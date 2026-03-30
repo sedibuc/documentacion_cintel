@@ -1,0 +1,53 @@
+<div class="site-shell">
+  <aside class="sidebar">
+    <div class="brand-block">
+      <p class="eyebrow">Micrositio documental</p>
+      <h1>Agente de Marketing IA</h1>
+      <p class="brand-copy">Documentación ejecutiva y técnica basada en el diagnóstico auditado del sistema vigente.</p>
+    </div>
+
+    <label class="search-box" for="site-search">
+      <span>Buscar en el sitio</span>
+      <input id="site-search" type="search" placeholder="Componentes, riesgos, variables..." autocomplete="off">
+    </label>
+    <div id="search-results" class="search-results" hidden></div>
+
+    <nav class="main-nav" aria-label="Secciones principales">
+      <a href="index.html" data-nav="inicio">Inicio</a>
+      <a href="diagnostico.html" data-nav="diagnostico">Diagnóstico técnico inicial</a>
+      <a href="arquitectura.html" data-nav="arquitectura">Arquitectura vigente</a>
+      <a href="brechas.html" data-nav="brechas">Brechas y oportunidades</a>
+      <a href="despliegue.html" data-nav="despliegue">Configuración y despliegue</a>
+      <a href="costos.html" data-nav="costos">Servicios y costos</a>
+    </nav>
+
+    <div class="sidebar-note">
+      <strong>Alcance</strong>
+      <p>Este sitio cubre la arquitectura, operación y riesgos del Agente de Marketing IA en su estado auditado actual.</p>
+    </div>
+  </aside>
+
+  <div class="page-column">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Repositorio agent</p>
+        <h2 id="page-title">Cargando sección...</h2>
+      </div>
+      <a id="source-link" class="source-link" href="source/diagnostico_marketing_agent.md" title="Abre el documento base en formato Markdown">Ver diagnóstico fuente (.md)</a>
+    </header>
+
+    <div id="runtime-warning" class="runtime-warning" hidden></div>
+
+    <main class="content-layout">
+      <article id="content" class="content-panel" aria-live="polite"></article>
+      <aside class="toc-panel">
+        <div class="toc-card">
+          <p class="eyebrow">Navegación interna</p>
+          <nav id="toc" aria-label="Tabla de contenido"></nav>
+        </div>
+      </aside>
+    </main>
+  </div>
+</div>
+
+<button id="back-to-top" class="back-to-top" type="button" aria-label="Volver arriba">↑</button>

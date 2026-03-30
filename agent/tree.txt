@@ -1,0 +1,35 @@
+docs/
+├── arquitectura.html
+├── brechas.html
+├── costos.html
+├── despliegue.html
+├── diagnostico.html
+├── index.html
+├── README.md
+│
+├── assets/
+│   ├── css/
+│   │   └── styles.css
+│   ├── img/
+│   │   └── diagramas/
+│   │       └── .gitkeep
+│   ├── js/
+│   │   ├── app.js
+│   │   ├── markdown-loader.js
+│   │   └── page-shell.js
+│   └── partials/
+│       └── site-shell.html
+│
+├── content/
+│   ├── arquitectura.md
+│   ├── brechas.md
+│   ├── costos.md
+│   ├── despliegue.md
+│   ├── diagnostico.md
+│   └── inicio.md
+│
+├── notes/
+│   └── decisiones.md
+│
+└── source/
+    └── diagnostico_marketing_agent.md
