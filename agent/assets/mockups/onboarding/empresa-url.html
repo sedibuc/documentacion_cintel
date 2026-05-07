@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mockup — Ingreso de empresa | Onboarding</title>
+  <style>
+    :root {
+      --bg: #f3efe6;
+      --panel: rgba(255, 252, 246, 0.95);
+      --ink: #1e2430;
+      --muted: #586171;
+      --line: rgba(30, 36, 48, 0.14);
+      --accent: #0f5a58;
+      --accent-soft: #d6ebe8;
+      --radius: 18px;
+      --radius-sm: 12px;
+      --shadow: 0 24px 60px rgba(26, 32, 41, 0.12);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      padding-top: 64px !important;
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #f7f1e7 0%, #ece7de 100%);
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 2rem;
+    }
+    .mockup-badge {
+      position: fixed;
+      top: 1rem; right: 1rem;
+      padding: 0.4rem 0.9rem;
+      background: #8d4a1f;
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      border-radius: 999px;
+      text-transform: uppercase;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 2.5rem 2.8rem;
+      width: 100%;
+      max-width: 560px;
+    }
+    .step-label {
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+    h1 {
+      font-size: 1.6rem;
+      color: var(--ink);
+      margin-bottom: 0.5rem;
+    }
+    .subtitle {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+      line-height: 1.5;
+    }
+    label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 0.5rem;
+    }
+    label .hint {
+      font-weight: 400;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+    .input-group {
+      display: flex;
+      gap: 0.6rem;
+      margin-bottom: 1.8rem;
+    }
+    input[type="url"], input[type="text"] {
+      flex: 1;
+      padding: 0.85rem 1.1rem;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: rgba(255,255,255,0.85);
+      font-size: 0.97rem;
+      color: var(--ink);
+      outline: none;
+    }
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(15, 90, 88, 0.12);
+    }
+    .btn {
+      padding: 0.85rem 1.6rem;
+      border-radius: var(--radius-sm);
+      border: none;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .example-block {
+      background: var(--accent-soft);
+      border: 1px solid rgba(15,90,88,0.18);
+      border-radius: var(--radius-sm);
+      padding: 0.9rem 1.1rem;
+      font-size: 0.88rem;
+      color: var(--ink);
+      margin-bottom: 1.8rem;
+    }
+    .example-block strong {
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.4rem;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .divider {
+      border: none;
+      border-top: 1px solid var(--line);
+      margin: 1.5rem 0;
+    }
+    .footer-note {
+      font-size: 0.83rem;
+      color: var(--muted);
+      text-align: center;
+    }
+    .footer-note a { color: var(--accent); }
+    .nav-mockup {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 2rem;
+      font-size: 0.88rem;
+    }
+    .nav-mockup a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .nav-mockup a:hover { text-decoration: underline; }
+  </style>
+  <style>
+  /* ═══ MN: Mockup nav injection ═══════════════════ */
+  .mn-topbar{position:fixed;top:0;left:0;right:0;height:48px;background:rgba(255,252,246,0.97);border-bottom:1px solid rgba(30,36,48,0.1);display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;z-index:300;backdrop-filter:blur(8px);box-shadow:0 1px 6px rgba(30,36,48,0.07);}
+  .mn-topbar-logo{font-weight:800;color:#1e2430;text-decoration:none;font-size:0.95rem;letter-spacing:-0.01em;}
+  .mn-topbar-logo span{color:#0f5a58;}
+  .mn-topbar-nav{display:flex;gap:0.15rem;}
+  .mn-topbar-nav a{font-size:0.79rem;color:#586171;padding:0.25rem 0.6rem;border-radius:5px;text-decoration:none;}
+  .mn-topbar-nav a.mn-active{background:rgba(15,90,88,0.1);color:#0f5a58;font-weight:600;}
+  .mn-topbar-logout{font-size:0.77rem;color:#8d4a1f;border:1px solid rgba(141,74,31,0.25);border-radius:6px;padding:0.26rem 0.65rem;text-decoration:none;white-space:nowrap;}
+  .mn-panel{position:fixed;bottom:1.4rem;right:1.2rem;display:flex;flex-direction:column;gap:0.45rem;z-index:900;}
+  .mn-panel a{display:block;padding:0.52rem 1.05rem;border-radius:10px;font-size:0.79rem;font-weight:700;text-decoration:none;text-align:center;white-space:nowrap;font-family:"Segoe UI",sans-serif;}
+  .mn-next{background:#0f5a58;color:#fff;box-shadow:0 4px 14px rgba(15,90,88,0.28);}
+  .mn-next:hover{background:#0a4846;}
+  .mn-prev{background:rgba(30,36,48,0.07);color:#1e2430;border:1px solid rgba(30,36,48,0.14);font-size:0.77rem;padding:0.4rem 0.85rem;}
+  .mn-home{background:rgba(30,36,48,0.05);color:#586171;border:1px solid rgba(30,36,48,0.1);font-size:0.73rem;padding:0.36rem 0.85rem;}
+  .mn-logout{background:rgba(141,74,31,0.08);color:#8d4a1f;border:1px solid rgba(141,74,31,0.2);font-size:0.73rem;padding:0.36rem 0.85rem;}
+  /* ═══════════════════════════════════════════════ */
+  </style>
+</head>
+<body>
+<div class="mn-topbar">
+  <a href="../app/home.html" class="mn-topbar-logo">CINTELIO <span>Marketing</span></a>
+  <nav class="mn-topbar-nav">
+    <a href="../onboarding/empresa-url.html" class="mn-active">Onboarding</a>
+    <a href="../agente-estrategico/ide-main.html">Estratégico</a>
+    <a href="../agente-creativo/arbol-campana-brief-piezas.html">Creativo</a>
+    <a href="../iteracion/iteracion-main.html">Ajuste</a>
+    <a href="../historico/historico-main.html">Histórico</a>
+  </nav>
+  <a href="../app/login.html" class="mn-topbar-logout">Salir →</a>
+</div>
+
+  <div class="mockup-badge">Mockup</div>
+
+  <div class="card">
+    <p class="step-label">Onboarding · Paso 1 de 4</p>
+    <h1>¿Cuál es el sitio web de tu empresa?</h1>
+    <p class="subtitle">
+      El sistema analizará tu sitio web e intentará precargar la información básica de la organización
+      para que no tengas que ingresarla manualmente.
+    </p>
+
+    <label for="url">
+      URL del sitio web
+      <span class="hint">— página principal de la empresa</span>
+    </label>
+    <div class="input-group">
+      <input type="url" id="url" placeholder="https://www.tuempresa.com" value="">
+      <button class="btn btn-primary">Analizar →</button>
+    </div>
+
+    <div class="example-block">
+      <strong>Ejemplos válidos</strong>
+      https://cintel.co<br>
+      https://empresa.com.co<br>
+      https://www.mipyme.co
+    </div>
+
+    <hr class="divider">
+
+    <p class="footer-note">
+      Si tu empresa no tiene sitio web, puedes
+      <a href="#">ingresar la información manualmente →</a>
+    </p>
+    <div class="nav-mockup">
+      <a href="../app/login.html">← Acceso</a>
+      <a href="empresa-scraping.html">Ver escaneo web →</a>
+    </div>
+
+  </div>
+
+<div class="mn-panel">
+  <a href="empresa-scraping.html" class="mn-next">Ver escaneo web →</a>
+  <a href="../app/login.html" class="mn-prev">← Acceso</a>
+  <a href="../app/home.html" class="mn-home">⌂ Inicio</a>
+  <a href="../app/login.html" class="mn-logout">Salir →</a>
+</div>
+</body>
+</html>

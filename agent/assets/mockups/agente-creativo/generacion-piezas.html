@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mockup — Generación de piezas</title>
+  <style>
+    :root {
+      --bg: #f3efe6;
+      --panel: rgba(255, 252, 246, 0.98);
+      --panel-alt: rgba(243, 239, 230, 0.75);
+      --panel-mid: rgba(248, 245, 240, 0.90);
+      --topbar: #1e2430;
+      --ink: #1e2430;
+      --ink-dim: #3a4253;
+      --muted: #586171;
+      --muted-lt: #8a97a8;
+      --line: rgba(30, 36, 48, 0.12);
+      --line-soft: rgba(30, 36, 48, 0.06);
+      --accent: #0f5a58;
+      --accent-soft: #d6ebe8;
+      --accent-light: #e8f4f3;
+      --glow: #4db8b5;
+      --warn: #8d4a1f;
+      --warn-soft: #faeadb;
+      --warn-light: #c07840;
+      --success: #2d6a4f;
+      --success-light: #5a9e7c;
+      --border: rgba(30, 36, 48, 0.12);
+      --border-accent: rgba(15, 90, 88, 0.30);
+      --radius: 14px;
+      --radius-sm: 9px;
+      --shadow: 0 4px 20px rgba(26,32,41,0.10);
+      --shadow-lg: 0 24px 60px rgba(26,32,41,0.12);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #f7f1e7 0%, #ece7de 100%); color: var(--ink);
+      min-height: 100vh; display: flex; flex-direction: column;
+    }
+    .mockup-badge {
+      position: fixed; top: 0.75rem; right: 1rem;
+      padding: 0.35rem 0.85rem; background: var(--warn); color: #fff;
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em;
+      border-radius: 999px; text-transform: uppercase; z-index: 500;
+    }
+    .topbar {
+      height: 52px; background: var(--topbar);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 1.5rem; border-bottom: 1px solid var(--line);
+    }
+    .logo { color: #f0ece3; font-weight: 800; font-size: 1rem; }
+    .logo span { color: #4db8b5; }
+    .nav a { color: rgba(255,255,255,0.6); font-size: 0.82rem; padding: 0.35rem 0.7rem; border-radius: 6px; text-decoration: none; }
+    .nav a.active { background: rgba(255,255,255,0.1); color: #f0ece3; }
+    .btn-back { background: transparent; color: #4db8b5; border: 1px solid rgba(77,184,181,0.35); border-radius: var(--radius-sm); padding: 0.38rem 0.85rem; font-size: 0.82rem; font-weight: 700; cursor: pointer; text-decoration: none; }
+
+    /* Layout 3 cols */
+    .workspace {
+      flex: 1; display: grid;
+      grid-template-columns: 260px 1fr 320px;
+      height: calc(100vh - 52px - 40px);
+    }
+
+    /* Left: brief summary */
+    .panel-left {
+      background: var(--panel);
+      border-right: 1px solid var(--line);
+      overflow-y: auto; padding: 1rem;
+    }
+    .panel-title { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.14em; color: #4db8b5; font-weight: 700; margin-bottom: 0.6rem; }
+    .brief-card {
+      background: rgba(77,184,181,0.08); border: 1px solid rgba(77,184,181,0.2);
+      border-radius: var(--radius-sm); padding: 0.75rem; margin-bottom: 0.8rem;
+    }
+    .bc-name { font-weight: 800; color: var(--ink); font-size: 0.88rem; margin-bottom: 0.4rem; }
+    .bc-row { display: flex; gap: 0.4rem; align-items: flex-start; font-size: 0.78rem; margin-bottom: 0.25rem; }
+    .bc-key { color: var(--muted-lt); min-width: 60px; flex-shrink: 0; }
+    .bc-val { color: var(--muted); line-height: 1.4; }
+    .channel-badge {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      background: rgba(30,36,48,0.07); border: 1px solid var(--line);
+      border-radius: 999px; padding: 0.22rem 0.6rem; font-size: 0.75rem; color: var(--muted);
+    }
+    .section-title {
+      font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.12em;
+      color: var(--muted-lt); font-weight: 700; margin-bottom: 0.5rem; margin-top: 0.8rem;
+    }
+    .variant-chip {
+      background: rgba(30,36,48,0.05); border: 1px solid var(--line);
+      border-radius: 7px; padding: 0.5rem 0.65rem; margin-bottom: 0.3rem;
+      cursor: pointer; transition: background 0.12s; font-size: 0.8rem; color: var(--muted);
+    }
+    .variant-chip.selected { background: rgba(77,184,181,0.1); border-color: rgba(77,184,181,0.3); color: #4db8b5; font-weight: 700; }
+
+    /* Center: piece content */
+    .panel-center {
+      background: var(--panel-alt);
+      overflow-y: auto; padding: 1.5rem 2rem;
+    }
+    .page-heading { margin-bottom: 1.2rem; }
+    .page-heading h1 { font-size: 1.15rem; font-weight: 800; color: var(--ink); margin-bottom: 0.2rem; }
+    .page-heading p { font-size: 0.84rem; color: var(--muted-lt); }
+    .piece-tabs { display: flex; gap: 0.4rem; margin-bottom: 1.2rem; border-bottom: 1px solid var(--line); padding-bottom: 0.8rem; }
+    .piece-tab {
+      padding: 0.42rem 0.9rem; border-radius: var(--radius-sm);
+      font-size: 0.82rem; font-weight: 600; cursor: pointer;
+      background: rgba(30,36,48,0.05); border: 1px solid var(--line);
+      color: var(--muted-lt);
+    }
+    .piece-tab.active { background: rgba(77,184,181,0.12); border-color: rgba(77,184,181,0.3); color: #4db8b5; }
+    .piece-card {
+      background: var(--panel); border: 1px solid var(--line);
+      border-radius: var(--radius); overflow: hidden; margin-bottom: 1rem;
+    }
+    .piece-card-header {
+      padding: 0.85rem 1.1rem; border-bottom: 1px solid var(--line);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .pch-left { display: flex; align-items: center; gap: 0.6rem; }
+    .pch-num { width: 24px; height: 24px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 700; color: #fff; flex-shrink: 0; }
+    .pch-name { font-size: 0.88rem; font-weight: 700; color: var(--ink); }
+    .pch-type { font-size: 0.73rem; color: var(--muted-lt); margin-top: 0.1rem; }
+    .piece-status { font-size: 0.73rem; font-weight: 700; }
+    .piece-status.draft { color: #a8905f; }
+    .piece-status.approved { color: var(--success); }
+    .piece-card-body { padding: 1rem 1.1rem; }
+    .copy-block {
+      background: rgba(30,36,48,0.04); border: 1px solid var(--line);
+      border-radius: var(--radius-sm); padding: 1rem 1.1rem;
+      font-size: 0.86rem; color: var(--muted); line-height: 1.75; white-space: pre-line;
+    }
+    .copy-meta { display: flex; gap: 0.8rem; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--line-soft); flex-wrap: wrap; }
+    .cm-item { font-size: 0.75rem; }
+    .cm-key { color: var(--muted-lt); }
+    .cm-val { color: var(--muted); margin-left: 0.25rem; }
+    .piece-actions { display: flex; gap: 0.6rem; margin-top: 0.75rem; }
+    .btn-sm {
+      padding: 0.38rem 0.8rem; border-radius: 7px; font-size: 0.78rem; font-weight: 700;
+      cursor: pointer; border: none;
+    }
+    .btn-sm.primary { background: var(--accent); color: #fff; }
+    .btn-sm.outline { background: transparent; color: #4db8b5; border: 1px solid rgba(77,184,181,0.35); }
+    .btn-sm.ghost { background: transparent; color: var(--muted-lt); border: 1px solid var(--line); }
+
+    /* Right: agent info */
+    .panel-right {
+      background: var(--panel-mid);
+      border-left: 1px solid var(--line);
+      overflow-y: auto; padding: 1rem;
+    }
+    .pr-title { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.14em; color: #4db8b5; font-weight: 700; margin-bottom: 0.5rem; }
+    .decision-item {
+      background: rgba(30,36,48,0.04); border: 1px solid var(--line);
+      border-radius: 7px; padding: 0.5rem 0.65rem; margin-bottom: 0.3rem; font-size: 0.8rem; color: var(--muted);
+    }
+    .decision-item .di-label { font-weight: 700; color: var(--ink); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 0.1rem; }
+    .insight-card {
+      background: rgba(77,184,181,0.07); border: 1px solid rgba(77,184,181,0.2);
+      border-radius: var(--radius-sm); padding: 0.6rem 0.75rem; margin-bottom: 0.4rem;
+    }
+    .ic-title { font-size: 0.73rem; color: #4db8b5; font-weight: 700; margin-bottom: 0.15rem; }
+    .ic-body { font-size: 0.78rem; color: var(--muted); line-height: 1.4; }
+    .add-channel-btn {
+      display: flex; align-items: center; justify-content: center; gap: 0.4rem;
+      background: rgba(77,184,181,0.07); border: 1px dashed rgba(77,184,181,0.3);
+      border-radius: var(--radius-sm); padding: 0.6rem; cursor: pointer;
+      font-size: 0.8rem; color: #4db8b5; margin-top: 0.6rem;
+    }
+
+    .bottom-nav {
+      background: var(--topbar); border-top: 1px solid var(--line);
+      padding: 0.5rem 1.5rem; display: flex; justify-content: space-between; font-size: 0.78rem;
+    }
+    .bottom-nav a { color: #4db8b5; text-decoration: none; font-weight: 600; }
+    .bottom-nav a:hover { text-decoration: underline; }
+  </style>
+  <style>
+    /* === MN: Mockup nav (light theme) === */
+  .mn-panel{position:fixed;bottom:1.4rem;right:1.2rem;display:flex;flex-direction:column;gap:0.45rem;z-index:900;}
+  .mn-panel a{display:block;padding:0.52rem 1.05rem;border-radius:10px;font-size:0.79rem;font-weight:700;text-decoration:none;text-align:center;white-space:nowrap;font-family:"Segoe UI",sans-serif;}
+  .mn-next{background:#0f5a58;color:#fff;box-shadow:0 4px 14px rgba(15,90,88,0.35);}
+  .mn-next:hover{background:#0a4846;}
+  .mn-prev{background:rgba(30,36,48,0.08);color:#586171;border:1px solid rgba(30,36,48,0.16);}
+  .mn-prev:hover{background:rgba(30,36,48,0.14);}
+  .mn-home{background:rgba(30,36,48,0.05);color:#8a97a8;border:1px solid rgba(30,36,48,0.10);font-size:0.74rem;padding:0.38rem 0.85rem;}
+  .mn-home:hover{background:rgba(30,36,48,0.10);color:#586171;}
+  .mn-logout{background:rgba(141,74,31,0.10);color:#8d4a1f;border:1px solid rgba(141,74,31,0.25);font-size:0.73rem;padding:0.36rem 0.85rem;}
+  .mn-logout:hover{background:rgba(141,74,31,0.18);}
+  /* ============================================ */
+  </style>
+</head>
+<body>
+  <div class="mockup-badge">Mockup</div>
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:1.2rem;">
+      <a href="../app/home.html" class="logo">CINTELIO <span>Marketing</span></a>
+      <nav class="topbar-nav" style="display:flex;gap:0.2rem;">
+        <a href="../onboarding/empresa-url.html">Onboarding</a>
+        <a href="../agente-estrategico/ide-main.html">Agente Estratégico</a>
+        <a href="arbol-campana-brief-piezas.html" class="active">Agente Creativo</a>
+        <a href="../iteracion/iteracion-main.html">Ajuste</a>
+        <a href="../historico/historico-main.html">Histórico</a>
+      </nav>
+    </div>
+    <a href="brief-diseno.html" class="btn-back">← Brief de diseño</a>
+  </div>
+
+  <div class="workspace">
+    <!-- Left: brief context -->
+    <div class="panel-left">
+      <div class="panel-title">Brief activo</div>
+      <div class="brief-card">
+        <div class="bc-name">Brief 1: LinkedIn institucional</div>
+        <div class="bc-row"><span class="bc-key">Canal</span><span class="bc-val"><span class="channel-badge">💼 LinkedIn</span></span></div>
+        <div class="bc-row"><span class="bc-key">Objetivo</span><span class="bc-val">Generar leads — directivos TI sector público</span></div>
+        <div class="bc-row"><span class="bc-key">Tono</span><span class="bc-val">Institucional / experto</span></div>
+        <div class="bc-row"><span class="bc-key">CTA</span><span class="bc-val">"Descarga el estudio completo"</span></div>
+      </div>
+
+      <div class="section-title">Piezas generadas</div>
+      <div class="variant-chip selected">Pieza 1 — Post institucional</div>
+      <div class="variant-chip">Pieza 2 — Artículo técnico</div>
+
+      <div class="section-title">Otro brief</div>
+      <div class="variant-chip">Brief 2: Instagram leads</div>
+
+      <div class="section-title">Acciones</div>
+      <div class="add-channel-btn">+ Nuevo brief para esta campaña</div>
+
+      <div class="section-title" style="margin-top:1rem;">Acciones de campaña</div>
+      <div class="add-channel-btn" style="margin-bottom:0.35rem;">⊕ Duplicar campaña anterior</div>
+      <div class="add-channel-btn">↗ Ver árbol campaña</div>
+    </div>
+
+    <!-- Center: pieces -->
+    <div class="panel-center">
+      <div class="page-heading">
+        <h1>Piezas generadas</h1>
+        <p>Brief 1 · LinkedIn institucional · Transformación Digital 2025</p>
+      </div>
+
+      <div class="piece-tabs">
+        <div class="piece-tab active">Todas (2)</div>
+        <div class="piece-tab">💼 LinkedIn</div>
+        <div class="piece-tab">📱 Instagram</div>
+        <div class="piece-tab">📧 Email</div>
+      </div>
+
+      <!-- Estado general de piezas -->
+      <div style="background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-sm);padding:0.7rem 1rem;display:flex;gap:0.6rem;align-items:center;flex-wrap:wrap;margin-bottom:1rem;">
+        <span style="font-size:0.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;">Estado de piezas:</span>
+        <span style="display:inline-flex;align-items:center;gap:0.3rem;background:var(--accent-soft);border:1px solid rgba(15,90,88,0.2);border-radius:999px;padding:0.22rem 0.65rem;font-size:0.72rem;color:var(--accent);font-weight:700;">✓ 1 Aprobada</span>
+        <span style="display:inline-flex;align-items:center;gap:0.3rem;background:rgba(200,180,80,0.1);border:1px solid rgba(180,160,60,0.3);border-radius:999px;padding:0.22rem 0.65rem;font-size:0.72rem;color:#7a6f1a;font-weight:700;">◌ 1 En revisión</span>
+        <span style="display:inline-flex;align-items:center;gap:0.3rem;background:var(--warn-soft);border:1px solid rgba(141,74,31,0.2);border-radius:999px;padding:0.22rem 0.65rem;font-size:0.72rem;color:var(--warn);font-weight:700;">↻ 0 Ajustadas</span>
+        <button style="margin-left:auto;padding:0.35rem 0.85rem;background:transparent;color:var(--accent);border:1px solid var(--line);border-radius:var(--radius-sm);font-size:0.78rem;font-weight:700;cursor:pointer;">⊕ Duplicar desde campaña anterior</button>
+      </div>
+
+      <!-- Pieza 1 -->
+      <div class="piece-card">
+        <div class="piece-card-header">
+          <div class="pch-left">
+            <div class="pch-num">1</div>
+            <div>
+              <div class="pch-name">Post institucional LinkedIn</div>
+              <div class="pch-type">Texto largo · LinkedIn · TD Sector Público 2025</div>
+            </div>
+          </div>
+          <span class="piece-status approved">✓ Aprobada</span>
+        </div>
+        <div class="piece-card-body">
+          <div class="copy-block">La transformación digital del sector público no es un destino, es un proceso.
+
+Las entidades que avanzan con más seguridad tienen algo en común: acompañamiento estructurado, con visión de largo plazo y experiencia en implementación.
+
+En CINTEL llevamos más de 25 años ayudando a organizaciones a navegar ese camino — con evidencia, metodología y foco en resultados reales.
+
+👉 Descarga nuestro estudio: "Ruta de Transformación Digital en el Sector Público"
+
+→ [enlace]
+
+#TransformaciónDigital #GobiernoDigital #CINTEL</div>
+          <div class="copy-meta">
+            <div class="cm-item"><span class="cm-key">Caracteres:</span><span class="cm-val">412</span></div>
+            <div class="cm-item"><span class="cm-key">Hashtags:</span><span class="cm-val">3</span></div>
+            <div class="cm-item"><span class="cm-key">CTA:</span><span class="cm-val">Incluido ✓</span></div>
+            <div class="cm-item"><span class="cm-key">Resultado:</span><span class="cm-val" style="color:#9ba5b4;">Pendiente carga</span></div>
+          </div>
+          <div class="piece-actions">
+            <button class="btn-sm primary">Copiar texto</button>
+            <button class="btn-sm outline">Exportar</button>
+            <button class="btn-sm ghost">Ajustar con IA</button>
+            <button class="btn-sm ghost">Cargar resultados</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pieza 2 -->
+      <div class="piece-card">
+        <div class="piece-card-header">
+          <div class="pch-left">
+            <div class="pch-num">2</div>
+            <div>
+              <div class="pch-name">Artículo técnico LinkedIn</div>
+              <div class="pch-type">Artículo largo · LinkedIn · TD Sector Público 2025</div>
+            </div>
+          </div>
+          <span class="piece-status draft">◌ En revisión</span>
+        </div>
+        <div class="piece-card-body">
+          <div class="copy-block">5 claves para liderar la transformación digital en una entidad pública
+
+La adopción tecnológica en el sector público es diferente. No basta con implementar herramientas — se necesita una hoja de ruta, aliados con experiencia y una visión que contemple la sostenibilidad institucional.
+
+En este artículo, compartimos los cinco factores que diferencian a las entidades que logran transformaciones reales de las que solo digitalizan procesos sin impacto.
+
+1. Diagnóstico real del estado actual
+2. Liderazgo institucional comprometido
+3. Capacitación continua y gestión del cambio
+4. Arquitectura tecnológica escalable
+5. Medición de impacto desde el inicio
+
+[Leer el artículo completo →]</div>
+          <div class="copy-meta">
+            <div class="cm-item"><span class="cm-key">Palabras:</span><span class="cm-val">~180</span></div>
+            <div class="cm-item"><span class="cm-key">Formato:</span><span class="cm-val">Lista numerada</span></div>
+            <div class="cm-item"><span class="cm-key">Resultado:</span><span class="cm-val" style="color:#9ba5b4;">Sin publicar</span></div>
+          </div>
+          <div class="piece-actions">
+            <button class="btn-sm primary">Aprobar pieza</button>
+            <button class="btn-sm outline">Solicitar ajuste</button>
+            <button class="btn-sm outline">↻ Regenerar</button>
+            <button class="btn-sm ghost">Exportar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: agent decisions -->
+    <div class="panel-right">
+      <div class="pr-title">Decisiones del agente</div>
+      <div class="decision-item">
+        <span class="di-label">Canal seleccionado</span>
+        LinkedIn (del brief)
+      </div>
+      <div class="decision-item">
+        <span class="di-label">Tono aplicado</span>
+        Institucional + experto — evitó lenguaje excesivamente técnico
+      </div>
+      <div class="decision-item">
+        <span class="di-label">CTA incluido</span>
+        "Descarga el estudio completo" en Pieza 1
+      </div>
+      <div class="decision-item">
+        <span class="di-label">2 variantes generadas</span>
+        Post corto + artículo largo
+      </div>
+
+      <div class="pr-title" style="margin-top:1rem;">Del histórico</div>
+      <div class="insight-card">
+        <div class="ic-title">TD 2024 — estructura reutilizada</div>
+        <div class="ic-body">Formato post LinkedIn con hashtags institucionales. Alto engagement comprobado. Adaptado para sector público.</div>
+      </div>
+
+      <div class="pr-title" style="margin-top:1rem;">Próximos pasos</div>
+      <div class="decision-item">
+        <span class="di-label">Pieza 1</span>
+        Aprobada — pendiente publicación y registro de resultados
+      </div>
+      <div class="decision-item">
+        <span class="di-label">Pieza 2</span>
+        En revisión — pendiente aprobación
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="brief-diseno.html">← Brief de diseño</a>
+    <div style="display:flex;gap:1.5rem;">
+      <a href="detalle-pieza-instagram.html">Ver pieza Instagram →</a>
+      <a href="carga-resultados-manual.html">Carga de resultados →</a>
+      <a href="arbol-campana-brief-piezas.html">Ver árbol →</a>
+    </div>
+  </div>
+
+<script>
+/* MN: Fix topbar links */
+(function(){
+  // Make logo link to home
+  document.querySelectorAll('.topbar .logo, .logo').forEach(function(el){
+    if(el.tagName!=='A'){
+      var a=document.createElement('a');
+      a.href='../app/home.html';
+      a.innerHTML=el.innerHTML;
+      a.className=el.className;
+      a.style.textDecoration='none';
+      el.parentNode.replaceChild(a,el);
+    }
+  });
+  // Fix module nav links
+  var map={
+    'Onboarding':'../onboarding/empresa-url.html',
+    'Agente Estratégico':'../agente-estrategico/ide-main.html',
+    'Agente Creativo':'../agente-creativo/arbol-campana-brief-piezas.html',
+    'Ajuste':'../iteracion/iteracion-main.html',
+    'Ajuste de resultados':'../iteracion/iteracion-main.html',
+    'Histórico':'../historico/historico-main.html'
+  };
+  document.querySelectorAll('.topbar a,.topbar-nav a,.topbar .nav a').forEach(function(a){
+    var t=a.textContent.trim();
+    if(map[t]&&(a.getAttribute('href')==='#'||!a.getAttribute('href'))){
+      a.href=map[t];
+    }
+  });
+  // Add logout if not present
+  var topbar=document.querySelector('.topbar');
+  if(topbar&&!topbar.querySelector('.mn-topbar-out')){
+    var out=document.createElement('a');
+    out.href='../app/login.html';
+    out.textContent='Salir →';
+    out.className='mn-topbar-out';
+    out.style.cssText='font-size:0.75rem;color:#9ba5b4;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:0.28rem 0.6rem;text-decoration:none;margin-left:0.5rem;white-space:nowrap;';
+    topbar.appendChild(out);
+  }
+})();
+</script>
+
+<div class="mn-panel">
+  <a href="detalle-pieza-instagram.html" class="mn-next">Ver detalle →</a>
+  <a href="brief-diseno.html" class="mn-prev">← Brief</a>
+  <a href="../app/home.html" class="mn-home">⌂ Inicio</a>
+  <a href="../app/login.html" class="mn-logout">Salir →</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mockup — Detalle pieza Instagram | Agente Creativo</title>
+  <style>
+    :root {
+      --bg: #f3efe6;
+      --panel: rgba(255, 252, 246, 0.98);
+      --panel-alt: rgba(243, 239, 230, 0.75);
+      --topbar: #1e2430;
+      --ink: #1e2430;
+      --ink-dim: #3a4253;
+      --muted: #586171;
+      --muted-lt: #8a97a8;
+      --line: rgba(30, 36, 48, 0.12);
+      --line-soft: rgba(30, 36, 48, 0.06);
+      --accent: #0f5a58;
+      --accent-soft: #d6ebe8;
+      --accent-light: #e8f4f3;
+      --glow: #4db8b5;
+      --warn: #8d4a1f;
+      --warn-soft: #faeadb;
+      --success: #2d6a4f;
+      --success-light: #5a9e7c;
+      --radius: 14px;
+      --radius-sm: 9px;
+      --shadow: 0 4px 20px rgba(26,32,41,0.10);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #f7f1e7 0%, #ece7de 100%);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+    }
+    .mockup-badge {
+      position: fixed; top: 0.75rem; right: 1rem;
+      padding: 0.35rem 0.85rem; background: var(--warn); color: #fff;
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em;
+      border-radius: 999px; text-transform: uppercase; z-index: 500;
+    }
+    .topbar {
+      height: 52px; background: var(--topbar);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 1.5rem; border-bottom: 1px solid var(--line-soft);
+      flex-shrink: 0;
+    }
+    .logo { color: #f0ece3; font-weight: 800; font-size: 1rem; text-decoration: none; }
+    .logo span { color: var(--glow); }
+    .topbar-nav { display: flex; gap: 0.2rem; }
+    .topbar-nav a { color: var(--muted); font-size: 0.82rem; padding: 0.35rem 0.7rem; border-radius: 6px; text-decoration: none; }
+    .topbar-nav a:hover, .topbar-nav a.active { background: rgba(255,255,255,0.1); color: #f0ece3; }
+    .btn-back { background: transparent; color: var(--glow); border: 1px solid rgba(77,184,181,0.4); border-radius: var(--radius-sm); padding: 0.38rem 0.85rem; font-size: 0.82rem; font-weight: 700; cursor: pointer; text-decoration: none; }
+    .workspace { flex: 1; display: grid; grid-template-columns: 1fr 380px; min-height: 0; overflow: hidden; }
+    .panel-main { background: var(--bg); overflow-y: auto; padding: 1.5rem 2rem; }
+    .breadcrumb { font-size: 0.75rem; color: var(--muted-lt); margin-bottom: 1rem; }
+    .breadcrumb a { color: var(--glow); text-decoration: none; }
+
+    /* Status workflow */
+    .piece-header { margin-bottom: 1.5rem; }
+    .ph-top { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 0.9rem; }
+    .ph-left h1 { font-size: 1.1rem; font-weight: 800; color: var(--ink); margin-bottom: 0.3rem; }
+    .ph-badges { display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center; margin-top: 0.4rem; }
+    .insta-badge { display: inline-flex; align-items: center; gap: 0.35rem; background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); border-radius: 999px; padding: 0.3rem 0.8rem; font-size: 0.75rem; font-weight: 700; color: #fff; }
+    .auto-badge { display: inline-flex; align-items: center; gap: 0.3rem; background: rgba(45,106,79,0.12); border: 1px solid rgba(90,158,124,0.3); border-radius: 999px; padding: 0.25rem 0.7rem; font-size: 0.72rem; font-weight: 700; color: var(--success-light); }
+    .status-workflow { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 0.85rem 1rem; display: flex; align-items: center; margin-bottom: 1.2rem; overflow-x: auto; gap: 0; }
+    .sw-step { display: flex; flex-direction: column; align-items: center; gap: 0.2rem; padding: 0 1rem; position: relative; flex-shrink: 0; }
+    .sw-step:not(:last-child)::after { content: ""; position: absolute; right: -12px; top: 12px; width: 24px; height: 2px; background: var(--line); }
+    .sw-step.done::after { background: var(--glow); opacity: 0.5; }
+    .sw-step.current::after { background: var(--glow); }
+    .sw-dot { width: 24px; height: 24px; border-radius: 50%; background: var(--panel-alt); border: 2px solid var(--line); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: var(--muted-lt); }
+    .sw-step.done .sw-dot { background: var(--accent-soft); border-color: var(--glow); color: var(--accent); }
+    .sw-step.current .sw-dot { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 800; }
+    .sw-label { font-size: 0.68rem; font-weight: 700; color: var(--muted-lt); text-align: center; white-space: nowrap; }
+    .sw-step.done .sw-label { color: var(--accent); }
+    .sw-step.current .sw-label { color: var(--ink); }
+
+    /* Action bar */
+    .action-bar { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 0.85rem 1rem; display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; margin-bottom: 1.2rem; }
+    .action-bar-label { font-size: 0.72rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-right: 0.3rem; }
+    .btn { padding: 0.45rem 1rem; border-radius: var(--radius-sm); font-size: 0.82rem; font-weight: 700; cursor: pointer; border: none; font-family: inherit; transition: all 0.15s; }
+    .btn-success { background: var(--success); color: #fff; }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: #0a4846; }
+    .btn-outline { background: transparent; color: var(--accent); border: 1px solid var(--line); }
+    .btn-outline:hover { background: var(--accent-soft); }
+    .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--line); }
+    .btn-ghost:hover { background: var(--panel-alt); }
+
+    /* Instagram post */
+    .insta-post { background: #fff; border: 1px solid #dbdbdb; border-radius: 12px; overflow: hidden; max-width: 480px; margin: 0 auto 1.5rem; box-shadow: var(--shadow); }
+    .ip-header { display: flex; align-items: center; justify-content: space-between; padding: 0.7rem 1rem; border-bottom: 1px solid #efefef; }
+    .ip-user { display: flex; align-items: center; gap: 0.6rem; }
+    .ip-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); display: flex; align-items: center; justify-content: center; font-size: 1rem; color: #fff; font-weight: 800; }
+    .ip-username { font-weight: 700; color: #262626; font-size: 0.88rem; }
+    .ip-handle { font-size: 0.75rem; color: #8e8e8e; }
+    .ip-dots { color: #8e8e8e; font-size: 1.1rem; cursor: pointer; }
+    .ip-image { width: 100%; aspect-ratio: 1/1; object-fit: cover; display: block; }
+    .ip-actions { display: flex; align-items: center; gap: 1rem; padding: 0.65rem 1rem; border-bottom: 1px solid #efefef; }
+    .ip-action-btn { background: none; border: none; cursor: pointer; font-size: 1.1rem; padding: 0; line-height: 1; }
+    .ip-save { margin-left: auto; }
+    .ip-likes { font-weight: 700; color: #262626; font-size: 0.88rem; padding: 0 1rem; }
+    .ip-caption { padding: 0.4rem 1rem 0.7rem; font-size: 0.85rem; color: #262626; line-height: 1.55; }
+    .ip-caption .ip-user-tag { font-weight: 700; }
+    .ip-hashtags { color: #00376b; }
+    .ip-date { padding: 0 1rem 0.8rem; font-size: 0.75rem; color: #8e8e8e; text-transform: uppercase; letter-spacing: 0.04em; }
+    .ip-comment-input { display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1rem; border-top: 1px solid #efefef; }
+    .ip-comment-input input { flex: 1; border: none; outline: none; font-size: 0.85rem; color: #262626; background: transparent; font-family: inherit; }
+    .post-btn { color: #0095f6; font-weight: 700; font-size: 0.85rem; cursor: pointer; background: none; border: none; }
+
+    /* Sections */
+    .section-card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 1rem 1.2rem; margin-bottom: 1rem; }
+    .sc-title { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700; color: var(--glow); margin-bottom: 0.7rem; }
+    .caption-text { font-size: 0.88rem; color: var(--ink-dim); line-height: 1.75; white-space: pre-line; }
+    .tags-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.75rem; }
+    .hashtag-chip { background: var(--accent-soft); border: 1px solid rgba(15,90,88,0.2); border-radius: 999px; padding: 0.2rem 0.65rem; font-size: 0.73rem; color: var(--accent); font-weight: 600; }
+    .link-row { display: flex; gap: 0.5rem; margin-top: 0.8rem; align-items: center; }
+    .link-input { flex: 1; background: var(--panel-alt); border: 1px solid var(--line); border-radius: 7px; padding: 0.42rem 0.75rem; font-size: 0.83rem; color: var(--ink); outline: none; font-family: inherit; }
+    .link-stored { display: flex; align-items: center; gap: 0.5rem; background: rgba(45,106,79,0.08); border: 1px solid rgba(90,158,124,0.25); border-radius: 7px; padding: 0.42rem 0.75rem; margin-top: 0.5rem; font-size: 0.8rem; color: var(--success-light); }
+
+    /* Right panel */
+    .panel-right { background: var(--panel); border-left: 1px solid var(--line); overflow-y: auto; padding: 1.2rem; }
+    .pr-title { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--glow); font-weight: 700; margin-bottom: 0.6rem; }
+    .auto-note { background: var(--accent-soft); border: 1px solid rgba(15,90,88,0.2); border-radius: var(--radius-sm); padding: 0.55rem 0.75rem; font-size: 0.78rem; color: var(--accent); margin-bottom: 0.8rem; line-height: 1.4; }
+    .engagement-card { background: var(--accent-light); border: 1px solid rgba(15,90,88,0.2); border-radius: var(--radius-sm); padding: 0.85rem; text-align: center; margin-bottom: 0.75rem; }
+    .ec-value { font-size: 2rem; font-weight: 800; color: var(--accent); }
+    .ec-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.1rem; }
+    .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-bottom: 0.8rem; }
+    .metric-card { background: var(--panel-alt); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 0.7rem 0.75rem; text-align: center; }
+    .mc-value { font-size: 1.3rem; font-weight: 800; color: var(--ink); }
+    .mc-label { font-size: 0.7rem; color: var(--muted-lt); margin-top: 0.15rem; text-transform: uppercase; letter-spacing: 0.08em; }
+    .sparkline-fake { height: 48px; background: var(--panel-alt); border-radius: 7px; margin-bottom: 0.5rem; overflow: hidden; }
+    .sparkline-fake svg { width: 100%; height: 100%; }
+    .refresh-note { font-size: 0.73rem; color: var(--muted-lt); text-align: center; margin-bottom: 0.8rem; }
+    .history-item { display: flex; justify-content: space-between; font-size: 0.78rem; padding: 0.35rem 0; border-bottom: 1px solid var(--line-soft); }
+    .hi-date { color: var(--muted-lt); }
+    .hi-val { color: var(--ink-dim); }
+
+    /* Bottom nav */
+    .bottom-nav { background: var(--topbar); border-top: 1px solid var(--line-soft); padding: 0.5rem 1.5rem; display: flex; justify-content: space-between; font-size: 0.78rem; flex-shrink: 0; }
+    .bottom-nav a { color: var(--glow); text-decoration: none; font-weight: 600; }
+  </style>
+  <style>
+  /* === MN: Mockup nav (light theme) === */
+  .mn-panel{position:fixed;bottom:1.4rem;right:1.2rem;display:flex;flex-direction:column;gap:0.45rem;z-index:900;}
+  .mn-panel a{display:block;padding:0.52rem 1.05rem;border-radius:10px;font-size:0.79rem;font-weight:700;text-decoration:none;text-align:center;white-space:nowrap;font-family:"Segoe UI",sans-serif;}
+  .mn-next{background:#0f5a58;color:#fff;box-shadow:0 4px 14px rgba(15,90,88,0.35);}
+  .mn-next:hover{background:#0a4846;}
+  .mn-prev{background:rgba(30,36,48,0.08);color:#586171;border:1px solid rgba(30,36,48,0.16);}
+  .mn-prev:hover{background:rgba(30,36,48,0.14);}
+  .mn-home{background:rgba(30,36,48,0.05);color:#8a97a8;border:1px solid rgba(30,36,48,0.10);font-size:0.74rem;padding:0.38rem 0.85rem;}
+  .mn-home:hover{background:rgba(30,36,48,0.10);color:#586171;}
+  .mn-logout{background:rgba(141,74,31,0.10);color:#8d4a1f;border:1px solid rgba(141,74,31,0.25);font-size:0.73rem;padding:0.36rem 0.85rem;}
+  .mn-logout:hover{background:rgba(141,74,31,0.18);}
+  /* ============================================ */
+  </style>
+</head>
+<body>
+  <div class="mockup-badge">Mockup</div>
+
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:1.2rem;">
+      <a href="../app/home.html" class="logo">CINTELIO <span>Marketing</span></a>
+      <nav class="topbar-nav">
+        <a href="../onboarding/empresa-url.html">Onboarding</a>
+        <a href="../agente-estrategico/ide-main.html">Agente Estratégico</a>
+        <a href="arbol-campana-brief-piezas.html" class="active">Agente Creativo</a>
+        <a href="../iteracion/iteracion-main.html">Ajuste</a>
+        <a href="../historico/historico-main.html">Histórico</a>
+      </nav>
+    </div>
+    <a href="generacion-piezas.html" class="btn-back">← Piezas generadas</a>
+  </div>
+
+  <div class="workspace">
+    <!-- LEFT: piece detail -->
+    <div class="panel-main">
+      <div class="breadcrumb">
+        <a href="arbol-campana-brief-piezas.html">Transformación Digital 2025</a>
+        &nbsp;›&nbsp;
+        <a href="brief-diseno.html">Brief 2: Instagram leads</a>
+        &nbsp;›&nbsp; Pieza 3: Post visual con CTA
+      </div>
+
+      <div class="piece-header">
+        <div class="ph-top">
+          <div class="ph-left">
+            <h1>Pieza 3 — Post visual con CTA</h1>
+            <div class="ph-badges">
+              <span class="insta-badge">📱 Instagram</span>
+              <span class="auto-badge">🟢 Métricas automáticas</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Workflow de estados -->
+        <div class="status-workflow">
+          <div class="sw-step done">
+            <div class="sw-dot">✓</div>
+            <div class="sw-label">Generada</div>
+          </div>
+          <div class="sw-step done">
+            <div class="sw-dot">✓</div>
+            <div class="sw-label">En revisión</div>
+          </div>
+          <div class="sw-step current">
+            <div class="sw-dot">●</div>
+            <div class="sw-label">Aprobada</div>
+          </div>
+          <div class="sw-step">
+            <div class="sw-dot">○</div>
+            <div class="sw-label">Publicada</div>
+          </div>
+        </div>
+
+        <!-- Acciones -->
+        <div class="action-bar">
+          <span class="action-bar-label">Acciones:</span>
+          <button class="btn btn-success">✓ Pieza aprobada</button>
+          <button class="btn btn-outline">✏️ Solicitar ajuste</button>
+          <button class="btn btn-outline">↻ Regenerar pieza</button>
+          <button class="btn btn-ghost">📋 Editar brief</button>
+          <button class="btn btn-ghost" style="margin-left:auto;">⊕ Duplicar</button>
+        </div>
+      </div>
+
+      <!-- Instagram post preview -->
+      <div class="insta-post">
+        <div class="ip-header">
+          <div class="ip-user">
+            <div class="ip-avatar">C</div>
+            <div>
+              <div class="ip-username">cintel.colombia</div>
+              <div class="ip-handle">CINTEL — Transformación Digital</div>
+            </div>
+          </div>
+          <span class="ip-dots">···</span>
+        </div>
+        <img class="ip-image" src="../../img/campania.png" alt="Pieza Instagram — Transformación Digital 2025">
+        <div class="ip-actions">
+          <button class="ip-action-btn">🤍</button>
+          <button class="ip-action-btn">💬</button>
+          <button class="ip-action-btn">➤</button>
+          <button class="ip-action-btn ip-save">🔖</button>
+        </div>
+        <div class="ip-likes">312 me gusta</div>
+        <div class="ip-caption">
+          <span class="ip-user-tag">cintel.colombia</span>
+          &nbsp;¿Listo para transformar tu entidad? La transformación digital no empieza con tecnología — empieza con una decisión. CINTEL te acompaña en cada paso: diagnóstico, hoja de ruta, implementación y seguimiento.&nbsp;
+          <span class="ip-hashtags">#TransformaciónDigital #GobiernoDigital #CINTEL #SectorPúblico</span>
+        </div>
+        <div class="ip-date">12 de junio de 2025</div>
+        <div class="ip-comment-input">
+          <span>🙂</span>
+          <input type="text" placeholder="Añade un comentario…" readonly>
+          <button class="post-btn">Publicar</button>
+        </div>
+      </div>
+
+      <!-- Caption generada -->
+      <div class="section-card">
+        <div class="sc-title">Caption generada</div>
+        <div class="caption-text">¿Listo para transformar tu entidad?
+
+La transformación digital no empieza con tecnología — empieza con una decisión.
+
+CINTEL te acompaña en cada paso: diagnóstico, hoja de ruta, implementación y seguimiento.
+
+💡 Más de 200 entidades públicas ya recorrieron este camino con nosotros.
+
+→ Link en bio para conocer nuestra metodología.</div>
+        <div class="tags-row">
+          <span class="hashtag-chip">#TransformaciónDigital</span>
+          <span class="hashtag-chip">#GobiernoDigital</span>
+          <span class="hashtag-chip">#CINTEL</span>
+          <span class="hashtag-chip">#SectorPúblico</span>
+        </div>
+      </div>
+
+      <!-- Enlace de publicación -->
+      <div class="section-card">
+        <div class="sc-title">Enlace de publicación</div>
+        <div class="link-row">
+          <input class="link-input" type="text" value="https://www.instagram.com/p/C4xQmNKr2Lk/" readonly>
+          <button class="btn btn-primary">Guardar</button>
+        </div>
+        <div class="link-stored">
+          ✓ Publicación registrada el 12 jun 2025 — El agente obtiene métricas automáticamente.
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: metrics -->
+    <div class="panel-right">
+      <div class="pr-title">Métricas de Instagram</div>
+      <div class="auto-note">
+        🟢 Actualización automática vía API.<br>
+        Última sincronización hace <strong>4 horas</strong>.
+      </div>
+
+      <div class="engagement-card">
+        <div class="ec-value">9.3%</div>
+        <div class="ec-label">Engagement rate</div>
+      </div>
+
+      <div class="metrics-grid">
+        <div class="metric-card"><div class="mc-value">312</div><div class="mc-label">Likes</div></div>
+        <div class="metric-card"><div class="mc-value">18</div><div class="mc-label">Comentarios</div></div>
+        <div class="metric-card"><div class="mc-value">47</div><div class="mc-label">Guardados</div></div>
+        <div class="metric-card"><div class="mc-value">4,200</div><div class="mc-label">Alcance</div></div>
+      </div>
+
+      <div class="sparkline-fake">
+        <svg viewBox="0 0 200 48" preserveAspectRatio="none">
+          <polyline points="0,40 30,32 55,28 80,20 105,22 130,12 160,15 200,8" fill="none" stroke="#4db8b5" stroke-width="2" opacity="0.8"/>
+          <polygon points="0,40 30,32 55,28 80,20 105,22 130,12 160,15 200,8 200,48 0,48" fill="rgba(15,90,88,0.1)"/>
+        </svg>
+      </div>
+      <div class="refresh-note">Alcance — últimos 7 días</div>
+
+      <div class="pr-title" style="margin-top:0.5rem;">Historial diario</div>
+      <div class="history-item"><span class="hi-date">10 jun 2025</span><span class="hi-val">1,200 alcance</span></div>
+      <div class="history-item"><span class="hi-date">11 jun 2025</span><span class="hi-val">2,800 alcance</span></div>
+      <div class="history-item"><span class="hi-date">12 jun 2025</span><span class="hi-val">3,500 alcance</span></div>
+      <div class="history-item"><span class="hi-date">13 jun 2025</span><span class="hi-val">4,200 alcance</span></div>
+
+      <div style="margin-top:1.2rem;">
+        <div class="pr-title">Ajuste rápido</div>
+        <div style="display:flex;flex-direction:column;gap:0.5rem;margin-top:0.3rem;">
+          <button class="btn btn-outline" style="width:100%;font-size:0.8rem;">✏️ Ajustar copy</button>
+          <button class="btn btn-outline" style="width:100%;font-size:0.8rem;">🖼 Regenerar imagen</button>
+          <a href="../iteracion/iteracion-pieza.html" class="btn btn-ghost" style="display:block;width:100%;text-align:center;text-decoration:none;font-size:0.8rem;">→ Módulo de iteración</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="generacion-piezas.html">← Piezas generadas</a>
+    <div style="display:flex;gap:1.5rem;">
+      <a href="carga-resultados-manual.html">Cargar resultados →</a>
+      <a href="arbol-campana-brief-piezas.html">Ver árbol campaña →</a>
+    </div>
+  </div>
+
+  <div class="mn-panel">
+    <a href="carga-resultados-manual.html" class="mn-next">Cargar resultados →</a>
+    <a href="generacion-piezas.html" class="mn-prev">← Piezas generadas</a>
+    <a href="../app/home.html" class="mn-home">⌂ Inicio</a>
+    <a href="../app/login.html" class="mn-logout">Salir →</a>
+  </div>
+</body>
+</html>

@@ -1,0 +1,69 @@
+@startuml agente-estrategico-flujo
+!theme plain
+skinparam backgroundColor #FDFAF4
+skinparam defaultFontName Segoe UI
+skinparam roundCorner 12
+skinparam ArrowColor #0f5a58
+skinparam ActivityBorderColor #0f5a58
+skinparam ActivityBackgroundColor #d6ebe8
+skinparam ActivityDiamondBackgroundColor #fff8ef
+skinparam ActivityDiamondBorderColor #8d4a1f
+skinparam NoteBackgroundColor #fffdf6
+skinparam NoteBorderColor #c8bfa8
+
+title Agente Estratégico — Flujo principal
+
+|Usuario|
+start
+:Abre el entorno del Agente Estratégico;
+
+|Sistema|
+:Carga contexto de empresa desde onboarding;
+note right
+  Productos y servicios validados,
+  descripción institucional,
+  parámetros de marca básicos.
+end note
+:Carga histórico de campañas disponible;
+:Muestra entorno con paneles activos;
+
+|Usuario|
+:Escribe primera instrucción\n(qué quiere comunicar o para qué);
+
+|Sistema|
+:Analiza instrucción con contexto de empresa;
+:Actualiza panel de razonamiento\n(objetivos detectados, audiencia tentativa);
+
+if (¿Instrucción es suficientemente clara?) then (Sí)
+  :Propone objetivos, audiencia,\n mensajes clave y canales;
+else (No)
+  :Solicita aclaración específica;
+  |Usuario|
+  :Responde con más detalle;
+  |Sistema|
+  :Reformula la propuesta;
+endif
+
+|Usuario|
+:Revisa la propuesta del agente;
+
+fork
+  :Acepta la propuesta;
+  |Sistema|
+  :Consolida el plan de comunicación;
+  :Plan disponible para Agente Creativo;
+
+fork again
+  :Pide ajuste o cambio de enfoque;
+  |Sistema|
+  :Actualiza plan y razonamiento visible;
+  note right
+    Ver flujo de iteración
+    conversacional.
+  end note
+
+end fork
+
+stop
+
+@enduml

@@ -5,7 +5,14 @@
     arquitectura: { file: "content/arquitectura.md", title: "Arquitectura vigente" },
     brechas: { file: "content/brechas.md", title: "Brechas y oportunidades" },
     despliegue: { file: "content/despliegue.md", title: "Configuración y despliegue" },
-    costos: { file: "content/costos.md", title: "Servicios y costos" }
+    costos: { file: "content/costos.md", title: "Servicios y costos" },
+    "to-be-contexto": { file: "content/to-be-contexto.md", title: "TO-BE — Visión funcional objetivo" },
+    "to-be-onboarding": { file: "content/to-be-onboarding.md", title: "TO-BE — Módulo 2.1: Onboarding" },
+    "to-be-agente-estrategico": { file: "content/to-be-agente-estrategico.md", title: "TO-BE — Módulo 2.2: Agente Estratégico" },
+    "to-be-agente-creativo": { file: "content/to-be-agente-creativo.md", title: "TO-BE — Módulo 2.3: Agente Creativo" },
+    "to-be-iteracion": { file: "content/to-be-iteracion.md", title: "TO-BE — Módulo 2.4: Ajuste de resultados" },
+    "to-be-historico": { file: "content/to-be-historico.md", title: "TO-BE — Módulo 2.5: Histórico" },
+    "mockup": { file: "content/mockup.md", title: "7. Prototipo navegable" }
   };
 
   const pageOrder = Object.keys(pages);

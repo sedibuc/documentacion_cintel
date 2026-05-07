@@ -1,50 +1,48 @@
-# Demostrador RAG actual
+# Agente de procesamiento documental — TO-BE
 
 <div class="badge-row">
-<span class="badge">Diagnóstico base: 2026-02-26</span>
-<span class="badge">Repositorio analizado: RagFunc</span>
-<span class="badge">Entregable estático</span>
+<span class="badge">Pivot validado: 2026-04</span>
+<span class="badge">Sector piloto: construcción</span>
+<span class="badge">Extracción: NER supervisado · NER zero-shot</span>
+<span class="badge">Salida: JSON · CSV</span>
 </div>
 
-Este micrositio resume el estado actual del demostrador RAG documentado en [source/diagnostico_rag.md](source/diagnostico_rag.md). Todo el contenido fue construido a partir de ese diagnóstico y evita introducir supuestos de arquitectura no respaldados por el documento.
+Este micrositio documenta el sistema TO-BE propuesto: un **agente especializado de procesamiento documental basado en NER (Named Entity Recognition)**. El sistema recibe documentos tipados, extrae entidades de dominio mediante modelos de reconocimiento de entidades nombradas, valida los resultados contra fuentes de referencia y expone los datos estructurados por API REST.
 
-## Alcance del sitio
+## Qué problema resuelve
 
-- Presentar el diagnóstico técnico inicial del demostrador.
-- Exponer la arquitectura vigente en su estado actual.
-- Identificar brechas frente a una evolución futura hacia un RAG agéntico.
-- Consolidar una guía técnica inicial de configuración y despliegue.
-- Resumir el inventario preliminar de servicios y variables de costo.
+Las organizaciones que operan con grandes volúmenes de documentos tipados —certificados, contratos, pólizas, documentos HSE— invierten tiempo manual en extraer datos, contrastarlos contra fuentes de referencia y producir reportes operativos. Este proceso es lento, propenso a errores y difícil de escalar.
 
-## Qué hace hoy el demostrador
+El sistema convierte documentos tipados en **datos estructurados y comparables**, de forma automatizada, con salida directamente consumible por operación.
 
-El sistema implementa un asistente conversacional tipo RAG orientado a consulta de documentos empresariales, con soporte para autenticación, gestión de bibliotecas documentales, ingesta de archivos, extracción OCR opcional, generación de embeddings, indexación vectorial y conversación multi-turn persistida.
+## Pipeline del sistema
 
-## Casos de uso observados
+| Etapa | Descripción |
+|---|---|
+| **OCR** | Conversión del PDF o imagen a texto plano con preservación de estructura posicional |
+| **NER** | Identificación y clasificación de entidades de dominio según el esquema del tipo documental |
+| **Mapeo al esquema** | Alineación de entidades detectadas con los campos configurados |
+| **Validación de completitud** | Campos extraídos vs. campos esperados del esquema |
+| **Comparación cruzada** | Contraste campo a campo contra una fuente de referencia |
+| **Clasificación** | Estado por campo: `MATCH`, `MISMATCH`, `PENDIENTE`, `ERROR` |
+| **Consolidación por lote** | Agrupación de ejecuciones bajo un ID único de lote |
 
-- Carga e ingesta de documentos en bibliotecas.
-- Procesamiento de texto y OCR cuando aplica.
-- Indexación en motor vectorial configurable.
-- Consulta conversacional sobre contenido documental.
-- Captura de feedback y generación de reportes agregados.
+## Tipos documentales del piloto
 
-## Lecturas recomendadas
+| Tipo documental | Estado |
+|---|---|
+| Certificado de tradición y libertad | PRODUCCIÓN ✅ |
+| Contrato de obra | BETA ⚠️ |
+| Póliza de seguro HSE | EN DESARROLLO 🔧 |
 
-- [diagnostico.html](diagnostico.html) para revisar la madurez técnica y los riesgos actuales.
-- [arquitectura.html](arquitectura.html) para ver componentes, flujos y conmutación cloud vs on-premise.
-- [brechas.html](brechas.html) para revisar los bloqueadores principales de una evolución agéntica.
-- [despliegue.html](despliegue.html) para ubicar prerrequisitos, variables y pasos base de ejecución.
-- [costos.html](costos.html) para identificar servicios involucrados y variables de costo.
+## Quién usa el sistema
 
-## Criterio editorial aplicado
+- **Operadores documentales** en empresas del sector construcción, legal o inmobiliario.
+- **Administradores de procesos** que necesitan resultados consolidados por lote.
+- **Equipos de auditoría o cumplimiento** que validan datos contra fuentes de referencia.
+- **Equipos de integración** que consumen resultados vía API REST desde sistemas externos.
 
-- Cuando el diagnóstico no aporta un dato operativo o de diseño, este sitio lo marca como Información no disponible en diagnóstico actual.
-- Los nombres de carpetas, variables y servicios se conservan según la redacción observada en el código y en el documento base.
-- Las diferencias entre capacidades existentes y capacidades potenciales se presentan como brechas, no como funcionalidades ya disponibles.
+## Secciones de este sitio
 
-## Información no disponible en diagnóstico actual
-
-- Volumen de documentos actualmente cargados en producción o demo.
-- Cantidad de usuarios concurrentes esperada.
-- Métricas reales de latencia por consulta.
-- Acuerdos de nivel de servicio o disponibilidad.
+- [TO-BE funcional](tobefuncional.html) — Especificación completa del pipeline, modelos NER y proceso de entrenamiento.
+- [Preguntas para el experto](preguntasexperto.html) — Propuestas pre-resueltas y preguntas abiertas para validación especializada.

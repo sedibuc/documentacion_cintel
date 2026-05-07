@@ -1,0 +1,68 @@
+@startuml
+
+skinparam backgroundColor #1a202c
+skinparam defaultFontColor #d4dae6
+skinparam defaultFontSize 12
+skinparam arrowColor #4db8b5
+skinparam ArrowFontColor #9ba5b4
+skinparam ArrowFontSize 11
+skinparam borderColor #2d3748
+skinparam shadowing false
+
+skinparam componentBorderColor #2d3748
+skinparam componentBackgroundColor #1e2533
+skinparam componentFontColor #f0ece3
+skinparam componentFontSize 12
+skinparam interfaceBorderColor #4db8b5
+skinparam interfaceBackgroundColor #0f3a38
+skinparam packageBackgroundColor #161b27
+skinparam packageBorderColor #2d3748
+skinparam packageFontColor #4db8b5
+skinparam noteBorderColor #4db8b5
+skinparam noteBackgroundColor #0c3030
+skinparam noteFontColor #7fcba7
+skinparam titleFontColor #f0ece3
+skinparam titleFontSize 14
+skinparam databaseBorderColor #2d3748
+skinparam databaseBackgroundColor #1e2533
+skinparam databaseFontColor #f0ece3
+
+title <b>Fuentes de resultados en el Histórico</b>
+
+package "Fuentes de datos" {
+
+  package "Automático" #0c3030 {
+    [Instagram API / Scraping] as IG #0f5a58
+    note right of IG
+      Likes, comentarios,
+      interacciones, engagement,
+      alcance por publicación
+    end note
+  }
+
+  package "Manual" #1a1a2e {
+    [Carga de archivo\n(CSV / Excel)] as CSV #1e2533
+    note right of CSV
+      Métricas personalizadas
+      registradas por el equipo.\nIncluye fecha y archivo fuente.
+    end note
+  }
+
+}
+
+package "Módulo Histórico" {
+  [Visualizador\nde resultados] as VR #1e2533
+  [Panel de\ncampaña] as PC #1e2533
+}
+
+IG -down-> VR : métricas automáticas
+CSV -down-> VR : métricas manuales
+VR -right-> PC : agrega y muestra
+
+note bottom of VR
+  Los datos automáticos se
+  identifican visualmente con
+  un indicador de fuente.
+end note
+
+@enduml

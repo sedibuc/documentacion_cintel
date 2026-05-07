@@ -17,7 +17,7 @@ El **Agente de Marketing IA** es una aplicación web conversacional construida e
 - Imágenes generadas por IA (DALL-E 3 / gpt-image-1).
 - Email de cierre con el resumen completo de la campaña.
 
-El agente se denomina internamente **"Jarvis"**. Opera en español y está orientado al mercado hispanoparlante.
+El agente se denomina internamente **"CINTELIO"**. Opera en español y está orientado al mercado hispanoparlante.
 
 ---
 

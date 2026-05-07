@@ -1,6 +1,6 @@
 # Documentación Técnica — Agente de Marketing IA
 
-Microsite de documentación técnica para el **Agente de Marketing IA** ("Jarvis"), generado a partir del análisis del código fuente en `../code/`.
+Microsite de documentación técnica para el **Agente de Marketing IA** ("CINTELIO"), generado a partir del análisis del código fuente en `../code/`.
 
 ---
 

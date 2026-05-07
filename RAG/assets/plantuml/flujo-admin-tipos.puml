@@ -1,0 +1,81 @@
+@startuml flujo-admin-tipos
+skinparam backgroundColor #f7f1e7
+skinparam activity {
+  BackgroundColor #ffffff
+  BorderColor #0f5a58
+  BorderThickness 1.5
+  FontSize 13
+  FontName "Segoe UI"
+  ArrowColor #0f5a58
+  ArrowFontSize 11
+  StartColor #0f5a58
+  EndColor #073534
+  DiamondBackgroundColor #d6ebe8
+  DiamondBorderColor #0f5a58
+}
+skinparam note {
+  BackgroundColor #d6ebe8
+  BorderColor #0f5a58
+}
+skinparam title {
+  FontSize 16
+  FontStyle bold
+  FontColor #073534
+}
+
+title Flujo 6 — Administración de tipo documental
+
+start
+:Administrador crea nuevo tipo documental\n(nombre, descripción, sector);
+:Define campos a extraer\n(nombre, tipo de dato, requerido / opcional);
+:Elige modalidad de extracción;
+
+if (¿Modalidad?) then (Entrenado)
+  :Requiere dataset de documentos reales;\n:Alta precisión, mayor costo de construcción;
+else (Basado en LLM)
+  :Configuración rápida sin dataset;\n:Menor precisión, mayor variabilidad;
+endif
+
+:Define esquema de salida\n(JSON, CSV o ambos);
+:Estado inicial: EN DESARROLLO\n(no visible para empresas);
+note right
+  EN DESARROLLO:
+  solo uso interno del equipo.
+  No disponible para empresas.
+end note
+
+:Equipo carga documentos de entrenamiento\n(múltiples ejemplos reales);
+:Sistema infiere estructura\ny valida consistencia del dataset;
+
+repeat
+  :Ejecuta proceso de extracción\nsobre el dataset de prueba;
+  :Equipo revisa resultados\ny corrige esquema o campos;
+repeat while (¿Precisión aceptable?) is (No)
+->Sí;
+
+:Equipo promueve tipo a estado BETA;
+note right
+  BETA:
+  visible para empresas con
+  advertencia de variabilidad.
+  Sin garantía de precisión.
+end note
+
+:Empresas piloto usan el tipo\ny reportan errores o ajustes;
+
+repeat
+  :Equipo ajusta modelo\ny valida con nuevos documentos;
+repeat while (¿Estable y confiable?) is (No)
+->Sí;
+
+:Equipo promueve tipo a PRODUCCIÓN;
+note right
+  PRODUCCIÓN:
+  validado y confiable.
+  Recomendado para operación regular.
+end note
+
+:Tipo documental disponible\npara todas las empresas habilitadas;
+stop
+
+@enduml

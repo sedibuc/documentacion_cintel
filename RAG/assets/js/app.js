@@ -5,7 +5,10 @@
     arquitectura: { file: "content/arquitectura.md", title: "Arquitectura vigente" },
     brechas: { file: "content/brechas.md", title: "Brechas y oportunidades" },
     despliegue: { file: "content/despliegue.md", title: "Configuración y despliegue" },
-    costos: { file: "content/costos.md", title: "Servicios y costos" }
+    costos: { file: "content/costos.md", title: "Servicios y costos" },
+    tobefuncional: { file: "content/to-be-funcional.md", title: "TO-BE — Agente documental" },
+    preguntasexperto: { file: "content/preguntas-experto.md", title: "Preguntas para el experto en modelos" },
+    noesrag: { file: "content/no-es-rag.md", title: "Por qué esta solución no es un RAG" }
   };
 
   const pageOrder = Object.keys(pages);

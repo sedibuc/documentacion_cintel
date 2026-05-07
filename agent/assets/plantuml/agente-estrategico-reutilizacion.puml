@@ -1,0 +1,70 @@
+@startuml agente-estrategico-reutilizacion
+!theme plain
+skinparam backgroundColor #FDFAF4
+skinparam defaultFontName Segoe UI
+skinparam roundCorner 12
+skinparam ArrowColor #0f5a58
+skinparam ActivityBorderColor #0f5a58
+skinparam ActivityBackgroundColor #d6ebe8
+skinparam ActivityDiamondBackgroundColor #fff8ef
+skinparam ActivityDiamondBorderColor #8d4a1f
+skinparam NoteBackgroundColor #fffdf6
+skinparam NoteBorderColor #c8bfa8
+
+title Agente Estratégico — Reutilización de campaña histórica
+
+|Usuario|
+start
+:Abre el entorno del Agente Estratégico;
+
+|Sistema|
+:Muestra panel de campañas históricas\n disponibles en el panel superior;
+
+|Usuario|
+:Selecciona una campaña del histórico;
+
+|Sistema|
+:Carga datos de la campaña seleccionada;
+note right
+  Canal, copy principal, fecha,
+  resultado (si existe), enfoque.
+end note
+:Muestra resumen de la campaña base\nen el panel de razonamiento;
+:Indica al usuario que puede pedir\nuna nueva versión, adaptación o inspiración;
+
+|Usuario|
+:Da instrucción sobre qué hacer con la campaña;
+
+note left
+  Ejemplos:
+  · "Crea una parecida para 2026"
+  · "Adapta esto para sector público"
+  · "Usa el tono pero cambia el objetivo"
+end note
+
+|Sistema|
+:Compara campaña histórica con contexto\n actual de la empresa;
+:Identifica qué elementos se reutilizan\n y qué se adapta;
+:Genera nueva versión del plan\n basada en la campaña seleccionada;
+:Muestra en el panel de razonamiento:\n - qué tomó de la campaña anterior\n - qué cambió y por qué;
+
+|Usuario|
+:Revisa la nueva versión propuesta;
+
+if (¿Está satisfecho?) then (Sí)
+  :Acepta el plan;
+  |Sistema|
+  :Plan disponible para Agente Creativo;
+else (No)
+  :Pide ajuste adicional;
+  |Sistema|
+  :Refina y actualiza;
+  note right
+    Ver flujo de iteración
+    conversacional.
+  end note
+endif
+
+stop
+
+@enduml

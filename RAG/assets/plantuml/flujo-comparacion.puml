@@ -1,0 +1,58 @@
+@startuml flujo-comparacion
+skinparam backgroundColor #f7f1e7
+skinparam activity {
+  BackgroundColor #ffffff
+  BorderColor #0f5a58
+  BorderThickness 1.5
+  FontSize 13
+  FontName "Segoe UI"
+  ArrowColor #0f5a58
+  ArrowFontSize 11
+  StartColor #0f5a58
+  EndColor #073534
+  DiamondBackgroundColor #d6ebe8
+  DiamondBorderColor #0f5a58
+}
+skinparam note {
+  BackgroundColor #d6ebe8
+  BorderColor #0f5a58
+}
+skinparam title {
+  FontSize 16
+  FontStyle bold
+  FontColor #073534
+}
+
+title Flujo 3 — Comparación y validación cruzada contra fuente de referencia
+
+start
+:Operador selecciona lote de resultados\nextraídos previamente;
+:Operador carga archivo de referencia\n(CSV o JSON con datos esperados);
+note right
+  El archivo de referencia contiene
+  los valores "correctos" o esperados
+  para cada registro/documento.
+end note
+:Sistema valida estructura del\narchivo de referencia;
+
+if (¿Estructura compatible?) then (Sí)
+  :Sistema alinea registros por\nclave común (ej. matrícula inmobiliaria);
+  :Compara campo a campo cada\nregistro extraído vs. referencia;
+  fork
+    :Clasifica coincidencias\ncomo MATCH ✓;
+  fork again
+    :Clasifica divergencias\ncomo MISMATCH ✗;
+  fork again
+    :Marca registros sin\ncorrespondencia como PENDIENTE;
+  end fork
+  :Genera reporte de comparación\ncon resumen estadístico;
+  :Muestra tabla de resultados\ncon estados por campo y registro;
+  :Habilita descarga del reporte\n(JSON / CSV con columna de estado);
+else (No compatible)
+  :Muestra error de estructura\ncon detalle del problema;
+  :Operador ajusta archivo\nde referencia y reintenta;
+  stop
+endif
+stop
+
+@enduml

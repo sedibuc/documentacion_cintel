@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mockup — Selección de campaña histórica</title>
+  <style>
+    :root {
+      --bg: #f3efe6;
+      --panel: rgba(255, 252, 246, 0.98);
+      --panel-alt: rgba(243, 239, 230, 0.75);
+      --panel-mid: rgba(248, 245, 240, 0.90);
+      --topbar: #1e2430;
+      --ink: #1e2430;
+      --ink-dim: #3a4253;
+      --muted: #586171;
+      --muted-lt: #8a97a8;
+      --line: rgba(30, 36, 48, 0.12);
+      --line-soft: rgba(30, 36, 48, 0.06);
+      --accent: #0f5a58;
+      --accent-soft: #d6ebe8;
+      --accent-light: #e8f4f3;
+      --glow: #4db8b5;
+      --warn: #8d4a1f;
+      --warn-soft: #faeadb;
+      --warn-light: #c07840;
+      --success: #2d6a4f;
+      --success-light: #5a9e7c;
+      --border: rgba(30, 36, 48, 0.12);
+      --border-accent: rgba(15, 90, 88, 0.30);
+      --radius: 14px;
+      --radius-sm: 9px;
+      --shadow: 0 4px 20px rgba(26,32,41,0.10);
+      --shadow-lg: 0 24px 60px rgba(26,32,41,0.12);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #f7f1e7 0%, #ece7de 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      color: var(--ink);
+    }
+    .mockup-badge {
+      position: fixed; top: 0.75rem; right: 1rem;
+      padding: 0.35rem 0.85rem; background: var(--warn); color: #fff;
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em;
+      border-radius: 999px; text-transform: uppercase; z-index: 500;
+    }
+
+    /* ─── Top bar ─────────────────────────────────── */
+    .topbar {
+      height: 52px; background: var(--topbar);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 1.5rem; border-bottom: 1px solid var(--line);
+      flex-shrink: 0;
+    }
+    .topbar .logo { color: #f0ece3; font-weight: 800; font-size: 1rem; letter-spacing: -0.02em; }
+    .topbar .logo span { color: #4db8b5; }
+    .topbar-nav { display: flex; gap: 0.2rem; }
+    .topbar-nav a {
+      color: var(--muted-lt); font-size: 0.82rem; padding: 0.35rem 0.7rem;
+      border-radius: 6px; text-decoration: none;
+    }
+    .topbar-nav a.active { background: rgba(255,255,255,0.1); color: #f0ece3; }
+    .btn-back {
+      background: transparent; color: #4db8b5; border: 1px solid rgba(77,184,181,0.35);
+      border-radius: var(--radius-sm); padding: 0.38rem 0.85rem;
+      font-size: 0.82rem; font-weight: 700; cursor: pointer;
+      text-decoration: none;
+    }
+
+    /* ─── Layout ──────────────────────────────────── */
+    .page-body {
+      flex: 1; display: flex; flex-direction: column;
+      padding: 1.5rem 2.5rem 2rem; max-width: 1100px; width: 100%; margin: 0 auto;
+    }
+    .page-heading {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      margin-bottom: 1.4rem;
+    }
+    .heading-text h1 { font-size: 1.3rem; color: var(--ink); font-weight: 800; margin-bottom: 0.3rem; }
+    .heading-text p { font-size: 0.86rem; color: var(--muted-lt); }
+    .search-row { display: flex; gap: 0.8rem; margin-bottom: 1.2rem; }
+    .search-input {
+      flex: 1; background: rgba(30,36,48,0.07); border: 1px solid var(--line);
+      border-radius: var(--radius-sm); padding: 0.6rem 1rem;
+      color: var(--ink); font-size: 0.86rem; outline: none;
+    }
+    .search-input::placeholder { color: var(--muted-lt); }
+    .search-input:focus { border-color: rgba(77,184,181,0.4); }
+    .filter-chip {
+      background: rgba(30,36,48,0.05); border: 1px solid var(--line);
+      border-radius: 999px; padding: 0.4rem 0.85rem;
+      font-size: 0.79rem; color: var(--muted-lt); cursor: pointer; white-space: nowrap;
+    }
+    .filter-chip.active { background: rgba(77,184,181,0.12); border-color: rgba(77,184,181,0.35); color: var(--muted); }
+
+    /* ─── Campaign table ──────────────────────────── */
+    .campaign-table {
+      width: 100%; border-collapse: collapse;
+    }
+    .campaign-table thead tr th {
+      font-size: 0.69rem; text-transform: uppercase; letter-spacing: 0.12em;
+      color: var(--muted-lt); font-weight: 700; padding: 0.5rem 0.9rem;
+      border-bottom: 1px solid var(--line); text-align: left;
+    }
+    .campaign-table tbody tr {
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      cursor: pointer; transition: background 0.12s;
+    }
+    .campaign-table tbody tr:hover { background: rgba(30,36,48,0.04); }
+    .campaign-table tbody tr.selected { background: rgba(77,184,181,0.08); }
+    .campaign-table tbody tr.selected .campaign-name { color: #4db8b5; }
+    .campaign-table td { padding: 0.85rem 0.9rem; font-size: 0.84rem; vertical-align: top; }
+    .campaign-name { font-weight: 700; color: var(--ink); margin-bottom: 0.2rem; }
+    .campaign-snippet { font-size: 0.78rem; color: var(--muted-lt); line-height: 1.4; max-width: 320px; }
+    .channel-badge {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      background: rgba(30,36,48,0.07);
+      border: 1px solid var(--line);
+      border-radius: 999px; padding: 0.22rem 0.6rem; font-size: 0.74rem; color: var(--muted);
+    }
+    .metric-col { text-align: right; }
+    .metric-value { font-size: 1rem; font-weight: 800; color: #4db8b5; }
+    .metric-label { font-size: 0.72rem; color: var(--muted-lt); }
+    .result-indicator { font-size: 0.75rem; font-weight: 700; }
+    .result-indicator.good { color: #5fa87f; }
+    .result-indicator.ok { color: #a8905f; }
+    .action-col { text-align: right; padding-right: 1rem; }
+    .btn-usar {
+      background: var(--accent); color: #fff; border: none;
+      border-radius: var(--radius-sm); padding: 0.4rem 0.85rem;
+      font-size: 0.8rem; font-weight: 700; cursor: pointer; white-space: nowrap;
+    }
+    .btn-usar:hover { background: #0d4d4b; }
+    .btn-usar.outline {
+      background: transparent; border: 1px solid rgba(77,184,181,0.35); color: #4db8b5;
+    }
+
+    /* ─── Preview panel ───────────────────────────── */
+    .preview-section {
+      margin-top: 1.5rem;
+      background: rgba(30,36,48,0.04);
+      border: 1px solid rgba(77,184,181,0.2);
+      border-radius: var(--radius);
+      padding: 1.2rem 1.5rem;
+    }
+    .preview-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.9rem; }
+    .preview-title { font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.12em; color: #4db8b5; font-weight: 700; }
+    .preview-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+    .preview-field .pf-label { font-size: 0.69rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted-lt); font-weight: 700; margin-bottom: 0.2rem; }
+    .preview-field .pf-val { font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+    .preview-copy {
+      margin-top: 0.9rem; padding: 0.8rem 1rem;
+      background: rgba(30,36,48,0.05); border-radius: var(--radius-sm);
+      font-size: 0.83rem; color: var(--muted); line-height: 1.5; font-style: italic;
+    }
+    .preview-actions { display: flex; gap: 0.7rem; margin-top: 1rem; }
+
+    /* ─── Bottom nav ──────────────────────────────── */
+    .bottom-nav {
+      background: var(--topbar); border-top: 1px solid var(--line);
+      padding: 0.5rem 1.2rem; display: flex; justify-content: space-between;
+      font-size: 0.78rem;
+    }
+    .bottom-nav a { color: #4db8b5; text-decoration: none; font-weight: 600; }
+    .bottom-nav a:hover { text-decoration: underline; }
+  </style>
+  <style>
+    /* === MN: Mockup nav (light theme) === */
+  .mn-panel{position:fixed;bottom:1.4rem;right:1.2rem;display:flex;flex-direction:column;gap:0.45rem;z-index:900;}
+  .mn-panel a{display:block;padding:0.52rem 1.05rem;border-radius:10px;font-size:0.79rem;font-weight:700;text-decoration:none;text-align:center;white-space:nowrap;font-family:"Segoe UI",sans-serif;}
+  .mn-next{background:#0f5a58;color:#fff;box-shadow:0 4px 14px rgba(15,90,88,0.35);}
+  .mn-next:hover{background:#0a4846;}
+  .mn-prev{background:rgba(30,36,48,0.08);color:#586171;border:1px solid rgba(30,36,48,0.16);}
+  .mn-prev:hover{background:rgba(30,36,48,0.14);}
+  .mn-home{background:rgba(30,36,48,0.05);color:#8a97a8;border:1px solid rgba(30,36,48,0.10);font-size:0.74rem;padding:0.38rem 0.85rem;}
+  .mn-home:hover{background:rgba(30,36,48,0.10);color:#586171;}
+  .mn-logout{background:rgba(141,74,31,0.10);color:#8d4a1f;border:1px solid rgba(141,74,31,0.25);font-size:0.73rem;padding:0.36rem 0.85rem;}
+  .mn-logout:hover{background:rgba(141,74,31,0.18);}
+  /* ============================================ */
+  </style>
+</head>
+<body>
+  <div class="mockup-badge">Mockup</div>
+
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:1.2rem;">
+      <a href="../app/home.html" class="logo">CINTELIO <span>Marketing</span></a>
+      <nav class="topbar-nav">
+        <a href="../onboarding/empresa-url.html">Onboarding</a>
+        <a href="#" class="active">Agente Estratégico</a>
+        <a href="../agente-creativo/arbol-campana-brief-piezas.html">Agente Creativo</a>
+        <a href="../historico/historico-main.html">Histórico</a>
+      </nav>
+    </div>
+    <a href="ide-main.html" class="btn-back">← Volver al IDE</a>
+  </div>
+
+  <div class="page-body">
+    <div class="page-heading">
+      <div class="heading-text">
+        <h1>Historial de campañas</h1>
+        <p>Selecciona una campaña anterior para utilizar como base de la nueva estrategia</p>
+      </div>
+    </div>
+
+    <div class="search-row">
+      <input class="search-input" type="text" placeholder="Buscar por nombre, canal o tema…" value="">
+      <span class="filter-chip active">Todas</span>
+      <span class="filter-chip">LinkedIn</span>
+      <span class="filter-chip">Email</span>
+      <span class="filter-chip">Instagram</span>
+      <span class="filter-chip">2024–2025</span>
+    </div>
+
+    <table class="campaign-table">
+      <thead>
+        <tr>
+          <th>Campaña</th>
+          <th>Canal</th>
+          <th>Fecha</th>
+          <th class="metric-col">Resultado</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="selected">
+          <td>
+            <div class="campaign-name">Transformación Digital 2024</div>
+            <div class="campaign-snippet">Posicionamiento empresarial en consultoría de TD. Mensaje: "Acompañamos a las organizaciones en su transformación con visión estructurada y experiencia comprobada."</div>
+          </td>
+          <td>
+            <span class="channel-badge">💼 LinkedIn</span><br><br>
+            <span class="channel-badge">🎤 Eventos</span>
+          </td>
+          <td style="color:#9ba5b4;font-size:0.82rem;">Nov 2024</td>
+          <td class="metric-col">
+            <div class="metric-value">Alto</div>
+            <div class="metric-label">Engagement</div>
+            <div class="result-indicator good" style="margin-top:3px;">↑ Contenido educativo</div>
+          </td>
+          <td class="action-col">
+            <button class="btn-usar">Usar como base</button>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="campaign-name">Gobierno Digital 2024</div>
+            <div class="campaign-snippet">Primera campaña orientada a entidades públicas. Mensaje: "El estado también se transforma — CINTEL lo hace posible."</div>
+          </td>
+          <td>
+            <span class="channel-badge">💼 LinkedIn</span><br><br>
+            <span class="channel-badge">📧 Email</span>
+          </td>
+          <td style="color:#9ba5b4;font-size:0.82rem;">Ago 2024</td>
+          <td class="metric-col">
+            <div class="metric-value">241</div>
+            <div class="metric-label">Leads</div>
+            <div class="result-indicator good" style="margin-top:3px;">↑ 35%</div>
+          </td>
+          <td class="action-col">
+            <button class="btn-usar outline">Usar como base</button>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="campaign-name">Arquitectura Empresarial 2024</div>
+            <div class="campaign-snippet">Campaña de posicionamiento para servicio de AE. Foco en empresas medianas y grandes del sector privado.</div>
+          </td>
+          <td>
+            <span class="channel-badge">💼 LinkedIn</span>
+          </td>
+          <td style="color:#9ba5b4;font-size:0.82rem;">Jun 2024</td>
+          <td class="metric-col">
+            <div class="metric-value">156</div>
+            <div class="metric-label">Leads</div>
+            <div class="result-indicator ok" style="margin-top:3px;">→ Base</div>
+          </td>
+          <td class="action-col">
+            <button class="btn-usar outline">Usar como base</button>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="campaign-name">Gestión Tecnológica para entidades 2023</div>
+            <div class="campaign-snippet">Whitepaper + webinar. "Las entidades que gestionan bien su tecnología son más competitivas."</div>
+          </td>
+          <td>
+            <span class="channel-badge">📧 Email</span><br><br>
+            <span class="channel-badge">📊 Whitepaper</span>
+          </td>
+          <td style="color:#9ba5b4;font-size:0.82rem;">Oct 2023</td>
+          <td class="metric-col">
+            <div class="metric-value">890</div>
+            <div class="metric-label">Descargas</div>
+            <div class="result-indicator good" style="margin-top:3px;">↑ Ref.</div>
+          </td>
+          <td class="action-col">
+            <button class="btn-usar outline">Usar como base</button>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="campaign-name">Transformación Digital 2023</div>
+            <div class="campaign-snippet">Primer ciclo de campaña TD. Resultado sólido en LinkedIn con contenido educativo tipo artículo y carrusel.</div>
+          </td>
+          <td>
+            <span class="channel-badge">💼 LinkedIn</span><br><br>
+            <span class="channel-badge">🎤 Webinar</span>
+          </td>
+          <td style="color:#9ba5b4;font-size:0.82rem;">Abr 2023</td>
+          <td class="metric-col">
+            <div class="metric-value">312</div>
+            <div class="metric-label">Registros</div>
+            <div class="result-indicator good" style="margin-top:3px;">↑ Ref. base</div>
+          </td>
+          <td class="action-col">
+            <button class="btn-usar outline">Usar como base</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Preview de Transformación Digital 2024 seleccionada -->
+    <div class="preview-section">
+      <div class="preview-header">
+        <div class="preview-title">Vista previa — Transformación Digital 2024</div>
+        <span style="font-size:0.78rem;color:#4db8b5;">Seleccionada ✓</span>
+      </div>
+      <div class="preview-grid">
+        <div class="preview-field">
+          <div class="pf-label">Tipo</div>
+          <div class="pf-val">Posicionamiento empresarial</div>
+        </div>
+        <div class="preview-field">
+          <div class="pf-label">Canales previos</div>
+          <div class="pf-val">LinkedIn + eventos sectoriales</div>
+        </div>
+        <div class="preview-field">
+          <div class="pf-label">Resultado histórico</div>
+          <div class="pf-val">Alto engagement en contenido educativo</div>
+        </div>
+      </div>
+      <div class="preview-copy">"Acompañamos a las organizaciones en su transformación con visión estructurada, experiencia comprobada y ejecución confiable."</div>
+      <div class="preview-actions">
+        <a href="conversacion.html" style="text-decoration:none;">
+          <button class="btn-usar">Usar como base para nueva campaña →</button>
+        </a>
+        <button class="btn-usar outline" style="background:transparent;border:1px solid rgba(77,184,181,0.35);color:#4db8b5;">Ver detalles completos</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="ide-main.html">← Agente Estratégico — IDE</a>
+    <div style="display:flex;gap:1.5rem;">
+      <a href="conversacion.html">Ver conversación →</a>
+      <a href="resultado-plan.html">Ver plan resultante →</a>
+    </div>
+  </div>
+
+<script>
+/* MN: Fix topbar links */
+(function(){
+  // Make logo link to home
+  document.querySelectorAll('.topbar .logo, .logo').forEach(function(el){
+    if(el.tagName!=='A'){
+      var a=document.createElement('a');
+      a.href='../app/home.html';
+      a.innerHTML=el.innerHTML;
+      a.className=el.className;
+      a.style.textDecoration='none';
+      el.parentNode.replaceChild(a,el);
+    }
+  });
+  // Fix module nav links
+  var map={
+    'Onboarding':'../onboarding/empresa-url.html',
+    'Agente Estratégico':'../agente-estrategico/ide-main.html',
+    'Agente Creativo':'../agente-creativo/arbol-campana-brief-piezas.html',
+    'Ajuste':'../iteracion/iteracion-main.html',
+    'Ajuste de resultados':'../iteracion/iteracion-main.html',
+    'Histórico':'../historico/historico-main.html'
+  };
+  document.querySelectorAll('.topbar a,.topbar-nav a,.topbar .nav a').forEach(function(a){
+    var t=a.textContent.trim();
+    if(map[t]&&(a.getAttribute('href')==='#'||!a.getAttribute('href'))){
+      a.href=map[t];
+    }
+  });
+  // Add logout if not present
+  var topbar=document.querySelector('.topbar');
+  if(topbar&&!topbar.querySelector('.mn-topbar-out')){
+    var out=document.createElement('a');
+    out.href='../app/login.html';
+    out.textContent='Salir →';
+    out.className='mn-topbar-out';
+    out.style.cssText='font-size:0.75rem;color:#9ba5b4;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:0.28rem 0.6rem;text-decoration:none;margin-left:0.5rem;white-space:nowrap;';
+    topbar.appendChild(out);
+  }
+})();
+</script>
+
+<div class="mn-panel">
+  <a href="conversacion.html" class="mn-next">Iniciar conversación →</a>
+  <a href="ide-main.html" class="mn-prev">← IDE</a>
+  <a href="../app/home.html" class="mn-home">⌂ Inicio</a>
+  <a href="../app/login.html" class="mn-logout">Salir →</a>
+</div>
+</body>
+</html>

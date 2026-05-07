@@ -1,0 +1,98 @@
+@startuml onboarding-completo
+!theme plain
+skinparam backgroundColor #FDFAF4
+skinparam defaultFontName Segoe UI
+skinparam roundCorner 12
+skinparam ArrowColor #0f5a58
+skinparam ActivityBorderColor #0f5a58
+skinparam ActivityBackgroundColor #d6ebe8
+skinparam ActivityDiamondBackgroundColor #fff8ef
+skinparam ActivityDiamondBorderColor #8d4a1f
+skinparam NoteBackgroundColor #fffdf6
+skinparam NoteBorderColor #c8bfa8
+
+title Onboarding completo — Alta inicial de empresa y persona
+
+|Usuario|
+start
+:Ingresa URL del sitio web de la empresa;
+
+|Sistema|
+:Analiza el sitio web (scraping);
+:Extrae: nombre, descripción, propuesta\n de valor, servicios, colores, logos;
+note right
+  La extracción es imperfecta.
+  Productos y servicios pueden
+  aparecer mezclados con noticias
+  o artículos. El usuario los filtra.
+end note
+
+|Usuario|
+:Revisa información estructural detectada;
+:Edita descripción y propuesta de valor;
+:Selecciona y limpia la lista de\n productos/servicios;
+:Revisa identidad visual inferida;
+:Confirma y guarda información básica;
+
+|Sistema|
+:Guarda perfil institucional base;
+
+|Usuario|
+fork
+  :Carga manual de marca (PDF);
+  |Sistema|
+  :Procesa el documento;
+  :Extrae logos, paleta de colores,\n tipografías y reglas visuales;
+  |Usuario|
+  :Revisa logos detectados;
+  :Marca el logo principal;
+  :Asigna variantes (blanco, reducido, etc.);
+  :Valida paleta de colores con valores HEX;
+  :Revisa reglas de uso visual;
+  :Confirma configuración de marca;
+  |Sistema|
+  :Guarda parámetros de marca\n como configuración activa;
+fork again
+  note right
+    El manual de marca es opcional.
+    Sin él, el sistema usa los
+    colores y estilos inferidos
+    del sitio web.
+  end note
+end fork
+
+|Usuario|
+fork
+  :Carga histórico de campañas (.xlsx / .csv);
+  |Sistema|
+  :Lee el archivo;
+  :Muestra vista previa de filas detectadas;
+  |Usuario|
+  :Revisa y valida las columnas detectadas;
+  :Confirma carga del histórico;
+  |Sistema|
+  :Guarda histórico como contexto\n para el Agente Estratégico;
+fork again
+  note right
+    El histórico de campañas es opcional.
+    Su carga mejora la pertinencia
+    del plan de comunicación generado.
+  end note
+end fork
+
+|Sistema|
+:Configuración institucional completada;
+
+|Usuario|
+:Ingresa datos personales\n (nombre, cargo, correo);
+:Selecciona canales habituales de trabajo;
+:Confirma registro;
+
+|Sistema|
+:Vincula usuario a la empresa;
+:Onboarding completado;
+:Contexto disponible para\n Agente Estratégico y Creativo;
+
+stop
+
+@enduml

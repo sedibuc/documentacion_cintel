@@ -1,0 +1,62 @@
+@startuml onboarding-usuario-adicional
+!theme plain
+skinparam backgroundColor #FDFAF4
+skinparam defaultFontName Segoe UI
+skinparam roundCorner 12
+skinparam ArrowColor #0f5a58
+skinparam ActivityBorderColor #0f5a58
+skinparam ActivityBackgroundColor #d6ebe8
+skinparam ActivityDiamondBackgroundColor #fff8ef
+skinparam ActivityDiamondBorderColor #8d4a1f
+skinparam NoteBackgroundColor #fffdf6
+skinparam NoteBorderColor #c8bfa8
+
+title Onboarding — Alta de usuario adicional en empresa ya registrada
+
+|Usuario|
+start
+:Accede al flujo de registro;
+
+|Sistema|
+:Pregunta: ¿Su empresa ya está\nregistrada en el sistema?;
+
+|Usuario|
+if (¿Empresa ya registrada?) then (Sí)
+  :Busca la empresa por nombre o dominio;
+
+  |Sistema|
+  :Valida que la empresa existe;
+  if (¿Empresa encontrada?) then (Sí)
+    :Muestra datos básicos de la empresa\npara confirmación;
+    |Usuario|
+    :Confirma que es su empresa;
+    |Sistema|
+    :Solicita datos personales del nuevo usuario;
+    |Usuario|
+    :Ingresa nombre, cargo y correo institucional;
+    |Sistema|
+    :Crea el perfil del usuario;
+    :Vincula usuario a la empresa existente;
+    note right
+      No se repite la configuración
+      institucional. El nuevo usuario
+      hereda el contexto de la empresa.
+    end note
+    :Registro completado;
+    :Usuario listo para operar;
+  else (No encontrada)
+    :Informa que la empresa no está registrada;
+    |Usuario|
+    :Puede iniciar onboarding completo\no solicitar acceso al administrador;
+  endif
+else (No)
+  :Redirige al flujo de\nonboarding completo;
+  note right
+    Ver flujo:
+    onboarding-empresa.puml
+  end note
+endif
+
+stop
+
+@enduml

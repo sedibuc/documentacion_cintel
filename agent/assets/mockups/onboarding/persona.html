@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mockup — Datos personales | Onboarding</title>
+  <style>
+    :root {
+      --panel: rgba(255, 252, 246, 0.95);
+      --ink: #1e2430;
+      --muted: #586171;
+      --line: rgba(30, 36, 48, 0.14);
+      --accent: #0f5a58;
+      --accent-soft: #d6ebe8;
+      --radius: 18px;
+      --radius-sm: 12px;
+      --shadow: 0 24px 60px rgba(26, 32, 41, 0.12);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      padding-top: 64px !important;
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #f7f1e7 0%, #ece7de 100%);
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 2rem;
+    }
+    .mockup-badge {
+      position: fixed;
+      top: 1rem; right: 1rem;
+      padding: 0.4rem 0.9rem;
+      background: #8d4a1f;
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      border-radius: 999px;
+      text-transform: uppercase;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 2.5rem 2.8rem;
+      width: 100%;
+      max-width: 520px;
+    }
+    .step-label {
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+    h1 { font-size: 1.5rem; color: var(--ink); margin-bottom: 0.4rem; }
+    .subtitle { color: var(--muted); font-size: 0.93rem; line-height: 1.5; margin-bottom: 1.8rem; }
+    .context-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--accent-soft);
+      border: 1px solid rgba(15,90,88,0.2);
+      border-radius: 999px;
+      padding: 0.3rem 0.9rem;
+      font-size: 0.82rem;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 1.8rem;
+    }
+    .field-group { margin-bottom: 1.2rem; }
+    label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 0.45rem;
+    }
+    input[type="text"], input[type="email"], select {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: rgba(255,255,255,0.85);
+      font-size: 0.93rem;
+      color: var(--ink);
+      font-family: inherit;
+      outline: none;
+    }
+    input:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(15, 90, 88, 0.1);
+    }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+    .divider { border: none; border-top: 1px solid var(--line); margin: 1.5rem 0; }
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1.8rem;
+    }
+    .btn {
+      padding: 0.85rem 1.6rem;
+      border-radius: var(--radius-sm);
+      border: none;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-secondary { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+    .nav-mockup {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1rem;
+      font-size: 0.85rem;
+    }
+    .nav-mockup a { color: var(--accent); text-decoration: none; font-weight: 600; }
+    .nav-mockup a:hover { text-decoration: underline; }
+  </style>
+  <style>
+  /* ═══ MN: Mockup nav injection ═══════════════════ */
+  .mn-topbar{position:fixed;top:0;left:0;right:0;height:48px;background:rgba(255,252,246,0.97);border-bottom:1px solid rgba(30,36,48,0.1);display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;z-index:300;backdrop-filter:blur(8px);box-shadow:0 1px 6px rgba(30,36,48,0.07);}
+  .mn-topbar-logo{font-weight:800;color:#1e2430;text-decoration:none;font-size:0.95rem;letter-spacing:-0.01em;}
+  .mn-topbar-logo span{color:#0f5a58;}
+  .mn-topbar-nav{display:flex;gap:0.15rem;}
+  .mn-topbar-nav a{font-size:0.79rem;color:#586171;padding:0.25rem 0.6rem;border-radius:5px;text-decoration:none;}
+  .mn-topbar-nav a.mn-active{background:rgba(15,90,88,0.1);color:#0f5a58;font-weight:600;}
+  .mn-topbar-logout{font-size:0.77rem;color:#8d4a1f;border:1px solid rgba(141,74,31,0.25);border-radius:6px;padding:0.26rem 0.65rem;text-decoration:none;white-space:nowrap;}
+  .mn-panel{position:fixed;bottom:1.4rem;right:1.2rem;display:flex;flex-direction:column;gap:0.45rem;z-index:900;}
+  .mn-panel a{display:block;padding:0.52rem 1.05rem;border-radius:10px;font-size:0.79rem;font-weight:700;text-decoration:none;text-align:center;white-space:nowrap;font-family:"Segoe UI",sans-serif;}
+  .mn-next{background:#0f5a58;color:#fff;box-shadow:0 4px 14px rgba(15,90,88,0.28);}
+  .mn-next:hover{background:#0a4846;}
+  .mn-prev{background:rgba(30,36,48,0.07);color:#1e2430;border:1px solid rgba(30,36,48,0.14);font-size:0.77rem;padding:0.4rem 0.85rem;}
+  .mn-home{background:rgba(30,36,48,0.05);color:#586171;border:1px solid rgba(30,36,48,0.1);font-size:0.73rem;padding:0.36rem 0.85rem;}
+  .mn-logout{background:rgba(141,74,31,0.08);color:#8d4a1f;border:1px solid rgba(141,74,31,0.2);font-size:0.73rem;padding:0.36rem 0.85rem;}
+  /* ═══════════════════════════════════════════════ */
+  </style>
+</head>
+<body>
+<div class="mn-topbar">
+  <a href="../app/home.html" class="mn-topbar-logo">CINTELIO <span>Marketing</span></a>
+  <nav class="mn-topbar-nav">
+    <a href="../onboarding/empresa-url.html" class="mn-active">Onboarding</a>
+    <a href="../agente-estrategico/ide-main.html">Estratégico</a>
+    <a href="../agente-creativo/arbol-campana-brief-piezas.html">Creativo</a>
+    <a href="../iteracion/iteracion-main.html">Ajuste</a>
+    <a href="../historico/historico-main.html">Histórico</a>
+  </nav>
+  <a href="../app/login.html" class="mn-topbar-logout">Salir →</a>
+</div>
+
+  <div class="mockup-badge">Mockup</div>
+
+  <div class="card">
+    <p class="step-label">Onboarding · Paso 4 de 4</p>
+    <h1>Tus datos personales</h1>
+    <p class="subtitle">
+      Completa tu perfil para vincular tu cuenta a la empresa configurada.
+    </p>
+
+    <div class="context-chip">
+      🏢 Empresa: CINTEL
+    </div>
+
+    <div class="two-col">
+      <div class="field-group">
+        <label for="nombre">Nombre</label>
+        <input type="text" id="nombre" placeholder="María">
+      </div>
+      <div class="field-group">
+        <label for="apellido">Apellido</label>
+        <input type="text" id="apellido" placeholder="González">
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label for="email">Correo institucional</label>
+      <input type="email" id="email" placeholder="mgonzalez@cintel.co">
+    </div>
+
+    <div class="field-group">
+      <label for="cargo">Cargo o rol</label>
+      <input type="text" id="cargo" placeholder="Directora de Comunicaciones">
+    </div>
+
+    <div class="field-group">
+      <label for="canales">Canales de trabajo habituales</label>
+      <select id="canales">
+        <option>LinkedIn, Email institucional</option>
+        <option>Instagram, Email</option>
+        <option>LinkedIn, Instagram, Email</option>
+        <option>Solo Email</option>
+      </select>
+    </div>
+
+    <hr class="divider">
+
+    <div class="actions">
+      <button class="btn btn-secondary">← Volver</button>
+      <button class="btn btn-primary">Finalizar onboarding ✓</button>
+    </div>
+    <div class="nav-mockup">
+      <a href="historico-campanas.html">← Historial</a>
+      <a href="../app/home.html">✓ Completar onboarding</a>
+    </div>
+
+  </div>
+
+<div class="mn-panel">
+  <a href="../app/home.html" class="mn-next">✓ Completar onboarding</a>
+  <a href="historico-campanas.html" class="mn-prev">← Historial</a>
+  <a href="../app/home.html" class="mn-home">⌂ Inicio</a>
+  <a href="../app/login.html" class="mn-logout">Salir →</a>
+</div>
+</body>
+</html>

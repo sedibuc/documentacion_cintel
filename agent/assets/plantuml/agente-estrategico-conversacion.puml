@@ -1,0 +1,51 @@
+@startuml agente-estrategico-conversacion
+!theme plain
+skinparam backgroundColor #FDFAF4
+skinparam defaultFontName Segoe UI
+skinparam roundCorner 12
+skinparam ArrowColor #0f5a58
+skinparam SequenceArrowThickness 2
+skinparam ParticipantBorderColor #0f5a58
+skinparam ParticipantBackgroundColor #d6ebe8
+skinparam NoteBackgroundColor #fffdf6
+skinparam NoteBorderColor #c8bfa8
+skinparam SequenceLifeLineBorderColor #0f5a58
+
+title Agente Estratégico — Ejemplo de iteración conversacional
+
+actor Usuario
+participant "Agente Estratégico" as Agente
+participant "Panel de Razonamiento" as Panel
+
+Usuario -> Agente: "Necesito una campaña para transformación digital."
+
+Agente -> Panel: Actualiza: tema detectado, empresa CINTEL,\n esperando objetivo
+Agente --> Usuario: "¿El objetivo es generar registros a un evento,\n posicionar la marca o promover un servicio?"
+
+Usuario -> Agente: "Quiero generar registros para un evento."
+
+Agente -> Panel: Actualiza: objetivo=registros, audiencia tentativa,\n canales LinkedIn+email, patrón del histórico
+Agente --> Usuario: Propone plan inicial:\n - Objetivo: registros al evento\n - Audiencia: líderes empresariales\n - Canales: LinkedIn, email\n - Mensaje clave propuesto
+
+Usuario -> Agente: "Usa la campaña de ANDICOM 2025 como base."
+
+Agente -> Panel: Actualiza: base histórica=ANDICOM 2025 (320 registros)\n adaptación aplicada: mensaje más local
+Agente --> Usuario: "Con base en ANDICOM 2025, adapto el mensaje\n para reflejar adopción real en Colombia en 2026."
+
+Usuario -> Agente: "Hazla más enfocada en sector público."
+
+Agente -> Panel: Actualiza: audiencia refinada=sector público\n canal adicional: LinkedIn segmentado\n tono: más institucional
+Agente --> Usuario: Actualiza el plan:\n - Audiencia: directores de TI en entidades\n - Mensaje: "El sector público ya está adoptando IA"\n - Canal adicional sugerido
+
+Usuario -> Agente: "Bien, acepta ese plan."
+
+Agente -> Panel: Marca plan como finalizado
+Agente --> Usuario: Plan consolidado disponible para el Agente Creativo.
+
+note over Usuario, Panel
+  En cada turno conversacional, el panel de razonamiento
+  muestra qué está considerando el agente: objetivos detectados,
+  audiencias, patrones del histórico y decisiones tomadas.
+end note
+
+@enduml

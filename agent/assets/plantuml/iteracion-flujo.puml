@@ -1,0 +1,55 @@
+@startuml iteracion-flujo
+skinparam backgroundColor #1a202c
+skinparam defaultFontColor #d4dae6
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 13
+
+skinparam activity {
+  BackgroundColor #1e2533
+  BorderColor #4db8b5
+  FontColor #d4dae6
+  ArrowColor #4db8b5
+  StartColor #0f5a58
+  EndColor #0f5a58
+  BarColor #4db8b5
+}
+
+skinparam note {
+  BackgroundColor #8d4a1f
+  BorderColor #d4a47a
+  FontColor #f0ece3
+}
+
+title Flujo de iteración controlada
+
+|Usuario|
+start
+:Visualiza resultado actual\n(plan / brief / pieza);
+:Escribe instrucción de ajuste\nen lenguaje natural;
+
+|Sistema|
+:Recupera resultado previo\n+ contexto de campaña;
+:Combina resultado anterior\ncon nueva instrucción;
+
+|Agente IA|
+:Genera nueva versión\ndel resultado;
+
+|Sistema|
+:Entrega nueva versión\nal usuario;
+
+|Usuario|
+if (¿Satisface el ajuste?) then (Sí)
+  :Aplica la nueva versión;
+  :Continúa el flujo\nnormal del sistema;
+  stop
+else (No)
+  note right
+    Resultado puede variar
+    entre iteraciones.
+    No es determinístico.
+  end note
+  :Escribe nueva instrucción;
+  note left: Nueva iteración
+endif
+
+@enduml

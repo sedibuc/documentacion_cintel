@@ -16,7 +16,7 @@ El sistema es una aplicación web conversacional para generación de campañas d
 - imágenes generadas por IA,
 - un correo electrónico con el resumen generado.
 
-El agente se denomina internamente **Jarvis** y opera en español.
+El agente se denomina internamente **CINTELIO** y opera en español.
 
 ---
 

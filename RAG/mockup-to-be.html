@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mockup TO-BE — Agente de procesamiento documental</title>
+  <style>
+    :root {
+      --bg: #f3efe6;
+      --panel: rgba(255, 252, 246, 0.9);
+      --panel-strong: #fffdfa;
+      --ink: #1e2430;
+      --muted: #586171;
+      --line: rgba(30, 36, 48, 0.12);
+      --line-strong: rgba(30, 36, 48, 0.2);
+      --accent: #0f5a58;
+      --accent-soft: #d6ebe8;
+      --accent-strong: #073534;
+      --warn: #8d4a1f;
+      --warn-soft: #faeadb;
+      --danger: #7a2930;
+      --danger-soft: #f8e3e2;
+      --success: #1a6b3c;
+      --success-soft: #d6edd8;
+      --shadow: 0 24px 60px rgba(26, 32, 41, 0.12);
+      --radius: 18px;
+      --radius-sm: 12px;
+      --dev-color: #6b3fa0;
+      --dev-soft: #ede6f7;
+      --beta-color: #8d4a1f;
+      --beta-soft: #faeadb;
+      --prod-color: #1a6b3c;
+      --prod-soft: #d6edd8;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      min-height: 100vh;
+      font-family: "Aptos", "Segoe UI Variable", "Segoe UI", sans-serif;
+      font-size: 15px; line-height: 1.6; color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(15,90,88,0.18), transparent 26%),
+        radial-gradient(circle at bottom right, rgba(185,119,53,0.12), transparent 30%),
+        linear-gradient(180deg, #f7f1e7 0%, #f0ece3 50%, #ece7de 100%);
+    }
+    .back-banner {
+      display: flex; align-items: center; gap: 1rem;
+      padding: 0.75rem 1.5rem; background: var(--accent-strong); color: white; font-size: 0.86rem;
+    }
+    .back-banner a { color: rgba(255,255,255,0.85); text-decoration: none; }
+    .back-banner a:hover { color: white; text-decoration: underline; }
+    .back-banner strong { color: white; }
+
+    /* ─── App shell ─── */
+    .app-shell { display: grid; grid-template-columns: 256px 1fr; min-height: calc(100vh - 40px); }
+
+    /* ─── Sidebar ─── */
+    .app-sidebar {
+      position: sticky; top: 40px; height: calc(100vh - 40px); overflow-y: auto;
+      padding: 1.2rem 0.85rem; border-right: 1px solid var(--line);
+      background: rgba(252,248,241,0.95); backdrop-filter: blur(18px);
+      display: flex; flex-direction: column; gap: 0.22rem;
+    }
+    .logo-block {
+      padding: 1rem; border-radius: var(--radius-sm);
+      background: linear-gradient(160deg, rgba(15,90,88,0.1), rgba(255,255,255,0.7));
+      border: 1px solid var(--line); margin-bottom: 0.7rem;
+    }
+    .logo-block .ey { font-size: 0.67rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: var(--accent); }
+    .logo-block h2 { font-size: 1rem; color: var(--accent-strong); margin-top: 0.2rem; }
+    .logo-block p { font-size: 0.74rem; color: var(--muted); margin-top: 0.18rem; }
+    .nav-label { font-size: 0.64rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.13em; color: var(--muted); padding: 0.45rem 0.5rem 0.12rem; margin-top: 0.3rem; }
+    .nav-btn {
+      display: flex; align-items: center; gap: 0.45rem; width: 100%;
+      padding: 0.55rem 0.6rem; border: 1px solid transparent; border-radius: 10px;
+      background: transparent; color: var(--ink); font-size: 0.83rem; font-weight: 500;
+      cursor: pointer; text-align: left; transition: background 0.14s, border-color 0.14s; font-family: inherit;
+    }
+    .nav-btn:hover { background: var(--panel-strong); border-color: var(--line); }
+    .nav-btn.active { background: var(--accent-soft); border-color: rgba(15,90,88,0.25); color: var(--accent-strong); font-weight: 700; }
+    .nav-btn .ico { font-size: 0.92rem; width: 1.05rem; text-align: center; }
+
+    /* ─── Main ─── */
+    .app-main { padding: 1.9rem 2.1rem; min-width: 0; }
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    /* ─── Page header ─── */
+    .ph { margin-bottom: 1.4rem; padding-bottom: 0.85rem; border-bottom: 1px solid var(--line); }
+    .ph .ey { font-size: 0.69rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.18em; color: var(--accent); }
+    .ph h1 { font-size: clamp(1.45rem, 2.1vw, 2.1rem); line-height: 1.1; color: var(--accent-strong); margin-top: 0.18rem; }
+    .ph p { color: var(--muted); margin-top: 0.28rem; font-size: 0.9rem; }
+
+    /* ─── Cards ─── */
+    .card { padding: 1.25rem 1.35rem; border: 1px solid var(--line); border-radius: var(--radius); background: rgba(255,253,248,0.92); box-shadow: var(--shadow); }
+    .ct { font-size: 0.92rem; font-weight: 800; color: var(--accent-strong); margin-bottom: 0.85rem; display: flex; align-items: center; gap: 0.38rem; }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.15rem; }
+    .sg { display: grid; grid-template-columns: repeat(auto-fill,minmax(170px,1fr)); gap: 0.85rem; margin-bottom: 1.3rem; }
+    .sc { padding: 1rem 1.1rem; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--panel); }
+    .sc .sl { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; }
+    .sc .sv { font-size: 1.8rem; font-weight: 800; color: var(--accent-strong); line-height: 1.1; margin-top: 0.12rem; }
+    .sc .ss { font-size: 0.76rem; color: var(--muted); margin-top: 0.08rem; }
+
+    /* ─── Tables ─── */
+    .tw { border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--panel-strong); }
+    .dt { width: 100%; border-collapse: collapse; }
+    .dt th { background: #dde9e8; padding: 0.65rem 0.8rem; text-align: left; font-size: 0.76rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--accent-strong); border-bottom: 1px solid var(--line-strong); }
+    .dt td { padding: 0.75rem 0.8rem; border-bottom: 1px solid var(--line); font-size: 0.86rem; vertical-align: middle; }
+    .dt tr:last-child td { border-bottom: 0; }
+    .dt tr:hover td { background: rgba(15,90,88,0.03); }
+
+    /* ─── Pills ─── */
+    .p { display: inline-flex; align-items: center; gap: 0.18rem; padding: 0.16rem 0.55rem; border-radius: 999px; font-size: 0.73rem; font-weight: 700; white-space: nowrap; }
+    .p-match    { background: var(--success-soft); color: var(--success); }
+    .p-mismatch { background: var(--danger-soft);  color: var(--danger); }
+    .p-pending  { background: var(--warn-soft);    color: var(--warn); }
+    .p-error    { background: #f0e4e4;             color: #6b2020; }
+    .p-done     { background: var(--success-soft); color: var(--success); }
+    .p-run      { background: #e8f0fe;             color: #1a4fb5; }
+    .p-draft    { background: var(--warn-soft);    color: var(--warn); }
+    .p-acc      { background: var(--accent-soft);  color: var(--accent-strong); }
+    .p-dev      { background: var(--dev-soft);     color: var(--dev-color); }
+    .p-beta     { background: var(--beta-soft);    color: var(--beta-color); }
+    .p-prod     { background: var(--prod-soft);    color: var(--prod-color); }
+
+    /* ─── Buttons ─── */
+    .btn { display: inline-flex; align-items: center; gap: 0.32rem; padding: 0.58rem 0.95rem; border-radius: 999px; border: 1px solid transparent; font-size: 0.83rem; font-weight: 700; cursor: pointer; transition: background 0.14s; font-family: inherit; }
+    .btn-p   { background: var(--accent-strong); color: white; }
+    .btn-p:hover { background: #0a4c4b; }
+    .btn-s   { background: var(--accent-soft); color: var(--accent-strong); border-color: rgba(15,90,88,0.2); }
+    .btn-s:hover { background: #c0dbd8; }
+    .btn-g   { background: transparent; color: var(--muted); border-color: var(--line-strong); }
+    .btn-g:hover { background: var(--panel); }
+    .btn-sm  { padding: 0.32rem 0.7rem; font-size: 0.76rem; }
+    .btn-d   { background: var(--danger-soft); color: var(--danger); border-color: rgba(122,41,48,0.2); }
+
+    /* ─── Forms ─── */
+    .fg { margin-bottom: 1.05rem; }
+    .fg label { display: block; font-size: 0.83rem; font-weight: 700; color: var(--ink); margin-bottom: 0.32rem; }
+    .hint { font-size: 0.73rem; color: var(--muted); margin-top: 0.18rem; }
+    .fi, .fs { width: 100%; padding: 0.68rem 0.85rem; border: 1px solid var(--line-strong); border-radius: var(--radius-sm); background: white; color: var(--ink); font-size: 0.88rem; font-family: inherit; }
+    .fi:focus, .fs:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+    .fr { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; }
+
+    /* ─── Steps ─── */
+    .steps { display: flex; margin-bottom: 1.65rem; }
+    .step { flex: 1; display: flex; align-items: center; gap: 0.38rem; padding: 0.5rem 0.65rem; font-size: 0.78rem; font-weight: 600; color: var(--muted); border-bottom: 2px solid var(--line); }
+    .step.done  { color: var(--success); border-color: var(--success); }
+    .step.act   { color: var(--accent-strong); border-color: var(--accent); font-weight: 800; }
+    .sn { width: 1.35rem; height: 1.35rem; border-radius: 999px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 800; background: var(--line); color: var(--muted); flex-shrink: 0; }
+    .step.done .sn  { background: var(--success); color: white; }
+    .step.act .sn   { background: var(--accent); color: white; }
+
+    /* ─── Upload ─── */
+    .uz { border: 2px dashed var(--line-strong); border-radius: var(--radius); padding: 1.8rem 1.4rem; text-align: center; background: repeating-linear-gradient(-45deg, rgba(15,90,88,0.04), rgba(15,90,88,0.04) 10px, rgba(255,255,255,0.6) 10px, rgba(255,255,255,0.6) 20px); cursor: pointer; }
+    .uz .ui { font-size: 1.9rem; margin-bottom: 0.45rem; }
+    .uz p { color: var(--muted); font-size: 0.86rem; }
+
+    /* ─── Progress ─── */
+    .pw { margin: 0.85rem 0; }
+    .pl { display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--muted); margin-bottom: 0.32rem; }
+    .pb { height: 8px; border-radius: 999px; background: var(--accent-soft); overflow: hidden; }
+    .pf { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--accent), #1a8a87); }
+
+    /* ─── Extracted fields ─── */
+    .xf { display: flex; justify-content: space-between; align-items: baseline; padding: 0.52rem 0; border-bottom: 1px solid var(--line); font-size: 0.87rem; }
+    .xf:last-child { border-bottom: 0; }
+    .xfn { color: var(--muted); font-weight: 600; font-size: 0.78rem; min-width: 155px; }
+    .xfv { color: var(--ink); font-weight: 500; text-align: right; }
+    .xfv.nf { color: var(--warn); font-style: italic; }
+
+    /* ─── Comparison rows ─── */
+    .cr { display: grid; grid-template-columns: 2fr 3fr 3fr 1.5fr; align-items: center; gap: 0.38rem; padding: 0.5rem 0.82rem; border-bottom: 1px solid var(--line); font-size: 0.84rem; }
+    .cr.hdr { font-weight: 700; font-size: 0.73rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--accent-strong); background: #dde9e8; }
+    .cr:last-child { border-bottom: 0; }
+
+    /* ─── Callout ─── */
+    .co { padding: 0.85rem 1.05rem; border-radius: var(--radius-sm); border-left: 4px solid var(--accent); background: var(--accent-soft); color: var(--accent-strong); font-size: 0.86rem; margin-bottom: 1.05rem; }
+    .co.warn { border-color: var(--warn); background: var(--warn-soft); color: var(--warn); }
+    .co.dev  { border-color: var(--dev-color); background: var(--dev-soft); color: var(--dev-color); }
+    .co.ok   { border-color: var(--success); background: var(--success-soft); color: var(--success); }
+
+    /* ─── Origin tabs ─── */
+    .otabs { display: flex; gap: 0.45rem; margin-bottom: 0.9rem; }
+    .otab { flex: 1; padding: 0.65rem; border: 2px solid var(--line-strong); border-radius: var(--radius-sm); background: white; cursor: pointer; text-align: center; font-size: 0.82rem; font-weight: 600; color: var(--muted); transition: all 0.14s; }
+    .otab.on { border-color: var(--accent); background: var(--accent-soft); color: var(--accent-strong); }
+    .otab .oi { font-size: 1.1rem; display: block; margin-bottom: 0.18rem; }
+
+    /* ─── API blocks ─── */
+    .ab { background: #1b2330; color: #ebf1ff; padding: 0.9rem; border-radius: 12px; font-family: "Cascadia Code", Consolas, monospace; font-size: 0.76rem; overflow: auto; margin-bottom: 0.75rem; white-space: pre; }
+    .am { display: inline-block; padding: 0.12rem 0.45rem; border-radius: 5px; font-size: 0.7rem; font-weight: 800; margin-right: 0.35rem; }
+    .am-post { background: #1a4fb5; color: white; }
+    .am-get  { background: #1a6b3c; color: white; }
+    .ap { color: #8eb6ff; }
+    .ac { color: #a8d8a8; }
+
+    /* ─── State cards ─── */
+    .stcards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin: 0.9rem 0 1.3rem; }
+    .stcard { padding: 1rem; border-radius: var(--radius-sm); border: 2px solid; }
+    .stcard.dev  { border-color: var(--dev-color);  background: var(--dev-soft); }
+    .stcard.beta { border-color: var(--beta-color); background: var(--beta-soft); }
+    .stcard.prod { border-color: var(--prod-color); background: var(--prod-soft); }
+    .stcard .sct { font-weight: 800; font-size: 0.85rem; margin-bottom: 0.38rem; }
+    .stcard.dev  .sct { color: var(--dev-color); }
+    .stcard.beta .sct { color: var(--beta-color); }
+    .stcard.prod .sct { color: var(--prod-color); }
+    .stcard ul { padding-left: 1rem; font-size: 0.8rem; color: var(--ink); }
+    .stcard ul li + li { margin-top: 0.18rem; }
+
+    /* ─── Utils ─── */
+    .flex { display: flex; } .fb { display: flex; justify-content: space-between; align-items: center; }
+    .gap { gap: 0.6rem; } .mt1 { margin-top: 0.5rem; } .mt2 { margin-top: 1rem; } .mt3 { margin-top: 1.5rem; }
+    .mb1 { margin-bottom: 0.5rem; } .mb2 { margin-bottom: 1rem; }
+    code { font-family: "Cascadia Code", Consolas, monospace; font-size: 0.8rem; }
+    hr.div { border: 0; border-top: 1px solid var(--line); margin: 1.1rem 0; }
+
+    @media (max-width: 900px) {
+      .app-shell { grid-template-columns: 1fr; }
+      .app-sidebar { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--line); }
+      .app-main { padding: 1.1rem; }
+      .fr, .grid2, .stcards { grid-template-columns: 1fr; }
+      .sg { grid-template-columns: 1fr 1fr; }
+      .cr { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="back-banner">
+  <a href="tobefuncional.html">← Volver al micrositio</a>
+  <strong>|</strong>
+  <strong>Mockup interactivo — TO-BE funcional</strong>
+  <span style="font-size:0.77rem;color:rgba(255,255,255,0.5);margin-left:auto;">Datos ficticios · Sector construcción · REST + FTP</span>
+</div>
+
+<div class="app-shell">
+
+  <!-- ══════════ SIDEBAR ══════════ -->
+  <nav class="app-sidebar">
+    <div class="logo-block">
+      <div class="ey">Agente documental</div>
+      <h2>DocAgent</h2>
+      <p>Extracción estructurada · Validación cruzada · API REST · FTP</p>
+    </div>
+
+    <div class="nav-label">Principal</div>
+    <button class="nav-btn active" data-screen="dashboard" onclick="go('dashboard',this)"><span class="ico">◉</span> Dashboard</button>
+
+    <div class="nav-label">Configuración</div>
+    <button class="nav-btn" data-screen="onboarding"    onclick="go('onboarding',this)"><span class="ico">🏢</span> Onboarding empresa</button>
+    <button class="nav-btn" data-screen="ftp"           onclick="go('ftp',this)"><span class="ico">🔌</span> Configuración FTP</button>
+    <button class="nav-btn" data-screen="api"           onclick="go('api',this)"><span class="ico">⚡</span> Servicios REST</button>
+
+    <div class="nav-label">Tipos documentales</div>
+    <button class="nav-btn" data-screen="admin-tipos"   onclick="go('admin-tipos',this)"><span class="ico">🛠</span> Administración</button>
+    <button class="nav-btn" data-screen="entrenamiento" onclick="go('entrenamiento',this)"><span class="ico">🧠</span> Entrenamiento</button>
+
+    <div class="nav-label">Procesamiento</div>
+    <button class="nav-btn" data-screen="individual"    onclick="go('individual',this)"><span class="ico">📄</span> Individual</button>
+    <button class="nav-btn" data-screen="batch"         onclick="go('batch',this)"><span class="ico">📦</span> Por lotes (batch)</button>
+    <button class="nav-btn" data-screen="comparacion"   onclick="go('comparacion',this)"><span class="ico">⚖️</span> Comparación cruzada</button>
+
+    <div class="nav-label">Resultados</div>
+    <button class="nav-btn" data-screen="historial"     onclick="go('historial',this)"><span class="ico">🗂</span> Historial de lotes</button>
+    <button class="nav-btn" data-screen="detallelote"   onclick="go('detallelote',this)"><span class="ico">🔍</span> Detalle de lote</button>
+    <button class="nav-btn" data-screen="resultados"    onclick="go('resultados',this)"><span class="ico">✅</span> Resultado de extracción</button>
+  </nav>
+
+  <!-- ══════════ MAIN ══════════ -->
+  <main class="app-main">
+
+    <!-- ──────────────────────────────────── -->
+    <!-- DASHBOARD                            -->
+    <!-- ──────────────────────────────────── -->
+    <section class="screen active" id="screen-dashboard">
+      <div class="ph">
+        <div class="ey">Inicio</div>
+        <h1>Dashboard</h1>
+        <p>Constructora Norteamérica S.A.S. — Procesamiento documental operativo</p>
+      </div>
+      <div class="sg">
+        <div class="sc"><div class="sl">Lotes ejecutados</div><div class="sv">47</div><div class="ss">Últimos 90 días</div></div>
+        <div class="sc"><div class="sl">Docs procesados</div><div class="sv">1 284</div><div class="ss">Total acumulado</div></div>
+        <div class="sc"><div class="sl">Completitud media</div><div class="sv">96.3%</div><div class="ss">Campos extraídos</div></div>
+        <div class="sc"><div class="sl">Match vs. referencia</div><div class="sv">88.7%</div><div class="ss">En lotes comparados</div></div>
+      </div>
+      <div class="grid2 mb2">
+        <div class="card">
+          <div class="ct">⚡ Actividad reciente</div>
+          <div class="tw">
+            <table class="dt">
+              <thead><tr><th>Lote</th><th>Tipo</th><th>Docs</th><th>Origen</th><th>Estado</th></tr></thead>
+              <tbody>
+                <tr><td><strong>CTL-Mayo-P01</strong></td><td>Cert. T&L <span class="p p-prod">PROD</span></td><td>42</td><td>FTP</td><td><span class="p p-done">✓ Fin.</span></td></tr>
+                <tr><td><strong>CTL-Mayo-P02</strong></td><td>Cert. T&L <span class="p p-prod">PROD</span></td><td>56</td><td>FTP</td><td><span class="p p-run">↻ Activo</span></td></tr>
+                <tr><td><strong>CONTR-2026-01</strong></td><td>Contrato obra <span class="p p-beta">BETA</span></td><td>8</td><td>Manual</td><td><span class="p p-draft">⏸ Pendiente</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ct">📋 Tipos documentales</div>
+          <div class="tw">
+            <table class="dt">
+              <thead><tr><th>Tipo</th><th>Estado</th><th>Modalidad</th><th>Usos</th></tr></thead>
+              <tbody>
+                <tr><td>Cert. Tradición y Libertad</td><td><span class="p p-prod">✅ PROD</span></td><td>Entrenado</td><td>892</td></tr>
+                <tr><td>Contrato de obra</td><td><span class="p p-beta">⚠️ BETA</span></td><td>Entrenado</td><td>179</td></tr>
+                <tr><td>Póliza HSE</td><td><span class="p p-dev">🔧 DEV</span></td><td>LLM</td><td>—</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="co">
+        <strong>Lote en progreso:</strong> CTL-Mayo-P02 — 56 docs · 38 completados · 17 en cola · Origen: FTP
+        <button class="btn btn-s btn-sm" style="margin-left:1rem;" onclick="go('detallelote',null)">Ver detalle →</button>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────── -->
+    <!-- ONBOARDING                           -->
+    <!-- ──────────────────────────────────── -->
+    <section class="screen" id="screen-onboarding">
+      <div class="ph">
+        <div class="ey">Configuración inicial</div>
+        <h1>Onboarding de empresa</h1>
+        <p>Registra la organización, configura FTP si aplica y habilita los tipos documentales.</p>
+      </div>
+      <div class="steps">
+        <div class="step done"><div class="sn">✓</div> Datos básicos</div>
+        <div class="step done"><div class="sn">✓</div> Plan de acceso</div>
+        <div class="step done"><div class="sn">✓</div> FTP / Integración</div>
+        <div class="step act"><div class="sn">4</div> Tipos documentales</div>
+        <div class="step"><div class="sn">5</div> API key</div>
+      </div>
+      <div class="card" style="max-width:640px;">
+        <div class="ct">🏢 Datos confirmados</div>
+        <div class="fr">
+          <div class="fg"><label>Razón social</label><input class="fi" value="Constructora Norteamérica S.A.S." readonly></div>
+          <div class="fg"><label>NIT</label><input class="fi" value="900.234.567-1" readonly></div>
+        </div>
+        <div class="fr">
+          <div class="fg"><label>Sector</label><input class="fi" value="Construcción e inmobiliario" readonly></div>
+          <div class="fg"><label>Plan</label><input class="fi" value="Profesional · 5 000 docs/mes" readonly></div>
+        </div>
+        <hr class="div">
+        <div class="ct">🔌 Conexión FTP del cliente (opcional)</div>
+        <div class="co">Configura el servidor FTP del cliente para procesar documentos sin carga manual.</div>
+        <div class="fr">
+          <div class="fg"><label>Host FTP</label><input class="fi" placeholder="ftp.norteamerica.com.co"></div>
+          <div class="fg"><label>Puerto</label><input class="fi" value="21"></div>
+        </div>
+        <div class="fr">
+          <div class="fg"><label>Usuario</label><input class="fi" placeholder="docagent_ro"></div>
+          <div class="fg"><label>Contraseña</label><input class="fi" type="password"></div>
+        </div>
+        <div class="fg"><label>Carpeta raíz</label><input class="fi" placeholder="/documentos/certificados"></div>
+        <div class="flex gap mt2">
+          <button class="btn btn-s btn-sm" onclick="go('ftp',null)">🔌 Probar conexión</button>
+          <button class="btn btn-g btn-sm">Omitir</button>
+        </div>
+        <hr class="div">
+        <div class="ct">📋 Tipos documentales disponibles</div>
+        <p style="font-size:0.86rem;color:var(--muted);margin-bottom:1rem;">Selecciona qué tipos documentales estarán habilitados para esta empresa. Solo se muestran los tipos en estado BETA o PRODUCCIÓN.</p>
+        <div style="display:flex;flex-direction:column;gap:0.55rem;margin-bottom:1rem;">
+          <!-- PROD -->
+          <label style="display:flex;align-items:flex-start;gap:0.75rem;padding:0.85rem 1rem;border:1.5px solid rgba(26,107,60,0.3);border-radius:var(--radius-sm);background:var(--success-soft);cursor:pointer;">
+            <input type="checkbox" checked style="margin-top:0.2rem;accent-color:var(--success);width:1rem;height:1rem;flex-shrink:0;">
+            <div>
+              <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.2rem;">
+                <strong style="font-size:0.9rem;color:var(--ink);">Certificado de Tradición y Libertad</strong>
+                <span class="p p-prod">✅ PRODUCCIÓN</span>
+                <span class="p p-acc" style="font-size:0.68rem;">Entrenado</span>
+              </div>
+              <span style="font-size:0.8rem;color:var(--muted);">8 campos · 892 usos · Sector inmobiliario / construcción</span>
+            </div>
+          </label>
+          <!-- BETA -->
+          <label style="display:flex;align-items:flex-start;gap:0.75rem;padding:0.85rem 1rem;border:1.5px solid rgba(141,74,31,0.3);border-radius:var(--radius-sm);background:var(--beta-soft);cursor:pointer;">
+            <input type="checkbox" style="margin-top:0.2rem;accent-color:var(--beta-color);width:1rem;height:1rem;flex-shrink:0;">
+            <div>
+              <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.2rem;">
+                <strong style="font-size:0.9rem;color:var(--ink);">Contrato de obra</strong>
+                <span class="p p-beta">⚠️ BETA</span>
+                <span class="p p-acc" style="font-size:0.68rem;">Entrenado</span>
+              </div>
+              <span style="font-size:0.8rem;color:var(--muted);">9 campos · 179 usos · Sector construcción</span>
+              <div style="margin-top:0.45rem;padding:0.5rem 0.7rem;border-radius:8px;background:var(--warn-soft);border-left:3px solid var(--beta-color);font-size:0.78rem;color:var(--warn);">
+                <strong>⚠️ Advertencia BETA:</strong> Este tipo está en validación piloto. La precisión puede variar y no está garantizada. Úsalo solo para pruebas o proyectos no críticos.
+              </div>
+            </div>
+          </label>
+          <!-- DEV — deshabilitado -->
+          <label style="display:flex;align-items:flex-start;gap:0.75rem;padding:0.85rem 1rem;border:1.5px solid var(--line-strong);border-radius:var(--radius-sm);background:rgba(0,0,0,0.03);cursor:not-allowed;opacity:0.55;">
+            <input type="checkbox" disabled style="margin-top:0.2rem;width:1rem;height:1rem;flex-shrink:0;">
+            <div>
+              <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.2rem;">
+                <strong style="font-size:0.9rem;color:var(--ink);">Póliza de seguro HSE</strong>
+                <span class="p p-dev">🔧 EN DESARROLLO</span>
+              </div>
+              <span style="font-size:0.8rem;color:var(--muted);">6 campos · En entrenamiento · No disponible para empresas</span>
+            </div>
+          </label>
+        </div>
+        <div class="co" style="font-size:0.83rem;margin-bottom:1rem;">Los tipos en <strong>EN DESARROLLO</strong> no están disponibles hasta que el equipo administrador los promueva a BETA o PRODUCCIÓN.</div>
+        <hr class="div">
+        <button class="btn btn-p mt1" onclick="go('api',null)">Continuar → Configuración API key</button>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────── -->
+    <!-- FTP                                  -->
+    <!-- ──────────────────────────────────── -->
+    <section class="screen" id="screen-ftp">
+      <div class="ph">
+        <div class="ey">Integración</div>
+        <h1>Configuración FTP</h1>
+        <p>Canal de entrada de documentos desde el servidor del cliente. No es protocolo de salida de resultados.</p>
+      </div>
+      <div class="grid2">
+        <div class="card">
+          <div class="ct">🔌 Parámetros</div>
+          <div class="fr">
+            <div class="fg"><label>Protocolo</label>
+              <select class="fs"><option>FTP (21)</option><option>SFTP (22)</option><option>FTPS (990)</option></select>
+            </div>
+            <div class="fg"><label>Host</label><input class="fi" value="ftp.norteamerica.com.co"></div>
+          </div>
+          <div class="fr">
+            <div class="fg"><label>Puerto</label><input class="fi" value="21"></div>
+            <div class="fg"><label>Timeout (s)</label><input class="fi" value="30"></div>
+          </div>
+          <div class="fr">
+            <div class="fg"><label>Usuario</label><input class="fi" value="docagent_ro"></div>
+            <div class="fg"><label>Contraseña</label><input class="fi" type="password" value="••••••••"></div>
+          </div>
+          <div class="fg"><label>Carpeta raíz de lectura</label><input class="fi" value="/documentos/certificados"></div>
+          <div class="flex gap mt2">
+            <button class="btn btn-p">🔌 Probar conexión</button>
+            <button class="btn btn-s">Guardar</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ct">📂 Estado de la conexión</div>
+          <div class="co ok"><strong>✓ Conexión activa</strong><br>Última verificación: 2026-05-18 14:00<br>Carpeta: /documentos/certificados</div>
+          <div class="ct">📄 Archivos disponibles</div>
+          <div class="tw">
+            <table class="dt">
+              <thead><tr><th>Archivo</th><th>Tamaño</th><th>Modificado</th></tr></thead>
+              <tbody>
+                <tr><td>CTL_074822.pdf</td><td>1.2 MB</td><td>2026-05-17</td></tr>
+                <tr><td>CTL_074823.pdf</td><td>980 KB</td><td>2026-05-17</td></tr>
+                <tr><td>CTL_074824.pdf</td><td>1.5 MB</td><td>2026-05-16</td></tr>
+                <tr><td>CTL_074825.pdf</td><td>2.1 MB</td><td>2026-05-16</td></tr>
+                <tr><td>CTL_074826.pdf</td><td>890 KB</td><td>2026-05-15</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <button class="btn btn-s btn-sm mt2" onclick="go('batch',null)">📦 Crear lote desde esta carpeta →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────── -->
+    <!-- API / REST                           -->
+    <!-- ──────────────────────────────────── -->
+    <section class="screen" id="screen-api">
+      <div class="ph">
+        <div class="ey">Integración</div>
+        <h1>Servicios REST</h1>
+        <p>Tres endpoints JSON para integración con sistemas externos. REST únicamente — no SOAP, no XML.</p>
+      </div>
+      <div class="card mb2" style="max-width:620px;">
+        <div class="ct">🔑 API key de la organización</div>
+        <div class="fr" style="align-items:end;">
+          <div class="fg" style="margin-bottom:0;">
+            <label>Tu API key</label>
+            <input class="fi" value="da_live_k8J9mNpQ3xRt7vWz2cHf5bLs" readonly style="font-family:monospace;font-size:0.82rem;">
+          </div>
+          <div style="padding-bottom:0.05rem;">
+            <button class="btn btn-s btn-sm">Copiar</button>
+            <button class="btn btn-d btn-sm">Rotar</button>
+          </div>
+        </div>
+        <div class="hint mt1">Incluye el header <code>Authorization: Bearer &lt;api-key&gt;</code> en todas las peticiones.</div>
+      </div>
+
+      <div class="grid2 mb2">
+        <div class="card">
+          <div class="ct"><span class="am am-post">POST</span> Procesamiento individual</div>
+          <div class="ab"><span class="ap">POST /api/v1/documentos/procesar</span>
+<span class="ac">// Parámetros (multipart/form-data)</span>
+documento: &lt;PDF o imagen&gt;
+tipo_documental: "certificado_tradicion_libertad"
+formato_salida: "json"  <span style="color:#8eb6ff;">// json | csv</span>
+
+<span class="ac">// Respuesta 200</span>
+{
+  "id_ejecucion": "EJE-2026-08814",
+  "estado": "completado",
+  "completitud": 87.5,
+  "campos": { ... }
+}</div>
+        </div>
+        <div class="card">
+          <div class="ct"><span class="am am-post">POST</span> Procesamiento batch</div>
+          <div class="ab"><span class="ap">POST /api/v1/lotes/procesar</span>
+<span class="ac">// Parámetros</span>
+documentos[]: &lt;archivos&gt;  <span style="color:#8eb6ff;">// o</span>
+ftp_carpeta: "/docs/certificados"
+tipo_documental: "certificado_tradicion_libertad"
+nombre_lote: "CTL-Mayo-P03"
+formato_salida: "json"
+
+<span class="ac">// Respuesta 202 (asíncrono)</span>
+{ "id_lote": "LOTE-2026-048", "estado": "encolado" }</div>
+          <div class="ab" style="margin-top:0.45rem;"><span class="am am-get">GET</span> <span class="ap">/api/v1/lotes/{id}</span>
+<span class="ac">// Respuesta 200</span>
+{
+  "id_lote": "LOTE-2026-048",
+  "estado": "en_progreso",
+  "progreso": { "total": 42, "completados": 28 },
+  "resultados": [ ... ]
+}</div>
+        </div>
+      </div>
+
+      <div class="card" style="max-width:620px;">
+        <div class="ct"><span class="am am-post">POST</span> Comparación cruzada</div>
+        <div class="ab"><span class="ap">POST /api/v1/comparacion/ejecutar</span>
+<span class="ac">// Parámetros</span>
+id_lote: "LOTE-2026-046"
+archivo_referencia: &lt;CSV o JSON&gt;
+clave_alineacion: "matricula_inmobiliaria"
+
+<span class="ac">// Respuesta 200</span>
+{
+  "resumen": { "match": 34, "mismatch": 6, "pendiente": 2 },
+  "registros": [
+    { "matricula": "050-74822", "estado": "MATCH" },
+    { "matricula": "050-74823", "estado": "MISMATCH",
+      "discrepancias": ["propietario_actual"] }
+  ]
+}</div>
+        <div class="co mt1">REST/JSON únicamente. No se expone SOAP ni XML. FTP es solo canal de entrada de documentos, no de resultados.</div>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────── -->
+    <!-- ADMIN TIPOS                          -->
+    <!-- ──────────────────────────────────── -->
+    <section class="screen" id="screen-admin-tipos">
+      <div class="ph">
+        <div class="ey">Administración</div>
+        <h1>Tipos documentales</h1>
+        <p>Todo tipo documental pasa por entrenamiento antes de estar disponible para empresas.</p>
+      </div>
+      <div class="stcards">
+        <div class="stcard dev">
+          <div class="sct">🔧 EN DESARROLLO</div>
+          <ul>
+            <li>Solo visible internamente</li>
+            <li>En proceso de entrenamiento</li>
+            <li>No disponible para empresas</li>
+            <li>Sin garantía de precisión</li>
+          </ul>
+        </div>
+        <div class="stcard beta">
+          <div class="sct">⚠️ BETA</div>
+          <ul>
+            <li>Visible con advertencia</li>
+            <li>Empresas piloto seleccionadas</li>
+            <li>Variabilidad esperada</li>
+            <li>Sin SLA de precisión</li>
+          </ul>
+        </div>
+        <div class="stcard prod">
+          <div class="sct">✅ PRODUCCIÓN</div>
+          <ul>
+            <li>Validado y estable</li>
+            <li>Disponible para todas las empresas</li>
+            <li>Alta precisión garantizada</li>
+            <li>Recomendado para operación</li>
+          </ul>
+        </div>
+      </div>
+      <div class="fb mb2">
+        <div></div>
+        <button class="btn btn-p btn-sm">+ Nuevo tipo documental</button>
+      </div>
+      <div class="tw mb2">
+        <table class="dt">
+          <thead><tr><th>Nombre</th><th>Estado</th><th>Modalidad</th><th>Campos</th><th>Dataset</th><th>Usos</th><th>Acciones</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>Certificado de Tradición y Libertad</strong></td>
+              <td><span class="p p-prod">✅ PRODUCCIÓN</span></td>
+              <td>Entrenado</td><td>8</td><td>320 docs</td><td>892</td>
+              <td><button class="btn btn-g btn-sm">Ver</button></td>
+            </tr>
+            <tr>
+              <td><strong>Contrato de obra</strong></td>
+              <td><span class="p p-beta">⚠️ BETA</span></td>
+              <td>Entrenado</td><td>9</td><td>85 docs</td><td>179</td>
+              <td>
+                <button class="btn btn-g btn-sm">Ver</button>
+                <button class="btn btn-s btn-sm" onclick="go('entrenamiento',null)">Entrenar</button>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Póliza de seguro HSE</strong></td>
+              <td><span class="p p-dev">🔧 EN DESARROLLO</span></td>
+              <td>LLM</td><td>6</td><td>12 docs</td><td>—</td>
+              <td><button class="btn btn-s btn-sm" onclick="go('entrenamiento',null)">Entrenar</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card" style="max-width:620px;">
+        <div class="ct">🛠 Nuevo tipo — formulario</div>
+        <div class="fr">
+          <div class="fg"><label>Nombre del tipo</label><input class="fi" placeholder="Ej: Licencia de construcción"></div>
+          <div class="fg"><label>Sector</label><select class="fs"><option>Construcción</option><option>Seguros</option><option>Legal</option><option>Otro</option></select></div>
+        </div>
+        <div class="fg">
+          <label>Modalidad de extracción</label>
+          <select class="fs">
+            <option>Entrenado — alta precisión, requiere dataset (recomendado para producción)</option>
+            <option>Basado en LLM — sin dataset, menor precisión, útil para exploración</option>
+          </select>
+          <div class="hint">El tipo siempre inicia EN DESARROLLO. Requiere entrenamiento antes de estar disponible para empresas.</div>
+        </div>
+        <div class="fg"><label>Formato de salida</label><select class="fs"><option>JSON + CSV</option><option>Solo JSON</option><option>Solo CSV</option></select></div>
+        <button class="btn btn-p mt1" onclick="go('entrenamiento',null)">Crear y configurar campos →</button>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────── -->
+    <!-- ENTRENAMIENTO                        -->
+    <!-- ──────────────────────────────────── -->
+    <section class="screen" id="screen-entrenamiento">
+      <div class="ph">
+        <div class="ey">Administración · Póliza de seguro HSE</div>
+        <h1>Entrenamiento del tipo documental</h1>
+        <p>Carga documentos reales, valida la estructura extraída y promueve a BETA cuando sea estable.</p>
+      </div>
+      <div class="co dev mb2"><strong>🔧 EN DESARROLLO</strong> — No disponible para empresas. Completa el entrenamiento para promover a BETA.</div>
+      <div class="grid2 mb2">
+        <div class="card">
+          <div class="ct">📋 Campos configurados</div>
+          <div class="tw">
+            <table class="dt">
+              <thead><tr><th>Campo</th><th>Tipo</th><th>Requerido</th></tr></thead>
+              <tbody>
+                <tr><td>Asegurado</td><td>Texto</td><td><span class="p p-match">✱ Sí</span></td></tr>
+                <tr><td>Vigencia desde</td><td>Fecha</td><td><span class="p p-match">✱ Sí</span></td></tr>
+                <tr><td>Vigencia hasta</td><td>Fecha</td><td><span class="p p-match">✱ Sí</span></td></tr>
+                <tr><td>Valor asegurado</td><td>Número</td><td><span class="p p-match">✱ Sí</span></td></tr>
+                <tr><td>Coberturas</td><td>Lista</td><td><span class="p p-acc">Opc.</span></td></tr>
+                <tr><td>Beneficiarios</td><td>Lista</td><td><span class="p p-acc">Opc.</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ct">📊 Estado del dataset</div>
+          <div class="sg" style="grid-template-columns:1fr 1fr;margin-bottom:0.85rem;">
+            <div class="sc"><div class="sl">Docs cargados</div><div class="sv">12</div><div class="ss">Mínimo: 30</div></div>
+            <div class="sc"><div class="sl">Completitud media</div><div class="sv">71%</div><div class="ss">Objetivo: 90%+</div></div>
+          </div>
+          <div class="pw">
+            <div class="pl"><span>Progreso dataset</span><span>12 / 30 docs</span></div>
+            <div class="pb"><div class="pf" style="width:40%;"></div></div>
+          </div>
+          <div class="co warn mt2">Dataset insuficiente. Carga al menos 18 documentos más.</div>
+        </div>
+      </div>
+      <div class="card mb2">
+        <div class="ct">📤 Cargar documentos de entrenamiento</div>
+        <div class="uz">
+          <div class="ui">📄</div>
+          <p><strong>Arrastra pólizas HSE reales aquí</strong></p>
+          <p style="font-size:0.78rem;margin-top:0.22rem;">PDF o imagen · Sin datos sensibles de producción real</p>
+        </div>
+        <div class="flex gap mt2">
+          <button class="btn btn-p">📤 Cargar</button>
+          <button class="btn btn-s">▶ Ejecutar inferencia</button>
+        </div>
+      </div>
+      <div class="card" style="max-width:520px;">
+        <div class="ct">🚀 Promover a siguiente estado</div>
+        <p style="font-size:0.86rem;color:var(--muted);margin-bottom:1rem;">Una vez el dataset esté completo y la precisión sea aceptable, promueve este tipo a BETA.</p>
+        <button class="btn btn-s" disabled style="opacity:0.45;cursor:not-allowed;">⚠️ Promover a BETA (requiere 30+ docs)</button>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────── -->
+    <!-- INDIVIDUAL                           -->
+    <!-- ──────────────────────────────────── -->
+    <section class="screen" id="screen-individual">
+      <div class="ph">
+        <div class="ey">Procesamiento</div>
+        <h1>Procesamiento individual</h1>
+        <p>Extracción estructurada de un documento. Salida: JSON o CSV. Sin respuesta conversacional.</p>
+      </div>
+      <div class="grid2">
+        <div class="card">
+          <div class="ct">⚙️ Configuración</div>
+          <div class="fg">
+            <label>Tipo documental</label>
+            <select class="fs">
+              <option>Certificado de Tradición y Libertad ✅ PROD · Entrenado</option>
+              <option>Contrato de obra ⚠️ BETA · Entrenado</option>
+            </select>
+            <div class="hint">Solo se muestran tipos en estado BETA o PRODUCCIÓN.</div>
+          </div>
+          <div class="fg"><label>Formato de salida</label><select class="fs"><option>JSON estructurado</option><option>CSV plano</option></select></div>
+          <div class="fg">
+            <label>Origen del documento</label>
+            <div class="otabs">
+              <div class="otab on" onclick="ot(this)"><span class="oi">📄</span>Carga manual</div>
+              <div class="otab" onclick="ot(this)"><span class="oi">🔌</span>Desde FTP</div>
+            </div>
+          </div>
+          <div class="uz">
+            <div class="ui">📄</div>
+            <p><strong>CTL_074822.pdf</strong></p>
+            <p style="font-size:0.78rem;margin-top:0.2rem;">PDF · 1.2 MB · Cargado</p>
+          </div>
+          <button class="btn btn-p mt2" onclick="go('resultados',null)">▶ Ejecutar extracción</button>
+        </div>
+        <div class="card">
+          <div class="ct">📊 Resultado — CTL_074822.pdf</div>
+          <div class="co">7 / 8 campos extraídos · JSON generado · ID: EJE-2026-08814</div>
+          <div class="xf"><span class="xfn">Matrícula inmobiliaria</span><span class="xfv">050-74822</span></div>
+          <div class="xf"><span class="xfn">Propietario actual</span><span class="xfv">Inversiones Pacífico Ltda.</span></div>
+          <div class="xf"><span class="xfn">Área del predio</span><span class="xfv">1 240 m²</span></div>
+          <div class="xf"><span class="xfn">Gravámenes</span><span class="xfv">Hipoteca Banco Davivienda</span></div>
+          <div class="xf"><span class="xfn">Limitaciones</span><span class="xfv">Ninguna</span></div>
+          <div class="xf"><span class="xfn">Fecha de expedición</span><span class="xfv">2026-04-03</span></div>
+          <div class="xf"><span class="xfn">Municipio / Dpto.</span><span class="xfv">Medellín / Antioquia</span></div>
+          <div class="xf"><span class="xfn">Número de folios</span><span class="xfv nf">No extraído</span></div>
+          <div class="flex gap mt2">
+            <button class="btn btn-s btn-sm">⬇ JSON</button>
+            <button class="btn btn-g btn-sm">⬇ CSV</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────── -->
+    <!-- BATCH                                -->
+    <!-- ──────────────────────────────────── -->
+    <section class="screen" id="screen-batch">
+      <div class="ph">
+        <div class="ey">Procesamiento</div>
+        <h1>Procesamiento por lotes</h1>
+        <p>Define el lote (nombre, tipo, formato), elige origen (manual o FTP) y ejecuta en paralelo.</p>
+      </div>
+      <div class="grid2">
+        <div class="card">
+          <div class="ct">⚙️ Configuración del lote</div>
+          <div class="fg">
+            <label>Nombre del lote</label>
+            <input class="fi" value="CTL-Mayo-P02-Norteamérica">
+            <div class="hint">Identificador único en el historial. Ej: CTL-Mayo-2026-Proyecto-X</div>
+          </div>
+          <div class="fg">
+            <label>Tipo documental</label>
+            <select class="fs"><option>Certificado de Tradición y Libertad ✅ PROD</option><option>Contrato de obra ⚠️ BETA</option></select>
+          </div>
+          <div class="fg"><label>Formato de salida</label><select class="fs"><option>JSON + CSV</option><option>Solo JSON</option><option>Solo CSV</option></select></div>
+          <div class="fg">
+            <label>Origen de documentos</label>
+            <div class="otabs">
+              <div class="otab" onclick="ot(this)"><span class="oi">📄</span>Carga manual</div>
+              <div class="otab on" onclick="ot(this)"><span class="oi">🔌</span>Desde FTP</div>
+            </div>
+            <div class="co mt1"><strong>FTP activo:</strong> ftp.norteamerica.com.co · /documentos/certificados<br>56 archivos disponibles · Todos seleccionados</div>
+          </div>
+          <button class="btn btn-p" onclick="go('detallelote',null)">▶ Ejecutar lote — 56 docs</button>
+        </div>
+        <div class="card">
+          <div class="ct">↻ Lote en progreso — CTL-Mayo-P02</div>
+          <div style="font-size:0.78rem;color:var(--muted);margin-bottom:0.7rem;">ID: <code>LOTE-2026-047</code> · Origen: FTP · Tipo: Cert. T&L (PROD · Entrenado)</div>
+          <div class="pw">
+            <div class="pl"><span>Progreso</span><span>38 / 56 docs</span></div>
+            <div class="pb"><div class="pf" style="width:68%;"></div></div>
+          </div>
+          <div class="sg" style="grid-template-columns:1fr 1fr 1fr;margin:0.9rem 0 0.5rem;">
+            <div class="sc"><div class="sl">Completados</div><div class="sv" style="font-size:1.45rem;color:var(--success);">38</div></div>
+            <div class="sc"><div class="sl">En cola</div><div class="sv" style="font-size:1.45rem;color:#1a4fb5;">17</div></div>
+            <div class="sc"><div class="sl">Errores</div><div class="sv" style="font-size:1.45rem;color:var(--danger);">1</div></div>
+          </div>
+          <div class="tw mt1">
+            <table class="dt">
+              <thead><tr><th>Archivo</th><th>Origen</th><th>Estado</th><th>Tiempo</th></tr></thead>
+              <tbody>
+                <tr><td>CTL_074822.pdf</td><td>FTP</td><td><span class="p p-done">✓</span></td><td>2.1 s</td></tr>
+                <tr><td>CTL_074823.pdf</td><td>FTP</td><td><span class="p p-done">✓</span></td><td>1.9 s</td></tr>
+                <tr><td>CTL_074824.pdf</td><td>FTP</td><td><span class="p p-error">✗ Error</span></td><td>—</td></tr>
+                <tr><td>CTL_074825.pdf</td><td>FTP</td><td><span class="p p-run">↻</span></td><td>—</td></tr>
+                <tr><td>CTL_074826.pdf</td><td>FTP</td><td><span class="p p-draft">Cola</span></td><td>—</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────── -->
+    <!-- COMPARACIÓN                          -->
+    <!-- ──────────────────────────────────── -->
+    <section class="screen" id="screen-comparacion">
+      <div class="ph">
+        <div class="ey">Validación</div>
+        <h1>Comparación cruzada</h1>
+        <p>Contrasta los resultados extraídos contra una fuente de referencia. Salida: MATCH / MISMATCH / PENDIENTE.</p>
+      </div>
+      <div class="grid2 mb2">
+        <div class="card">
+          <div class="ct">📥 Configuración</div>
+          <div class="fg"><label>Lote base</label><select class="fs"><option>CTL-Mayo-P01 (42 docs · Finalizado)</option></select></div>
+          <div class="fg">
+            <label>Archivo de referencia (CSV o JSON)</label>
+            <div class="uz">
+              <div class="ui">📊</div>
+              <p><strong>predios_referencia_p01.csv</strong></p>
+              <p style="font-size:0.78rem;">CSV · 42 filas · Clave: matrícula inmobiliaria</p>
+            </div>
+          </div>
+          <div class="fg"><label>Clave de alineación</label><select class="fs"><option>Matrícula inmobiliaria</option></select></div>
+          <button class="btn btn-p">⚖️ Ejecutar comparación</button>
+        </div>
+        <div class="card">
+          <div class="ct">📊 Resumen</div>
+          <div class="sg" style="grid-template-columns:1fr 1fr;margin-bottom:0.9rem;">
+            <div class="sc"><div class="sl">MATCH</div><div class="sv" style="color:var(--success);">34</div><div class="ss">80.9%</div></div>
+            <div class="sc"><div class="sl">MISMATCH</div><div class="sv" style="color:var(--danger);">6</div><div class="ss">14.3%</div></div>
+            <div class="sc"><div class="sl">PENDIENTE</div><div class="sv" style="color:var(--warn);">2</div><div class="ss">Sin par</div></div>
+            <div class="sc"><div class="sl">ERROR</div><div class="sv" style="color:var(--danger);">0</div><div class="ss">Fallo</div></div>
+          </div>
+          <div class="flex gap">
+            <button class="btn btn-s btn-sm">⬇ CSV</button>
+            <button class="btn btn-g btn-sm">⬇ JSON</button>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ct">🔍 Detalle por registro — muestra</div>
+        <div class="tw">
+          <div class="cr hdr"><span>Matrícula</span><span>Valor extraído</span><span>Valor referencia</span><span>Estado</span></div>
+          <div class="cr"><span><strong>050-74822</strong></span><span>Inversiones Pacífico Ltda.</span><span>Inversiones Pacífico Ltda.</span><span><span class="p p-match">✓ MATCH</span></span></div>
+          <div class="cr"><span><strong>050-74823</strong></span><span>Constructora Andes S.A.</span><span>Constructora Andes S.A.S.</span><span><span class="p p-mismatch">✗ MISMATCH</span></span></div>
+          <div class="cr"><span><strong>050-74824</strong></span><span>1 240 m²</span><span>1 240 m²</span><span><span class="p p-match">✓ MATCH</span></span></div>
+          <div class="cr"><span><strong>050-74825</strong></span><span>Hipoteca Banco Bogotá</span><span>Sin gravámenes</span><span><span class="p p-mismatch">✗ MISMATCH</span></span></div>
+          <div class="cr"><span><strong>050-74826</strong></span><span>—</span><span>Edificaciones del Valle S.A.</span><span><span class="p p-pending">⏸ PENDIENTE</span></span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────── -->
+    <!-- HISTORIAL                            -->
+    <!-- ──────────────────────────────────── -->
+    <section class="screen" id="screen-historial">
+      <div class="ph">
+        <div class="ey">Resultados</div>
+        <h1>Historial de lotes</h1>
+        <p>Todos los lotes ejecutados, con estado, origen, métricas y descarga disponible.</p>
+      </div>
+      <div class="tw">
+        <table class="dt">
+          <thead><tr><th>ID</th><th>Nombre</th><th>Tipo</th><th>Origen</th><th>Docs</th><th>OK</th><th>Err</th><th>Comparado</th><th>Fecha</th><th>Estado</th><th></th></tr></thead>
+          <tbody>
+            <tr>
+              <td><code>LOTE-2026-047</code></td><td><strong>CTL-Mayo-P02</strong></td>
+              <td>Cert. T&L <span class="p p-prod">PROD</span></td><td>FTP</td>
+              <td>56</td><td>38</td><td>1</td><td>—</td><td>2026-05-18</td>
+              <td><span class="p p-run">↻ Activo</span></td>
+              <td><button class="btn btn-s btn-sm" onclick="go('detallelote',null)">Ver →</button></td>
+            </tr>
+            <tr>
+              <td><code>LOTE-2026-046</code></td><td><strong>CTL-Mayo-P01</strong></td>
+              <td>Cert. T&L <span class="p p-prod">PROD</span></td><td>FTP</td>
+              <td>42</td><td>42</td><td>0</td><td><span class="p p-match">✓</span></td><td>2026-05-12</td>
+              <td><span class="p p-done">✓ Fin.</span></td>
+              <td><button class="btn btn-g btn-sm" onclick="go('detallelote',null)">Ver →</button></td>
+            </tr>
+            <tr>
+              <td><code>LOTE-2026-040</code></td><td><strong>CONTR-Mar-01</strong></td>
+              <td>Contrato <span class="p p-beta">BETA</span></td><td>Manual</td>
+              <td>12</td><td>11</td><td>1</td><td>—</td><td>2026-04-28</td>
+              <td><span class="p p-done">✓ Fin.</span></td>
+              <td><button class="btn btn-g btn-sm">Ver →</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────── -->
+    <!-- DETALLE LOTE                         -->
+    <!-- ──────────────────────────────────── -->
+    <section class="screen" id="screen-detallelote">
+      <div class="ph">
+        <div class="ey">Resultados · LOTE-2026-047</div>
+        <h1>CTL-Mayo-P02-Norteamérica</h1>
+        <p>Cert. T&L (PROD · Entrenado) · 56 docs · Origen: FTP · Iniciado 2026-05-18 14:22</p>
+      </div>
+      <div class="sg mb2">
+        <div class="sc"><div class="sl">Total</div><div class="sv">56</div></div>
+        <div class="sc"><div class="sl">Completados</div><div class="sv" style="color:var(--success);">38</div></div>
+        <div class="sc"><div class="sl">En progreso</div><div class="sv" style="color:#1a4fb5;">17</div></div>
+        <div class="sc"><div class="sl">Errores</div><div class="sv" style="color:var(--danger);">1</div></div>
+      </div>
+      <div class="pw mb2">
+        <div class="pl"><span>Progreso del lote</span><span>68%</span></div>
+        <div class="pb"><div class="pf" style="width:68%;"></div></div>
+      </div>
+      <div class="fb mb2">
+        <div class="flex gap">
+          <button class="btn btn-s btn-sm">⬇ JSON consolidado</button>
+          <button class="btn btn-g btn-sm">⬇ CSV consolidado</button>
+        </div>
+        <button class="btn btn-s btn-sm" onclick="go('comparacion',null)">⚖️ Comparar contra referencia →</button>
+      </div>
+      <div class="tw">
+        <table class="dt">
+          <thead><tr><th>Archivo</th><th>Origen</th><th>Matrícula</th><th>Propietario</th><th>Área</th><th>Campos</th><th>Estado</th></tr></thead>
+          <tbody>
+            <tr><td>CTL_074822.pdf</td><td>FTP</td><td>050-74822</td><td>Inversiones Pacífico Ltda.</td><td>1 240 m²</td><td>7/8</td><td><span class="p p-done">✓ OK</span></td></tr>
+            <tr><td>CTL_074823.pdf</td><td>FTP</td><td>050-74823</td><td>Constructora Andes S.A.</td><td>980 m²</td><td>8/8</td><td><span class="p p-done">✓ OK</span></td></tr>
+            <tr><td>CTL_074824.pdf</td><td>FTP</td><td>—</td><td>—</td><td>—</td><td>0/8</td><td><span class="p p-error">✗ Ilegible</span></td></tr>
+            <tr><td>CTL_074825.pdf</td><td>FTP</td><td>050-74825</td><td>Edificaciones del Valle</td><td>2 100 m²</td><td>8/8</td><td><span class="p p-done">✓ OK</span></td></tr>
+            <tr><td>CTL_074826.pdf</td><td>FTP</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="p p-run">↻ Procesando</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────── -->
+    <!-- RESULTADOS                           -->
+    <!-- ──────────────────────────────────── -->
+    <section class="screen" id="screen-resultados">
+      <div class="ph">
+        <div class="ey">Resultado · CTL_074822.pdf · EJE-2026-08814</div>
+        <h1>Extracción completada</h1>
+        <p>7/8 campos · Cert. T&L (PROD · Entrenado) · Origen: carga manual · JSON + CSV disponibles</p>
+      </div>
+      <div class="co">
+        <strong>Extracción exitosa.</strong> El campo "Número de folios" no fue localizado. Los 7 campos restantes fueron extraídos con alta confianza. Salida: datos estructurados — no hay respuesta en lenguaje natural.
+      </div>
+      <div class="grid2">
+        <div class="card">
+          <div class="ct">📋 Campos extraídos</div>
+          <div class="xf"><span class="xfn">Matrícula inmobiliaria</span><span class="xfv">050-74822</span></div>
+          <div class="xf"><span class="xfn">Propietario actual</span><span class="xfv">Inversiones Pacífico Ltda.</span></div>
+          <div class="xf"><span class="xfn">Área del predio</span><span class="xfv">1 240 m²</span></div>
+          <div class="xf"><span class="xfn">Gravámenes</span><span class="xfv">Hipoteca Banco Davivienda</span></div>
+          <div class="xf"><span class="xfn">Limitaciones de dominio</span><span class="xfv">Ninguna</span></div>
+          <div class="xf"><span class="xfn">Fecha de expedición</span><span class="xfv">2026-04-03</span></div>
+          <div class="xf"><span class="xfn">Municipio / Dpto.</span><span class="xfv">Medellín / Antioquia</span></div>
+          <div class="xf"><span class="xfn">Número de folios</span><span class="xfv nf">No extraído</span></div>
+          <div class="flex gap mt2">
+            <button class="btn btn-s btn-sm">⬇ JSON</button>
+            <button class="btn btn-g btn-sm">⬇ CSV</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ct">🗃 Salida JSON</div>
+          <pre style="font-size:0.74rem;background:#1b2330;color:#ebf1ff;padding:0.95rem;border-radius:12px;overflow:auto;max-height:360px;"><code>{
+  "id_ejecucion": "EJE-2026-08814",
+  "tipo_documental": "certificado_tradicion_libertad",
+  "estado_tipo": "produccion",
+  "modalidad_extraccion": "entrenado",
+  "documento": "CTL_074822.pdf",
+  "origen": "manual",
+  "fecha_procesamiento": "2026-05-18T14:38:42Z",
+  "campos": {
+    "matricula_inmobiliaria": "050-74822",
+    "propietario_actual": "Inversiones Pacífico Ltda.",
+    "area_m2": 1240,
+    "gravamenes": ["Hipoteca Banco Davivienda"],
+    "limitaciones_dominio": "Ninguna",
+    "fecha_expedicion": "2026-04-03",
+    "municipio": "Medellín",
+    "departamento": "Antioquia",
+    "numero_folios": null
+  },
+  "completitud": {
+    "campos_esperados": 8,
+    "campos_extraidos": 7,
+    "porcentaje": 87.5
+  }
+}</code></pre>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  function go(screenId) {
+    document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
+    var t = document.getElementById('screen-' + screenId);
+    if (t) t.classList.add('active');
+    document.querySelectorAll('.nav-btn').forEach(function(b) { b.classList.remove('active'); });
+    var nb = document.querySelector('.nav-btn[data-screen="' + screenId + '"]');
+    if (nb) nb.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  function ot(el) {
+    el.closest('.otabs').querySelectorAll('.otab').forEach(function(t) { t.classList.remove('on'); });
+    el.classList.add('on');
+  }
+</script>
+</body>
+</html>

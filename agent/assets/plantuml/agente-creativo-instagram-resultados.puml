@@ -1,0 +1,50 @@
+@startuml agente-creativo-instagram-resultados
+skinparam backgroundColor #1a202c
+skinparam defaultFontColor #d4dae6
+skinparam defaultFontName "Segoe UI"
+skinparam sequenceArrowColor #4db8b5
+skinparam sequenceLifeLineBorderColor #4db8b5
+skinparam sequenceParticipantBackgroundColor #1e2533
+skinparam sequenceParticipantBorderColor #4db8b5
+skinparam sequenceParticipantFontColor #e8f4f3
+skinparam noteBackgroundColor #252d3d
+skinparam noteBorderColor #4db8b5
+skinparam noteFontColor #9ba5b4
+
+title Agente Creativo — Piezas de Instagram: Seguimiento automático de resultados
+
+actor Usuario
+participant "Sistema\n(CINTELIO Marketing)" as Sistema
+participant "API\nInstagram" as IG
+database "Base de\ndatos" as DB
+
+== Publicación y registro ==
+
+Usuario -> Sistema : Aprueba pieza de Instagram
+Sistema -> Usuario : Muestra pieza final
+Usuario -> Sistema : Publica pieza manualmente en Instagram
+Usuario -> Sistema : Registra link de publicación\n(ej: instagram.com/p/abc123)
+Sistema -> DB : Guarda link asociado a la pieza
+Sistema -> Usuario : Confirma registro del link
+
+== Consulta periódica de métricas ==
+
+loop Cada N horas (automático)
+    Sistema -> IG : Consulta métricas de publicación
+    IG -> Sistema : Retorna datos:\n- likes\n- comentarios\n- guardados\n- alcance\n- interacciones
+    Sistema -> DB : Actualiza panel de resultados
+end
+
+== Visualización ==
+
+Usuario -> Sistema : Abre panel de desempeño
+Sistema -> DB : Recupera métricas actuales
+DB -> Sistema : Datos de resultados
+Sistema -> Usuario : Muestra panel de resultados\n(likes, comentarios, engagement, etc.)
+note over Usuario, Sistema
+  El seguimiento es automático.
+  No requiere carga manual de datos.
+  Se actualiza en cada ciclo de consulta.
+end note
+
+@enduml

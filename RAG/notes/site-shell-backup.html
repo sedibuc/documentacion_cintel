@@ -1,0 +1,56 @@
+<div class="site-shell">
+  <aside class="sidebar">
+    <div class="brand-block">
+      <p class="eyebrow">Micrositio documental</p>
+      <h1>Demostrador RAG</h1>
+      <p class="brand-copy">Documentación ejecutiva y técnica basada únicamente en el diagnóstico vigente.</p>
+    </div>
+
+    <label class="search-box" for="site-search">
+      <span>Buscar en el sitio</span>
+      <input id="site-search" type="search" placeholder="Componentes, riesgos, variables..." autocomplete="off">
+    </label>
+    <div id="search-results" class="search-results" hidden></div>
+
+    <nav class="main-nav" aria-label="Secciones principales">
+      <a href="index.html" data-nav="inicio">Inicio</a>
+      <a href="diagnostico.html" data-nav="diagnostico">Diagnóstico técnico inicial</a>
+      <a href="arquitectura.html" data-nav="arquitectura">Arquitectura vigente</a>
+      <a href="brechas.html" data-nav="brechas">Brechas y oportunidades</a>
+      <a href="despliegue.html" data-nav="despliegue">Configuración y despliegue</a>
+      <a href="costos.html" data-nav="costos">Servicios y costos</a>
+      <a href="tobefuncional.html" data-nav="tobefuncional">TO-BE funcional</a>
+      <a href="preguntasexperto.html" data-nav="preguntasexperto">Preguntas para el experto</a>
+      <a href="no-es-rag.html" data-nav="noesrag">Por qué no es un RAG</a>
+    </nav>
+
+    <div class="sidebar-note">
+      <strong>Alcance</strong>
+      <p>Este sitio cubre solo el demostrador RAG actual. El Agente de Marketing queda fuera de alcance.</p>
+    </div>
+  </aside>
+
+  <div class="page-column">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Repositorio RagFunc</p>
+        <h2 id="page-title">Cargando sección...</h2>
+      </div>
+      <a id="source-link" class="source-link" href="source/diagnostico_rag.md" title="Abre el documento base en formato Markdown">Ver diagnóstico fuente (.md)</a>
+    </header>
+
+    <div id="runtime-warning" class="runtime-warning" hidden></div>
+
+    <main class="content-layout">
+      <article id="content" class="content-panel" aria-live="polite"></article>
+      <aside class="toc-panel">
+        <div class="toc-card">
+          <p class="eyebrow">Navegación interna</p>
+          <nav id="toc" aria-label="Tabla de contenido"></nav>
+        </div>
+      </aside>
+    </main>
+  </div>
+</div>
+
+<button id="back-to-top" class="back-to-top" type="button" aria-label="Volver arriba">↑</button>

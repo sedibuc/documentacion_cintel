@@ -54,6 +54,7 @@ Automatizar el proceso de diseño de campañas de marketing mediante un agente d
 | [Brechas](brechas.html) | Capacidades actuales vs. buenas prácticas; oportunidades de evolución. |
 | [Despliegue](despliegue.html) | Guía completa de configuración, variables de entorno y pasos de instalación. |
 | [Costos](costos.html) | Inventario de servicios IA, variables de costo y estimación por sesión. |
+| [TO-BE](to-be.html) | Visión funcional objetivo del sistema: módulos, flujos y alcance del MVP. |
 
 ---
 

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mockup — Registro de usuario | CINTELIO Marketing</title>
+  <style>
+    :root {
+      --panel: rgba(255, 252, 246, 0.97);
+      --ink: #1e2430;
+      --muted: #586171;
+      --line: rgba(30, 36, 48, 0.13);
+      --accent: #0f5a58;
+      --accent-soft: #d6ebe8;
+      --warn: #8d4a1f;
+      --radius: 20px;
+      --radius-sm: 12px;
+      --shadow: 0 28px 70px rgba(26, 32, 41, 0.13), 0 4px 16px rgba(26,32,41,0.07);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", "Aptos", sans-serif;
+      background:
+        radial-gradient(circle at 10% 15%, rgba(15,90,88,0.12) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(185,119,53,0.09) 0%, transparent 40%),
+        linear-gradient(180deg, #f7f1e7 0%, #ece7de 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    /* ── Fixed top nav bar ────── */
+    .mn-topbar {
+      position: fixed; top: 0; left: 0; right: 0; height: 48px;
+      background: rgba(255,252,246,0.97);
+      border-bottom: 1px solid rgba(30,36,48,0.1);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 1.5rem; z-index: 200;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 1px 6px rgba(30,36,48,0.06);
+    }
+    .mn-logo { font-weight: 800; color: #1e2430; text-decoration: none; font-size: 0.95rem; letter-spacing: -0.01em; }
+    .mn-logo span { color: #0f5a58; }
+    .mn-nav { display: flex; gap: 0.15rem; }
+    .mn-nav a { font-size: 0.79rem; color: #586171; padding: 0.25rem 0.6rem; border-radius: 5px; text-decoration: none; }
+    .mn-logout { font-size: 0.77rem; color: #8d4a1f; border: 1px solid rgba(141,74,31,0.25); border-radius: 6px; padding: 0.26rem 0.65rem; text-decoration: none; }
+
+    /* ── Mockup badge ─────────── */
+    .mockup-badge {
+      position: fixed; top: 1rem; right: 1rem;
+      padding: 0.38rem 0.9rem;
+      background: var(--warn); color: #fff;
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em;
+      border-radius: 999px; text-transform: uppercase; z-index: 300;
+    }
+
+    /* ── Content ──────────────── */
+    .content-wrap {
+      margin-top: 72px;
+      width: 100%; max-width: 560px;
+    }
+
+    /* ── Step indicator ───────── */
+    .step-indicator {
+      display: flex; gap: 0.5rem; align-items: center;
+      margin-bottom: 2rem;
+    }
+    .step-dot {
+      width: 28px; height: 28px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 700;
+      border: 2px solid var(--line);
+      color: var(--muted);
+    }
+    .step-dot.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .step-dot.done { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+    .step-line { flex: 1; height: 2px; background: var(--line); border-radius: 1px; }
+    .step-line.done { background: var(--accent); }
+    .step-label-row {
+      display: flex; justify-content: space-between;
+      margin-top: 0.4rem; margin-bottom: 1.6rem;
+      font-size: 0.72rem; color: var(--muted);
+    }
+
+    /* ── Card ─────────────────── */
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 2.4rem 2.8rem;
+    }
+    .card-label {
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+    h1 { font-size: 1.45rem; color: var(--ink); margin-bottom: 0.4rem; font-weight: 800; }
+    .subtitle { color: var(--muted); font-size: 0.9rem; line-height: 1.55; margin-bottom: 1.8rem; }
+
+    /* ── Form ─────────────────── */
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; margin-bottom: 1.2rem; }
+    .form-group { margin-bottom: 1.2rem; }
+    label { display: block; font-size: 0.87rem; font-weight: 600; color: var(--ink); margin-bottom: 0.42rem; }
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    select {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: rgba(255,255,255,0.9);
+      font-size: 0.93rem;
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      font-family: inherit;
+    }
+    input:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(15,90,88,0.1);
+    }
+    select { cursor: pointer; }
+
+    /* ── Company mode switch ──── */
+    .mode-switch {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 0.6rem; margin-bottom: 1.5rem;
+    }
+    .mode-opt {
+      border: 2px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 0.85rem;
+      cursor: pointer;
+      text-align: center;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .mode-opt.selected {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+    .mode-opt .mode-icon { font-size: 1.3rem; display: block; margin-bottom: 0.3rem; }
+    .mode-opt .mode-label { font-size: 0.82rem; font-weight: 700; color: var(--ink); }
+    .mode-opt .mode-sub { font-size: 0.75rem; color: var(--muted); }
+
+    /* ── Buttons ──────────────── */
+    .btn-row { display: flex; gap: 0.75rem; margin-top: 1.8rem; }
+    .btn {
+      flex: 1; padding: 0.88rem; border-radius: var(--radius-sm); border: none;
+      font-size: 0.95rem; font-weight: 700; cursor: pointer; text-align: center;
+      text-decoration: none; transition: transform 0.15s, opacity 0.15s;
+      font-family: inherit; display: block;
+    }
+    .btn:hover { transform: translateY(-1px); text-decoration: none; opacity: 0.92; }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--line); flex: 0.6; }
+
+    /* ── OR divider ───────────── */
+    .divider {
+      display: flex; align-items: center; gap: 0.8rem;
+      margin: 1.4rem 0; color: var(--muted); font-size: 0.82rem;
+    }
+    .divider::before, .divider::after {
+      content: ''; flex: 1; height: 1px; background: var(--line);
+    }
+
+    /* ── Alt CTA ──────────────── */
+    .alt-cta {
+      text-align: center; font-size: 0.83rem; color: var(--muted); margin-top: 1.2rem;
+    }
+    .alt-cta a { color: var(--accent); font-weight: 600; }
+
+    /* ── Onboarding link ──────── */
+    .onboarding-link {
+      margin-top: 1.2rem;
+      padding: 1rem 1.2rem;
+      background: var(--accent-soft);
+      border: 1px solid rgba(15,90,88,0.15);
+      border-radius: var(--radius-sm);
+      font-size: 0.84rem; color: var(--accent);
+      display: flex; align-items: center; justify-content: space-between;
+      text-decoration: none;
+      transition: background 0.15s;
+    }
+    .onboarding-link:hover { background: #c5e3e0; text-decoration: none; }
+    .onboarding-link strong { color: var(--ink); font-weight: 700; }
+  </style>
+</head>
+<body>
+
+  <!-- Fixed top nav -->
+  <div class="mn-topbar">
+    <a href="../app/home.html" class="mn-logo">CINTELIO <span>Marketing</span></a>
+    <nav class="mn-nav">
+      <a href="../onboarding/empresa-url.html">Onboarding</a>
+      <a href="../agente-estrategico/ide-main.html">Estratégico</a>
+      <a href="../agente-creativo/arbol-campana-brief-piezas.html">Creativo</a>
+      <a href="../iteracion/iteracion-main.html">Ajuste</a>
+      <a href="../historico/historico-main.html">Histórico</a>
+    </nav>
+    <a href="../app/login.html" class="mn-logout">Salir →</a>
+  </div>
+
+  <div class="mockup-badge">Mockup</div>
+
+  <div class="content-wrap">
+
+    <!-- Step indicator -->
+    <div class="step-indicator">
+      <div class="step-dot active">1</div>
+      <div class="step-line"></div>
+      <div class="step-dot">2</div>
+      <div class="step-line"></div>
+      <div class="step-dot">3</div>
+    </div>
+    <div class="step-label-row">
+      <span>Datos personales</span>
+      <span>Empresa</span>
+      <span>Verificación</span>
+    </div>
+
+    <div class="card">
+      <p class="card-label">Registro · Paso 1 de 3</p>
+      <h1>Crea tu cuenta</h1>
+      <p class="subtitle">
+        Completa tus datos para acceder a CINTELIO Marketing.<br>
+        Si tu empresa ya está registrada, se te vinculará automáticamente.
+      </p>
+
+      <!-- Company mode -->
+      <p style="font-size:0.85rem;font-weight:600;color:var(--ink);margin-bottom:0.6rem;">¿Cómo quieres comenzar?</p>
+      <div class="mode-switch">
+        <div class="mode-opt selected">
+          <span class="mode-icon">👤</span>
+          <div class="mode-label">Nueva empresa</div>
+          <div class="mode-sub">Registrar empresa nueva</div>
+        </div>
+        <div class="mode-opt">
+          <span class="mode-icon">🏢</span>
+          <div class="mode-label">Unirme a empresa</div>
+          <div class="mode-sub">Mi empresa ya existe</div>
+        </div>
+      </div>
+
+      <!-- Personal data -->
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nombre</label>
+          <input type="text" placeholder="Ana" value="">
+        </div>
+        <div class="form-group">
+          <label>Apellido</label>
+          <input type="text" placeholder="Martínez" value="">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Correo corporativo</label>
+        <input type="email" placeholder="ana@empresa.com" value="">
+      </div>
+
+      <div class="form-group">
+        <label>Cargo en la empresa</label>
+        <select>
+          <option>Selecciona tu cargo...</option>
+          <option>Directora de Marketing</option>
+          <option>Coordinadora de Comunicaciones</option>
+          <option>Gerente General</option>
+          <option>Analista de Marketing Digital</option>
+          <option>Otro</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input type="password" placeholder="Mínimo 8 caracteres">
+      </div>
+
+      <div class="btn-row">
+        <a href="../app/login.html" class="btn btn-ghost">← Volver</a>
+        <a href="../onboarding/empresa-url.html" class="btn btn-primary">Continuar →</a>
+      </div>
+
+      <div class="divider">o</div>
+
+      <a href="../onboarding/nuevo-usuario.html" class="onboarding-link">
+        <span><strong>¿Tu empresa ya está en la plataforma?</strong><br>Únete como nuevo usuario de una empresa existente</span>
+        <span>→</span>
+      </a>
+
+      <p class="alt-cta">
+        ¿Ya tienes cuenta? <a href="../app/login.html">Ingresar →</a>
+      </p>
+    </div>
+
+  </div>
+</body>
+</html>

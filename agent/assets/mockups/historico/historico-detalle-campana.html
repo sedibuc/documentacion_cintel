@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mockup — Histórico · Detalle de campaña</title>
+  <style>
+    :root {
+      --bg: #f3efe6;
+      --panel: rgba(255, 252, 246, 0.98);
+      --panel-alt: rgba(243, 239, 230, 0.75);
+      --panel-mid: rgba(248, 245, 240, 0.90);
+      --topbar: #1e2430;
+      --ink: #1e2430;
+      --ink-dim: #3a4253;
+      --muted: #586171;
+      --muted-lt: #8a97a8;
+      --line: rgba(30, 36, 48, 0.12);
+      --line-soft: rgba(30, 36, 48, 0.06);
+      --accent: #0f5a58;
+      --accent-soft: #d6ebe8;
+      --accent-light: #e8f4f3;
+      --glow: #4db8b5;
+      --warn: #8d4a1f;
+      --warn-soft: #faeadb;
+      --warn-light: #c07840;
+      --success: #2d6a4f;
+      --success-light: #5a9e7c;
+      --border: rgba(30, 36, 48, 0.12);
+      --border-accent: rgba(15, 90, 88, 0.30);
+      --radius: 14px;
+      --radius-sm: 9px;
+      --shadow: 0 4px 20px rgba(26,32,41,0.10);
+      --shadow-lg: 0 24px 60px rgba(26,32,41,0.12);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Segoe UI", sans-serif; background: linear-gradient(180deg, #f7f1e7 0%, #ece7de 100%); color: var(--ink); min-height: 100vh; display: flex; flex-direction: column; }
+
+    .mockup-badge { position: fixed; top: 0.75rem; right: 1rem; padding: 0.35rem 0.85rem; background: var(--warn); color: #fff; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; border-radius: 999px; text-transform: uppercase; z-index: 500; }
+
+    .topbar { height: 52px; background: var(--topbar); display: flex; align-items: center; justify-content: space-between; padding: 0 1.5rem; border-bottom: 1px solid var(--line); flex-shrink: 0; }
+    .logo { color: #f0ece3; font-weight: 800; font-size: 1rem; }
+    .logo span { color: var(--glow); }
+    .breadcrumb { display: flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; color: var(--muted); }
+    .breadcrumb a { color: var(--glow); text-decoration: none; }
+
+    .page-content { flex: 1; overflow-y: auto; padding: 2rem 2.5rem; }
+
+    .camp-hero { background: linear-gradient(135deg, rgba(15,90,88,0.25), rgba(26,32,44,0.5)); border: 1px solid var(--border-accent); border-radius: var(--radius); padding: 1.5rem 2rem; margin-bottom: 1.5rem; display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+    .camp-hero-left h1 { font-size: 1.3rem; font-weight: 800; color: var(--ink); margin-bottom: 0.35rem; }
+    .camp-hero-left .meta { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .meta-item { font-size: 0.78rem; color: var(--muted); display: flex; align-items: center; gap: 0.3rem; }
+    .meta-item span { color: var(--muted-lt); }
+    .ch-tag { font-size: 0.68rem; padding: 0.18rem 0.55rem; border-radius: 999px; font-weight: 600; margin-right: 0.3rem; }
+    .ch-instagram { background: rgba(131,58,180,0.15); color: #c084fc; border: 1px solid rgba(131,58,180,0.25); }
+    .ch-linkedin { background: rgba(10,102,194,0.15); color: #60a5fa; border: 1px solid rgba(10,102,194,0.25); }
+    .ch-email { background: rgba(245,158,11,0.12); color: #fbbf24; border: 1px solid rgba(245,158,11,0.2); }
+    .hero-actions { display: flex; flex-direction: column; gap: 0.4rem; min-width: 200px; }
+    .hero-btn { padding: 0.5rem 0.85rem; border-radius: 8px; font-size: 0.78rem; font-weight: 600; border: 1px solid; cursor: pointer; text-align: center; text-decoration: none; display: block; }
+    .hero-btn.primary { background: rgba(77,184,181,0.1); border-color: var(--border-accent); color: var(--glow); }
+    .hero-btn.reuse { background: rgba(45,106,79,0.14); border-color: rgba(127,203,167,0.3); color: var(--success-light); }
+
+    .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+    .content-grid.three { grid-template-columns: 1fr 1fr 1fr; }
+    @media (max-width: 900px) { .content-grid { grid-template-columns: 1fr; } }
+
+    .info-card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+    .ic-header { background: rgba(30,36,48,0.04); border-bottom: 1px solid var(--line); padding: 0.65rem 1rem; display: flex; align-items: center; gap: 0.5rem; }
+    .ic-title { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--glow); font-weight: 700; }
+    .ic-body { padding: 1rem; }
+    .field-row { display: flex; gap: 0.5rem; margin-bottom: 0.6rem; }
+    .field-k { font-size: 0.74rem; color: var(--muted); min-width: 90px; flex-shrink: 0; margin-top: 0.1rem; }
+    .field-v { font-size: 0.8rem; color: var(--muted); line-height: 1.5; }
+
+    .objective-block { background: rgba(77,184,181,0.05); border: 1px solid rgba(77,184,181,0.15); border-radius: 8px; padding: 0.8rem 1rem; font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+
+    .audience-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .aud-tag { font-size: 0.73rem; padding: 0.25rem 0.65rem; border-radius: 999px; background: rgba(30,36,48,0.05); border: 1px solid var(--line); color: var(--muted-lt); }
+
+    .kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+    .kpi-item { background: rgba(30,36,48,0.04); border: 1px solid var(--line); border-radius: 7px; padding: 0.5rem 0.7rem; }
+    .kpi-label { font-size: 0.68rem; color: var(--muted); margin-bottom: 0.2rem; }
+    .kpi-value { font-size: 0.82rem; color: var(--muted-lt); font-weight: 600; }
+
+    .components-table { width: 100%; border-collapse: collapse; }
+    .components-table th { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 600; padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--line); text-align: left; }
+    .components-table td { font-size: 0.77rem; color: var(--muted-lt); padding: 0.45rem 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: middle; }
+    .components-table tr:last-child td { border-bottom: none; }
+    .has-result { display: flex; align-items: center; gap: 0.3rem; font-size: 0.7rem; }
+    .has-result.yes { color: var(--success-light); }
+    .has-result.no { color: var(--muted); }
+    .result-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+    .rd-yes { background: var(--success-light); }
+    .rd-no { background: var(--muted); }
+
+    .timeline-list { display: flex; flex-direction: column; gap: 0.5rem; }
+    .tl-item { display: flex; gap: 0.7rem; align-items: flex-start; }
+    .tl-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--glow); flex-shrink: 0; margin-top: 0.3rem; }
+    .tl-content { flex: 1; }
+    .tl-label { font-size: 0.77rem; color: var(--muted); }
+    .tl-date { font-size: 0.68rem; color: var(--muted); }
+
+    /* BOTTOM NAV */
+    .bottom-nav { height: 40px; background: var(--topbar); border-top: 1px solid var(--line); display: flex; align-items: center; justify-content: center; gap: 0.4rem; padding: 0 1.5rem; flex-shrink: 0; }
+    .bn-link { font-size: 0.73rem; color: var(--muted); padding: 0.25rem 0.6rem; border-radius: 5px; text-decoration: none; }
+    .bn-link.active { color: var(--glow); background: rgba(77,184,181,0.08); }
+    .bn-sep { color: var(--line); font-size: 0.6rem; }
+  </style>
+  <style>
+    /* === MN: Mockup nav (light theme) === */
+  .mn-panel{position:fixed;bottom:1.4rem;right:1.2rem;display:flex;flex-direction:column;gap:0.45rem;z-index:900;}
+  .mn-panel a{display:block;padding:0.52rem 1.05rem;border-radius:10px;font-size:0.79rem;font-weight:700;text-decoration:none;text-align:center;white-space:nowrap;font-family:"Segoe UI",sans-serif;}
+  .mn-next{background:#0f5a58;color:#fff;box-shadow:0 4px 14px rgba(15,90,88,0.35);}
+  .mn-next:hover{background:#0a4846;}
+  .mn-prev{background:rgba(30,36,48,0.08);color:#586171;border:1px solid rgba(30,36,48,0.16);}
+  .mn-prev:hover{background:rgba(30,36,48,0.14);}
+  .mn-home{background:rgba(30,36,48,0.05);color:#8a97a8;border:1px solid rgba(30,36,48,0.10);font-size:0.74rem;padding:0.38rem 0.85rem;}
+  .mn-home:hover{background:rgba(30,36,48,0.10);color:#586171;}
+  .mn-logout{background:rgba(141,74,31,0.10);color:#8d4a1f;border:1px solid rgba(141,74,31,0.25);font-size:0.73rem;padding:0.36rem 0.85rem;}
+  .mn-logout:hover{background:rgba(141,74,31,0.18);}
+  /* ============================================ */
+  </style>
+</head>
+<body>
+  <div class="mockup-badge">Mockup</div>
+
+  <div class="topbar">
+    <a href="../app/home.html" class="logo">CINTELIO <span>Marketing</span></a>
+    <div class="breadcrumb">
+      <a href="historico-main.html">Histórico</a>
+      <span>›</span>
+      <span style="color:#f0ece3">ANDICOM 2024 — Congreso IA</span>
+    </div>
+  </div>
+
+  <div class="page-content">
+
+    <!-- Hero -->
+    <div class="camp-hero">
+      <div class="camp-hero-left">
+        <h1>ANDICOM 2024 — Congreso IA</h1>
+        <div class="meta" style="margin-bottom:0.7rem">
+          <div class="meta-item">📅 <span>12/11/2024</span></div>
+          <div class="meta-item">🏷️ <span>Evento</span></div>
+          <div class="meta-item">✅ <span>Completada</span></div>
+        </div>
+        <div>
+          <span class="ch-tag ch-instagram">Instagram</span>
+          <span class="ch-tag ch-linkedin">LinkedIn</span>
+          <span class="ch-tag ch-email">Email</span>
+        </div>
+      </div>
+      <div class="hero-actions">
+        <a href="historico-arbol.html" class="hero-btn primary">Ver árbol de campaña</a>
+        <a href="historico-resultados.html" class="hero-btn primary">Ver resultados</a>
+        <button class="hero-btn reuse">↩ Usar como base para 2025</button>
+      </div>
+    </div>
+
+    <!-- Fila 1: Objetivo + Audiencia -->
+    <div class="content-grid">
+      <div class="info-card">
+        <div class="ic-header"><span class="ic-title">🎯 Objetivo de campaña</span></div>
+        <div class="ic-body">
+          <div class="objective-block">
+            Posicionar a CINTEL como referente en inteligencia artificial aplicada al sector público colombiano, generando asistencia cualificada al Congreso ANDICOM 2024 y fortaleciendo la visibilidad institucional entre tomadores de decisión.
+          </div>
+        </div>
+      </div>
+      <div class="info-card">
+        <div class="ic-header"><span class="ic-title">👥 Audiencia objetivo</span></div>
+        <div class="ic-body">
+          <div class="audience-tags" style="margin-bottom:0.7rem">
+            <span class="aud-tag">Directivos TI entidades públicas</span>
+            <span class="aud-tag">Gerentes de transformación digital</span>
+            <span class="aud-tag">Secretarios de gobierno digital</span>
+            <span class="aud-tag">Profesionales TIC sector público</span>
+          </div>
+          <div class="field-row">
+            <span class="field-k">Segmento</span>
+            <span class="field-v">Sector público colombiano — orden nacional y territorial</span>
+          </div>
+          <div class="field-row">
+            <span class="field-k">Perfil</span>
+            <span class="field-v">35–55 años, formación técnica o administrativa, decisores de compra o influenciadores</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fila 2: KPIs + Canales + Resumen componentes -->
+    <div class="content-grid three">
+      <div class="info-card">
+        <div class="ic-header"><span class="ic-title">📊 KPIs definidos</span></div>
+        <div class="ic-body">
+          <div class="kpi-grid">
+            <div class="kpi-item"><div class="kpi-label">Asistentes objetivo</div><div class="kpi-value">200+</div></div>
+            <div class="kpi-item"><div class="kpi-label">Engagement Instagram</div><div class="kpi-value">≥ 3%</div></div>
+            <div class="kpi-item"><div class="kpi-label">Apertura email</div><div class="kpi-value">≥ 25%</div></div>
+            <div class="kpi-item"><div class="kpi-label">Alcance LinkedIn</div><div class="kpi-value">5.000+</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="ic-header"><span class="ic-title">📡 Canales y estrategia</span></div>
+        <div class="ic-body">
+          <div class="field-row">
+            <span class="field-k">Instagram</span>
+            <span class="field-v">Stories y feed para generar expectativa y asistencia</span>
+          </div>
+          <div class="field-row">
+            <span class="field-k">LinkedIn</span>
+            <span class="field-v">Contenido orgánico institucional con líderes de sector</span>
+          </div>
+          <div class="field-row">
+            <span class="field-k">Email</span>
+            <span class="field-v">Invitación directa a base de contactos calificados</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="ic-header"><span class="ic-title">📦 Resumen de componentes</span></div>
+        <div class="ic-body">
+          <div class="field-row">
+            <span class="field-k">Plan</span>
+            <span class="field-v">1 plan estratégico completo</span>
+          </div>
+          <div class="field-row">
+            <span class="field-k">Briefs</span>
+            <span class="field-v">3 briefs (Instagram, LinkedIn, Email)</span>
+          </div>
+          <div class="field-row">
+            <span class="field-k">Piezas</span>
+            <span class="field-v">9 piezas de contenido</span>
+          </div>
+          <div class="field-row">
+            <span class="field-k">Resultados</span>
+            <span class="field-v">Instagram (auto) · LinkedIn (manual)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fila 3: tabla de componentes + trazabilidad -->
+    <div class="content-grid">
+      <div class="info-card">
+        <div class="ic-header"><span class="ic-title">📋 Componentes generados</span></div>
+        <div class="ic-body">
+          <table class="components-table">
+            <thead>
+              <tr>
+                <th>Componente</th>
+                <th>Canal</th>
+                <th>Tipo</th>
+                <th>Resultado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Plan estratégico</td><td>—</td><td>Plan</td><td><span class="has-result no"><span class="result-dot rd-no"></span>N/A</span></td></tr>
+              <tr><td>Brief Instagram</td><td>Instagram</td><td>Brief</td><td><span class="has-result no"><span class="result-dot rd-no"></span>N/A</span></td></tr>
+              <tr><td>Feed post 1 — Convocatoria</td><td>Instagram</td><td>Copy</td><td><span class="has-result yes"><span class="result-dot rd-yes"></span>Automático</span></td></tr>
+              <tr><td>Feed post 2 — Agenda</td><td>Instagram</td><td>Copy</td><td><span class="has-result yes"><span class="result-dot rd-yes"></span>Automático</span></td></tr>
+              <tr><td>Story countdown</td><td>Instagram</td><td>Copy</td><td><span class="has-result yes"><span class="result-dot rd-yes"></span>Automático</span></td></tr>
+              <tr><td>Brief LinkedIn</td><td>LinkedIn</td><td>Brief</td><td><span class="has-result no"><span class="result-dot rd-no"></span>N/A</span></td></tr>
+              <tr><td>Publicación orgánica 1</td><td>LinkedIn</td><td>Copy</td><td><span class="has-result yes"><span class="result-dot rd-yes"></span>Manual</span></td></tr>
+              <tr><td>Publicación orgánica 2</td><td>LinkedIn</td><td>Copy</td><td><span class="has-result no"><span class="result-dot rd-no"></span>Sin datos</span></td></tr>
+              <tr><td>Brief Email</td><td>Email</td><td>Brief</td><td><span class="has-result no"><span class="result-dot rd-no"></span>N/A</span></td></tr>
+              <tr><td>Invitación + asunto</td><td>Email</td><td>Copy</td><td><span class="has-result no"><span class="result-dot rd-no"></span>Sin datos</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="ic-header"><span class="ic-title">🕐 Trazabilidad</span></div>
+        <div class="ic-body">
+          <div class="timeline-list">
+            <div class="tl-item">
+              <div class="tl-dot"></div>
+              <div class="tl-content">
+                <div class="tl-label">Campaña creada — onboarding completado</div>
+                <div class="tl-date">10/11/2024 · 09:14</div>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-dot"></div>
+              <div class="tl-content">
+                <div class="tl-label">Plan estratégico generado con Agente Estratégico</div>
+                <div class="tl-date">10/11/2024 · 09:32</div>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-dot"></div>
+              <div class="tl-content">
+                <div class="tl-label">Brief Instagram generado con Agente Creativo</div>
+                <div class="tl-date">10/11/2024 · 10:05</div>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-dot"></div>
+              <div class="tl-content">
+                <div class="tl-label">3 piezas Instagram generadas y ajustadas</div>
+                <div class="tl-date">10/11/2024 · 10:41 — 11:20</div>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-dot"></div>
+              <div class="tl-content">
+                <div class="tl-label">Briefs LinkedIn y Email generados</div>
+                <div class="tl-date">11/11/2024 · 08:15</div>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-dot"></div>
+              <div class="tl-content">
+                <div class="tl-label">Resultados Instagram cargados automáticamente</div>
+                <div class="tl-date">18/11/2024 · 22:00 (sync nocturno)</div>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-dot" style="background:var(--success-light)"></div>
+              <div class="tl-content">
+                <div class="tl-label" style="color:var(--success-light)">Campaña marcada como completada</div>
+                <div class="tl-date">20/11/2024 · 14:30</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="bottom-nav">
+    <a class="bn-link" href="historico-main.html">Lista</a>
+    <span class="bn-sep">›</span>
+    <a class="bn-link" href="historico-arbol.html">Árbol</a>
+    <span class="bn-sep">›</span>
+    <a class="bn-link active" href="historico-detalle-campana.html">Detalle</a>
+    <span class="bn-sep">›</span>
+    <a class="bn-link" href="historico-resultados.html">Resultados</a>
+  </div>
+
+<script>
+/* MN: Fix topbar links */
+(function(){
+  // Make logo link to home
+  document.querySelectorAll('.topbar .logo, .logo').forEach(function(el){
+    if(el.tagName!=='A'){
+      var a=document.createElement('a');
+      a.href='../app/home.html';
+      a.innerHTML=el.innerHTML;
+      a.className=el.className;
+      a.style.textDecoration='none';
+      el.parentNode.replaceChild(a,el);
+    }
+  });
+  // Fix module nav links
+  var map={
+    'Onboarding':'../onboarding/empresa-url.html',
+    'Agente Estratégico':'../agente-estrategico/ide-main.html',
+    'Agente Creativo':'../agente-creativo/arbol-campana-brief-piezas.html',
+    'Ajuste':'../iteracion/iteracion-main.html',
+    'Ajuste de resultados':'../iteracion/iteracion-main.html',
+    'Histórico':'../historico/historico-main.html'
+  };
+  document.querySelectorAll('.topbar a,.topbar-nav a,.topbar .nav a').forEach(function(a){
+    var t=a.textContent.trim();
+    if(map[t]&&(a.getAttribute('href')==='#'||!a.getAttribute('href'))){
+      a.href=map[t];
+    }
+  });
+  // Add logout if not present
+  var topbar=document.querySelector('.topbar');
+  if(topbar&&!topbar.querySelector('.mn-topbar-out')){
+    var out=document.createElement('a');
+    out.href='../app/login.html';
+    out.textContent='Salir →';
+    out.className='mn-topbar-out';
+    out.style.cssText='font-size:0.75rem;color:#9ba5b4;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:0.28rem 0.6rem;text-decoration:none;margin-left:0.5rem;white-space:nowrap;';
+    topbar.appendChild(out);
+  }
+})();
+</script>
+
+<div class="mn-panel">
+  <a href="historico-resultados.html" class="mn-next">Ver resultados →</a>
+  <a href="historico-arbol.html" class="mn-prev">← Árbol campaña</a>
+  <a href="../app/home.html" class="mn-home">⌂ Inicio</a>
+  <a href="../app/login.html" class="mn-logout">Salir →</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,62 @@
+@startuml flujo-onboarding
+skinparam backgroundColor #f7f1e7
+skinparam activity {
+  BackgroundColor #ffffff
+  BorderColor #0f5a58
+  BorderThickness 1.5
+  FontSize 13
+  FontName "Segoe UI"
+  ArrowColor #0f5a58
+  ArrowFontSize 11
+  StartColor #0f5a58
+  EndColor #073534
+  DiamondBackgroundColor #d6ebe8
+  DiamondBorderColor #0f5a58
+}
+skinparam note {
+  BackgroundColor #d6ebe8
+  BorderColor #0f5a58
+}
+skinparam title {
+  FontSize 16
+  FontStyle bold
+  FontColor #073534
+}
+
+title Flujo 1 — Onboarding funcional de empresa
+
+start
+:Administrador accede al portal\nde la plataforma;
+:Registra datos de la empresa\n(razón social, NIT, sector);
+:Sistema crea cuenta organizacional\ny asigna entorno aislado;
+:Administrador configura perfil\n(logo, datos de contacto, plan);
+:Invita usuarios operativos\n(correo + rol asignado);
+
+if (¿Integración por FTP?) then (Sí)
+  :Configura conexión FTP del cliente\n(host, puerto, credenciales);
+  :Selecciona carpeta raíz de lectura;
+  :Sistema verifica la conexión FTP;
+  if (¿Conexión exitosa?) then (Sí)
+    :Conexión FTP guardada;
+  else (Error)
+    :Sistema muestra error de conexión;
+    :Administrador corrige parámetros;
+    stop
+  endif
+else (No / carga manual)
+  :El operador cargará documentos\nmanualmente en cada lote;
+endif
+
+:Administrador habilita tipos documentales\ndisponibles para la empresa;
+note right
+  Solo se asignan tipos en estado
+  BETA o PRODUCCIÓN.
+  Los tipos EN DESARROLLO no
+  son visibles para empresas.
+end note
+
+:Administrador revisa API key generada\n(acceso a servicios REST);
+:Onboarding completado;
+stop
+
+@enduml

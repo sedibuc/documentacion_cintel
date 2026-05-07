@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mockup — Histórico de campañas | Onboarding</title>
+  <style>
+    :root {
+      --panel: rgba(255,252,246,0.95);
+      --ink: #1e2430;
+      --muted: #586171;
+      --line: rgba(30,36,48,0.14);
+      --accent: #0f5a58;
+      --accent-soft: #d6ebe8;
+      --warn: #8d4a1f;
+      --warn-soft: #faeadb;
+      --radius: 18px;
+      --radius-sm: 12px;
+      --shadow: 0 24px 60px rgba(26,32,41,0.12);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      padding-top: 64px !important;
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #f7f1e7 0%, #ece7de 100%);
+      min-height: 100vh; padding: 2rem;
+    }
+    .mockup-badge {
+      position: fixed; top: 1rem; right: 1rem;
+      padding: 0.4rem 0.9rem; background: #8d4a1f; color: #fff;
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
+      border-radius: 999px; text-transform: uppercase; z-index: 100;
+    }
+    .layout { max-width: 900px; margin: 0 auto; }
+    .step-label { text-transform: uppercase; letter-spacing: 0.18em; font-size: 0.72rem; font-weight: 700; color: var(--accent); margin-bottom: 0.5rem; }
+    h1 { font-size: 1.55rem; color: var(--ink); margin-bottom: 0.4rem; }
+    .subtitle { color: var(--muted); font-size: 0.93rem; line-height: 1.5; margin-bottom: 1.5rem; }
+    .optional-badge {
+      display: inline-block; font-size: 0.75rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      padding: 0.2rem 0.65rem; border-radius: 999px;
+      background: var(--warn-soft); color: var(--warn); margin-left: 0.6rem; vertical-align: middle;
+    }
+    .info-block {
+      background: var(--accent-soft); border: 1px solid rgba(15,90,88,0.2);
+      border-radius: var(--radius-sm); padding: 0.9rem 1.1rem;
+      font-size: 0.87rem; color: var(--ink); margin-bottom: 1.5rem; line-height: 1.6;
+    }
+    .info-block strong { color: var(--accent); }
+    .section-card {
+      background: var(--panel); border: 1px solid var(--line);
+      border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.6rem 1.8rem; margin-bottom: 1.2rem;
+    }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    .card-header h2 { font-size: 0.97rem; color: var(--ink); }
+    .badge { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.22rem 0.65rem; border-radius: 999px; }
+    .badge-auto { background: var(--accent-soft); color: var(--accent); }
+    .upload-zone {
+      border: 2px dashed rgba(15,90,88,0.3); border-radius: var(--radius);
+      background: rgba(214,235,232,0.2); padding: 2rem 1.5rem;
+      text-align: center; cursor: pointer; margin-bottom: 1.2rem;
+    }
+    .upload-icon { font-size: 2rem; margin-bottom: 0.5rem; opacity: 0.55; }
+    .upload-text { color: var(--muted); font-size: 0.9rem; line-height: 1.7; }
+    .upload-text strong { color: var(--accent); }
+
+    /* Column mapping */
+    .col-mapping { display: grid; grid-template-columns: 1fr 24px 1fr; gap: 0.5rem; align-items: center; margin-bottom: 0.6rem; font-size: 0.87rem; }
+    .col-raw { padding: 0.5rem 0.8rem; background: rgba(141,74,31,0.06); border: 1px solid rgba(141,74,31,0.15); border-radius: 8px; color: var(--ink); font-family: Consolas, monospace; font-size: 0.82rem; }
+    .arrow { text-align: center; color: var(--muted); }
+    select.col-target {
+      padding: 0.5rem 0.8rem; border: 1px solid var(--line); border-radius: 8px;
+      background: rgba(255,255,255,0.85); font-size: 0.85rem; color: var(--ink);
+      font-family: inherit; outline: none;
+    }
+    select:focus { border-color: var(--accent); }
+
+    /* Preview table */
+    .preview-wrap { overflow-x: auto; }
+    table.preview { width: 100%; border-collapse: collapse; font-size: 0.84rem; min-width: 700px; }
+    table.preview th { padding: 0.6rem 0.75rem; background: rgba(15,90,88,0.07); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); text-align: left; border-bottom: 1px solid var(--line); white-space: nowrap; }
+    table.preview td { padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--line); color: var(--ink); }
+    table.preview tr:last-child td { border-bottom: none; }
+    table.preview tr:hover td { background: rgba(214,235,232,0.25); }
+    .more-rows { font-size: 0.82rem; color: var(--muted); margin-top: 0.6rem; }
+
+    .actions { display: flex; justify-content: space-between; margin-top: 2rem; }
+    .btn { padding: 0.83rem 1.5rem; border-radius: var(--radius-sm); border: none; font-size: 0.93rem; font-weight: 700; cursor: pointer; }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-secondary { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+    .btn-ghost { background: transparent; color: var(--muted); font-weight: 400; font-size: 0.9rem; }
+    .nav-mockup { display: flex; justify-content: space-between; margin-top: 1rem; font-size: 0.85rem; }
+    .nav-mockup a { color: var(--accent); text-decoration: none; font-weight: 600; }
+    .nav-mockup a:hover { text-decoration: underline; }
+  </style>
+  <style>
+  /* ═══ MN: Mockup nav injection ═══════════════════ */
+  .mn-topbar{position:fixed;top:0;left:0;right:0;height:48px;background:rgba(255,252,246,0.97);border-bottom:1px solid rgba(30,36,48,0.1);display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;z-index:300;backdrop-filter:blur(8px);box-shadow:0 1px 6px rgba(30,36,48,0.07);}
+  .mn-topbar-logo{font-weight:800;color:#1e2430;text-decoration:none;font-size:0.95rem;letter-spacing:-0.01em;}
+  .mn-topbar-logo span{color:#0f5a58;}
+  .mn-topbar-nav{display:flex;gap:0.15rem;}
+  .mn-topbar-nav a{font-size:0.79rem;color:#586171;padding:0.25rem 0.6rem;border-radius:5px;text-decoration:none;}
+  .mn-topbar-nav a.mn-active{background:rgba(15,90,88,0.1);color:#0f5a58;font-weight:600;}
+  .mn-topbar-logout{font-size:0.77rem;color:#8d4a1f;border:1px solid rgba(141,74,31,0.25);border-radius:6px;padding:0.26rem 0.65rem;text-decoration:none;white-space:nowrap;}
+  .mn-panel{position:fixed;bottom:1.4rem;right:1.2rem;display:flex;flex-direction:column;gap:0.45rem;z-index:900;}
+  .mn-panel a{display:block;padding:0.52rem 1.05rem;border-radius:10px;font-size:0.79rem;font-weight:700;text-decoration:none;text-align:center;white-space:nowrap;font-family:"Segoe UI",sans-serif;}
+  .mn-next{background:#0f5a58;color:#fff;box-shadow:0 4px 14px rgba(15,90,88,0.28);}
+  .mn-next:hover{background:#0a4846;}
+  .mn-prev{background:rgba(30,36,48,0.07);color:#1e2430;border:1px solid rgba(30,36,48,0.14);font-size:0.77rem;padding:0.4rem 0.85rem;}
+  .mn-home{background:rgba(30,36,48,0.05);color:#586171;border:1px solid rgba(30,36,48,0.1);font-size:0.73rem;padding:0.36rem 0.85rem;}
+  .mn-logout{background:rgba(141,74,31,0.08);color:#8d4a1f;border:1px solid rgba(141,74,31,0.2);font-size:0.73rem;padding:0.36rem 0.85rem;}
+  /* ═══════════════════════════════════════════════ */
+  </style>
+</head>
+<body>
+<div class="mn-topbar">
+  <a href="../app/home.html" class="mn-topbar-logo">CINTELIO <span>Marketing</span></a>
+  <nav class="mn-topbar-nav">
+    <a href="../onboarding/empresa-url.html" class="mn-active">Onboarding</a>
+    <a href="../agente-estrategico/ide-main.html">Estratégico</a>
+    <a href="../agente-creativo/arbol-campana-brief-piezas.html">Creativo</a>
+    <a href="../iteracion/iteracion-main.html">Ajuste</a>
+    <a href="../historico/historico-main.html">Histórico</a>
+  </nav>
+  <a href="../app/login.html" class="mn-topbar-logout">Salir →</a>
+</div>
+
+  <div class="mockup-badge">Mockup</div>
+  <div class="layout">
+    <p class="step-label">Onboarding — Etapa 3 de 4 · Histórico de campañas</p>
+    <h1>Histórico de campañas <span class="optional-badge">Opcional</span></h1>
+    <p class="subtitle">
+      Carga un archivo Excel o CSV con campañas anteriores. Esta información ayuda al Agente Estratégico
+      a generar planes más pertinentes y contextualmente coherentes con lo que ya has comunicado.
+    </p>
+
+    <div class="info-block">
+      <strong>¿Por qué es útil?</strong><br>
+      El historial de campañas le da al agente contexto sobre mensajes previos, canales usados y resultados obtenidos.
+      No es obligatorio, pero mejora significativamente la calidad del plan de comunicación generado.
+    </div>
+
+    <!-- Estado 1: carga de archivo (comentado el estado 2 abajo) -->
+    <div class="section-card">
+      <div class="card-header">
+        <h2>Cargar archivo</h2>
+      </div>
+      <div class="upload-zone">
+        <div class="upload-icon">📊</div>
+        <div class="upload-text">
+          <strong>Arrastra tu archivo aquí</strong><br>
+          Excel (.xlsx) o CSV — máximo 5 MB<br>
+          <small>Columnas esperadas: campaña, canal, copy, fecha, resultado (opcional)</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Estado 2: archivo cargado, mapeo de columnas y preview -->
+    <div class="section-card">
+      <div class="card-header">
+        <h2>Mapeo de columnas</h2>
+        <span class="badge badge-auto">campañas-2025.xlsx · 22 filas detectadas</span>
+      </div>
+      <p style="font-size:0.85rem;color:var(--muted);margin-bottom:1rem;">
+        Indica qué columna de tu archivo corresponde a cada campo del sistema:
+      </p>
+      <div class="col-mapping">
+        <span class="col-raw">Nombre_campaña</span>
+        <span class="arrow">→</span>
+        <select class="col-target"><option selected>Nombre de campaña</option><option>Canal</option><option>Copy</option><option>Fecha</option><option>Resultado</option><option>— Ignorar columna —</option></select>
+      </div>
+      <div class="col-mapping">
+        <span class="col-raw">Canal_utilizado</span>
+        <span class="arrow">→</span>
+        <select class="col-target"><option>Nombre de campaña</option><option selected>Canal</option><option>Copy</option><option>Fecha</option><option>Resultado</option><option>— Ignorar columna —</option></select>
+      </div>
+      <div class="col-mapping">
+        <span class="col-raw">Mensaje_principal</span>
+        <span class="arrow">→</span>
+        <select class="col-target"><option>Nombre de campaña</option><option>Canal</option><option selected>Copy</option><option>Fecha</option><option>Resultado</option><option>— Ignorar columna —</option></select>
+      </div>
+      <div class="col-mapping">
+        <span class="col-raw">Fecha_de_envío</span>
+        <span class="arrow">→</span>
+        <select class="col-target"><option>Nombre de campaña</option><option>Canal</option><option>Copy</option><option selected>Fecha</option><option>Resultado</option><option>— Ignorar columna —</option></select>
+      </div>
+      <div class="col-mapping">
+        <span class="col-raw">KPI_resultado</span>
+        <span class="arrow">→</span>
+        <select class="col-target"><option>Nombre de campaña</option><option>Canal</option><option>Copy</option><option>Fecha</option><option selected>Resultado</option><option>— Ignorar columna —</option></select>
+      </div>
+      <div class="col-mapping">
+        <span class="col-raw">ID_interno</span>
+        <span class="arrow">→</span>
+        <select class="col-target"><option>Nombre de campaña</option><option>Canal</option><option>Copy</option><option>Fecha</option><option>Resultado</option><option selected>— Ignorar columna —</option></select>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="card-header">
+        <h2>Vista previa — primeras filas</h2>
+        <span class="badge badge-auto">22 filas en total</span>
+      </div>
+      <div class="preview-wrap">
+        <table class="preview">
+          <thead>
+            <tr>
+              <th>Campaña</th>
+              <th>Canal</th>
+              <th>Copy principal</th>
+              <th>Fecha</th>
+              <th>Resultado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>ANDICOM 2025</td>
+              <td>LinkedIn + Email</td>
+              <td>La IA aplicada ya está aquí. Únete a ANDICOM 2025.</td>
+              <td>2025-03-10</td>
+              <td>320 registros</td>
+            </tr>
+            <tr>
+              <td>Estudio prospectiva 2024</td>
+              <td>Email</td>
+              <td>Descarga el informe de prospectiva tecnológica 2024.</td>
+              <td>2024-11-20</td>
+              <td>140 descargas</td>
+            </tr>
+            <tr>
+              <td>Webinar transformación digital</td>
+              <td>LinkedIn</td>
+              <td>Únete a la conversación sobre transformación digital en Colombia.</td>
+              <td>2024-09-05</td>
+              <td>85 asistentes</td>
+            </tr>
+            <tr>
+              <td>Lanzamiento Informe TIC 2024</td>
+              <td>Email + Sitio web</td>
+              <td>El nuevo informe TIC ya está disponible. Descárgalo gratis.</td>
+              <td>2024-07-15</td>
+              <td>210 descargas</td>
+            </tr>
+            <tr>
+              <td>Convocatoria innovación abierta</td>
+              <td>LinkedIn + Email</td>
+              <td>Participa en el programa de innovación abierta CINTEL 2024.</td>
+              <td>2024-05-30</td>
+              <td>47 aplicaciones</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="more-rows">... y 17 filas más. Se guardarán todas al confirmar.</p>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-ghost">Omitir este paso →</button>
+      <div style="display:flex;gap:0.8rem;">
+        <button class="btn btn-secondary">← Volver</button>
+        <button class="btn btn-primary">Guardar histórico y continuar →</button>
+      </div>
+    </div>
+    <div class="nav-mockup">
+      <a href="manual-marca.html">← Manual marca</a>
+      <a href="persona.html">Definir persona →</a>
+    </div>
+
+  </div>
+
+<div class="mn-panel">
+  <a href="persona.html" class="mn-next">Definir persona →</a>
+  <a href="manual-marca.html" class="mn-prev">← Manual marca</a>
+  <a href="../app/home.html" class="mn-home">⌂ Inicio</a>
+  <a href="../app/login.html" class="mn-logout">Salir →</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,75 @@
+@startuml onboarding-admin-actualizacion
+!theme plain
+skinparam backgroundColor #FDFAF4
+skinparam defaultFontName Segoe UI
+skinparam roundCorner 12
+skinparam ArrowColor #0f5a58
+skinparam ActivityBorderColor #0f5a58
+skinparam ActivityBackgroundColor #d6ebe8
+skinparam ActivityDiamondBackgroundColor #fff8ef
+skinparam ActivityDiamondBorderColor #8d4a1f
+skinparam NoteBackgroundColor #fffdf6
+skinparam NoteBorderColor #c8bfa8
+
+title Onboarding — Actualización institucional por administrador
+
+|Administrador|
+start
+:Accede al panel de administración\nde la empresa;
+
+|Sistema|
+:Valida que el usuario tiene\nrol de administrador;
+
+if (¿Rol administrador?) then (Sí)
+  :Muestra opciones de administración;
+
+  |Administrador|
+  fork
+    :Actualiza información\ninstitucional;
+    note right
+      Descripción, sector,
+      propuesta de valor,
+      canales prioritarios.
+    end note
+    |Sistema|
+    :Guarda cambios;
+    :Notifica actualización\nal equipo si aplica;
+
+  fork again
+    :Reemplaza manual\nde marca;
+    |Sistema|
+    :Procesa nuevo manual;
+    :Extrae y actualiza\nparámetros de marca;
+    |Administrador|
+    :Revisa y valida\nparámetros actualizados;
+    |Sistema|
+    :Guarda nueva versión\nde parámetros de marca;
+
+  fork again
+    :Gestiona usuarios\nde la empresa;
+    |Sistema|
+    :Lista usuarios activos;
+    |Administrador|
+    if (¿Qué acción?) then (Activar usuario)
+      :Activa el acceso del usuario;
+    else if (Desactivar usuario)
+      :Suspende el acceso;
+    else (Cambiar rol)
+      :Asigna nuevo rol\nal usuario;
+    endif
+    |Sistema|
+    :Aplica cambio y registra\nen bitácora;
+
+  end fork
+
+  :Cambios guardados correctamente;
+
+else (No)
+  |Sistema|
+  :Acceso denegado;
+  :Redirige a la vista\nde usuario estándar;
+endif
+
+stop
+
+@enduml

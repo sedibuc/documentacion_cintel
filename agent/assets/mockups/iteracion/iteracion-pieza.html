@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mockup — Ajuste de pieza</title>
+  <style>
+    :root {
+      --bg: #f3efe6;
+      --panel: rgba(255, 252, 246, 0.98);
+      --panel-alt: rgba(243, 239, 230, 0.75);
+      --panel-mid: rgba(248, 245, 240, 0.90);
+      --topbar: #1e2430;
+      --ink: #1e2430;
+      --ink-dim: #3a4253;
+      --muted: #586171;
+      --muted-lt: #8a97a8;
+      --line: rgba(30, 36, 48, 0.12);
+      --line-soft: rgba(30, 36, 48, 0.06);
+      --accent: #0f5a58;
+      --accent-soft: #d6ebe8;
+      --accent-light: #e8f4f3;
+      --glow: #4db8b5;
+      --warn: #8d4a1f;
+      --warn-soft: #faeadb;
+      --warn-light: #c07840;
+      --success: #2d6a4f;
+      --success-light: #5a9e7c;
+      --border: rgba(30, 36, 48, 0.12);
+      --border-accent: rgba(15, 90, 88, 0.30);
+      --radius: 14px;
+      --radius-sm: 9px;
+      --shadow: 0 4px 20px rgba(26,32,41,0.10);
+      --shadow-lg: 0 24px 60px rgba(26,32,41,0.12);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Segoe UI", sans-serif; background: linear-gradient(180deg, #f7f1e7 0%, #ece7de 100%); color: var(--ink); min-height: 100vh; display: flex; flex-direction: column; }
+    .mockup-badge { position: fixed; top: 0.75rem; right: 1rem; padding: 0.35rem 0.85rem; background: var(--warn); color: #fff; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; border-radius: 999px; text-transform: uppercase; z-index: 500; }
+    .topbar { height: 52px; background: var(--topbar); display: flex; align-items: center; justify-content: space-between; padding: 0 1.5rem; border-bottom: 1px solid var(--line); flex-shrink: 0; }
+    .logo { color: #f0ece3; font-weight: 800; font-size: 1rem; }
+    .logo span { color: var(--glow); }
+    .btn-back { background: transparent; color: var(--glow); border: 1px solid var(--border-accent); border-radius: var(--radius-sm); padding: 0.38rem 0.85rem; font-size: 0.82rem; font-weight: 700; text-decoration: none; }
+    .type-pill { background: var(--purple-bg); border: 1px solid var(--purple-border); border-radius: 999px; padding: 0.28rem 0.85rem; font-size: 0.75rem; font-weight: 700; color: var(--purple); }
+    .workspace { flex: 1; display: grid; grid-template-columns: 260px 1fr 280px; height: calc(100vh - 52px - 40px); overflow: hidden; }
+
+    .panel-left { background: var(--panel); border-right: 1px solid var(--line); overflow-y: auto; padding: 1rem; }
+    .plabel { font-size: 0.67rem; text-transform: uppercase; letter-spacing: 0.13em; color: var(--glow); font-weight: 700; margin-bottom: 0.55rem; }
+    .ctx-row { display: flex; gap: 0.4rem; margin-bottom: 0.22rem; font-size: 0.78rem; }
+    .ctx-k { color: var(--muted); min-width: 68px; flex-shrink: 0; }
+    .ctx-v { color: var(--muted); line-height: 1.4; }
+    .iter-hist { display: flex; flex-direction: column; gap: 0.3rem; }
+    .ih-item { background: rgba(30,36,48,0.04); border: 1px solid var(--line); border-radius: 7px; padding: 0.42rem 0.6rem; }
+    .ih-lbl { font-size: 0.68rem; color: var(--muted); margin-bottom: 0.08rem; }
+    .ih-txt { font-size: 0.76rem; color: var(--muted-lt); line-height: 1.3; }
+
+    .panel-center { background: var(--panel-dark); overflow-y: auto; padding: 1.5rem 2rem; display: flex; flex-direction: column; gap: 1.1rem; }
+    .page-hd h1 { font-size: 1.05rem; font-weight: 800; color: var(--ink); margin-bottom: 0.2rem; }
+    .page-hd p { font-size: 0.82rem; color: var(--muted); }
+    .nd-banner { background: rgba(141,74,31,0.12); border: 1px solid rgba(141,74,31,0.35); border-radius: var(--radius-sm); padding: 0.55rem 0.85rem; font-size: 0.78rem; color: var(--warn-light); line-height: 1.4; }
+
+    .result-block { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+    .rb-hdr { background: rgba(30,36,48,0.04); border-bottom: 1px solid var(--line); padding: 0.65rem 1rem; display: flex; justify-content: space-between; align-items: center; }
+    .rb-lbl { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); font-weight: 700; }
+    .rb-meta { font-size: 0.72rem; color: var(--muted); }
+    .copy-block { padding: 1rem 1.1rem; font-size: 0.86rem; color: var(--muted); line-height: 1.75; white-space: pre-line; }
+    .copy-stats { display: flex; gap: 0.8rem; padding: 0 1.1rem 0.85rem; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 0.6rem; margin-top: -0.15rem; }
+    .cs-item { font-size: 0.74rem; color: var(--muted); }
+    .cs-val { color: var(--muted-lt); margin-left: 0.2rem; }
+
+    .sug-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .chip { background: rgba(30,36,48,0.05); border: 1px solid var(--line); border-radius: 999px; padding: 0.28rem 0.7rem; font-size: 0.77rem; color: var(--muted-lt); cursor: pointer; }
+    .chip:hover { background: rgba(77,184,181,0.1); border-color: var(--border-accent); color: var(--glow); }
+
+    .chat-area { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 0.9rem; }
+    .chat-lbl { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--glow); font-weight: 700; margin-bottom: 0.5rem; }
+    .chat-input { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 0.6rem 0.8rem; font-size: 0.84rem; color: var(--ink); outline: none; font-family: inherit; resize: none; min-height: 52px; }
+    .chat-input:focus { border-color: var(--border-accent); }
+    .chat-actions { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; margin-top: 0.55rem; }
+    .btn { padding: 0.48rem 1rem; border-radius: var(--radius-sm); font-size: 0.82rem; font-weight: 700; cursor: pointer; border: none; }
+    .btn.primary { background: var(--accent); color: #fff; }
+    .btn.ghost { background: transparent; color: var(--muted-lt); border: 1px solid var(--line); }
+    .btn.outline { background: transparent; color: var(--glow); border: 1px solid var(--border-accent); }
+
+    .new-block { background: rgba(77,184,181,0.06); border: 1px solid rgba(77,184,181,0.25); border-radius: var(--radius); overflow: hidden; }
+    .nb-hdr { background: rgba(77,184,181,0.08); border-bottom: 1px solid rgba(77,184,181,0.2); padding: 0.65rem 1rem; display: flex; justify-content: space-between; align-items: center; }
+    .nb-lbl { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--glow); font-weight: 700; }
+    .nb-meta-ok { font-size: 0.72rem; color: var(--ins-text); }
+    .nb-body { padding: 1rem 1.1rem; font-size: 0.86rem; color: var(--muted); line-height: 1.75; white-space: pre-line; }
+    .nb-stats { display: flex; gap: 0.8rem; padding: 0 1.1rem 0.6rem; flex-wrap: wrap; }
+    .nb-note { font-size: 0.74rem; color: var(--warn-light); font-style: italic; padding: 0 1.1rem 0.6rem; }
+    .apply-row { display: flex; gap: 0.55rem; padding: 0 1rem 0.85rem; }
+
+    .panel-right { background: var(--panel-mid); border-left: 1px solid var(--line); overflow-y: auto; padding: 1rem; }
+    .change-item { background: rgba(30,36,48,0.04); border: 1px solid var(--line); border-radius: 7px; padding: 0.5rem 0.65rem; margin-bottom: 0.3rem; font-size: 0.79rem; }
+    .ci-lbl { font-size: 0.67rem; font-weight: 700; color: var(--glow); text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 0.12rem; }
+    .ci-body { color: var(--muted-lt); line-height: 1.4; }
+    .del-val { color: var(--del-text); }
+    .ins-val { color: var(--ins-text); }
+    .warn-item { background: rgba(141,74,31,0.1); border: 1px solid rgba(141,74,31,0.2); border-radius: 7px; padding: 0.45rem 0.65rem; margin-bottom: 0.3rem; font-size: 0.77rem; color: var(--warn-light); }
+
+    .bottom-nav { background: var(--topbar); border-top: 1px solid var(--line); padding: 0.5rem 1.5rem; display: flex; justify-content: space-between; font-size: 0.78rem; flex-shrink: 0; }
+    .bottom-nav a { color: var(--glow); text-decoration: none; font-weight: 600; }
+    .bottom-nav a:hover { text-decoration: underline; }
+  </style>
+  <style>
+    /* === MN: Mockup nav (light theme) === */
+  .mn-panel{position:fixed;bottom:1.4rem;right:1.2rem;display:flex;flex-direction:column;gap:0.45rem;z-index:900;}
+  .mn-panel a{display:block;padding:0.52rem 1.05rem;border-radius:10px;font-size:0.79rem;font-weight:700;text-decoration:none;text-align:center;white-space:nowrap;font-family:"Segoe UI",sans-serif;}
+  .mn-next{background:#0f5a58;color:#fff;box-shadow:0 4px 14px rgba(15,90,88,0.35);}
+  .mn-next:hover{background:#0a4846;}
+  .mn-prev{background:rgba(30,36,48,0.08);color:#586171;border:1px solid rgba(30,36,48,0.16);}
+  .mn-prev:hover{background:rgba(30,36,48,0.14);}
+  .mn-home{background:rgba(30,36,48,0.05);color:#8a97a8;border:1px solid rgba(30,36,48,0.10);font-size:0.74rem;padding:0.38rem 0.85rem;}
+  .mn-home:hover{background:rgba(30,36,48,0.10);color:#586171;}
+  .mn-logout{background:rgba(141,74,31,0.10);color:#8d4a1f;border:1px solid rgba(141,74,31,0.25);font-size:0.73rem;padding:0.36rem 0.85rem;}
+  .mn-logout:hover{background:rgba(141,74,31,0.18);}
+  /* ============================================ */
+  </style>
+</head>
+<body>
+  <div class="mockup-badge">Mockup</div>
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:1rem;">
+      <a href="../app/home.html" class="logo">CINTELIO <span>Marketing</span></a>
+      <span class="type-pill">✏️ Ajuste de pieza</span>
+    </div>
+    <a href="iteracion-main.html" class="btn-back">← Vista principal</a>
+  </div>
+
+  <div class="workspace">
+    <!-- LEFT: context -->
+    <div class="panel-left">
+      <div class="plabel">Pieza activa</div>
+      <div class="ctx-row"><span class="ctx-k">Pieza</span><span class="ctx-v">Post institucional LinkedIn</span></div>
+      <div class="ctx-row"><span class="ctx-k">Canal</span><span class="ctx-v">💼 LinkedIn</span></div>
+      <div class="ctx-row"><span class="ctx-k">Brief</span><span class="ctx-v">Brief 1: LinkedIn institucional</span></div>
+      <div class="ctx-row"><span class="ctx-k">Campaña</span><span class="ctx-v">Transformación Digital 2025</span></div>
+      <div class="ctx-row"><span class="ctx-k">Estado</span><span class="ctx-v" style="color:var(--success);">En revisión</span></div>
+
+      <div class="plabel" style="margin-top:1rem;">Historial de iteraciones</div>
+      <div class="iter-hist">
+        <div class="ih-item">
+          <div class="ih-lbl">V1 — original</div>
+          <div class="ih-txt">Versión generada automáticamente.</div>
+        </div>
+        <div class="ih-item">
+          <div class="ih-lbl">V2 — iteración 1</div>
+          <div class="ih-txt">"Hazlo más formal"</div>
+        </div>
+        <div class="ih-item" style="background:rgba(77,184,181,0.06);border-color:rgba(77,184,181,0.2);">
+          <div class="ih-lbl" style="color:var(--glow);">V3 — actual</div>
+          <div class="ih-txt">"Reduce el texto y hazlo más directo"</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CENTER: interaction -->
+    <div class="panel-center">
+      <div class="page-hd">
+        <h1>Ajuste de pieza</h1>
+        <p>Post institucional LinkedIn · Transformación Digital 2025 · Versión 3</p>
+      </div>
+      <div class="nd-banner"><strong>No determinístico:</strong> La nueva versión puede modificar elementos no mencionados en la instrucción. El agente orienta el ajuste pero no garantiza control exacto de cada elemento.</div>
+
+      <!-- Current piece -->
+      <div class="result-block">
+        <div class="rb-hdr">
+          <span class="rb-lbl">Versión actual (V3)</span>
+          <span class="rb-meta">412 chars · LinkedIn</span>
+        </div>
+        <div class="copy-block">La transformación digital del sector público no es un destino, es un proceso.
+
+Las entidades que avanzan con más seguridad tienen algo en común: acompañamiento estructurado, con visión de largo plazo y experiencia en implementación.
+
+En CINTEL llevamos más de 25 años ayudando a organizaciones a navegar ese camino — con evidencia, metodología y foco en resultados reales.
+
+👉 Descarga nuestro estudio: "Ruta de Transformación Digital en el Sector Público"
+→ [enlace]
+
+#TransformaciónDigital #GobiernoDigital #CINTEL</div>
+        <div class="copy-stats">
+          <span class="cs-item">Caracteres: <span class="cs-val">412</span></span>
+          <span class="cs-item">Hashtags: <span class="cs-val">3</span></span>
+          <span class="cs-item">Párrafos: <span class="cs-val">4</span></span>
+          <span class="cs-item">CTA: <span class="cs-val" style="color:var(--ins-text);">Incluido ✓</span></span>
+        </div>
+      </div>
+
+      <!-- Suggestions -->
+      <div>
+        <div style="font-size:0.68rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);font-weight:700;margin-bottom:0.4rem;">Sugerencias de ajuste</div>
+        <div class="sug-chips">
+          <div class="chip">Reduce el texto</div>
+          <div class="chip">Hazlo más llamativo</div>
+          <div class="chip">Cambia el enfoque a ventas</div>
+          <div class="chip">Elimina los hashtags</div>
+          <div class="chip">Tono más ejecutivo</div>
+          <div class="chip">Agrega urgencia</div>
+        </div>
+      </div>
+
+      <!-- Chat input -->
+      <div class="chat-area">
+        <div class="chat-lbl">Instrucción de ajuste</div>
+        <textarea class="chat-input">Reduce el texto y hazlo más directo. Solo el gancho y el CTA. Sin hashtags.</textarea>
+        <div class="chat-actions">
+          <span style="font-size:0.72rem;color:var(--muted);">Tip: sé específico sobre qué cambiar.</span>
+          <div style="display:flex;gap:0.5rem;">
+            <button class="btn ghost">Regenerar</button>
+            <button class="btn primary">Ajustar pieza →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- New version -->
+      <div class="new-block">
+        <div class="nb-hdr">
+          <span class="nb-lbl">Nueva versión (V4)</span>
+          <span class="nb-meta-ok">112 chars · −73%</span>
+        </div>
+        <div class="nb-body">25 años acompañando la transformación digital del sector público en Colombia.
+
+👉 Descarga el estudio: "Ruta de Transformación Digital" → [enlace]</div>
+        <div class="nb-stats">
+          <span class="cs-item">Caracteres: <span class="cs-val" style="color:var(--ins-text);">112</span></span>
+          <span class="cs-item">Hashtags: <span class="cs-val" style="color:var(--ins-text);">0 ✓</span></span>
+          <span class="cs-item">Párrafos: <span class="cs-val" style="color:var(--ins-text);">2</span></span>
+        </div>
+        <div class="nb-note">⚠️ Nota: Se redujo el cuerpo del texto según la instrucción. El gancho fue reemplazado por un dato de credibilidad.</div>
+        <div class="apply-row">
+          <button class="btn primary">Aplicar V4</button>
+          <button class="btn outline">Comparar versiones</button>
+          <button class="btn ghost">Descartar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: decisions -->
+    <div class="panel-right">
+      <div class="plabel">Cambios detectados</div>
+      <div class="change-item">
+        <span class="ci-lbl">Extensión</span>
+        <div class="ci-body"><span class="del-val">412</span> → <span class="ins-val">112</span> chars (−73%)</div>
+      </div>
+      <div class="change-item">
+        <span class="ci-lbl">Párrafos</span>
+        <div class="ci-body"><span class="del-val">4 párrafos</span> → <span class="ins-val">2 líneas</span></div>
+      </div>
+      <div class="change-item">
+        <span class="ci-lbl">Hashtags</span>
+        <div class="ci-body"><span class="del-val">3 hashtags</span> → <span class="ins-val">0 (eliminados)</span></div>
+      </div>
+      <div class="change-item">
+        <span class="ci-lbl">Gancho</span>
+        <div class="ci-body">Reemplazado: dato de 25 años como credencial.</div>
+      </div>
+      <div class="change-item">
+        <span class="ci-lbl">CTA</span>
+        <div class="ci-body" style="color:var(--ins-text);">Conservado ✓ — "Descarga el estudio"</div>
+      </div>
+
+      <div class="plabel" style="margin-top:0.9rem;">Advertencias</div>
+      <div class="warn-item">El gancho fue completamente reescrito, no solo reducido.</div>
+      <div class="warn-item">Tono puede diferir de versiones anteriores.</div>
+      <div class="warn-item">Regenerar puede producir una versión diferente.</div>
+
+      <div class="plabel" style="margin-top:0.9rem;">Acciones rápidas</div>
+      <a href="iteracion-comparacion.html" style="display:block;padding:0.5rem 0.7rem;background:rgba(77,184,181,0.08);border:1px solid var(--border-accent);border-radius:7px;font-size:0.8rem;color:var(--glow);text-decoration:none;font-weight:700;margin-bottom:0.4rem;">Ver comparación completa →</a>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="iteracion-main.html">← Vista principal</a>
+    <div style="display:flex;gap:1.5rem;">
+      <a href="iteracion-comparacion.html">Comparar →</a>
+      <a href="iteracion-estrategia.html">Ajuste estrategia</a>
+      <a href="iteracion-brief.html">Ajuste brief</a>
+    </div>
+  </div>
+
+<script>
+/* MN: Fix topbar links */
+(function(){
+  // Make logo link to home
+  document.querySelectorAll('.topbar .logo, .logo').forEach(function(el){
+    if(el.tagName!=='A'){
+      var a=document.createElement('a');
+      a.href='../app/home.html';
+      a.innerHTML=el.innerHTML;
+      a.className=el.className;
+      a.style.textDecoration='none';
+      el.parentNode.replaceChild(a,el);
+    }
+  });
+  // Fix module nav links
+  var map={
+    'Onboarding':'../onboarding/empresa-url.html',
+    'Agente Estratégico':'../agente-estrategico/ide-main.html',
+    'Agente Creativo':'../agente-creativo/arbol-campana-brief-piezas.html',
+    'Ajuste':'../iteracion/iteracion-main.html',
+    'Ajuste de resultados':'../iteracion/iteracion-main.html',
+    'Histórico':'../historico/historico-main.html'
+  };
+  document.querySelectorAll('.topbar a,.topbar-nav a,.topbar .nav a').forEach(function(a){
+    var t=a.textContent.trim();
+    if(map[t]&&(a.getAttribute('href')==='#'||!a.getAttribute('href'))){
+      a.href=map[t];
+    }
+  });
+  // Add logout if not present
+  var topbar=document.querySelector('.topbar');
+  if(topbar&&!topbar.querySelector('.mn-topbar-out')){
+    var out=document.createElement('a');
+    out.href='../app/login.html';
+    out.textContent='Salir →';
+    out.className='mn-topbar-out';
+    out.style.cssText='font-size:0.75rem;color:#9ba5b4;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:0.28rem 0.6rem;text-decoration:none;margin-left:0.5rem;white-space:nowrap;';
+    topbar.appendChild(out);
+  }
+})();
+</script>
+
+<div class="mn-panel">
+  <a href="iteracion-comparacion.html" class="mn-next">Comparar versiones →</a>
+  <a href="iteracion-brief.html" class="mn-prev">← Brief</a>
+  <a href="../app/home.html" class="mn-home">⌂ Inicio</a>
+  <a href="../app/login.html" class="mn-logout">Salir →</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mockup — Agente Estratégico — Entorno principal</title>
+  <style>
+    :root {
+      --bg: #f3efe6;
+      --panel: rgba(255, 252, 246, 0.98);
+      --panel-alt: rgba(243, 239, 230, 0.75);
+      --panel-mid: rgba(248, 245, 240, 0.90);
+      --topbar: #1e2430;
+      --ink: #1e2430;
+      --ink-dim: #3a4253;
+      --muted: #586171;
+      --muted-lt: #8a97a8;
+      --line: rgba(30, 36, 48, 0.12);
+      --line-soft: rgba(30, 36, 48, 0.06);
+      --accent: #0f5a58;
+      --accent-soft: #d6ebe8;
+      --accent-light: #e8f4f3;
+      --glow: #4db8b5;
+      --warn: #8d4a1f;
+      --warn-soft: #faeadb;
+      --warn-light: #c07840;
+      --success: #2d6a4f;
+      --success-light: #5a9e7c;
+      --border: rgba(30, 36, 48, 0.12);
+      --border-accent: rgba(15, 90, 88, 0.30);
+      --radius: 14px;
+      --radius-sm: 9px;
+      --shadow: 0 4px 20px rgba(26,32,41,0.10);
+      --shadow-lg: 0 24px 60px rgba(26,32,41,0.12);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #f7f1e7 0%, #ece7de 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      color: var(--ink);
+    }
+
+    /* ─── Mockup badge ─────────────────────────────── */
+    .mockup-badge {
+      position: fixed; top: 0.75rem; right: 1rem;
+      padding: 0.35rem 0.85rem; background: var(--warn); color: #fff;
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em;
+      border-radius: 999px; text-transform: uppercase; z-index: 500;
+    }
+
+    /* ─── Top bar ─────────────────────────────────── */
+    .topbar {
+      height: 52px; background: var(--topbar);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 1.2rem; border-bottom: 1px solid var(--line);
+      flex-shrink: 0;
+    }
+    .topbar .logo { color: #f0ece3; font-weight: 800; font-size: 1rem; letter-spacing: -0.02em; }
+    .topbar .logo span { color: #4db8b5; }
+    .topbar-right { display: flex; align-items: center; gap: 0.9rem; }
+    .campaign-selector {
+      display: flex; align-items: center; gap: 0.5rem;
+      background: rgba(30,36,48,0.07); border: 1px solid var(--line);
+      border-radius: var(--radius-sm); padding: 0.38rem 0.8rem;
+      color: var(--muted); font-size: 0.84rem; cursor: pointer;
+    }
+    .campaign-selector .label { font-size: 0.7rem; color: var(--muted-lt); margin-right: 0.2rem; text-transform: uppercase; letter-spacing: 0.1em; }
+    .campaign-selector .arrow { color: #4db8b5; font-size: 0.7rem; }
+    .btn-new-campaign {
+      background: var(--accent); color: #fff; border: none;
+      border-radius: var(--radius-sm); padding: 0.4rem 0.9rem;
+      font-size: 0.82rem; font-weight: 700; cursor: pointer; white-space: nowrap;
+    }
+    .topbar-nav { display: flex; gap: 0.2rem; }
+    .topbar-nav a {
+      color: var(--muted-lt); font-size: 0.82rem; padding: 0.35rem 0.7rem;
+      border-radius: 6px; text-decoration: none; transition: background 0.15s;
+    }
+    .topbar-nav a:hover, .topbar-nav a.active { background: rgba(255,255,255,0.1); color: #f0ece3; }
+
+    /* ─── Main layout ─────────────────────────────── */
+    .workspace {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 260px 1fr 280px;
+      min-height: 0;
+      height: calc(100vh - 52px);
+    }
+
+    /* ─── Left panel — context ────────────────────── */
+    .panel-left {
+      background: var(--panel);
+      border-right: 1px solid var(--line);
+      display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+    .panel-header {
+      padding: 0.9rem 1rem 0.7rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .panel-title {
+      font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.15em;
+      color: #4db8b5; font-weight: 700; margin-bottom: 0.1rem;
+    }
+    .panel-subtitle { font-size: 0.82rem; color: var(--muted-lt); }
+    .panel-body { flex: 1; overflow-y: auto; padding: 0.8rem; }
+    .company-chip {
+      display: flex; align-items: center; gap: 0.5rem;
+      background: rgba(77,184,181,0.12); border: 1px solid rgba(77,184,181,0.25);
+      border-radius: var(--radius-sm); padding: 0.5rem 0.75rem; margin-bottom: 0.8rem;
+    }
+    .company-chip .icon { font-size: 1.1rem; }
+    .company-chip .info { }
+    .company-chip .name { font-size: 0.85rem; font-weight: 700; color: var(--ink); }
+    .company-chip .sector { font-size: 0.72rem; color: var(--muted-lt); }
+    .context-section { margin-bottom: 1rem; }
+    .context-section-title {
+      font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.12em;
+      color: var(--muted-lt); font-weight: 700; margin-bottom: 0.5rem;
+    }
+    .service-item {
+      display: flex; align-items: flex-start; gap: 0.45rem;
+      padding: 0.4rem 0.5rem; border-radius: 7px; cursor: pointer;
+      border: 1px solid transparent; margin-bottom: 0.25rem;
+      transition: background 0.15s;
+    }
+    .service-item:hover { background: rgba(30,36,48,0.05); }
+    .service-item.selected { background: rgba(77,184,181,0.1); border-color: rgba(77,184,181,0.3); }
+    .service-item .dot { width: 6px; height: 6px; border-radius: 50%; background: #4db8b5; margin-top: 5px; flex-shrink: 0; }
+    .service-item .dot.off { background: #3d4455; }
+    .service-item .text { font-size: 0.82rem; color: var(--muted); line-height: 1.4; }
+    .service-item .check { margin-left: auto; color: #4db8b5; font-size: 0.85rem; }
+    .info-row { display: flex; justify-content: space-between; margin-bottom: 0.35rem; font-size: 0.8rem; }
+    .info-row .k { color: var(--muted-lt); }
+    .info-row .v { color: var(--muted); }
+
+    /* ─── Center — chat ───────────────────────────── */
+    .panel-center {
+      background: var(--panel-alt);
+      display: flex; flex-direction: column;
+    }
+    .chat-area {
+      flex: 1; overflow-y: auto; padding: 1.5rem 2rem;
+      display: flex; flex-direction: column; gap: 1.2rem;
+    }
+    .msg { display: flex; gap: 0.8rem; max-width: 680px; }
+    .msg.user { align-self: flex-end; flex-direction: row-reverse; }
+    .msg-avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--accent); display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 700; color: #fff; flex-shrink: 0;
+    }
+    .msg.user .msg-avatar { background: var(--accent-soft); color: var(--muted); }
+    .msg-bubble {
+      background: var(--panel-alt); border: 1px solid var(--line);
+      border-radius: var(--radius); padding: 0.85rem 1.1rem;
+      font-size: 0.88rem; color: var(--ink); line-height: 1.6;
+    }
+    .msg.user .msg-bubble { background: rgba(77,184,181,0.1); border-color: rgba(77,184,181,0.25); }
+    .msg-bubble strong { color: var(--ink); }
+    .msg-bubble .plan-block {
+      margin-top: 0.8rem; background: rgba(30,36,48,0.05);
+      border: 1px solid var(--line); border-radius: var(--radius-sm);
+      padding: 0.8rem 1rem; font-size: 0.84rem;
+    }
+    .msg-bubble .plan-row { display: flex; gap: 0.5rem; margin-bottom: 0.35rem; }
+    .msg-bubble .plan-key { color: #4db8b5; font-weight: 700; min-width: 100px; font-size: 0.8rem; }
+    .msg-bubble .plan-val { color: var(--muted); }
+    .thinking-indicator {
+      display: flex; align-items: center; gap: 0.6rem; padding: 0.6rem 0;
+      font-size: 0.82rem; color: var(--muted-lt);
+    }
+    .thinking-dots { display: flex; gap: 4px; }
+    .thinking-dots span {
+      width: 6px; height: 6px; border-radius: 50%; background: #4db8b5;
+      animation: pulse 1.2s infinite;
+    }
+    .thinking-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .thinking-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes pulse { 0%,80%,100% { opacity: 0.2; } 40% { opacity: 1; } }
+
+    .chat-input-area {
+      padding: 1rem 1.5rem 1.2rem;
+      border-top: 1px solid var(--line);
+      background: var(--panel-mid);
+    }
+    .input-row { display: flex; gap: 0.6rem; align-items: flex-end; }
+    .chat-input {
+      flex: 1; background: rgba(30,36,48,0.07); border: 1px solid var(--line);
+      border-radius: var(--radius); padding: 0.8rem 1.1rem;
+      color: var(--ink); font-size: 0.88rem; font-family: inherit; resize: none;
+      outline: none; line-height: 1.5;
+    }
+    .chat-input:focus { border-color: rgba(77,184,181,0.45); }
+    .btn-send {
+      background: var(--accent); color: #fff; border: none;
+      border-radius: var(--radius-sm); padding: 0.75rem 1.2rem;
+      font-size: 0.88rem; font-weight: 700; cursor: pointer; white-space: nowrap;
+    }
+    .input-hints { display: flex; gap: 0.5rem; margin-bottom: 0.6rem; flex-wrap: wrap; }
+    .hint-chip {
+      background: rgba(30,36,48,0.05); border: 1px solid var(--line);
+      border-radius: 999px; padding: 0.25rem 0.7rem; font-size: 0.75rem;
+      color: var(--muted-lt); cursor: pointer; transition: background 0.15s;
+    }
+    .hint-chip:hover { background: rgba(77,184,181,0.12); border-color: rgba(77,184,181,0.3); color: var(--muted); }
+
+    /* ─── Right panel — agent reasoning ──────────── */
+    .panel-right {
+      background: var(--panel-mid);
+      border-left: 1px solid var(--line);
+      display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+    .reasoning-area { flex: 1; overflow-y: auto; padding: 0.8rem; }
+    .reasoning-group { margin-bottom: 1rem; }
+    .rg-title {
+      font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.12em;
+      color: #4db8b5; font-weight: 700; margin-bottom: 0.4rem;
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+    .rg-title .dot-live {
+      width: 6px; height: 6px; border-radius: 50%; background: #4db8b5;
+      animation: pulse 1.5s infinite;
+    }
+    .reasoning-item {
+      display: flex; align-items: flex-start; gap: 0.5rem;
+      padding: 0.45rem 0.6rem; border-radius: 7px;
+      background: rgba(30,36,48,0.04); margin-bottom: 0.3rem;
+      border: 1px solid var(--line);
+    }
+    .ri-icon { font-size: 0.8rem; margin-top: 1px; flex-shrink: 0; }
+    .ri-text { font-size: 0.8rem; color: var(--muted); line-height: 1.4; }
+    .ri-text .label { font-weight: 700; color: var(--ink); display: block; }
+    .ri-text .val { color: var(--muted); font-size: 0.75rem; }
+    .insight-card {
+      background: rgba(77,184,181,0.07); border: 1px solid rgba(77,184,181,0.2);
+      border-radius: var(--radius-sm); padding: 0.6rem 0.75rem; margin-bottom: 0.4rem;
+    }
+    .insight-card .ic-title { font-size: 0.75rem; color: #4db8b5; font-weight: 700; margin-bottom: 0.2rem; }
+    .insight-card .ic-body { font-size: 0.78rem; color: var(--muted); line-height: 1.4; }
+
+    /* ─── Nav links ───────────────────────────────── */
+    .bottom-nav {
+      background: var(--topbar); border-top: 1px solid var(--line);
+      padding: 0.5rem 1.2rem; display: flex; justify-content: space-between;
+      font-size: 0.78rem;
+    }
+    .bottom-nav a { color: #4db8b5; text-decoration: none; font-weight: 600; }
+    .bottom-nav a:hover { text-decoration: underline; }
+  </style>
+  <style>
+    /* === MN: Mockup nav (light theme) === */
+  .mn-panel{position:fixed;bottom:1.4rem;right:1.2rem;display:flex;flex-direction:column;gap:0.45rem;z-index:900;}
+  .mn-panel a{display:block;padding:0.52rem 1.05rem;border-radius:10px;font-size:0.79rem;font-weight:700;text-decoration:none;text-align:center;white-space:nowrap;font-family:"Segoe UI",sans-serif;}
+  .mn-next{background:#0f5a58;color:#fff;box-shadow:0 4px 14px rgba(15,90,88,0.35);}
+  .mn-next:hover{background:#0a4846;}
+  .mn-prev{background:rgba(30,36,48,0.08);color:#586171;border:1px solid rgba(30,36,48,0.16);}
+  .mn-prev:hover{background:rgba(30,36,48,0.14);}
+  .mn-home{background:rgba(30,36,48,0.05);color:#8a97a8;border:1px solid rgba(30,36,48,0.10);font-size:0.74rem;padding:0.38rem 0.85rem;}
+  .mn-home:hover{background:rgba(30,36,48,0.10);color:#586171;}
+  .mn-logout{background:rgba(141,74,31,0.10);color:#8d4a1f;border:1px solid rgba(141,74,31,0.25);font-size:0.73rem;padding:0.36rem 0.85rem;}
+  .mn-logout:hover{background:rgba(141,74,31,0.18);}
+  /* ============================================ */
+  </style>
+</head>
+<body>
+  <div class="mockup-badge">Mockup</div>
+
+  <!-- Top bar -->
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:1.2rem;">
+      <a href="../app/home.html" class="logo">CINTELIO <span>Marketing</span></a>
+      <nav class="topbar-nav">
+        <a href="../onboarding/empresa-url.html">Onboarding</a>
+        <a href="ide-main.html" class="active">Agente Estratégico</a>
+        <a href="../agente-creativo/arbol-campana-brief-piezas.html">Agente Creativo</a>
+        <a href="../iteracion/iteracion-main.html">Ajuste</a>
+        <a href="../historico/historico-main.html">Histórico</a>
+      </nav>
+    </div>
+    <div class="topbar-right">
+      <div class="campaign-selector">
+        <span class="label">Campaña base</span>
+        <span>Sin selección</span>
+        <span class="arrow">▾</span>
+      </div>
+      <a href="seleccion-campana.html" style="text-decoration:none;">
+        <button class="btn-new-campaign">+ Usar campaña anterior</button>
+      </a>
+    </div>
+  </div>
+
+  <!-- Workspace -->
+  <div class="workspace">
+
+    <!-- Left: context -->
+    <div class="panel-left">
+      <div class="panel-header">
+        <div class="panel-title">Contexto de empresa</div>
+        <div class="panel-subtitle">Selecciona qué incluir</div>
+      </div>
+      <div class="panel-body">
+        <div class="company-chip">
+          <div class="icon">🏢</div>
+          <div class="info">
+            <div class="name">CINTEL</div>
+            <div class="sector">Innovación y TI</div>
+          </div>
+        </div>
+
+        <div class="context-section">
+          <div class="context-section-title">Información institucional</div>
+          <div class="info-row"><span class="k">Sector</span><span class="v">Consultoría TI e Innovación</span></div>
+          <div class="info-row"><span class="k">Enfoque</span><span class="v">Sector público y privado</span></div>
+        </div>
+
+        <div class="context-section">
+          <div class="context-section-title">Productos y servicios <span style="font-size:0.68rem;color:#6b7889;font-weight:400;">(del scraping)</span></div>
+          <div class="service-item selected">
+            <div class="dot"></div>
+            <div class="text">Transformación Digital</div>
+            <div class="check">✓</div>
+          </div>
+          <div class="service-item selected">
+            <div class="dot"></div>
+            <div class="text">Gobierno Digital</div>
+            <div class="check">✓</div>
+          </div>
+          <div class="service-item">
+            <div class="dot off"></div>
+            <div class="text">Arquitectura Empresarial</div>
+          </div>
+          <div class="service-item">
+            <div class="dot off"></div>
+            <div class="text">Gestión Tecnológica</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Center: chat -->
+    <div class="panel-center">
+      <div class="chat-area">
+        <div class="msg user">
+          <div class="msg-avatar">MG</div>
+          <div class="msg-bubble">
+            Necesito crear una campaña para 2025 enfocada en transformación digital para empresas del sector público.
+          </div>
+        </div>
+
+        <div class="msg">
+          <div class="msg-avatar">IA</div>
+          <div class="msg-bubble">
+            Perfecto. Con base en la información de <strong>CINTEL</strong> y sus campañas anteriores, te propongo un enfoque inicial.
+            <div class="plan-block">
+              <div class="plan-row"><span class="plan-key">Objetivo</span><span class="plan-val">Posicionar a CINTEL como aliado estratégico en transformación digital para entidades públicas</span></div>
+              <div class="plan-row"><span class="plan-key">Mensaje clave</span><span class="plan-val">"La transformación digital del sector público requiere visión estratégica, experiencia y ejecución confiable."</span></div>
+              <div class="plan-row"><span class="plan-key">Canales</span><span class="plan-val">LinkedIn (principal) · Webinars especializados · Sitio web · Email institucional</span></div>
+            </div>
+            ¿Quieres que tomemos como base alguna campaña anterior o construimos desde cero?
+          </div>
+        </div>
+
+        <div class="thinking-indicator">
+          <div class="thinking-dots"><span></span><span></span><span></span></div>
+          Esperando respuesta — ¿usar campaña 2024 o construir nueva?
+        </div>
+      </div>
+
+      <div class="chat-input-area">
+        <div class="input-hints">
+          <span class="hint-chip">Usar campaña TD 2024</span>
+          <span class="hint-chip">Construir desde cero</span>
+          <span class="hint-chip">Cambiar canales</span>
+          <span class="hint-chip">Más agresivo en leads</span>
+        </div>
+        <div class="input-row">
+          <textarea class="chat-input" rows="2" placeholder="Escribe una instrucción para ajustar o construir el plan..."></textarea>
+          <button class="btn-send">Enviar →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: agent reasoning -->
+    <div class="panel-right">
+      <div class="panel-header">
+        <div class="panel-title">Razonamiento del agente <span class="dot-live" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#4db8b5;margin-left:4px;animation:pulse 1.5s infinite;"></span></div>
+        <div class="panel-subtitle">Se actualiza en cada turno</div>
+      </div>
+      <div class="reasoning-area">
+        <div class="reasoning-group">
+          <div class="rg-title"><span class="dot-live"></span>Objetivo detectado</div>
+          <div class="reasoning-item">
+            <span class="ri-icon">🎯</span>
+            <div class="ri-text">
+              <span class="label">Posicionamiento estratégico</span>
+              <span class="val">Inferido del mensaje del usuario</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="reasoning-group">
+          <div class="rg-title">Segmento identificado</div>
+          <div class="reasoning-item">
+            <span class="ri-icon">🏛️</span>
+            <div class="ri-text">
+              <span class="label">Sector público</span>
+              <span class="val">Explicitado por el usuario</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="reasoning-group">
+          <div class="rg-title">Servicio principal</div>
+          <div class="reasoning-item">
+            <span class="ri-icon">🔧</span>
+            <div class="ri-text">
+              <span class="label">Transformación Digital</span>
+              <span class="val">Del portafolio CINTEL (scraping)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="reasoning-group">
+          <div class="rg-title">Insight histórico</div>
+          <div class="insight-card">
+            <div class="ic-title">Campañas previas — sector privado</div>
+            <div class="ic-body">Historial de CINTEL enfocado en privado. Primera campaña para sector público — alta oportunidad de diferenciación.</div>
+          </div>
+        </div>
+
+        <div class="reasoning-group">
+          <div class="rg-title">Pendiente</div>
+          <div class="reasoning-item">
+            <span class="ri-icon">❓</span>
+            <div class="ri-text">
+              <span class="label">¿Campaña base?</span>
+              <span class="val">Esperando decisión del usuario</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="bottom-nav">
+    <span style="color:#6b7889;">Agente Estratégico — Entorno principal</span>
+    <div style="display:flex;gap:1.5rem;">
+      <a href="seleccion-campana.html">Seleccionar campaña →</a>
+      <a href="conversacion.html">Ver conversación completa →</a>
+      <a href="resultado-plan.html">Ver plan resultante →</a>
+    </div>
+  </div>
+
+<script>
+/* MN: Fix topbar links */
+(function(){
+  // Make logo link to home
+  document.querySelectorAll('.topbar .logo, .logo').forEach(function(el){
+    if(el.tagName!=='A'){
+      var a=document.createElement('a');
+      a.href='../app/home.html';
+      a.innerHTML=el.innerHTML;
+      a.className=el.className;
+      a.style.textDecoration='none';
+      el.parentNode.replaceChild(a,el);
+    }
+  });
+  // Fix module nav links
+  var map={
+    'Onboarding':'../onboarding/empresa-url.html',
+    'Agente Estratégico':'../agente-estrategico/ide-main.html',
+    'Agente Creativo':'../agente-creativo/arbol-campana-brief-piezas.html',
+    'Ajuste':'../iteracion/iteracion-main.html',
+    'Ajuste de resultados':'../iteracion/iteracion-main.html',
+    'Histórico':'../historico/historico-main.html'
+  };
+  document.querySelectorAll('.topbar a,.topbar-nav a,.topbar .nav a').forEach(function(a){
+    var t=a.textContent.trim();
+    if(map[t]&&(a.getAttribute('href')==='#'||!a.getAttribute('href'))){
+      a.href=map[t];
+    }
+  });
+  // Add logout if not present
+  var topbar=document.querySelector('.topbar');
+  if(topbar&&!topbar.querySelector('.mn-topbar-out')){
+    var out=document.createElement('a');
+    out.href='../app/login.html';
+    out.textContent='Salir →';
+    out.className='mn-topbar-out';
+    out.style.cssText='font-size:0.75rem;color:#9ba5b4;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:0.28rem 0.6rem;text-decoration:none;margin-left:0.5rem;white-space:nowrap;';
+    topbar.appendChild(out);
+  }
+})();
+</script>
+
+<div class="mn-panel">
+  <a href="seleccion-campana.html" class="mn-next">Seleccionar base →</a>
+  <a href="../app/home.html" class="mn-prev">← Inicio</a>
+  <a href="../app/home.html" class="mn-home">⌂ Inicio</a>
+  <a href="../app/login.html" class="mn-logout">Salir →</a>
+</div>
+</body>
+</html>

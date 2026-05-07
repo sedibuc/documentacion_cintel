@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CINTELIO Marketing — Inicio</title>
+  <style>
+    :root {
+      --bg: #f3efe6;
+      --panel: rgba(255, 252, 246, 0.98);
+      --panel-alt: rgba(243, 239, 230, 0.75);
+      --panel-mid: rgba(248, 245, 240, 0.90);
+      --topbar: #1e2430;
+      --ink: #1e2430;
+      --ink-dim: #3a4253;
+      --muted: #586171;
+      --muted-lt: #8a97a8;
+      --line: rgba(30, 36, 48, 0.12);
+      --line-soft: rgba(30, 36, 48, 0.06);
+      --accent: #0f5a58;
+      --accent-soft: #d6ebe8;
+      --accent-light: #e8f4f3;
+      --glow: #4db8b5;
+      --warn: #8d4a1f;
+      --warn-soft: #faeadb;
+      --warn-light: #c07840;
+      --success: #2d6a4f;
+      --success-light: #5a9e7c;
+      --border: rgba(30, 36, 48, 0.12);
+      --border-accent: rgba(15, 90, 88, 0.30);
+      --radius: 14px;
+      --radius-sm: 9px;
+      --shadow: 0 4px 20px rgba(26,32,41,0.10);
+      --shadow-lg: 0 24px 60px rgba(26,32,41,0.12);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #f7f1e7 0%, #ece7de 100%);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Mockup badge ───────── */
+    .mockup-badge {
+      position: fixed; top: 0.75rem; right: 1rem;
+      padding: 0.35rem 0.85rem; background: var(--warn); color: #fff;
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em;
+      border-radius: 999px; text-transform: uppercase; z-index: 500;
+    }
+
+    /* ── Topbar ─────────────── */
+    .topbar {
+      height: 52px; background: var(--topbar);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 1.5rem; border-bottom: 1px solid var(--line);
+      flex-shrink: 0;
+    }
+    .logo { color: #f0ece3; font-weight: 800; font-size: 1rem; letter-spacing: -0.01em; text-decoration: none; }
+    .logo span { color: var(--glow); }
+    .topbar-nav { display: flex; gap: 0.2rem; }
+    .topbar-nav a {
+      color: rgba(255,255,255,0.6); font-size: 0.82rem;
+      padding: 0.35rem 0.7rem; border-radius: 6px;
+      text-decoration: none; transition: background 0.15s, color 0.15s;
+    }
+    .topbar-nav a:hover { background: rgba(30,36,48,0.07); color: var(--text); }
+    .topbar-right { display: flex; align-items: center; gap: 0.75rem; }
+    .user-pill {
+      display: flex; align-items: center; gap: 0.45rem;
+      background: rgba(30,36,48,0.05);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0.28rem 0.75rem 0.28rem 0.5rem;
+      font-size: 0.79rem; color: var(--muted-lt);
+    }
+    .user-avatar {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: var(--accent); color: #fff;
+      font-size: 0.68rem; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .btn-logout {
+      font-size: 0.76rem; color: var(--muted);
+      background: rgba(30,36,48,0.05);
+      border: 1px solid var(--line);
+      border-radius: 6px; padding: 0.3rem 0.65rem;
+      text-decoration: none; transition: background 0.15s, color 0.15s;
+    }
+    .btn-logout:hover { background: rgba(141,74,31,0.15); color: #e8b88a; border-color: rgba(141,74,31,0.3); }
+
+    /* ── Main content ───────── */
+    .main {
+      flex: 1;
+      padding: 2rem 2.5rem;
+      max-width: 1100px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* ── Welcome banner ─────── */
+    .welcome-banner {
+      margin-bottom: 2rem;
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: 1rem;
+    }
+    .welcome-text h1 {
+      font-size: 1.4rem; font-weight: 800; color: var(--ink);
+      margin-bottom: 0.3rem; letter-spacing: -0.02em;
+    }
+    .welcome-text p { font-size: 0.9rem; color: var(--muted); }
+    .context-pill {
+      display: flex; align-items: center; gap: 0.5rem;
+      background: var(--glow-soft);
+      border: 1px solid var(--border-accent);
+      border-radius: var(--radius-sm);
+      padding: 0.5rem 1rem;
+      font-size: 0.82rem; color: var(--glow); white-space: nowrap;
+    }
+    .context-pill .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--glow); flex-shrink: 0; }
+
+    /* ── Section label ──────── */
+    .section-label {
+      font-size: 0.67rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--glow);
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    /* ── Module grid ────────── */
+    .module-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+    .module-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1.4rem 1.5rem;
+      text-decoration: none;
+      color: inherit;
+      transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+      display: flex; flex-direction: column; gap: 0.8rem;
+      cursor: pointer;
+    }
+    .module-card:hover {
+      border-color: var(--border-accent);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(0,0,0,0.2);
+      text-decoration: none;
+    }
+    .mc-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.8rem; }
+    .mc-icon {
+      width: 38px; height: 38px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; flex-shrink: 0;
+    }
+    .mc-icon.onboarding { background: rgba(15,90,88,0.18); }
+    .mc-icon.estrategico { background: rgba(77,184,181,0.15); }
+    .mc-icon.creativo { background: rgba(159,100,190,0.15); }
+    .mc-icon.iteracion { background: rgba(220,160,60,0.15); }
+    .mc-icon.historico { background: rgba(80,140,200,0.15); }
+    .mc-badge {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em;
+      padding: 0.2rem 0.55rem; border-radius: 999px;
+      text-transform: uppercase;
+    }
+    .mc-badge.active { background: rgba(77,184,181,0.15); color: var(--glow); }
+    .mc-badge.ready { background: rgba(45,106,79,0.2); color: var(--success); }
+    .mc-badge.locked { background: rgba(30,36,48,0.05); color: var(--muted); }
+    .mc-title {
+      font-size: 1rem; font-weight: 800; color: var(--ink);
+      margin-bottom: 0.2rem;
+    }
+    .mc-desc { font-size: 0.83rem; color: var(--muted); line-height: 1.5; }
+    .mc-cta {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-size: 0.8rem; font-weight: 700; color: var(--glow);
+      margin-top: auto;
+    }
+    .mc-cta::after { content: '→'; transition: transform 0.15s; }
+    .module-card:hover .mc-cta::after { transform: translateX(3px); }
+
+    /* ── Recent activity ────── */
+    .activity-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .activity-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1.2rem 1.4rem;
+    }
+    .ac-title { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--glow); font-weight: 700; margin-bottom: 0.9rem; }
+    .ac-item {
+      display: flex; align-items: center; gap: 0.6rem;
+      padding: 0.45rem 0;
+      border-bottom: 1px solid var(--line);
+      font-size: 0.82rem;
+    }
+    .ac-item:last-child { border-bottom: none; }
+    .ac-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .ac-dot.teal { background: var(--glow); }
+    .ac-dot.amber { background: #c8a050; }
+    .ac-dot.blue { background: #5a9fd4; }
+    .ac-label { color: var(--muted-lt); flex: 1; }
+    .ac-date { color: var(--muted); font-size: 0.75rem; }
+    .ac-link { color: var(--glow); text-decoration: none; font-weight: 600; font-size: 0.79rem; }
+    .ac-link:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="mockup-badge">Mockup</div>
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:1.2rem;">
+      <a href="../app/home.html" class="logo">CINTELIO <span>Marketing</span></a>
+      <nav class="topbar-nav">
+        <a href="../onboarding/empresa-url.html">Onboarding</a>
+        <a href="../agente-estrategico/ide-main.html">Agente Estratégico</a>
+        <a href="../agente-creativo/arbol-campana-brief-piezas.html">Agente Creativo</a>
+        <a href="../iteracion/iteracion-main.html">Ajuste</a>
+        <a href="../historico/historico-main.html">Histórico</a>
+      </nav>
+    </div>
+    <div class="topbar-right">
+      <div class="user-pill">
+        <div class="user-avatar">A</div>
+        Ana Martínez · CINTEL
+      </div>
+      <a href="../app/login.html" class="btn-logout">Salir →</a>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="main">
+
+    <!-- Welcome banner -->
+    <div class="welcome-banner">
+      <div class="welcome-text">
+        <h1>Buenos días, Ana</h1>
+        <p>Tienes 2 campañas activas. El agente está listo para trabajar.</p>
+      </div>
+      <div class="context-pill">
+        <div class="dot"></div>
+        CINTEL · Empresa activa
+      </div>
+    </div>
+
+    <!-- Module grid -->
+    <div class="section-label">Módulos del sistema</div>
+    <div class="module-grid">
+
+      <a href="../onboarding/empresa-url.html" class="module-card">
+        <div class="mc-header">
+          <div class="mc-icon onboarding">🏢</div>
+          <span class="mc-badge active">Completado</span>
+        </div>
+        <div>
+          <div class="mc-title">Onboarding</div>
+          <div class="mc-desc">Configuración inicial de empresa, identidad visual, historial de campañas y definición de personas.</div>
+        </div>
+        <span class="mc-cta">Revisar configuración</span>
+      </a>
+
+      <a href="../agente-estrategico/ide-main.html" class="module-card">
+        <div class="mc-header">
+          <div class="mc-icon estrategico">🧠</div>
+          <span class="mc-badge active">Activo</span>
+        </div>
+        <div>
+          <div class="mc-title">Agente Estratégico</div>
+          <div class="mc-desc">Genera estrategias de comunicación y planes de campaña mediante conversación con el agente IA.</div>
+        </div>
+        <span class="mc-cta">Abrir agente</span>
+      </a>
+
+      <a href="../agente-creativo/arbol-campana-brief-piezas.html" class="module-card">
+        <div class="mc-header">
+          <div class="mc-icon creativo">🎨</div>
+          <span class="mc-badge active">Activo</span>
+        </div>
+        <div>
+          <div class="mc-title">Agente Creativo</div>
+          <div class="mc-desc">Genera briefs de diseño y piezas de contenido a partir de la estrategia definida.</div>
+        </div>
+        <span class="mc-cta">Crear contenido</span>
+      </a>
+
+      <a href="../iteracion/iteracion-main.html" class="module-card">
+        <div class="mc-header">
+          <div class="mc-icon iteracion">🔁</div>
+          <span class="mc-badge ready">Disponible</span>
+        </div>
+        <div>
+          <div class="mc-title">Ajuste de resultados</div>
+          <div class="mc-desc">Itera sobre estrategias, briefs y piezas generadas aplicando instrucciones en lenguaje natural.</div>
+        </div>
+        <span class="mc-cta">Ajustar resultados</span>
+      </a>
+
+      <a href="../historico/historico-main.html" class="module-card">
+        <div class="mc-header">
+          <div class="mc-icon historico">📂</div>
+          <span class="mc-badge ready">Disponible</span>
+        </div>
+        <div>
+          <div class="mc-title">Histórico</div>
+          <div class="mc-desc">Consulta el historial de campañas pasadas, sus resultados y reutiliza elementos en nuevas campañas.</div>
+        </div>
+        <span class="mc-cta">Ver histórico</span>
+      </a>
+
+    </div>
+
+    <!-- Activity section -->
+    <div class="section-label">Actividad reciente</div>
+    <div class="activity-grid">
+      <div class="activity-card">
+        <div class="ac-title">Campañas recientes</div>
+        <div class="ac-item">
+          <div class="ac-dot teal"></div>
+          <span class="ac-label">Transformación Digital 2025</span>
+          <span class="ac-date">Hoy</span>
+          <a href="../agente-estrategico/resultado-plan.html" class="ac-link">Ver →</a>
+        </div>
+        <div class="ac-item">
+          <div class="ac-dot amber"></div>
+          <span class="ac-label">Gobierno Digital Q2</span>
+          <span class="ac-date">Ayer</span>
+          <a href="../historico/historico-detalle-campana.html" class="ac-link">Ver →</a>
+        </div>
+        <div class="ac-item">
+          <div class="ac-dot blue"></div>
+          <span class="ac-label">Arquitectura Empresarial</span>
+          <span class="ac-date">Hace 3 días</span>
+          <a href="../historico/historico-main.html" class="ac-link">Ver →</a>
+        </div>
+      </div>
+      <div class="activity-card">
+        <div class="ac-title">Acciones rápidas</div>
+        <div class="ac-item">
+          <div class="ac-dot teal"></div>
+          <a href="../agente-estrategico/ide-main.html" class="ac-link">Nueva campaña con Agente Estratégico</a>
+        </div>
+        <div class="ac-item">
+          <div class="ac-dot amber"></div>
+          <a href="../agente-creativo/arbol-campana-brief-piezas.html" class="ac-link">Generar piezas creativas</a>
+        </div>
+        <div class="ac-item">
+          <div class="ac-dot blue"></div>
+          <a href="../iteracion/iteracion-main.html" class="ac-link">Ajustar resultado existente</a>
+        </div>
+        <div class="ac-item">
+          <div class="ac-dot teal"></div>
+          <a href="../onboarding/nuevo-usuario.html" class="ac-link">Agregar nuevo usuario al equipo</a>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+
+</body>
+</html>

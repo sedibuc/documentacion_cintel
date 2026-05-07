@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mockup — Nuevo usuario en empresa existente | Onboarding</title>
+  <style>
+    :root {
+      --panel: rgba(255, 252, 246, 0.95);
+      --ink: #1e2430;
+      --muted: #586171;
+      --line: rgba(30, 36, 48, 0.14);
+      --accent: #0f5a58;
+      --accent-soft: #d6ebe8;
+      --warn: #8d4a1f;
+      --warn-soft: #faeadb;
+      --radius: 18px;
+      --radius-sm: 12px;
+      --shadow: 0 24px 60px rgba(26, 32, 41, 0.12);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      padding-top: 64px !important;
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #f7f1e7 0%, #ece7de 100%);
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 2rem;
+    }
+    .mockup-badge {
+      position: fixed;
+      top: 1rem; right: 1rem;
+      padding: 0.4rem 0.9rem;
+      background: #8d4a1f;
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      border-radius: 999px;
+      text-transform: uppercase;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 2.5rem 2.8rem;
+      width: 100%;
+      max-width: 540px;
+    }
+    .step-label {
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+    h1 { font-size: 1.5rem; color: var(--ink); margin-bottom: 0.4rem; }
+    .subtitle { color: var(--muted); font-size: 0.93rem; line-height: 1.5; margin-bottom: 1.8rem; }
+    .info-block {
+      background: var(--accent-soft);
+      border: 1px solid rgba(15,90,88,0.2);
+      border-radius: var(--radius-sm);
+      padding: 1rem 1.2rem;
+      font-size: 0.88rem;
+      color: var(--ink);
+      margin-bottom: 1.6rem;
+      line-height: 1.6;
+    }
+    .info-block strong { color: var(--accent); }
+    .search-group {
+      display: flex;
+      gap: 0.6rem;
+      margin-bottom: 0.8rem;
+    }
+    input[type="text"], input[type="email"], select {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: rgba(255,255,255,0.85);
+      font-size: 0.93rem;
+      color: var(--ink);
+      font-family: inherit;
+      outline: none;
+    }
+    input:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(15, 90, 88, 0.1);
+    }
+    .btn {
+      padding: 0.8rem 1.3rem;
+      border-radius: var(--radius-sm);
+      border: none;
+      font-size: 0.93rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-secondary { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+    .company-result {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border: 1px solid rgba(15,90,88,0.3);
+      border-radius: var(--radius-sm);
+      padding: 1rem 1.2rem;
+      background: rgba(214, 235, 232, 0.35);
+      margin-bottom: 1.8rem;
+    }
+    .company-result .name { font-weight: 700; color: var(--ink); }
+    .company-result .domain { font-size: 0.82rem; color: var(--muted); }
+    .check-icon { font-size: 1.3rem; }
+    .divider { border: none; border-top: 1px solid var(--line); margin: 1.4rem 0; }
+    .field-group { margin-bottom: 1.1rem; }
+    label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 0.4rem;
+    }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1.8rem;
+    }
+    .nav-mockup {
+      margin-top: 1rem;
+      font-size: 0.85rem;
+      text-align: center;
+    }
+    .nav-mockup a { color: var(--accent); text-decoration: none; font-weight: 600; }
+    .nav-mockup a:hover { text-decoration: underline; }
+  </style>
+  <style>
+  /* ═══ MN: Mockup nav injection ═══════════════════ */
+  .mn-topbar{position:fixed;top:0;left:0;right:0;height:48px;background:rgba(255,252,246,0.97);border-bottom:1px solid rgba(30,36,48,0.1);display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;z-index:300;backdrop-filter:blur(8px);box-shadow:0 1px 6px rgba(30,36,48,0.07);}
+  .mn-topbar-logo{font-weight:800;color:#1e2430;text-decoration:none;font-size:0.95rem;letter-spacing:-0.01em;}
+  .mn-topbar-logo span{color:#0f5a58;}
+  .mn-topbar-nav{display:flex;gap:0.15rem;}
+  .mn-topbar-nav a{font-size:0.79rem;color:#586171;padding:0.25rem 0.6rem;border-radius:5px;text-decoration:none;}
+  .mn-topbar-nav a.mn-active{background:rgba(15,90,88,0.1);color:#0f5a58;font-weight:600;}
+  .mn-topbar-logout{font-size:0.77rem;color:#8d4a1f;border:1px solid rgba(141,74,31,0.25);border-radius:6px;padding:0.26rem 0.65rem;text-decoration:none;white-space:nowrap;}
+  .mn-panel{position:fixed;bottom:1.4rem;right:1.2rem;display:flex;flex-direction:column;gap:0.45rem;z-index:900;}
+  .mn-panel a{display:block;padding:0.52rem 1.05rem;border-radius:10px;font-size:0.79rem;font-weight:700;text-decoration:none;text-align:center;white-space:nowrap;font-family:"Segoe UI",sans-serif;}
+  .mn-next{background:#0f5a58;color:#fff;box-shadow:0 4px 14px rgba(15,90,88,0.28);}
+  .mn-next:hover{background:#0a4846;}
+  .mn-prev{background:rgba(30,36,48,0.07);color:#1e2430;border:1px solid rgba(30,36,48,0.14);font-size:0.77rem;padding:0.4rem 0.85rem;}
+  .mn-home{background:rgba(30,36,48,0.05);color:#586171;border:1px solid rgba(30,36,48,0.1);font-size:0.73rem;padding:0.36rem 0.85rem;}
+  .mn-logout{background:rgba(141,74,31,0.08);color:#8d4a1f;border:1px solid rgba(141,74,31,0.2);font-size:0.73rem;padding:0.36rem 0.85rem;}
+  /* ═══════════════════════════════════════════════ */
+  </style>
+</head>
+<body>
+<div class="mn-topbar">
+  <a href="../app/home.html" class="mn-topbar-logo">CINTELIO <span>Marketing</span></a>
+  <nav class="mn-topbar-nav">
+    <a href="../onboarding/empresa-url.html" class="mn-active">Onboarding</a>
+    <a href="../agente-estrategico/ide-main.html">Estratégico</a>
+    <a href="../agente-creativo/arbol-campana-brief-piezas.html">Creativo</a>
+    <a href="../iteracion/iteracion-main.html">Ajuste</a>
+    <a href="../historico/historico-main.html">Histórico</a>
+  </nav>
+  <a href="../app/login.html" class="mn-topbar-logout">Salir →</a>
+</div>
+
+  <div class="mockup-badge">Mockup</div>
+
+  <div class="card">
+    <p class="step-label">Alta de nuevo usuario</p>
+    <h1>Únete a tu empresa</h1>
+    <p class="subtitle">
+      Si tu empresa ya está registrada, solo necesitas vincular tu cuenta. No es necesario volver
+      a configurar la información institucional.
+    </p>
+
+    <div class="info-block">
+      <strong>¿Por qué este flujo es diferente?</strong><br>
+      La configuración de la empresa (descripción, marca, canales) ya fue realizada por otro usuario.
+      Aquí solo registramos tus datos personales y te vinculamos a la empresa existente.
+    </div>
+
+    <!-- Paso 1: buscar empresa -->
+    <label>Busca tu empresa por nombre o dominio</label>
+    <div class="search-group">
+      <input type="text" placeholder="CINTEL o cintel.co" value="cintel">
+      <button class="btn btn-primary">Buscar</button>
+    </div>
+
+    <!-- Resultado de búsqueda (simulado como encontrado) -->
+    <div class="company-result">
+      <div>
+        <div class="name">CINTEL</div>
+        <div class="domain">cintel.co · Innovación y transformación digital</div>
+      </div>
+      <div class="check-icon">✅</div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- Paso 2: datos personales -->
+    <p style="font-size:0.88rem;font-weight:700;color:var(--ink);margin-bottom:1rem;">
+      Tus datos personales
+    </p>
+
+    <div class="two-col">
+      <div class="field-group">
+        <label>Nombre</label>
+        <input type="text" placeholder="Carlos">
+      </div>
+      <div class="field-group">
+        <label>Apellido</label>
+        <input type="text" placeholder="Ramírez">
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label>Correo institucional</label>
+      <input type="email" placeholder="cramirez@cintel.co">
+    </div>
+
+    <div class="field-group">
+      <label>Cargo</label>
+      <input type="text" placeholder="Coordinador de Marketing">
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-secondary">← Volver</button>
+      <button class="btn btn-primary">Crear mi cuenta ✓</button>
+    </div>
+    <div class="nav-mockup">
+      <a href="../app/login.html">← Acceso</a>
+      <a href="../app/home.html">Ir al inicio →</a>
+    </div>
+
+  </div>
+
+<div class="mn-panel">
+  <a href="../app/home.html" class="mn-next">Ir al inicio →</a>
+  <a href="../app/login.html" class="mn-prev">← Acceso</a>
+  <a href="../app/home.html" class="mn-home">⌂ Inicio</a>
+  <a href="../app/login.html" class="mn-logout">Salir →</a>
+</div>
+</body>
+</html>

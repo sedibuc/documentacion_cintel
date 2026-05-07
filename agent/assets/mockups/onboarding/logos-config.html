@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mockup — Logos y configuración de marca | Onboarding</title>
+  <style>
+    :root {
+      --panel: rgba(255,252,246,0.95);
+      --ink: #1e2430;
+      --muted: #586171;
+      --line: rgba(30,36,48,0.14);
+      --accent: #0f5a58;
+      --accent-soft: #d6ebe8;
+      --warn: #8d4a1f;
+      --warn-soft: #faeadb;
+      --radius: 18px;
+      --radius-sm: 12px;
+      --shadow: 0 24px 60px rgba(26,32,41,0.12);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      padding-top: 64px !important;
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #f7f1e7 0%, #ece7de 100%);
+      min-height: 100vh; padding: 2rem;
+    }
+    .mockup-badge {
+      position: fixed; top: 1rem; right: 1rem;
+      padding: 0.4rem 0.9rem; background: #8d4a1f; color: #fff;
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
+      border-radius: 999px; text-transform: uppercase; z-index: 100;
+    }
+    .layout { max-width: 860px; margin: 0 auto; }
+    .step-label { text-transform: uppercase; letter-spacing: 0.18em; font-size: 0.72rem; font-weight: 700; color: var(--accent); margin-bottom: 0.5rem; }
+    h1 { font-size: 1.55rem; color: var(--ink); margin-bottom: 0.4rem; }
+    .subtitle { color: var(--muted); font-size: 0.93rem; line-height: 1.5; margin-bottom: 1.5rem; }
+    .section-card {
+      background: var(--panel); border: 1px solid var(--line);
+      border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.6rem 1.8rem; margin-bottom: 1.2rem;
+    }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.1rem; }
+    .card-header h2 { font-size: 0.97rem; color: var(--ink); }
+    .badge { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.22rem 0.65rem; border-radius: 999px; }
+    .badge-auto { background: var(--accent-soft); color: var(--accent); }
+
+    /* Logo cards grid */
+    .logos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; }
+    .logo-card {
+      border: 1px solid var(--line); border-radius: var(--radius-sm);
+      background: rgba(255,255,255,0.88); overflow: hidden;
+    }
+    .logo-card.primary { border-color: var(--accent); border-width: 2px; }
+    .logo-preview-area {
+      height: 90px; display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; color: var(--muted); text-align: center; padding: 0.5rem;
+    }
+    .logo-preview-area.dark { background: #1a1a1a; color: #aaa; }
+    .logo-card-body { padding: 0.8rem 1rem; }
+    .logo-variant { font-size: 0.85rem; font-weight: 700; color: var(--ink); }
+    .logo-use { font-size: 0.78rem; color: var(--muted); margin-bottom: 0.5rem; margin-top: 0.1rem; }
+    .logo-card-actions { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+    .btn-xs { padding: 0.28rem 0.65rem; border-radius: 7px; border: 1px solid var(--line); font-size: 0.75rem; font-weight: 600; cursor: pointer; background: transparent; color: var(--ink); }
+    .btn-xs.primary-badge { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .btn-xs.replace { border-color: var(--warn); color: var(--warn); }
+    .primary-chip {
+      display: inline-block; font-size: 0.68rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      padding: 0.15rem 0.55rem; border-radius: 999px;
+      background: var(--accent); color: #fff; margin-bottom: 0.3rem;
+    }
+    .add-logo-card {
+      border: 2px dashed rgba(15,90,88,0.3); border-radius: var(--radius-sm);
+      background: rgba(214,235,232,0.2); height: 100%;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      min-height: 180px; cursor: pointer; gap: 0.5rem; color: var(--accent);
+      font-size: 0.88rem; font-weight: 700; padding: 1rem;
+    }
+    .add-logo-card .icon { font-size: 2rem; opacity: 0.6; }
+
+    /* Rules table */
+    .rules-table { width: 100%; border-collapse: collapse; font-size: 0.87rem; }
+    .rules-table th { text-align: left; padding: 0.6rem 0.8rem; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); border-bottom: 1px solid var(--line); }
+    .rules-table td { padding: 0.65rem 0.8rem; border-bottom: 1px solid var(--line); color: var(--ink); }
+    .rules-table tr:last-child td { border-bottom: none; }
+    .rules-table input[type="text"] {
+      width: 100%; padding: 0.35rem 0.6rem; border: 1px solid var(--line);
+      border-radius: 6px; font-size: 0.84rem; background: rgba(255,255,255,0.8);
+      color: var(--ink); font-family: inherit; outline: none;
+    }
+    .rules-table input:focus { border-color: var(--accent); }
+
+    .actions { display: flex; justify-content: space-between; margin-top: 2rem; }
+    .btn { padding: 0.83rem 1.5rem; border-radius: var(--radius-sm); border: none; font-size: 0.93rem; font-weight: 700; cursor: pointer; }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-secondary { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+    .nav-mockup { display: flex; justify-content: space-between; margin-top: 1rem; font-size: 0.85rem; }
+    .nav-mockup a { color: var(--accent); text-decoration: none; font-weight: 600; }
+    .nav-mockup a:hover { text-decoration: underline; }
+  </style>
+  <style>
+  /* ═══ MN: Mockup nav injection ═══════════════════ */
+  .mn-topbar{position:fixed;top:0;left:0;right:0;height:48px;background:rgba(255,252,246,0.97);border-bottom:1px solid rgba(30,36,48,0.1);display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;z-index:300;backdrop-filter:blur(8px);box-shadow:0 1px 6px rgba(30,36,48,0.07);}
+  .mn-topbar-logo{font-weight:800;color:#1e2430;text-decoration:none;font-size:0.95rem;letter-spacing:-0.01em;}
+  .mn-topbar-logo span{color:#0f5a58;}
+  .mn-topbar-nav{display:flex;gap:0.15rem;}
+  .mn-topbar-nav a{font-size:0.79rem;color:#586171;padding:0.25rem 0.6rem;border-radius:5px;text-decoration:none;}
+  .mn-topbar-nav a.mn-active{background:rgba(15,90,88,0.1);color:#0f5a58;font-weight:600;}
+  .mn-topbar-logout{font-size:0.77rem;color:#8d4a1f;border:1px solid rgba(141,74,31,0.25);border-radius:6px;padding:0.26rem 0.65rem;text-decoration:none;white-space:nowrap;}
+  .mn-panel{position:fixed;bottom:1.4rem;right:1.2rem;display:flex;flex-direction:column;gap:0.45rem;z-index:900;}
+  .mn-panel a{display:block;padding:0.52rem 1.05rem;border-radius:10px;font-size:0.79rem;font-weight:700;text-decoration:none;text-align:center;white-space:nowrap;font-family:"Segoe UI",sans-serif;}
+  .mn-next{background:#0f5a58;color:#fff;box-shadow:0 4px 14px rgba(15,90,88,0.28);}
+  .mn-next:hover{background:#0a4846;}
+  .mn-prev{background:rgba(30,36,48,0.07);color:#1e2430;border:1px solid rgba(30,36,48,0.14);font-size:0.77rem;padding:0.4rem 0.85rem;}
+  .mn-home{background:rgba(30,36,48,0.05);color:#586171;border:1px solid rgba(30,36,48,0.1);font-size:0.73rem;padding:0.36rem 0.85rem;}
+  .mn-logout{background:rgba(141,74,31,0.08);color:#8d4a1f;border:1px solid rgba(141,74,31,0.2);font-size:0.73rem;padding:0.36rem 0.85rem;}
+  /* ═══════════════════════════════════════════════ */
+  </style>
+</head>
+<body>
+<div class="mn-topbar">
+  <a href="../app/home.html" class="mn-topbar-logo">CINTELIO <span>Marketing</span></a>
+  <nav class="mn-topbar-nav">
+    <a href="../onboarding/empresa-url.html" class="mn-active">Onboarding</a>
+    <a href="../agente-estrategico/ide-main.html">Estratégico</a>
+    <a href="../agente-creativo/arbol-campana-brief-piezas.html">Creativo</a>
+    <a href="../iteracion/iteracion-main.html">Ajuste</a>
+    <a href="../historico/historico-main.html">Histórico</a>
+  </nav>
+  <a href="../app/login.html" class="mn-topbar-logout">Salir →</a>
+</div>
+
+  <div class="mockup-badge">Mockup</div>
+  <div class="layout">
+    <p class="step-label">Onboarding — Etapa 2 de 4 · Logos y reglas de marca</p>
+    <h1>Logos y configuración de uso</h1>
+    <p class="subtitle">El sistema extrajo los logos del manual de marca. Revisa cada variante, marca el logo principal y verifica las reglas de uso.</p>
+
+    <div class="section-card">
+      <div class="card-header">
+        <h2>Logos detectados</h2>
+        <span class="badge badge-auto">Extraído del manual</span>
+      </div>
+      <div class="logos-grid">
+        <div class="logo-card primary">
+          <div class="logo-preview-area" style="background:#f0f4ff;">
+            [Logo color<br>cintel-logo.svg]
+          </div>
+          <div class="logo-card-body">
+            <span class="primary-chip">Principal</span>
+            <div class="logo-variant">Logo color</div>
+            <div class="logo-use">Uso general — fondos claros</div>
+            <div class="logo-card-actions">
+              <button class="btn-xs replace">↑ Reemplazar</button>
+              <button class="btn-xs">✕ Eliminar</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="logo-card">
+          <div class="logo-preview-area dark">
+            [Logo blanco<br>cintel-logo-white.svg]
+          </div>
+          <div class="logo-card-body">
+            <div class="logo-variant">Logo versión blanca</div>
+            <div class="logo-use">Fondos oscuros o de color</div>
+            <div class="logo-card-actions">
+              <button class="btn-xs primary-badge">★ Marcar principal</button>
+              <button class="btn-xs replace">↑ Reemplazar</button>
+              <button class="btn-xs">✕ Eliminar</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="logo-card">
+          <div class="logo-preview-area">
+            [Ícono reducido<br>cintel-icon.svg]
+          </div>
+          <div class="logo-card-body">
+            <div class="logo-variant">Ícono reducido</div>
+            <div class="logo-use">Espacios pequeños, ícono de app</div>
+            <div class="logo-card-actions">
+              <button class="btn-xs primary-badge">★ Marcar principal</button>
+              <button class="btn-xs replace">↑ Reemplazar</button>
+              <button class="btn-xs">✕ Eliminar</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="add-logo-card">
+          <div class="icon">+</div>
+          Agregar variante de logo
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="card-header">
+        <h2>Reglas de uso de logos</h2>
+        <span class="badge badge-auto">Extraído del manual — editable</span>
+      </div>
+      <table class="rules-table">
+        <thead>
+          <tr>
+            <th>Variante</th>
+            <th>Cuándo usar</th>
+            <th>Fondos permitidos</th>
+            <th>Restricciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Logo color</td>
+            <td><input type="text" value="Piezas generales, presentaciones, web"></td>
+            <td><input type="text" value="Blanco, gris claro, neutros"></td>
+            <td><input type="text" value="No sobre colores oscuros"></td>
+          </tr>
+          <tr>
+            <td>Logo blanco</td>
+            <td><input type="text" value="Fondos de color o imágenes oscuras"></td>
+            <td><input type="text" value="Azul institucional, verde, oscuros"></td>
+            <td><input type="text" value="No sobre fondos claros"></td>
+          </tr>
+          <tr>
+            <td>Ícono reducido</td>
+            <td><input type="text" value="Espacios pequeños, redes sociales"></td>
+            <td><input type="text" value="Cualquier fondo oficial"></td>
+            <td><input type="text" value="Mínimo 32px de ancho"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-secondary">← Volver</button>
+      <button class="btn btn-primary">Confirmar y continuar →</button>
+    </div>
+    <div class="nav-mockup">
+      <a href="identidad-web.html">← Identidad web</a>
+      <a href="manual-marca.html">Manual de marca →</a>
+    </div>
+
+  </div>
+
+<div class="mn-panel">
+  <a href="manual-marca.html" class="mn-next">Manual de marca →</a>
+  <a href="identidad-web.html" class="mn-prev">← Identidad web</a>
+  <a href="../app/home.html" class="mn-home">⌂ Inicio</a>
+  <a href="../app/login.html" class="mn-logout">Salir →</a>
+</div>
+</body>
+</html>

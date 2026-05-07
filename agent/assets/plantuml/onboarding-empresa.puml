@@ -1,0 +1,68 @@
+@startuml onboarding-empresa
+!theme plain
+skinparam backgroundColor #FDFAF4
+skinparam defaultFontName Segoe UI
+skinparam roundCorner 12
+skinparam ArrowColor #0f5a58
+skinparam ActivityBorderColor #0f5a58
+skinparam ActivityBackgroundColor #d6ebe8
+skinparam ActivityDiamondBackgroundColor #fff8ef
+skinparam ActivityDiamondBorderColor #8d4a1f
+skinparam NoteBackgroundColor #fffdf6
+skinparam NoteBorderColor #c8bfa8
+
+title Onboarding — Alta inicial de empresa y persona
+
+|Usuario|
+start
+:Ingresa URL del sitio web de la empresa;
+
+|Sistema|
+:Realiza scraping del sitio web;
+:Extrae descripción, productos/servicios,\nmensajes clave y canales detectados;
+:Presenta información detectada al usuario;
+
+|Usuario|
+:Revisa y edita la información detectada;
+:Confirma o corrige los datos;
+
+|Sistema|
+:Guarda el perfil institucional base;
+
+|Usuario|
+fork
+  :Carga manual de marca (opcional);
+  |Sistema|
+  :Procesa el documento;
+  :Extrae colores, tipografías, logo\ny reglas de uso visual;
+  :Convierte parámetros en metadatos\nfuncionales de marca;
+  |Usuario|
+  :Revisa y valida los parámetros extraídos;
+  |Sistema|
+  :Guarda parámetros de marca;
+fork again
+  note right
+    Si no hay manual de marca,
+    el sistema omite este paso.
+    Los parámetros de marca
+    quedarán vacíos o con valores
+    por defecto.
+  end note
+end fork
+
+|Sistema|
+:Perfil institucional listo;
+
+|Usuario|
+:Continúa con onboarding de persona;
+:Ingresa nombre, cargo y correo;
+:Confirma datos personales;
+
+|Sistema|
+:Vincula usuario a la empresa;
+:Onboarding completado;
+:Contexto disponible para\nAgente Estratégico y Creativo;
+
+stop
+
+@enduml

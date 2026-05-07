@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mockup — Plan estratégico resultante</title>
+  <style>
+    :root {
+      --bg: #f3efe6;
+      --panel: rgba(255, 252, 246, 0.98);
+      --panel-alt: rgba(243, 239, 230, 0.75);
+      --panel-mid: rgba(248, 245, 240, 0.90);
+      --topbar: #1e2430;
+      --ink: #1e2430;
+      --ink-dim: #3a4253;
+      --muted: #586171;
+      --muted-lt: #8a97a8;
+      --line: rgba(30, 36, 48, 0.12);
+      --line-soft: rgba(30, 36, 48, 0.06);
+      --accent: #0f5a58;
+      --accent-soft: #d6ebe8;
+      --accent-light: #e8f4f3;
+      --glow: #4db8b5;
+      --warn: #8d4a1f;
+      --warn-soft: #faeadb;
+      --warn-light: #c07840;
+      --success: #2d6a4f;
+      --success-light: #5a9e7c;
+      --border: rgba(30, 36, 48, 0.12);
+      --border-accent: rgba(15, 90, 88, 0.30);
+      --radius: 14px;
+      --radius-sm: 9px;
+      --shadow: 0 4px 20px rgba(26,32,41,0.10);
+      --shadow-lg: 0 24px 60px rgba(26,32,41,0.12);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #f7f1e7 0%, #ece7de 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      color: var(--ink);
+    }
+    .mockup-badge {
+      position: fixed; top: 0.75rem; right: 1rem;
+      padding: 0.35rem 0.85rem; background: var(--warn); color: #fff;
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em;
+      border-radius: 999px; text-transform: uppercase; z-index: 500;
+    }
+
+    /* ─── Top bar ─── */
+    .topbar {
+      height: 52px; background: var(--topbar);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 1.2rem; border-bottom: 1px solid var(--line);
+      flex-shrink: 0;
+    }
+    .topbar .logo { color: #f0ece3; font-weight: 800; font-size: 1rem; letter-spacing: -0.02em; }
+    .topbar .logo span { color: #4db8b5; }
+    .topbar-right { display: flex; align-items: center; gap: 0.9rem; }
+    .status-chip {
+      display: flex; align-items: center; gap: 0.5rem;
+      background: var(--success-light); border: 1px solid rgba(45,106,79,0.4);
+      border-radius: var(--radius-sm); padding: 0.38rem 0.85rem;
+      color: var(--success); font-size: 0.83rem; font-weight: 600;
+    }
+    .topbar-nav { display: flex; gap: 0.2rem; }
+    .topbar-nav a {
+      color: var(--muted-lt); font-size: 0.82rem; padding: 0.35rem 0.7rem;
+      border-radius: 6px; text-decoration: none;
+    }
+    .topbar-nav a.active { background: rgba(255,255,255,0.1); color: #f0ece3; }
+
+    /* ─── Grid ─── */
+    .workspace {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 260px 1fr 280px;
+      min-height: 0;
+      height: calc(100vh - 52px);
+    }
+
+    /* ─── Left panel ─── */
+    .panel-left {
+      background: var(--panel);
+      border-right: 1px solid var(--line);
+      display: flex; flex-direction: column; overflow: hidden;
+    }
+    .panel-header {
+      padding: 0.9rem 1rem 0.7rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .panel-title { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.15em; color: #4db8b5; font-weight: 700; margin-bottom: 0.1rem; }
+    .panel-subtitle { font-size: 0.82rem; color: var(--muted-lt); }
+    .panel-body { flex: 1; overflow-y: auto; padding: 0.8rem; }
+    .company-chip {
+      display: flex; align-items: center; gap: 0.5rem;
+      background: rgba(77,184,181,0.12); border: 1px solid rgba(77,184,181,0.25);
+      border-radius: var(--radius-sm); padding: 0.5rem 0.75rem; margin-bottom: 0.8rem;
+    }
+    .company-chip .name { font-size: 0.85rem; font-weight: 700; color: var(--ink); }
+    .company-chip .sector { font-size: 0.72rem; color: var(--muted-lt); }
+    .context-section { margin-bottom: 1rem; }
+    .context-section-title { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted-lt); font-weight: 700; margin-bottom: 0.5rem; }
+    .session-summary { background: rgba(30,36,48,0.04); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 0.6rem 0.75rem; margin-bottom: 0.4rem; }
+    .ss-label { font-size: 0.7rem; color: var(--muted-lt); margin-bottom: 0.15rem; }
+    .ss-value { font-size: 0.83rem; color: var(--muted); }
+    .campaign-ref {
+      background: rgba(45,106,79,0.1); border: 1px solid rgba(45,106,79,0.3);
+      border-radius: var(--radius-sm); padding: 0.6rem 0.75rem;
+    }
+    .cr-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted-lt); font-weight: 700; margin-bottom: 0.3rem; }
+    .cr-name { font-size: 0.84rem; font-weight: 700; color: var(--success); }
+    .cr-stats { font-size: 0.76rem; color: var(--muted); margin-top: 0.2rem; }
+
+    /* ─── Center: plan display ─── */
+    .panel-center {
+      background: var(--panel-alt);
+      display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+    .plan-area { flex: 1; overflow-y: auto; padding: 1.5rem 2rem; }
+
+    /* Completion banner */
+    .completion-banner {
+      display: flex; align-items: center; gap: 1rem;
+      background: var(--success-light); border: 1px solid rgba(45,106,79,0.35);
+      border-radius: var(--radius); padding: 1rem 1.25rem; margin-bottom: 1.5rem;
+    }
+    .completion-icon { font-size: 1.5rem; }
+    .completion-text h3 { font-size: 1rem; font-weight: 800; color: #a8d4bc; margin-bottom: 0.15rem; }
+    .completion-text p { font-size: 0.84rem; color: #7a9e8e; }
+    .completion-badge {
+      margin-left: auto;
+      background: rgba(45,106,79,0.25); border: 1px solid rgba(45,106,79,0.5);
+      border-radius: 999px; padding: 0.3rem 0.8rem; font-size: 0.75rem;
+      color: var(--success); font-weight: 700; white-space: nowrap;
+    }
+
+    /* Plan card */
+    .plan-card {
+      background: var(--panel); border: 1px solid var(--line);
+      border-radius: var(--radius); overflow: hidden; margin-bottom: 1.2rem;
+    }
+    .plan-card-header {
+      padding: 0.9rem 1.2rem; border-bottom: 1px solid var(--line);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .plan-card-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.15em; color: #4db8b5; font-weight: 700; }
+    .plan-card-body { padding: 1rem 1.2rem; }
+    .plan-field { margin-bottom: 0.9rem; }
+    .plan-field:last-child { margin-bottom: 0; }
+    .pf-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted-lt); font-weight: 700; margin-bottom: 0.25rem; }
+    .pf-value { font-size: 0.9rem; color: var(--ink); line-height: 1.5; }
+    .pf-value.large { font-size: 1.05rem; font-weight: 700; }
+    .reuse-tag {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      background: rgba(45,106,79,0.15); border: 1px solid rgba(45,106,79,0.35);
+      border-radius: 999px; padding: 0.22rem 0.65rem; font-size: 0.75rem; color: var(--success); font-weight: 600;
+    }
+
+    /* Channel chips */
+    .channel-chips { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.3rem; }
+    .channel-chip {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      background: rgba(30,36,48,0.07); border: 1px solid var(--line);
+      border-radius: 999px; padding: 0.3rem 0.7rem; font-size: 0.8rem; color: var(--muted);
+    }
+
+    /* Piezas grid */
+    .piezas-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.7rem; }
+    .pieza-card {
+      background: rgba(30,36,48,0.04); border: 1px solid var(--line);
+      border-radius: var(--radius-sm); padding: 0.7rem 0.85rem;
+    }
+    .pieza-num { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: #4db8b5; font-weight: 700; margin-bottom: 0.2rem; }
+    .pieza-type { font-size: 0.83rem; color: var(--ink); font-weight: 700; margin-bottom: 0.15rem; }
+    .pieza-channel { font-size: 0.75rem; color: var(--muted-lt); }
+
+    /* CTA area */
+    .cta-area {
+      padding: 1rem 1.5rem 1.2rem;
+      border-top: 1px solid var(--line);
+      background: var(--panel-mid);
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.8rem;
+    }
+    .cta-hint { font-size: 0.82rem; color: var(--muted-lt); }
+    .cta-buttons { display: flex; gap: 0.7rem; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--accent); color: #fff; border: none;
+      border-radius: var(--radius-sm); padding: 0.65rem 1.4rem;
+      font-size: 0.88rem; font-weight: 800; cursor: pointer; white-space: nowrap;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+    }
+    .btn-primary .arrow { font-size: 1rem; }
+    .btn-primary:hover { background: #0d4d4b; }
+    .btn-outline {
+      background: transparent; color: #4db8b5;
+      border: 1px solid rgba(77,184,181,0.35);
+      border-radius: var(--radius-sm); padding: 0.62rem 1.1rem;
+      font-size: 0.84rem; font-weight: 700; cursor: pointer; white-space: nowrap;
+    }
+    .btn-ghost {
+      background: transparent; color: var(--muted-lt);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm); padding: 0.62rem 1rem;
+      font-size: 0.84rem; cursor: pointer; white-space: nowrap;
+    }
+
+    /* ─── Right panel ─── */
+    .panel-right {
+      background: var(--panel-mid);
+      border-left: 1px solid var(--line);
+      display: flex; flex-direction: column; overflow: hidden;
+    }
+    .reasoning-area { flex: 1; overflow-y: auto; padding: 0.8rem; }
+    .reasoning-group { margin-bottom: 1rem; }
+    .rg-title { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.12em; color: #4db8b5; font-weight: 700; margin-bottom: 0.4rem; }
+    .reasoning-item {
+      display: flex; align-items: flex-start; gap: 0.5rem;
+      padding: 0.45rem 0.6rem; border-radius: 7px;
+      background: rgba(30,36,48,0.04); margin-bottom: 0.3rem;
+      border: 1px solid var(--line);
+    }
+    .ri-icon { font-size: 0.85rem; margin-top: 1px; flex-shrink: 0; }
+    .ri-text { font-size: 0.8rem; color: var(--muted); line-height: 1.4; }
+    .ri-text .label { font-weight: 700; color: var(--ink); display: block; }
+    .ri-text .val { color: var(--muted); font-size: 0.75rem; }
+    .decision-item {
+      background: var(--success-light); border: 1px solid rgba(45,106,79,0.25);
+      border-radius: var(--radius-sm); padding: 0.4rem 0.6rem; margin-bottom: 0.3rem;
+      font-size: 0.78rem; color: #a8d4bc;
+    }
+    .decision-item::before { content: "✓ "; font-weight: 700; }
+    .insight-card {
+      background: rgba(77,184,181,0.07); border: 1px solid rgba(77,184,181,0.2);
+      border-radius: var(--radius-sm); padding: 0.6rem 0.75rem; margin-bottom: 0.4rem;
+    }
+    .insight-card .ic-title { font-size: 0.75rem; color: #4db8b5; font-weight: 700; margin-bottom: 0.2rem; }
+    .insight-card .ic-body { font-size: 0.78rem; color: var(--muted); line-height: 1.4; }
+    .next-step {
+      background: rgba(15,90,88,0.12); border: 1px solid rgba(77,184,181,0.3);
+      border-radius: var(--radius-sm); padding: 0.6rem 0.75rem; margin-bottom: 0.4rem;
+      font-size: 0.82rem;
+    }
+    .next-step .ns-title { color: #4db8b5; font-weight: 700; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.2rem; }
+    .next-step .ns-body { color: var(--muted); line-height: 1.4; }
+
+    /* ─── Bottom nav ─── */
+    .bottom-nav {
+      background: var(--topbar); border-top: 1px solid var(--line);
+      padding: 0.5rem 1.2rem; display: flex; justify-content: space-between;
+      font-size: 0.78rem;
+    }
+    .bottom-nav a { color: #4db8b5; text-decoration: none; font-weight: 600; }
+    .bottom-nav a:hover { text-decoration: underline; }
+  </style>
+  <style>
+    /* === MN: Mockup nav (light theme) === */
+  .mn-panel{position:fixed;bottom:1.4rem;right:1.2rem;display:flex;flex-direction:column;gap:0.45rem;z-index:900;}
+  .mn-panel a{display:block;padding:0.52rem 1.05rem;border-radius:10px;font-size:0.79rem;font-weight:700;text-decoration:none;text-align:center;white-space:nowrap;font-family:"Segoe UI",sans-serif;}
+  .mn-next{background:#0f5a58;color:#fff;box-shadow:0 4px 14px rgba(15,90,88,0.35);}
+  .mn-next:hover{background:#0a4846;}
+  .mn-prev{background:rgba(30,36,48,0.08);color:#586171;border:1px solid rgba(30,36,48,0.16);}
+  .mn-prev:hover{background:rgba(30,36,48,0.14);}
+  .mn-home{background:rgba(30,36,48,0.05);color:#8a97a8;border:1px solid rgba(30,36,48,0.10);font-size:0.74rem;padding:0.38rem 0.85rem;}
+  .mn-home:hover{background:rgba(30,36,48,0.10);color:#586171;}
+  .mn-logout{background:rgba(141,74,31,0.10);color:#8d4a1f;border:1px solid rgba(141,74,31,0.25);font-size:0.73rem;padding:0.36rem 0.85rem;}
+  .mn-logout:hover{background:rgba(141,74,31,0.18);}
+  /* ============================================ */
+  </style>
+</head>
+<body>
+  <div class="mockup-badge">Mockup</div>
+
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:1.2rem;">
+      <a href="../app/home.html" class="logo">CINTELIO <span>Marketing</span></a>
+      <nav class="topbar-nav">
+        <a href="../onboarding/empresa-url.html">Onboarding</a>
+        <a href="ide-main.html" class="active">Agente Estratégico</a>
+        <a href="../agente-creativo/arbol-campana-brief-piezas.html">Agente Creativo</a>
+        <a href="../iteracion/iteracion-main.html">Ajuste</a>
+        <a href="../historico/historico-main.html">Histórico</a>
+      </nav>
+    </div>
+    <div class="topbar-right">
+      <div class="status-chip">
+        ✓ Plan confirmado
+      </div>
+    </div>
+  </div>
+
+  <div class="workspace">
+
+    <!-- Left -->
+    <div class="panel-left">
+      <div class="panel-header">
+        <div class="panel-title">Resumen de sesión</div>
+        <div class="panel-subtitle">4 turnos — Plan finalizado</div>
+      </div>
+      <div class="panel-body">
+        <div class="company-chip">
+          <div>🏢</div>
+          <div>
+            <div class="name">CINTEL</div>
+            <div class="sector">Innovación y TI</div>
+          </div>
+        </div>
+        <div class="context-section">
+          <div class="context-section-title">Parámetros confirmados</div>
+          <div class="session-summary">
+            <div class="ss-label">Objetivo</div>
+            <div class="ss-value">Generación de leads</div>
+          </div>
+          <div class="session-summary">
+            <div class="ss-label">Audiencia</div>
+            <div class="ss-value">Directivos TI — sector público</div>
+          </div>
+          <div class="session-summary">
+            <div class="ss-label">Canales</div>
+            <div class="ss-value">LinkedIn · Webinars · Email</div>
+          </div>
+          <div class="session-summary">
+            <div class="ss-label">Turno</div>
+            <div class="ss-value">4 — plan generado</div>
+          </div>
+        </div>
+        <div class="context-section">
+          <div class="context-section-title">Campaña de referencia</div>
+          <div class="campaign-ref">
+            <div class="cr-label">♻ Reutilizada</div>
+            <div class="cr-name">Transformación Digital 2024</div>
+            <div class="cr-stats">Posicionamiento · Alto engagement</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Center: plan resultado -->
+    <div class="panel-center">
+      <div class="plan-area">
+
+        <div class="completion-banner">
+          <div class="completion-icon">🎯</div>
+          <div class="completion-text">
+            <h3>Plan de Comunicación 2025 — Listo</h3>
+            <p>4 turnos de conversación · Sector público · Generación de leads</p>
+          </div>
+          <div class="completion-badge">Versión 1.0</div>
+        </div>
+
+        <!-- Plan principal — 7 secciones -->
+        <div class="plan-card">
+          <div class="plan-card-header">
+            <span class="plan-card-title">Plan de Comunicación — 2025</span>
+            <span class="reuse-tag">♻ Transformación Digital 2024</span>
+          </div>
+          <div class="plan-card-body">
+            <div class="plan-field">
+              <div class="pf-label">1. Objetivo</div>
+              <div class="pf-value large">Generar leads calificados en entidades del sector público interesadas en procesos de transformación digital</div>
+            </div>
+            <div class="plan-field">
+              <div class="pf-label">2. Público objetivo</div>
+              <div class="pf-value">
+                Entidades gubernamentales · Directivos de TI · Líderes de transformación digital
+              </div>
+            </div>
+            <div class="plan-field">
+              <div class="pf-label">3. Propuesta de valor</div>
+              <div class="pf-value" style="font-style:italic;color:#8ac6c4;">"CINTEL acompaña al sector público en la adopción estratégica de tecnologías digitales, asegurando impacto, sostenibilidad y alineación institucional."</div>
+            </div>
+            <div class="plan-field">
+              <div class="pf-label">4. Mensajes clave</div>
+              <div class="pf-value">
+                Transformación digital con impacto real en la gestión pública<br>
+                Acompañamiento experto en cada fase del proceso<br>
+                Enfoque estructurado y basado en experiencia
+              </div>
+            </div>
+            <div class="plan-field">
+              <div class="pf-label">5. Canales</div>
+              <div class="channel-chips">
+                <span class="channel-chip">💼 LinkedIn (contenido + pauta)</span>
+                <span class="channel-chip">🎤 Webinars</span>
+                <span class="channel-chip">📱 Landing pages</span>
+                <span class="channel-chip">📧 Email marketing</span>
+              </div>
+            </div>
+            <div class="plan-field">
+              <div class="pf-label">6. Activos de campaña</div>
+              <div class="piezas-grid">
+                <div class="pieza-card">
+                  <div class="pieza-num">Activo 1</div>
+                  <div class="pieza-type">Whitepaper descargable</div>
+                  <div class="pieza-channel">"Ruta de TD en el Sector Público"</div>
+                </div>
+                <div class="pieza-card">
+                  <div class="pieza-num">Activo 2</div>
+                  <div class="pieza-type">Serie de publicaciones</div>
+                  <div class="pieza-channel">💼 LinkedIn (4 entregas)</div>
+                </div>
+                <div class="pieza-card">
+                  <div class="pieza-num">Activo 3</div>
+                  <div class="pieza-type">Webinar principal</div>
+                  <div class="pieza-channel">🎤 Con registro obligatorio</div>
+                </div>
+                <div class="pieza-card">
+                  <div class="pieza-num">Activo 4</div>
+                  <div class="pieza-type">Casos de éxito</div>
+                  <div class="pieza-channel">Formato PDF + web</div>
+                </div>
+                <div class="pieza-card">
+                  <div class="pieza-num">Activo 5</div>
+                  <div class="pieza-type">Email marketing</div>
+                  <div class="pieza-channel">📧 3 envios segmentados</div>
+                </div>
+                <div class="pieza-card">
+                  <div class="pieza-num">Activo 6</div>
+                  <div class="pieza-type">Landing página</div>
+                  <div class="pieza-channel">Formulario + CTA</div>
+                </div>
+              </div>
+            </div>
+            <div class="plan-field">
+              <div class="pf-label">7. KPIs</div>
+              <div class="pf-value">
+                Leads generados · Tasa de conversión · Asistencia a webinars · Engagement en LinkedIn
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- CTA bar -->
+      <div class="cta-area">
+        <div class="cta-hint">¿Listo para que el Agente Creativo genere el whitepaper, posts y emails?</div>
+        <div class="cta-buttons">
+          <button class="btn-primary">Enviar al Agente Creativo <span class="arrow">→</span></button>
+          <button class="btn-outline">Exportar PDF</button>
+          <button class="btn-ghost">Copiar JSON</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: reasoning final -->
+    <div class="panel-right">
+      <div class="panel-header">
+        <div class="panel-title">Decisiones del agente</div>
+        <div class="panel-subtitle">Resumen final</div>
+      </div>
+      <div class="reasoning-area">
+        <div class="reasoning-group">
+          <div class="rg-title">Confirmado en conversación</div>
+          <div class="decision-item">Objetivo: generación de leads (turno 3)</div>
+          <div class="decision-item">Segmento: sector público (turno 1)</div>
+          <div class="decision-item">Campaña base: TD 2024 (turno 2)</div>
+          <div class="decision-item">Lenguaje institucional incorporado</div>
+          <div class="decision-item">Foco en leads (turno 3)</div>
+          <div class="decision-item">Plan completo generado (turno 4)</div>
+        </div>
+        <div class="reasoning-group">
+          <div class="rg-title">Del histórico de campañas</div>
+          <div class="insight-card">
+            <div class="ic-title">Transformación Digital 2024 — base</div>
+            <div class="ic-body">Posicionamiento empresarial. Alto engagement en contenido educativo. Canales LinkedIn + eventos. Adaptado a sector público y generación de leads.</div>
+          </div>
+        </div>
+        <div class="reasoning-group">
+          <div class="rg-title">Próximos pasos</div>
+          <div class="next-step">
+            <div class="ns-title">Agente Creativo</div>
+            <div class="ns-body">Recibirá este plan y generará: whitepaper, posts LinkedIn, webinar y emails. Alineados con el manual de marca de CINTEL.</div>
+          </div>
+          <div class="next-step">
+            <div class="ns-title">Revisión humana</div>
+            <div class="ns-body">El equipo de marketing revisa y aprueba cada pieza antes de publicación o activación.</div>
+          </div>
+        </div>
+        <div class="reasoning-group">
+          <div class="rg-title">Métricas clave</div>
+          <div class="reasoning-item">
+            <span class="ri-icon">📊</span>
+            <div class="ri-text">
+              <span class="label">Leads generados</span>
+              <span class="val">KPI principal de la campaña</span>
+            </div>
+          </div>
+          <div class="reasoning-item">
+            <span class="ri-icon">📅</span>
+            <div class="ri-text">
+              <span class="label">Tasas de conversión</span>
+              <span class="val">Whitepaper · Webinar · Landing page</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="bottom-nav">
+    <a href="ide-main.html">← IDE principal</a>
+    <div style="display:flex;gap:1.5rem;">
+      <a href="seleccion-campana.html">← Historial de campañas</a>
+      <a href="conversacion.html">← Ver conversación</a>
+    </div>
+  </div>
+
+<script>
+/* MN: Fix topbar links */
+(function(){
+  // Make logo link to home
+  document.querySelectorAll('.topbar .logo, .logo').forEach(function(el){
+    if(el.tagName!=='A'){
+      var a=document.createElement('a');
+      a.href='../app/home.html';
+      a.innerHTML=el.innerHTML;
+      a.className=el.className;
+      a.style.textDecoration='none';
+      el.parentNode.replaceChild(a,el);
+    }
+  });
+  // Fix module nav links
+  var map={
+    'Onboarding':'../onboarding/empresa-url.html',
+    'Agente Estratégico':'../agente-estrategico/ide-main.html',
+    'Agente Creativo':'../agente-creativo/arbol-campana-brief-piezas.html',
+    'Ajuste':'../iteracion/iteracion-main.html',
+    'Ajuste de resultados':'../iteracion/iteracion-main.html',
+    'Histórico':'../historico/historico-main.html'
+  };
+  document.querySelectorAll('.topbar a,.topbar-nav a,.topbar .nav a').forEach(function(a){
+    var t=a.textContent.trim();
+    if(map[t]&&(a.getAttribute('href')==='#'||!a.getAttribute('href'))){
+      a.href=map[t];
+    }
+  });
+  // Add logout if not present
+  var topbar=document.querySelector('.topbar');
+  if(topbar&&!topbar.querySelector('.mn-topbar-out')){
+    var out=document.createElement('a');
+    out.href='../app/login.html';
+    out.textContent='Salir →';
+    out.className='mn-topbar-out';
+    out.style.cssText='font-size:0.75rem;color:#9ba5b4;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:0.28rem 0.6rem;text-decoration:none;margin-left:0.5rem;white-space:nowrap;';
+    topbar.appendChild(out);
+  }
+})();
+</script>
+
+<div class="mn-panel">
+  <a href="../app/home.html" class="mn-next">Volver al inicio →</a>
+  <a href="conversacion.html" class="mn-prev">← Conversación</a>
+  <a href="../app/home.html" class="mn-home">⌂ Inicio</a>
+  <a href="../app/login.html" class="mn-logout">Salir →</a>
+</div>
+</body>
+</html>

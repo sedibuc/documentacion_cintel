@@ -186,6 +186,73 @@ samp {
   text-decoration: none;
 }
 
+/* TO-BE submenu */
+.nav-group {
+  display: grid;
+  gap: 0;
+}
+
+.nav-parent {
+  display: block;
+  padding: 0.9rem 1rem;
+  border-radius: 14px;
+  border: 1px solid transparent;
+  color: var(--ink);
+  font-weight: 600;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  text-decoration: none;
+}
+
+.nav-parent:hover,
+.nav-parent.active {
+  background: var(--panel-strong);
+  border-color: var(--line);
+  transform: translateX(2px);
+  text-decoration: none;
+}
+
+.nav-sub {
+  display: grid;
+  gap: 0.15rem;
+  margin: 0.2rem 0 0.35rem 0.85rem;
+  padding-left: 0.85rem;
+  border-left: 2px solid var(--line);
+}
+
+.nav-sub a {
+  display: block;
+  padding: 0.5rem 0.75rem;
+  border-radius: 9px;
+  border: 1px solid transparent;
+  color: var(--muted);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background 0.15s ease, color 0.15s ease;
+  text-decoration: none;
+}
+
+.nav-sub a:hover,
+.nav-sub a.active {
+  background: var(--panel-strong);
+  border-color: var(--line);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+/* Mockup nav item — distinct accent */
+[data-nav="mockup"] {
+  border-left: 2px solid var(--accent) !important;
+  padding-left: calc(1rem - 2px);
+  font-weight: 700;
+  color: var(--accent) !important;
+}
+[data-nav="mockup"]:hover,
+[data-nav="mockup"].active {
+  background: var(--accent-soft) !important;
+  border-color: var(--accent) !important;
+  color: var(--accent-strong) !important;
+}
+
 .sidebar-note,
 .toc-card,
 .runtime-warning,

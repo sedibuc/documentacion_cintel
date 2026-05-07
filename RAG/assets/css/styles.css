@@ -604,6 +604,42 @@ mark {
   padding: 0.05rem 0.15rem;
 }
 
+/* ─── Reference block (no-es-rag page) ─── */
+.content-panel .ref-block {
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius-sm);
+  background: var(--panel);
+  padding: 1.2rem 1.35rem;
+  margin: 1.2rem 0;
+  font-size: 0.9rem;
+  color: var(--ink);
+}
+
+.content-panel .ref-block strong {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent-strong);
+  margin-top: 1.1rem;
+}
+
+.content-panel .ref-block strong:first-child {
+  margin-top: 0;
+}
+
+.content-panel .ref-block a {
+  color: var(--accent);
+  font-size: 0.86rem;
+  word-break: break-all;
+}
+
+.content-panel .ref-block a:hover {
+  color: var(--accent-strong);
+}
+
 @media (max-width: 1180px) {
   .content-layout {
     grid-template-columns: 1fr;

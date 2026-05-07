@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mockup — Histórico · Vista principal</title>
+  <style>
+    :root {
+      --bg: #f3efe6;
+      --panel: rgba(255, 252, 246, 0.98);
+      --panel-alt: rgba(243, 239, 230, 0.75);
+      --panel-mid: rgba(248, 245, 240, 0.90);
+      --topbar: #1e2430;
+      --ink: #1e2430;
+      --ink-dim: #3a4253;
+      --muted: #586171;
+      --muted-lt: #8a97a8;
+      --line: rgba(30, 36, 48, 0.12);
+      --line-soft: rgba(30, 36, 48, 0.06);
+      --accent: #0f5a58;
+      --accent-soft: #d6ebe8;
+      --accent-light: #e8f4f3;
+      --glow: #4db8b5;
+      --warn: #8d4a1f;
+      --warn-soft: #faeadb;
+      --warn-light: #c07840;
+      --success: #2d6a4f;
+      --success-light: #5a9e7c;
+      --border: rgba(30, 36, 48, 0.12);
+      --border-accent: rgba(15, 90, 88, 0.30);
+      --radius: 14px;
+      --radius-sm: 9px;
+      --shadow: 0 4px 20px rgba(26,32,41,0.10);
+      --shadow-lg: 0 24px 60px rgba(26,32,41,0.12);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "Segoe UI", sans-serif; background: linear-gradient(180deg, #f7f1e7 0%, #ece7de 100%); color: var(--ink); min-height: 100vh; display: flex; flex-direction: column; }
+
+    .mockup-badge { position: fixed; top: 0.75rem; right: 1rem; padding: 0.35rem 0.85rem; background: var(--warn); color: #fff; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; border-radius: 999px; text-transform: uppercase; z-index: 500; }
+
+    .topbar { height: 52px; background: var(--topbar); display: flex; align-items: center; justify-content: space-between; padding: 0 1.5rem; border-bottom: 1px solid var(--line); flex-shrink: 0; }
+    .logo { color: #f0ece3; font-weight: 800; font-size: 1rem; }
+    .logo span { color: var(--glow); }
+    .nav { display: flex; gap: 0.2rem; }
+    .nav a { color: rgba(255,255,255,0.6); font-size: 0.82rem; padding: 0.35rem 0.7rem; border-radius: 6px; text-decoration: none; }
+    .nav a.active { background: rgba(255,255,255,0.1); color: #f0ece3; }
+
+    .workspace { flex: 1; display: grid; grid-template-columns: 280px 1fr 300px; height: calc(100vh - 52px - 40px); overflow: hidden; }
+
+    /* LEFT: filtros */
+    .panel-left { background: var(--panel); border-right: 1px solid var(--line); overflow-y: auto; padding: 1rem; }
+    .plabel { font-size: 0.67rem; text-transform: uppercase; letter-spacing: 0.13em; color: var(--glow); font-weight: 700; margin-bottom: 0.55rem; }
+
+    .search-box { display: flex; align-items: center; gap: 0.5rem; background: rgba(30,36,48,0.05); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 0.5rem 0.75rem; margin-bottom: 1rem; }
+    .search-box input { background: none; border: none; outline: none; color: var(--text); font-size: 0.82rem; width: 100%; }
+    .search-box input::placeholder { color: var(--muted); }
+    .search-icon { color: var(--muted); font-size: 0.85rem; }
+
+    .filter-group { margin-bottom: 1rem; }
+    .filter-label { font-size: 0.7rem; color: var(--muted); margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.08em; }
+    .filter-chips { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+    .chip { padding: 0.28rem 0.6rem; border-radius: 999px; font-size: 0.74rem; border: 1px solid var(--line); color: var(--muted-lt); cursor: pointer; background: rgba(30,36,48,0.04); }
+    .chip.active { background: rgba(77,184,181,0.12); border-color: var(--border-accent); color: var(--glow); font-weight: 600; }
+
+    .stats-summary { background: rgba(77,184,181,0.06); border: 1px solid var(--border-accent); border-radius: var(--radius-sm); padding: 0.75rem; margin-top: 1rem; }
+    .stat-row { display: flex; justify-content: space-between; font-size: 0.78rem; margin-bottom: 0.3rem; }
+    .stat-k { color: var(--muted); }
+    .stat-v { color: var(--glow); font-weight: 700; }
+
+    /* CENTER: lista de campañas */
+    .panel-center { background: var(--panel-dark); overflow-y: auto; padding: 1.5rem 2rem; }
+    .page-hd { margin-bottom: 1.2rem; }
+    .page-hd h1 { font-size: 1.1rem; font-weight: 800; color: var(--ink); margin-bottom: 0.2rem; }
+    .page-hd p { font-size: 0.82rem; color: var(--muted); }
+
+    .sort-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+    .result-count { font-size: 0.78rem; color: var(--muted); }
+    .sort-controls { display: flex; gap: 0.5rem; align-items: center; }
+    .sort-btn { font-size: 0.75rem; color: var(--muted-lt); background: rgba(30,36,48,0.05); border: 1px solid var(--line); border-radius: 6px; padding: 0.28rem 0.6rem; cursor: pointer; }
+    .sort-btn.active { color: var(--glow); border-color: var(--border-accent); }
+
+    .campaign-list { display: flex; flex-direction: column; gap: 0.7rem; }
+    .campaign-card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 1rem 1.2rem; cursor: pointer; transition: border-color 0.15s; display: flex; flex-direction: column; gap: 0.5rem; }
+    .campaign-card:hover { border-color: var(--border-accent); }
+    .campaign-card.selected { border-color: var(--glow); background: rgba(77,184,181,0.06); }
+    .cc-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.5rem; }
+    .cc-name { font-size: 0.92rem; font-weight: 700; color: var(--ink); }
+    .cc-date { font-size: 0.72rem; color: var(--muted); white-space: nowrap; }
+    .cc-channels { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+    .ch-tag { font-size: 0.68rem; padding: 0.18rem 0.5rem; border-radius: 999px; font-weight: 600; }
+    .ch-instagram { background: rgba(131,58,180,0.15); color: #c084fc; border: 1px solid rgba(131,58,180,0.25); }
+    .ch-linkedin { background: rgba(10,102,194,0.15); color: #60a5fa; border: 1px solid rgba(10,102,194,0.25); }
+    .ch-email { background: rgba(245,158,11,0.12); color: #fbbf24; border: 1px solid rgba(245,158,11,0.2); }
+    .ch-web { background: rgba(77,184,181,0.12); color: #4db8b5; border: 1px solid rgba(77,184,181,0.2); }
+    .cc-meta { display: flex; gap: 1rem; }
+    .cc-meta-item { font-size: 0.74rem; color: var(--muted); display: flex; align-items: center; gap: 0.3rem; }
+    .cc-meta-item span { color: var(--muted-lt); }
+    .cc-actions { display: flex; gap: 0.4rem; }
+    .btn-sm { font-size: 0.73rem; padding: 0.3rem 0.7rem; border-radius: 6px; border: 1px solid var(--line); background: rgba(30,36,48,0.05); color: var(--muted-lt); cursor: pointer; }
+    .btn-sm.primary { background: rgba(77,184,181,0.1); border-color: var(--border-accent); color: var(--glow); font-weight: 600; }
+    .btn-sm.reuse { background: rgba(45,106,79,0.12); border-color: rgba(127,203,167,0.25); color: var(--success-light); font-weight: 600; }
+
+    /* RIGHT: detalle rápido */
+    .panel-right { background: var(--panel); border-left: 1px solid var(--line); overflow-y: auto; padding: 1rem; }
+    .preview-placeholder { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 0.5rem; color: var(--muted); font-size: 0.82rem; padding: 2rem; }
+    .preview-icon { font-size: 2rem; margin-bottom: 0.3rem; opacity: 0.4; }
+
+    .quick-preview { display: flex; flex-direction: column; gap: 0.9rem; }
+    .qp-hd { display: flex; flex-direction: column; gap: 0.2rem; border-bottom: 1px solid var(--line); padding-bottom: 0.8rem; }
+    .qp-name { font-size: 0.95rem; font-weight: 700; color: var(--ink); }
+    .qp-date { font-size: 0.72rem; color: var(--muted); }
+    .qp-section { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--glow); font-weight: 700; margin-bottom: 0.35rem; margin-top: 0.2rem; }
+    .qp-obj { font-size: 0.8rem; color: var(--muted-lt); line-height: 1.5; background: rgba(30,36,48,0.04); border: 1px solid var(--line); border-radius: 7px; padding: 0.5rem 0.7rem; }
+    .component-list { display: flex; flex-direction: column; gap: 0.3rem; }
+    .comp-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.78rem; color: var(--muted-lt); padding: 0.3rem 0.5rem; border-radius: 6px; background: rgba(30,36,48,0.04); }
+    .comp-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success-light); flex-shrink: 0; }
+    .result-indicator { display: flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; padding: 0.35rem 0.6rem; border-radius: 6px; }
+    .result-indicator.auto { background: rgba(77,184,181,0.08); color: var(--glow); border: 1px solid var(--border-accent); }
+    .result-indicator.manual { background: rgba(245,158,11,0.08); color: #fbbf24; border: 1px solid rgba(245,158,11,0.2); }
+    .ri-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+    .ri-auto { background: var(--glow); }
+    .ri-manual { background: #fbbf24; }
+    .qp-actions { display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.3rem; }
+    .qp-btn { padding: 0.5rem 0.8rem; border-radius: 8px; font-size: 0.78rem; font-weight: 600; border: 1px solid; cursor: pointer; text-align: center; }
+    .qp-btn.primary { background: rgba(77,184,181,0.1); border-color: var(--border-accent); color: var(--glow); }
+    .qp-btn.reuse { background: rgba(45,106,79,0.12); border-color: rgba(127,203,167,0.25); color: var(--success-light); }
+
+    /* BOTTOM NAV */
+    .bottom-nav { height: 40px; background: var(--topbar); border-top: 1px solid var(--line); display: flex; align-items: center; justify-content: center; gap: 0.4rem; padding: 0 1.5rem; flex-shrink: 0; }
+    .bn-link { font-size: 0.73rem; color: var(--muted); padding: 0.25rem 0.6rem; border-radius: 5px; text-decoration: none; }
+    .bn-link.active { color: var(--glow); background: rgba(77,184,181,0.08); }
+    .bn-sep { color: var(--line); font-size: 0.6rem; }
+  </style>
+  <style>
+    /* === MN: Mockup nav (light theme) === */
+  .mn-panel{position:fixed;bottom:1.4rem;right:1.2rem;display:flex;flex-direction:column;gap:0.45rem;z-index:900;}
+  .mn-panel a{display:block;padding:0.52rem 1.05rem;border-radius:10px;font-size:0.79rem;font-weight:700;text-decoration:none;text-align:center;white-space:nowrap;font-family:"Segoe UI",sans-serif;}
+  .mn-next{background:#0f5a58;color:#fff;box-shadow:0 4px 14px rgba(15,90,88,0.35);}
+  .mn-next:hover{background:#0a4846;}
+  .mn-prev{background:rgba(30,36,48,0.08);color:#586171;border:1px solid rgba(30,36,48,0.16);}
+  .mn-prev:hover{background:rgba(30,36,48,0.14);}
+  .mn-home{background:rgba(30,36,48,0.05);color:#8a97a8;border:1px solid rgba(30,36,48,0.10);font-size:0.74rem;padding:0.38rem 0.85rem;}
+  .mn-home:hover{background:rgba(30,36,48,0.10);color:#586171;}
+  .mn-logout{background:rgba(141,74,31,0.10);color:#8d4a1f;border:1px solid rgba(141,74,31,0.25);font-size:0.73rem;padding:0.36rem 0.85rem;}
+  .mn-logout:hover{background:rgba(141,74,31,0.18);}
+  /* ============================================ */
+  </style>
+</head>
+<body>
+  <div class="mockup-badge">Mockup</div>
+
+  <div class="topbar">
+    <a href="../app/home.html" class="logo">CINTELIO <span>Marketing</span></a>
+    <nav class="nav">
+      <a href="../onboarding/empresa-url.html">Onboarding</a>
+      <a href="../agente-estrategico/ide-main.html">Estratégico</a>
+      <a href="../agente-creativo/arbol-campana-brief-piezas.html">Creativo</a>
+      <a href="../iteracion/iteracion-main.html">Iteración</a>
+      <a href="historico-main.html" class="active">Histórico</a>
+    </nav>
+  </div>
+
+  <div class="workspace">
+    <!-- LEFT: filtros -->
+    <div class="panel-left">
+      <div class="plabel">Búsqueda</div>
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" placeholder="Buscar campaña..." value="2024">
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-label">Año</div>
+        <div class="filter-chips">
+          <span class="chip">2026</span>
+          <span class="chip active">2025</span>
+          <span class="chip active">2024</span>
+          <span class="chip">2023</span>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-label">Canal</div>
+        <div class="filter-chips">
+          <span class="chip active">Instagram</span>
+          <span class="chip">LinkedIn</span>
+          <span class="chip">Email</span>
+          <span class="chip">Web</span>
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-label">Tipo de campaña</div>
+        <div class="filter-chips">
+          <span class="chip">Lanzamiento</span>
+          <span class="chip">Institucional</span>
+          <span class="chip active">Evento</span>
+          <span class="chip">Promoción</span>
+        </div>
+      </div>
+
+      <div class="stats-summary">
+        <div class="plabel">Resumen del filtro</div>
+        <div class="stat-row"><span class="stat-k">Campañas encontradas</span><span class="stat-v">4</span></div>
+        <div class="stat-row"><span class="stat-k">Con resultados</span><span class="stat-v">3</span></div>
+        <div class="stat-row"><span class="stat-k">Reutilizables</span><span class="stat-v">4</span></div>
+      </div>
+    </div>
+
+    <!-- CENTER: lista -->
+    <div class="panel-center">
+      <div class="page-hd">
+        <h1>Histórico de campañas</h1>
+        <p>Campañas generadas con el Agente de Marketing IA</p>
+      </div>
+
+      <div class="sort-bar">
+        <div class="result-count">4 campañas encontradas</div>
+        <div class="sort-controls">
+          <span style="font-size:0.73rem;color:var(--muted)">Ordenar:</span>
+          <button class="sort-btn active">Más reciente</button>
+          <button class="sort-btn">Nombre</button>
+          <button class="sort-btn">Resultados</button>
+        </div>
+      </div>
+
+      <div class="campaign-list">
+
+        <div class="campaign-card selected">
+          <div class="cc-top">
+            <div class="cc-name">ANDICOM 2024 — Congreso IA</div>
+            <div class="cc-date">12/11/2024</div>
+          </div>
+          <div class="cc-channels">
+            <span class="ch-tag ch-instagram">Instagram</span>
+            <span class="ch-tag ch-linkedin">LinkedIn</span>
+            <span class="ch-tag ch-email">Email</span>
+          </div>
+          <div class="cc-meta">
+            <div class="cc-meta-item">📋 <span>3 briefs</span></div>
+            <div class="cc-meta-item">✏️ <span>9 piezas</span></div>
+            <div class="cc-meta-item">📊 <span>Con resultados</span></div>
+          </div>
+          <div class="cc-actions">
+            <button class="btn-sm primary">Ver detalle →</button>
+            <button class="btn-sm">Ver árbol</button>
+            <button class="btn-sm reuse">↩ Usar como base</button>
+          </div>
+        </div>
+
+        <div class="campaign-card">
+          <div class="cc-top">
+            <div class="cc-name">Correo Institucional — Transformación Digital</div>
+            <div class="cc-date">09/08/2024</div>
+          </div>
+          <div class="cc-channels">
+            <span class="ch-tag ch-email">Email</span>
+          </div>
+          <div class="cc-meta">
+            <div class="cc-meta-item">📋 <span>1 brief</span></div>
+            <div class="cc-meta-item">✏️ <span>3 piezas</span></div>
+            <div class="cc-meta-item">📊 <span>Sin resultados</span></div>
+          </div>
+          <div class="cc-actions">
+            <button class="btn-sm primary">Ver detalle →</button>
+            <button class="btn-sm">Ver árbol</button>
+            <button class="btn-sm reuse">↩ Usar como base</button>
+          </div>
+        </div>
+
+        <div class="campaign-card">
+          <div class="cc-top">
+            <div class="cc-name">Lanzamiento Estudio IA Sector Público</div>
+            <div class="cc-date">15/05/2024</div>
+          </div>
+          <div class="cc-channels">
+            <span class="ch-tag ch-instagram">Instagram</span>
+            <span class="ch-tag ch-linkedin">LinkedIn</span>
+          </div>
+          <div class="cc-meta">
+            <div class="cc-meta-item">📋 <span>2 briefs</span></div>
+            <div class="cc-meta-item">✏️ <span>6 piezas</span></div>
+            <div class="cc-meta-item">📊 <span>Con resultados</span></div>
+          </div>
+          <div class="cc-actions">
+            <button class="btn-sm primary">Ver detalle →</button>
+            <button class="btn-sm">Ver árbol</button>
+            <button class="btn-sm reuse">↩ Usar como base</button>
+          </div>
+        </div>
+
+        <div class="campaign-card">
+          <div class="cc-top">
+            <div class="cc-name">Black Friday Servicios CINTEL</div>
+            <div class="cc-date">18/11/2024</div>
+          </div>
+          <div class="cc-channels">
+            <span class="ch-tag ch-instagram">Instagram</span>
+            <span class="ch-tag ch-email">Email</span>
+          </div>
+          <div class="cc-meta">
+            <div class="cc-meta-item">📋 <span>2 briefs</span></div>
+            <div class="cc-meta-item">✏️ <span>5 piezas</span></div>
+            <div class="cc-meta-item">📊 <span>Con resultados</span></div>
+          </div>
+          <div class="cc-actions">
+            <button class="btn-sm primary">Ver detalle →</button>
+            <button class="btn-sm">Ver árbol</button>
+            <button class="btn-sm reuse">↩ Usar como base</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT: vista rápida -->
+    <div class="panel-right">
+      <div class="plabel">Vista rápida</div>
+      <div class="quick-preview">
+        <div class="qp-hd">
+          <div class="qp-name">ANDICOM 2024 — Congreso IA</div>
+          <div class="qp-date">Creada el 12/11/2024 · Evento</div>
+        </div>
+
+        <div>
+          <div class="qp-section">Objetivo</div>
+          <div class="qp-obj">Posicionar a CINTEL como referente en IA para el sector público, generando asistencia al congreso ANDICOM 2024.</div>
+        </div>
+
+        <div>
+          <div class="qp-section">Componentes generados</div>
+          <div class="component-list">
+            <div class="comp-item"><span class="comp-dot"></span>Plan estratégico de campaña</div>
+            <div class="comp-item"><span class="comp-dot"></span>Brief Instagram (stories + feed)</div>
+            <div class="comp-item"><span class="comp-dot"></span>Brief LinkedIn (publicación orgánica)</div>
+            <div class="comp-item"><span class="comp-dot"></span>Brief Email (invitación al evento)</div>
+            <div class="comp-item"><span class="comp-dot"></span>3 copies para Instagram</div>
+            <div class="comp-item"><span class="comp-dot"></span>2 copies para LinkedIn</div>
+            <div class="comp-item"><span class="comp-dot"></span>Asunto + cuerpo email</div>
+          </div>
+        </div>
+
+        <div>
+          <div class="qp-section">Resultados disponibles</div>
+          <div class="result-indicator auto"><span class="ri-dot ri-auto"></span>Instagram — datos automáticos</div>
+          <div style="height:0.35rem"></div>
+          <div class="result-indicator manual"><span class="ri-dot ri-manual"></span>LinkedIn — datos manuales</div>
+        </div>
+
+        <div class="qp-actions">
+          <a href="historico-detalle-campana.html" class="qp-btn primary">Ver detalle completo →</a>
+          <a href="historico-arbol.html" class="qp-btn primary">Ver estructura árbol</a>
+          <a href="historico-resultados.html" class="qp-btn primary">Ver resultados</a>
+          <button class="qp-btn reuse">↩ Usar como base para nueva campaña</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <a class="bn-link active" href="historico-main.html">Lista</a>
+    <span class="bn-sep">›</span>
+    <a class="bn-link" href="historico-arbol.html">Árbol</a>
+    <span class="bn-sep">›</span>
+    <a class="bn-link" href="historico-detalle-campana.html">Detalle</a>
+    <span class="bn-sep">›</span>
+    <a class="bn-link" href="historico-resultados.html">Resultados</a>
+  </div>
+
+<script>
+/* MN: Fix topbar links */
+(function(){
+  // Make logo link to home
+  document.querySelectorAll('.topbar .logo, .logo').forEach(function(el){
+    if(el.tagName!=='A'){
+      var a=document.createElement('a');
+      a.href='../app/home.html';
+      a.innerHTML=el.innerHTML;
+      a.className=el.className;
+      a.style.textDecoration='none';
+      el.parentNode.replaceChild(a,el);
+    }
+  });
+  // Fix module nav links
+  var map={
+    'Onboarding':'../onboarding/empresa-url.html',
+    'Agente Estratégico':'../agente-estrategico/ide-main.html',
+    'Agente Creativo':'../agente-creativo/arbol-campana-brief-piezas.html',
+    'Ajuste':'../iteracion/iteracion-main.html',
+    'Ajuste de resultados':'../iteracion/iteracion-main.html',
+    'Histórico':'../historico/historico-main.html'
+  };
+  document.querySelectorAll('.topbar a,.topbar-nav a,.topbar .nav a').forEach(function(a){
+    var t=a.textContent.trim();
+    if(map[t]&&(a.getAttribute('href')==='#'||!a.getAttribute('href'))){
+      a.href=map[t];
+    }
+  });
+  // Add logout if not present
+  var topbar=document.querySelector('.topbar');
+  if(topbar&&!topbar.querySelector('.mn-topbar-out')){
+    var out=document.createElement('a');
+    out.href='../app/login.html';
+    out.textContent='Salir →';
+    out.className='mn-topbar-out';
+    out.style.cssText='font-size:0.75rem;color:#9ba5b4;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:0.28rem 0.6rem;text-decoration:none;margin-left:0.5rem;white-space:nowrap;';
+    topbar.appendChild(out);
+  }
+})();
+</script>
+
+<div class="mn-panel">
+  <a href="historico-arbol.html" class="mn-next">Ver árbol campaña →</a>
+  <a href="../app/home.html" class="mn-prev">← Inicio</a>
+  <a href="../app/home.html" class="mn-home">⌂ Inicio</a>
+  <a href="../app/login.html" class="mn-logout">Salir →</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,108 @@
+@startuml onboarding-admin
+!theme plain
+skinparam backgroundColor #FDFAF4
+skinparam defaultFontName Segoe UI
+skinparam roundCorner 12
+skinparam ArrowColor #0f5a58
+skinparam ActivityBorderColor #0f5a58
+skinparam ActivityBackgroundColor #d6ebe8
+skinparam ActivityDiamondBackgroundColor #fff8ef
+skinparam ActivityDiamondBorderColor #8d4a1f
+skinparam NoteBackgroundColor #fffdf6
+skinparam NoteBorderColor #c8bfa8
+
+title Onboarding — Administración posterior por administrador
+
+|Administrador|
+start
+:Accede al panel de administración;
+
+|Sistema|
+:Valida rol de administrador;
+
+if (¿Tiene rol administrador?) then (Sí)
+
+  |Administrador|
+  :Elige qué desea actualizar;
+
+  fork
+    :Actualizar información institucional;
+    note right
+      Descripción, sector,
+      propuesta de valor,
+      canales prioritarios.
+    end note
+    |Sistema|
+    :Guarda cambios institucionales;
+
+  fork again
+    :Actualizar productos y servicios;
+    |Sistema|
+    :Muestra lista actual;
+    |Administrador|
+    :Agrega, edita o elimina entradas;
+    |Sistema|
+    :Actualiza lista;
+
+  fork again
+    :Reemplazar o actualizar logos;
+    |Sistema|
+    :Muestra logos actuales con variantes;
+    |Administrador|
+    :Carga nuevos logos si aplica;
+    :Ajusta reglas de uso;
+    :Confirma cambios;
+    |Sistema|
+    :Actualiza configuración de logos;
+
+  fork again
+    :Actualizar manual de marca;
+    |Sistema|
+    :Procesa nuevo documento;
+    :Extrae parámetros actualizados;
+    |Administrador|
+    :Revisa y confirma parámetros;
+    |Sistema|
+    :Reemplaza configuración de marca;
+
+  fork again
+    :Actualizar histórico de campañas;
+    |Sistema|
+    :Muestra histórico actual;
+    |Administrador|
+    :Carga nuevo archivo .xlsx o .csv;
+    |Sistema|
+    :Muestra vista previa;
+    |Administrador|
+    :Confirma actualización;
+    |Sistema|
+    :Agrega nuevas entradas al histórico;
+
+  fork again
+    :Gestionar usuarios de la empresa;
+    |Sistema|
+    :Lista usuarios activos;
+    |Administrador|
+    if (¿Qué acción?) then (Activar)
+      :Activa acceso del usuario;
+    else if (Desactivar)
+      :Suspende acceso;
+    else (Cambiar rol)
+      :Asigna nuevo rol;
+    endif
+    |Sistema|
+    :Aplica cambio y registra en bitácora;
+
+  end fork
+
+  :Cambios guardados correctamente;
+
+else (No)
+  |Sistema|
+  :Acceso denegado;
+  :Redirige a vista de usuario estándar;
+endif
+
+stop
+
+@enduml

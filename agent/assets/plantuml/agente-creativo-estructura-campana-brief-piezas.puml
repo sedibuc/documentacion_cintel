@@ -1,0 +1,84 @@
+@startuml agente-creativo-estructura-campana-brief-piezas
+skinparam backgroundColor #1a202c
+skinparam defaultFontColor #d4dae6
+skinparam defaultFontName "Segoe UI"
+skinparam objectBackgroundColor #1e2533
+skinparam objectBorderColor #4db8b5
+skinparam objectFontColor #e8f4f3
+skinparam objectAttributeFontColor #9ba5b4
+skinparam ArrowColor #4db8b5
+skinparam noteBackgroundColor #252d3d
+skinparam noteBorderColor #4db8b5
+skinparam noteFontColor #9ba5b4
+
+title Estructura jerarquica: Campana -> Brief -> Piezas -> Resultados
+
+object "Campana: TD 2025" as C {
+  objetivo = Generar leads sector publico
+  canales = LinkedIn, Instagram, Email
+  estado = Activa
+}
+
+object "Brief 1: LinkedIn institucional" as B1 {
+  canal = LinkedIn
+  tono = Institucional / experto
+}
+
+object "Brief 2: Instagram leads" as B2 {
+  canal = Instagram
+  tono = Directo / visual
+}
+
+object "Brief 3: Email marketing" as B3 {
+  canal = Email
+  tono = Formal / informativo
+}
+
+object "Pieza 1: Post institucional" as P1 {
+  estado = Aprobada
+  resultado = Carga manual
+}
+
+object "Pieza 2: Articulo tecnico" as P2 {
+  estado = En revision
+  resultado = Pendiente
+}
+
+object "Pieza 3: Post visual CTA" as P3 {
+  estado = Publicada
+  resultado = Automatico activo
+}
+
+object "Pieza 4: Historia animada" as P4 {
+  estado = Publicada
+  resultado = Automatico activo
+}
+
+object "Pieza 5: Mailing institucional" as P5 {
+  estado = Enviada
+  resultado = Carga manual CSV
+}
+
+C --> B1
+C --> B2
+C --> B3
+
+B1 --> P1
+B1 --> P2
+
+B2 --> P3
+B2 --> P4
+
+B3 --> P5
+
+note bottom of P3
+  Link registrado en sistema.
+  Metricas consultadas automaticamente.
+end note
+
+note bottom of P1
+  Resultados cargados por usuario.
+  Formato: Excel / CSV
+end note
+
+@enduml
