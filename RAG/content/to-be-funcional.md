@@ -303,7 +303,7 @@ Este documento describe el TO-BE funcional de la iniciativa luego del pivot estr
 
 <div class="callout">
 <strong>Consulta al experto en modelos NER</strong><br>
-Documento estructurado en dos bloques: 8 propuestas técnicas pre-resueltas para validación rápida (Sí / No / Ajustar) y 5 preguntas abiertas que requieren criterio especializado. Diseñado para un máximo de 20 horas del experto. Total estimado: 19 h.<br><br>
+Documento estructurado en dos bloques: 8 propuestas técnicas pre-resueltas para validación rápida (Sí / No / Ajustar) y 5 preguntas abiertas que requieren criterio especializado.<br><br>
 <a href="preguntasexperto.html"><strong>Ver consulta al experto →</strong></a>
 </div>
 
