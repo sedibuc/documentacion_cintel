@@ -1,0 +1,59 @@
+@startuml 08-roadmap-arquitectonico
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 10
+skinparam titleFontSize 14
+skinparam titleFontStyle bold
+skinparam noteBackgroundColor #FEF9E7
+skinparam noteBorderColor #F39C12
+skinparam legendBackgroundColor #FAFAFA
+
+title Document Intelligence Engine MultiTenant\nRoadmap Arquitectonico (5 Fases)
+
+package "Fase 1 — DIE MVP\n(3-4 meses)" as F1 #E8F4FD {
+  rectangle "MultiTenant Platform Core\n· Tenants, usuarios, RBAC, aislamiento" as F1A #AED6F1
+  rectangle "Document Intake + OCR\n· Carga individual, batch, FTP" as F1B #AED6F1
+  rectangle "DocumentSchemaRegistry + PromptRegistry\n· Tipos, campos, prompts versionados" as F1C #AED6F1
+  rectangle "StructuredExtractor + LLM Orchestrator\n· Zero-shot / few-shot, JSON estructurado" as F1D #A9DFBF
+  rectangle "CrossValidator + DiscrepancyAlertEngine\n· Comparacion CSV, alertas BLOCKING/WARNING/INFO" as F1E #AED6F1
+  rectangle "Alert Dashboard + API REST\n· Human review, aprobacion, JSON/CSV" as F1F #AED6F1
+  rectangle "Audit Service + Observabilidad basica" as F1G #AED6F1
+}
+
+package "Fase 2 — Hardening + Conectores Cloud\n(2-3 meses post-Fase 1)" as F2 #E9F7EF {
+  rectangle "Validadores de calidad LLM\n· Score de confianza por campo, alertas de baja confianza" as F2A #A9DFBF
+  rectangle "Google Workspace integration\n· Drive, Gmail ingestion" as F2B #D5D8DC
+  rectangle "Microsoft 365 integration\n· SharePoint, OneDrive ingestion" as F2C #D5D8DC
+  rectangle "Conectores FTP/SFTP robustos\n· Procesamiento programado" as F2D #AED6F1
+  rectangle "Webhooks y notificaciones\n· Email, Slack, Teams" as F2E #AED6F1
+}
+
+package "Fase 3 — Conectores ERP y Escalabilidad\n(3-4 meses post-Fase 2)" as F3 #EAF2FF {
+  rectangle "ERP Connector Layer\n· SAP, Sinco, Odoo (via API/ETL)" as F3A #D5D8DC
+  rectangle "Escalabilidad horizontal\n· K8s, auto-scaling por tenant" as F3B #D5D8DC
+  rectangle "Facturacion automatizada\n· Cobro por tokens, por documento" as F3C #AED6F1
+  rectangle "Dashboard analitico CINTEL\n· Metricas de uso, costos, SLA" as F3D #AED6F1
+}
+
+package "Fase 4 — Evaluacion NER Supervisado\n(condicional — post-produccion estable)" as F4 #F4F6F7 {
+  rectangle "Evaluacion NER en produccion\n· Solo si LLM tiene limitaciones documentadas\n· Solo para tipos de alto volumen" as F4A #D5D8DC
+  rectangle "NER como opcion complementaria\n· No reemplaza LLM\n· Deshabilitado por defecto" as F4B #D5D8DC
+}
+
+package "Fase 5 — Escala Sectorial\n(6-12 meses post-Fase 1)" as F5 #EEF9EE {
+  rectangle "Expansion sectorial\n· Legal, seguros, logistica, salud" as F5A #D5D8DC
+  rectangle "Tipos documentales genericos\n· Template marketplace" as F5B #D5D8DC
+  rectangle "Modelo de precios por uso\n· SaaS B2B, white-label CINTEL" as F5C #D5D8DC
+}
+
+note bottom of F4 #D5D8DC : NER supervisado se activa SOLO si:\n1. Piloto Fase 1 esta en produccion y validado\n2. LLM muestra limitaciones en tipo especifico\n3. Volumen justifica el costo de anotacion\n4. Beneficio supera costo de mantenimiento del modelo
+
+legend right
+  | Color | Fase / Tipo |
+  |<#AED6F1> | Fase 1 — MVP Tradicional |
+  |<#A9DFBF> | Fase 1 — MVP IA/LLM |
+  |<#D5D8DC> | Fases 2-5 (futuro) |
+endlegend
+
+@enduml

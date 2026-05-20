@@ -1,0 +1,88 @@
+@startuml 07-vista-despliegue-mvp
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 10
+skinparam nodeBackgroundColor #E8F4FD
+skinparam nodeBorderColor #2E86C1
+skinparam databaseBackgroundColor #AED6F1
+skinparam arrowColor #444444
+skinparam titleFontSize 14
+skinparam titleFontStyle bold
+skinparam noteBackgroundColor #FEF9E7
+skinparam noteBorderColor #F39C12
+skinparam legendBackgroundColor #FAFAFA
+
+title Document Intelligence Engine MultiTenant\nVista de Despliegue — MVP
+
+node "Infraestructura CINTEL\n(on-premise o cloud certificado)" as INFRA {
+
+  node "API Gateway\n(Nginx / Kong)" as GW #AED6F1
+  note right of GW : TLS · Rate-limit\nJWT decode
+
+  node "DIE Backend (FastAPI)\nPython 3.11+" as BE #AED6F1 {
+    rectangle "Auth/Tenant Service"
+    rectangle "Document Service"
+    rectangle "Batch Service"
+    rectangle "Schema Registry"
+    rectangle "StructuredExtractor"
+    rectangle "LLM Orchestrator"
+    rectangle "CrossValidator"
+    rectangle "DiscrepancyAlertEngine"
+    rectangle "Alert Service"
+    rectangle "Audit Service"
+  }
+  note right of BE : Stateless · Containerizado (Docker)\nHorizontalmente escalable
+
+  node "Worker LLM\n(Celery + Redis)" as WORKER #A9DFBF
+  note right of WORKER : Procesamiento asincrono\nColas por prioridad y tenant
+
+  database "PostgreSQL\n(datos + alertas + audit)" as PG #AED6F1
+  note right of PG : Row-Level Security por tenant_id\nBackup diario requerido
+
+  storage "Object Storage\n(documentos y CSVs)" as OBS #AED6F1
+  note right of OBS : Prefijo: tenant_id/\nRetención configurable
+
+  node "Redis\n(cache + broker)" as REDIS #AED6F1
+
+  node "Observability\n(Prometheus + Grafana)" as PROM #D5D8DC
+}
+
+cloud "LLM Provider Certificado\n(SaaS o self-hosted)" as LLMP #E9F7EF {
+  node "OpenAI API" as OPENAI #A9DFBF
+  node "Groq API" as GROQ #A9DFBF
+  node "Ollama\n(on-premise opcional)" as OLLAMA #A9DFBF
+}
+
+actor "Operador / Usuario\n(navegador)" as USER
+actor "Sistema integrador\n(cliente API REST)" as SYSINT
+
+USER --> GW : HTTPS 443
+SYSINT --> GW : HTTPS 443 (REST)
+GW --> BE : HTTP interno
+BE --> WORKER : Celery tasks (doc/batch processing)
+WORKER --> LLMP : HTTPS (llamadas LLM)
+WORKER --> PG : persist resultados
+BE --> PG : datos + alertas
+BE --> OBS : files (docs, CSVs)
+BE --> REDIS : cache + session
+WORKER --> REDIS : cola de tareas
+BE --> PROM : metrics
+
+note bottom of LLMP #A9DFBF : Sin retencion de datos del cliente\nContrato DPA requerido para cloud\nOllama para soberania total
+
+node "Fuera de despliegue MVP" as FORA #F4F6F7 {
+  rectangle "Vector DB (Pinecone/Chroma)\n<<No se usa — No RAG>>" #FADBD8
+  rectangle "Chat Service / Embedding Service\n<<No se usa>>" #FADBD8
+  rectangle "NER Service\n<<Post-MVP>>" #D5D8DC
+}
+
+legend right
+  | Color | Tipo |
+  |<#AED6F1> | Tradicional / Backend |
+  |<#A9DFBF> | IA / LLM |
+  |<#D5D8DC> | Observabilidad |
+  |<#FADBD8> | Fuera de alcance MVP |
+endlegend
+
+@enduml

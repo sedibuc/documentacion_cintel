@@ -1,5 +1,13 @@
 # Inventario preliminar de servicios y variables de costo
 
+<div class="badge-row">
+<span class="badge">Análisis AS-IS</span>
+<span class="badge">Referencia: demostrador RAG actual</span>
+<span class="badge badge-note">TO-BE: Document Intelligence Engine — ver sección de nuevas variables</span>
+</div>
+
+> **Nota de reposicionamiento (2026-05):** Este inventario está basado en el demostrador RAG actual (AS-IS). El sistema TO-BE — **Document Intelligence Engine MultiTenant** — introduce nuevas variables de costo y elimina algunas de las actuales (especialmente la Vector DB y el stack de embeddings). Ver sección al final de este documento.
+
 ## Enfoque del inventario
 
 El diagnóstico distingue costos potenciales según el modo cloud u on-premise. El objetivo aquí es identificar los componentes que introducen gasto o consumo de infraestructura, no estimar un presupuesto definitivo.
@@ -71,3 +79,42 @@ El diagnóstico distingue costos potenciales según el modo cloud u on-premise. 
 - Tamaño actual de índices y volumen documental.
 - Requerimientos de hardware mínimos y recomendados.
 - Costos de soporte, monitoreo y respaldo.
+
+---
+
+## Variables de costo del Document Intelligence Engine MultiTenant (TO-BE)
+
+El sistema TO-BE introduce las siguientes variables de costo nuevas y elimina algunas del AS-IS:
+
+### Componentes nuevos con costo de desarrollo
+
+| Componente | Tipo de costo | Estimación relativa |
+|---|---|---|
+| **MultiTenant Platform Core** | Desarrollo backend (mayor esfuerzo) | Alto |
+| **DocumentSchemaRegistry** | Desarrollo backend | Medio |
+| **CrossValidator** | Desarrollo backend | Medio |
+| **DiscrepancyAlertEngine** | Desarrollo backend | Medio |
+| **Alert Dashboard** | Desarrollo frontend + backend | Medio |
+| **API REST documentada** | Desarrollo + documentación OpenAPI | Medio |
+| **Audit Service** | Desarrollo backend (DB inmutable) | Bajo |
+| **StructuredExtractor** | Integración LLM + parser | Bajo-Medio |
+
+### Variables de infraestructura TO-BE
+
+| Servicio | Modalidad | Variable de costo principal |
+|---|---|---|
+| LLM Provider (OpenAI / Groq) | Cloud | Tokens de entrada + salida por extracción |
+| Ollama (on-premise) | On-premise | CPU/GPU + memoria del servidor |
+| PostgreSQL (RLS MultiTenant) | On-premise / Cloud | Almacenamiento + compute |
+| Object Storage (documentos + CSVs) | On-premise / S3 | Almacenamiento + transferencia |
+| Redis (broker + cache) | On-premise | Compute + memoria |
+| OCR Service | On-premise / API | Compute (Tesseract) o consumo (API) |
+
+### Eliminados respecto al AS-IS
+
+| Componente AS-IS | Motivo de eliminación |
+|---|---|
+| Vector DB (Pinecone, Qdrant) | No se usa — no hay RAG ni embeddings en el TO-BE |
+| Embedding server | No se usa — no hay vectorización en el TO-BE |
+| LangSmith / LangChain Hub | No se usa — LLM Orchestrator es nativo |
+| Stack de chat / conversación | No se implementa — fuera de alcance |

@@ -6,9 +6,10 @@
     brechas: { file: "content/brechas.md", title: "Brechas y oportunidades" },
     despliegue: { file: "content/despliegue.md", title: "Configuración y despliegue" },
     costos: { file: "content/costos.md", title: "Servicios y costos" },
-    tobefuncional: { file: "content/to-be-funcional.md", title: "TO-BE — Agente documental" },
-    preguntasexperto: { file: "content/preguntas-experto.md", title: "Preguntas para el experto en modelos" },
-    noesrag: { file: "content/no-es-rag.md", title: "Por qué esta solución no es un RAG" }
+    tobefuncional: { file: "content/to-be-funcional.md", title: "TO-BE funcional — Document Intelligence Engine MultiTenant" },
+    arquitecturatobe: { file: "content/arquitectura-tobe.md", title: "Arquitectura TO-BE — Document Intelligence Engine MultiTenant" },
+    preguntasexperto: { file: "content/preguntas-experto.md", title: "Cuestionario preliminar para experto en modelos — Document Intelligence Engine MultiTenant" },
+    noesrag: { file: "content/no-es-rag.md", title: "Por qué esta solución no es un RAG ni un sistema de Q&A" }
   };
 
   const pageOrder = Object.keys(pages);

@@ -169,6 +169,21 @@ samp {
   margin-top: 1.3rem;
 }
 
+.nav-section-label {
+  margin: 1rem 0 0.2rem;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-left: 2px solid var(--accent);
+}
+
+.nav-section-label.tobe {
+  border-left-color: #2d8c6e;
+}
+
 .main-nav a {
   padding: 0.9rem 1rem;
   border-radius: 14px;
@@ -598,6 +613,72 @@ samp {
   font-size: 0.82rem;
   font-weight: 700;
 }
+
+.badge-note {
+  background: rgba(141,74,31,0.12);
+  color: #8d4a1f;
+}
+
+/* ─── Diagram block with download links (arquitectura-tobe) ─── */
+.diagram-block {
+  margin: 1.4rem 0 2rem;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(15,90,88,0.04), rgba(255,255,255,0.82));
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.diagram-block img {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: white;
+}
+
+.diagram-links {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.7rem 1rem;
+  border-top: 1px solid var(--line);
+  background: var(--panel);
+  flex-wrap: wrap;
+}
+
+.diagram-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: white;
+  color: var(--accent-strong);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.diagram-links a:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  text-decoration: none;
+}
+
+.diagram-label {
+  padding: 0.35rem 1rem 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ─── Capacity matrix table ─── */
+.matrix-trad { background: #EBF5FB; }
+.matrix-ai   { background: #EAFAF1; }
+.matrix-fut  { background: #F4F6F7; color: #555; }
 
 mark {
   background: #fff0a6;

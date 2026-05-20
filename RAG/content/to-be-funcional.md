@@ -1,14 +1,18 @@
-# TO-BE funcional — Agente de procesamiento documental
+# TO-BE funcional — Document Intelligence Engine MultiTenant
 
 <div class="badge-row">
-<span class="badge">Pivot validado: 2026-04</span>
+<span class="badge">Producto: Document Intelligence Engine</span>
+<span class="badge">Arquitectura: MultiTenant — Esencial MVP</span>
 <span class="badge">Sector piloto: construcción</span>
-<span class="badge">Formatos base: JSON · CSV</span>
+<span class="badge">Salida: JSON · CSV</span>
 <span class="badge">REST · FTP · Lotes</span>
-<span class="badge">Extracción: NER supervisado · NER zero-shot</span>
+<span class="badge">Motor de extracción: LLM (zero-shot / few-shot)</span>
+<span class="badge badge-note">NER supervisado: evaluación post-producción</span>
 </div>
 
-Este documento describe el TO-BE funcional de la iniciativa después del pivot estratégico validado en las reuniones de alineación. El sistema es un **agente especializado de procesamiento documental basado en NER (Named Entity Recognition)**: recibe documentos tipados, aplica modelos de reconocimiento de entidades nombradas para extraer campos de dominio específico, valida los resultados contra fuentes de referencia y expone los resultados por API REST. El RAG conversacional queda **fuera del alcance funcional del producto**.
+> **Reposicionamiento de producto (2026-05):** El producto es un **Document Intelligence Engine MultiTenant**: convierte documentos tipados en datos estructurados, valida esos datos contra fuentes de referencia, genera alertas de discrepancia y opera bajo un modelo multi-cliente controlado por CINTEL. Sin chat. Sin Q&A. Sin RAG conversacional. Sin vectores.
+
+Este documento describe el TO-BE funcional del Document Intelligence Engine (DIE) después del reposicionamiento estratégico validado. El sistema recibe documentos tipados, extrae campos estructurados mediante LLM, valida los resultados contra fuentes de referencia y gestiona las discrepancias encontradas a través de alertas clasificadas por severidad. Todo ello bajo una arquitectura **MultiTenant** donde CINTEL administra la plataforma y cada empresa cliente opera en un entorno completamente aislado.
 
 ---
 
@@ -22,10 +26,11 @@ El sistema resuelve ese problema convirtiendo documentos tipados en **datos estr
 
 ### Quién lo usa
 
-- **Operadores documentales** en empresas del sector construcción, legal o inmobiliario.
-- **Administradores de procesos** que necesitan resultados consolidados por lote.
-- **Equipos de auditoría o cumplimiento** que validan datos contra fuentes de referencia.
-- **Equipos de integración** que consumen resultados vía API REST desde sistemas externos.
+- **Operadores documentales** en empresas del sector construcción, legal o inmobiliario: cargan documentos, revisan resultados de extracción, gestionan alertas de discrepancia.
+- **Administradores de empresa (tenant)**: configuran usuarios, tipos documentales habilitados y fuentes de referencia.
+- **Equipos de auditoría o cumplimiento**: validan datos extraídos, resuelven alertas BLOCKING y aprueban documentos.
+- **Equipos de integración**: consumen resultados estructurados vía API REST desde ERP, BI u otros sistemas.
+- **CINTEL (operador de la plataforma)**: administra tenants, gestiona modelos LLM, monitorea métricas globales.
 
 ### Qué entradas recibe
 
@@ -36,25 +41,36 @@ El sistema resuelve ese problema convirtiendo documentos tipados en **datos estr
 
 ### Qué procesamiento realiza
 
-1. **OCR**: conversión del PDF o imagen a texto plano con preservación de estructura posicional.
-2. **NER — Reconocimiento de entidades**: el modelo identifica y clasifica spans de texto como entidades de dominio según el esquema del tipo documental (p. ej. `MATRICULA_INMOBILIARIA`, `PROPIETARIO`, `FECHA_EXPEDICION`, `VALOR_CONTRATO`).
-3. **Mapeo al esquema**: las entidades detectadas se alinean con los campos configurados en el tipo documental; los campos sin entidad detectada se marcan explícitamente como no extraídos.
-4. **Validación de completitud**: campos extraídos vs. campos esperados del esquema.
-5. **Comparación cruzada** contra una fuente de referencia, campo a campo.
-6. **Clasificación de resultados** por estado: `MATCH`, `MISMATCH`, `PENDIENTE`, `ERROR`.
-7. **Consolidación por lote**: agrupación de ejecuciones bajo un ID único de lote.
-8. **Persistencia del historial** de lotes para consulta y descarga posterior.
+1. **MultiTenant Auth**: el API Gateway valida el token JWT, extrae el `tenant_id` y aplica RBAC antes de cualquier operación.
+2. **Content Extraction Strategy**: selección de la ruta de extracción más adecuada según el tipo de archivo y las capacidades disponibles: (a) extracción nativa para documentos digitales con texto embebido (PDF/DOCX/XLSX/CSV), (b) LLM multimodal/documental si el modelo lo soporta y es compatible con soberanía de datos, (c) OCR fallback solo para documentos escaneados, imágenes o archivos sin texto embebido. El método usado queda registrado en la `DocumentContentExtraction` y vinculado a la `NormalizedDocumentRepresentation` que alimenta al StructuredExtractor.
+3. **StructuredExtractor (LLM)**: el modelo de lenguaje recibe la representación normalizada del documento (no necesariamente texto OCR), el esquema del tipo documental (campos, tipos de dato, descripciones semánticas) y el prompt versionado. Extrae los valores de cada campo sin corpus anotado (zero-shot) o con ejemplos representativos mínimos (few-shot). Salida: JSON estructurado con confianza por campo.
+4. **Mapeo al esquema**: los valores extraídos se alinean con los campos del `DocumentSchemaRegistry`; campos sin valor detectado se marcan explícitamente como no extraídos.
+5. **Validation Engine**: validación determinística de tipo de dato, formato, campos obligatorios y rangos esperados.
+6. **CrossValidator**: comparación campo a campo contra la fuente de referencia (CSV o Excel) proporcionada. Clasifica por campo: `MATCH`, `MISMATCH`, `PENDIENTE`.
+7. **DiscrepancyAlertEngine**: genera alertas de discrepancia para cada `MISMATCH` detectado. Clasifica la severidad: `BLOCKING` (impide aprobar el documento), `WARNING` (requiere revisión), `INFO` (informativo).
+8. **Alert Dashboard / Human Review**: el operador o auditor ve los documentos con alertas, puede corregir valores, aprobar con observación o rechazar el documento.
+9. **Consolidación por lote**: agrupación de ejecuciones bajo un ID único de lote con métricas de resumen.
+10. **Audit Service**: persiste trazabilidad inmutable de cada operación (tenant, documento, modelo, prompt versión, tokens, latencia, actor, decisión).
 
-### Pipeline técnico NER
+### Pipeline técnico LLM
 
 ```
-PDF / Imagen
+PDF / Imagen / DOCX / XLSX
     ↓
-OCR  (texto plano + posición de bloques)
+Document Intake
     ↓
-Modelo NER  (entidades de dominio según tipo documental)
+Content Extraction Strategy
+    ├─ Extracción nativa (texto digital / DOCX / XLSX)
+    ├─ LLM multimodal/documental (si modelo y soberanía lo permiten)
+    └─ OCR fallback (solo escaneados/imágenes/sin texto embebido)
     ↓
-Mapeo al esquema  (entidad → campo configurado)
+Normalized Document Representation  (contenido + método + hash + uri original)
+    ↓
+Composición del prompt  (esquema del tipo + instrucciones + representación normalizada)
+    ↓
+Inferencia LLM  (extracción zero-shot / few-shot)
+    ↓
+Parseo de salida estructurada  (JSON schema / function calling)
     ↓
 Validación de completitud
     ↓
@@ -63,10 +79,7 @@ Comparación cruzada (opcional, si hay fuente de referencia)
 JSON / CSV estructurado
 ```
 
-La técnica NER se aplica en dos modalidades según el tipo documental:
-
-- **NER supervisado**: modelo entrenado con corpus anotado del tipo documental. Alta precisión en entidades de dominio específico que no existen en datasets genéricos (p. ej. matrícula inmobiliaria colombiana).
-- **NER zero-shot / LLM**: el esquema del tipo documental se entrega como prompt al LLM, que extrae entidades sin entrenamiento previo. Menor esfuerzo de configuración, precisión variable.
+> **Sobre NER supervisado:** La modalidad de extracción basada en modelos NER entrenados con corpus anotado (NER supervisado) **no es parte del alcance del MVP**. Se evaluará como evolución planificada una vez el piloto con LLM esté en producción y se disponga de datos empíricos sobre los tipos documentales donde el LLM podría presentar limitaciones de precisión o costo a escala.
 
 ### Qué salidas entrega
 
@@ -89,73 +102,119 @@ El sistema opera como una **capa de procesamiento documental** que se integra co
 
 ---
 
+## Componentes esenciales del MVP
+
+### MultiTenant Platform Core
+
+El MultiTenant Platform Core **no es un módulo opcional**: es la fundación arquitectónica del producto. Sin él, el sistema sería un piloto de una sola empresa, no un producto comercializable por CINTEL.
+
+| Capacidad | Descripción |
+|---|---|
+| **Tenant Management** | CINTEL crea, configura y suspende empresas cliente (tenants) |
+| **User Management** | Cada tenant gestiona sus propios usuarios con roles OPERADOR, ADMIN, REVISOR |
+| **RBAC** | Control de acceso por rol y por endpoint; cada operación valida permisos |
+| **Aislamiento de datos** | Row-Level Security por `tenant_id` en PostgreSQL; sin acceso cruzado entre tenants |
+| **Aislamiento de storage** | Archivos organizados por prefijo `tenant_id/` en Object Storage |
+| **Configuración por tenant** | Cada tenant puede tener tipos documentales, prompts y fuentes de referencia propios |
+| **Audit por tenant** | Log inmutable de todas las operaciones del tenant |
+
+### CrossValidator
+
+El CrossValidator recibe los campos extraídos por el `StructuredExtractor` y los compara contra una fuente de referencia cargada por el tenant (archivo CSV o Excel). La comparación es campo a campo.
+
+| Aspecto | Detalle |
+|---|---|
+| **Entrada** | JSON de extracción + archivo de referencia (CSV/Excel) del tenant |
+| **Salida** | Por cada campo: resultado `MATCH`, `MISMATCH` o `PENDIENTE` con valores de ambas fuentes |
+| **Detección de diferencias** | Comparación exacta o con normalización configurable (mayúsculas, espacios, formatos de fecha) |
+| **Trazabilidad** | `CrossValidationRun` con `cross_validation_result` por campo |
+| **Alcance MVP** | Comparación contra CSV/Excel de referencia subido manualmente por el tenant |
+| **Post-MVP** | Comparación contra BD externa o API del cliente (requiere conector) |
+
+### DiscrepancyAlertEngine
+
+El DiscrepancyAlertEngine convierte los resultados `MISMATCH` del CrossValidator en alertas de discrepancia clasificadas y accionables.
+
+| Severidad | Criterio | Comportamiento |
+|---|---|---|
+| **BLOCKING** | Campo obligatorio con `MISMATCH` en dato crítico | Impide aprobación del documento; requiere resolución explícita |
+| **WARNING** | Campo importante con `MISMATCH` tolerable | Requiere revisión; el operador puede aprobar con observación |
+| **INFO** | Diferencia menor o campo no obligatorio | Registro informativo; no requiere acción |
+
+Cada alerta tiene un estado de ciclo de vida: `PENDIENTE` → `EN_REVISION` → `RESUELTA` / `IGNORADA`.
+
+---
+
 ## Módulo administrativo de tipos documentales
 
-Cada tipo de documento que el sistema puede procesar requiere un proceso de configuración y entrenamiento previo. Este módulo es gestionado por el equipo administrador del sistema, no por los operadores de empresa.
+Cada tipo de documento que el sistema puede procesar requiere un proceso de configuración y validación previo. Este módulo es gestionado por el equipo administrador del sistema, no por los operadores de empresa. Dado que el MVP usa LLM como motor de extracción, **no se requiere corpus anotado ni entrenamiento de modelos**: el proceso es de configuración de esquema y validación de calidad de extracción.
 
 ### Funcionalidad del módulo
 
 - Crear un nuevo tipo documental con nombre, descripción y sector.
-- Definir los campos a extraer (nombre, tipo de dato, requerido o no).
-- Subir documentos de entrenamiento reales (mínimo requerido según el tipo).
+- Definir los campos a extraer (nombre, tipo de dato, descripción semántica para el LLM, requerido o no).
+- Cargar documentos de validación representativos del tipo (mínimo recomendado según la complejidad del esquema).
+- Revisar la salida LLM sobre los documentos de validación y ajustar las descripciones de campos o el prompt base si la extracción no es precisa.
 - Configurar el esquema de salida: JSON, CSV o ambos.
-- Definir la **modalidad de extracción**: tipo entrenado o tipo basado en LLM.
 - Cambiar el estado del tipo documental entre ciclos de validación.
 
-### Proceso de entrenamiento del modelo NER
+### Proceso de configuración y validación del tipo LLM
 
-1. Carga de múltiples documentos reales representativos del tipo (corpus de entrenamiento).
-2. **Anotación de entidades**: marcado manual de spans de texto con la etiqueta de entidad correspondiente al esquema del tipo, en formato BIO o BIOES (p. ej. `B-MATRICULA`, `I-MATRICULA`, `B-PROPIETARIO`).
-3. **Entrenamiento del modelo NER** sobre el corpus anotado.
-4. **Evaluación de métricas**: precisión, recall y F1 por tipo de entidad sobre conjunto de validación.
-5. Ajuste iterativo por parte del equipo hasta alcanzar el umbral de precisión definido por estado.
+1. Definición del esquema de campos: nombre canónico, tipo de dato, descripción semántica clara para el LLM (p. ej. "Número de matrícula inmobiliaria en formato NNN-NNNNNNN").
+2. Carga de documentos de validación reales representativos del tipo.
+3. **Ejecución de extracción de prueba** con el LLM sobre el conjunto de validación.
+4. **Revisión de calidad**: verificación manual de campos extraídos vs. campos esperados. Identificación de campos con extracción inconsistente.
+5. Ajuste iterativo de las descripciones de campos o del prompt base del tipo hasta alcanzar la calidad requerida.
 6. Promoción del tipo al siguiente estado (de EN DESARROLLO a BETA o a PRODUCCIÓN).
 
-> Todo nuevo tipo documental requiere corpus anotado y modelo NER validado antes de estar disponible para empresas. No es posible activar un tipo documental sin haber completado el ciclo de anotación, entrenamiento y evaluación.
+> Con LLM no se requieren corpus anotados, archivos BIO/BIOES ni ciclos de entrenamiento de modelos. El esfuerzo se concentra en definir con precisión el esquema de campos y validar la calidad de extracción con documentos representativos.
 
 ### Estados del tipo documental
 
 | Estado | Visibilidad | Garantía de precisión | Uso recomendado |
 |---|---|---|---|
-| **EN DESARROLLO** | No visible para empresas | Sin garantía | Entrenamiento interno del sistema |
+| **EN DESARROLLO** | No visible para empresas | Sin garantía | Configuración y validación interna del esquema LLM |
 | **BETA** | Visible con advertencia de riesgo | Sin garantía | Validación piloto con empresas seleccionadas |
 | **PRODUCCIÓN** | Visible y recomendado | Validado | Operación regular y confiable |
 
-### Modalidad NER: supervisado vs. zero-shot
+### Modalidad de extracción en el MVP
 
-Cada tipo documental tiene asignada una modalidad de extracción NER:
+El MVP utiliza **LLM (zero-shot / few-shot)** como única modalidad de extracción para todos los tipos documentales.
 
-| Propiedad | NER supervisado (entrenado) | NER zero-shot / LLM |
+| Propiedad | LLM (zero-shot / few-shot) — **Alcance MVP** | NER supervisado (entrenado) — **Evaluación post-MVP** |
 |---|---|---|
-| Técnica base | Modelo fine-tuned (SpaCy, BERT, RoBERTa) | LLM con prompt de esquema (zero-shot o few-shot) |
-| Precisión | Alta y estable por tipo de entidad | Variable; sensible a redacción y layout |
-| Dataset requerido | Sí — corpus anotado en formato BIO/BIOES | No (o mínimo para few-shot) |
-| Entidades de dominio | Excelente — aprende patrones específicos del tipo | Limitado — depende del conocimiento previo del LLM |
-| Costo de construcción | Mayor — anotación + entrenamiento + evaluación | Menor — configuración de prompt y esquema |
-| Velocidad de configuración | Más lenta | Más rápida |
-| Uso recomendado | Operación en producción con volumen alto | Exploración, validación inicial y tipos de bajo volumen |
+| Técnica base | LLM con prompt de esquema (zero-shot o few-shot) | Modelo fine-tuned (SpaCy, BERT, RoBERTa) |
+| Dataset requerido | No (o ejemplos mínimos para few-shot) | Sí — corpus anotado en formato BIO/BIOES |
+| Velocidad de configuración | Alta — solo requiere definir esquema y prompt | Baja — requiere anotación + entrenamiento + evaluación |
+| Costo de construcción | Bajo | Alto |
+| Precisión | Variable; puede degradar en documentos con layout complejo o entidades de dominio muy específico | Alta y estable en entidades de dominio con suficiente corpus |
+| Disponibilidad en MVP | ✅ Sí | ❌ No — evaluación planificada post-MVP |
+
+> **NER supervisado no es parte del alcance de este MVP.** Se evaluará una vez que el piloto LLM esté en producción y se hayan identificado tipos documentales específicos donde la precisión LLM presente limitaciones operativas relevantes o donde el costo por token a escala justifique el esfuerzo de entrenamiento.
 
 ---
 
 ## Tipos documentales del piloto
 
+Todos los tipos del piloto utilizan LLM como modalidad de extracción en el MVP.
+
 ### PRODUCCIÓN (disponible para operación)
 
-| Tipo documental | Campos clave | Estado |
-|---|---|---|
-| Certificado de tradición y libertad | Matrícula inmobiliaria, propietario actual, área, gravámenes, anotaciones, municipio, fecha de expedición | ✅ PRODUCCIÓN |
+| Tipo documental | Campos clave | Modalidad | Estado |
+|---|---|---|---|
+| Certificado de tradición y libertad | Matrícula inmobiliaria, propietario actual, área, gravámenes, anotaciones, municipio, fecha de expedición | LLM | ✅ PRODUCCIÓN |
 
 ### BETA (disponible con advertencia)
 
-| Tipo documental | Campos clave | Estado |
-|---|---|---|
-| Contrato de obra | Partes, objeto, valor, plazo, garantías, firma | ⚠️ BETA |
+| Tipo documental | Campos clave | Modalidad | Estado |
+|---|---|---|---|
+| Contrato de obra | Partes, objeto, valor, plazo, garantías, firma | LLM | ⚠️ BETA |
 
 ### EN DESARROLLO (solo uso interno)
 
-| Tipo documental | Campos clave | Estado |
-|---|---|---|
-| Póliza de seguro HSE | Asegurado, vigencia, coberturas, valor asegurado, beneficiarios | 🔧 EN DESARROLLO |
+| Tipo documental | Campos clave | Modalidad | Estado |
+|---|---|---|---|
+| Póliza de seguro HSE | Asegurado, vigencia, coberturas, valor asegurado, beneficiarios | LLM | 🔧 EN DESARROLLO |
 
 ---
 
@@ -269,41 +328,54 @@ Cubre 13 pantallas: dashboard, onboarding, administración de tipos documentales
 
 ## Posicionamiento: antes y ahora
 
-| Dimensión | ANTES (RAG conversacional) | AHORA (Agente documental NER) |
+| Dimensión | DEMOSTRADOR RAG (AS-IS) | DOCUMENT INTELLIGENCE ENGINE (TO-BE) |
 |---|---|---|
-| Propuesta de valor | "Consulta tus documentos" | "Convierte documentos en datos" |
-| Tecnología central | RAG + LLM conversacional | NER supervisado + NER zero-shot/LLM |
-| Técnica de extracción | Recuperación semántica + generación | Reconocimiento de entidades nombradas (NER) |
-| Interacción principal | Chat libre con documentos | Operación estructurada por flujo |
-| Salida principal | Respuesta en lenguaje natural | JSON / CSV con entidades extraídas |
-| RAG / Q&A conversacional | Capacidad central | **Fuera del alcance del producto** |
-| Entidades de dominio específico | No diferenciadas | Definidas en el esquema del tipo documental |
-| Comparación cruzada | No disponible | Flujo nativo del producto |
-| Procesamiento batch | No disponible | Flujo nativo con ID de lote |
-| FTP | No disponible | Canal de entrada nativo |
-| REST API | No disponible | Tres endpoints documentados |
-| Trazabilidad | Conversacional | Por lote, por ejecución, descargable |
+| Nombre del producto | RAG conversacional CINTEL | Document Intelligence Engine MultiTenant |
+| Propuesta de valor | "Consulta tus documentos" | "Documentos tipados → datos estructurados + alertas" |
+| Arquitectura | Single-tenant (un cliente) | MultiTenant (N clientes aislados bajo CINTEL) |
+| Tecnología central | RAG + LLM conversacional + Vector DB | LLM para extracción estructurada (sin vectores) |
+| Interacción principal | Chat libre con documentos | Procesamiento por flujo estructurado |
+| Salida principal | Respuesta en lenguaje natural | JSON / CSV con campos y valores |
+| CrossValidator | No disponible | ✅ Componente MVP — comparación vs. CSV/Excel |
+| DiscrepancyAlertEngine | No disponible | ✅ Componente MVP — alertas BLOCKING/WARNING/INFO |
+| Alert Dashboard | No disponible | ✅ Componente MVP — human review y resolución |
+| MultiTenant | No disponible | ✅ Esencial MVP — múltiples empresas aisladas |
+| Chat / Q&A conversacional | Capacidad central | ❌ Fuera del alcance — no implementar |
+| NER supervisado | No disponible | ⏸ Post-producción — solo si LLM muestra limitaciones |
+| Vector DB (Pinecone/Chroma) | Componente central | ❌ Fuera del alcance — no se usa |
+| API REST | No disponible | ✅ Canal principal — endpoints documentados |
+| Audit / trazabilidad | Conversacional | ✅ Inmutable por tenant/documento/operación |
 
 ---
 
-## Restricciones funcionales del TO-BE
+## Restricciones funcionales del TO-BE — Fuera de alcance
 
-- El sistema **no utiliza RAG** como parte del flujo funcional. El RAG queda fuera del alcance del producto.
-- **No hay capacidades de chat ni consulta conversacional**. El sistema está orientado 100% a procesamiento estructurado.
-- El sistema **no es** un chatbot ni un asistente conversacional de ningún tipo.
-- El sistema **no reemplaza** Microsoft Copilot ni Google Gemini.
+| Capacidad excluida | Motivo |
+|---|---|
+| **Chat / RAG conversacional** | Paradigma diferente: el sistema extrae, no responde preguntas libres |
+| **Q&A libre sobre documentos** | No es el posicionamiento del producto; confunde a compradores |
+| **Respuesta en lenguaje natural** | La salida es siempre JSON/CSV estructurado, nunca texto libre |
+| **Base vectorial (Pinecone, Chroma, etc.)** | No se usa: el sistema no hace recuperación semántica |
+| **Fine-tuning de LLMs** | Costo y complejidad injustificados en MVP |
+| **NER supervisado en MVP** | Se evalúa post-producción si LLM presenta limitaciones documentadas |
+| **Conectores ERP directos** | Post-MVP (SAP, Sinco, Odoo) |
+| **Multi-idioma** | Fuera del alcance del piloto sectorial |
+| **Reemplazar Copilot / Gemini** | No es el posicionamiento — complementa, no reemplaza |
+
+> El sistema **no es** un chatbot, un asistente conversacional ni un motor de búsqueda semántica. El sistema convierte documentos tipados en datos estructurados, valida esos datos y gestiona las discrepancias. Eso es el Document Intelligence Engine.
 - El sistema **no es** un gestor documental tradicional.
 - **XML no** es formato de salida. Los formatos base son JSON y CSV.
-- Todo nuevo tipo documental **requiere proceso de entrenamiento** antes de estar disponible. No es posible activar tipos documentales sin pasar por el ciclo EN DESARROLLO → BETA → PRODUCCIÓN.
+- El motor de extracción del MVP es **exclusivamente LLM (zero-shot / few-shot)**. El NER supervisado no es parte del alcance actual y se evaluará únicamente después de que el piloto MVP con LLM esté operativo en producción.
+- Todo nuevo tipo documental **requiere proceso de validación de calidad LLM** antes de estar disponible. No es posible activar tipos documentales sin haber validado la extracción sobre documentos representativos.
 - Las integraciones con notificaciones automáticas (correo, webhook) se marcan como **evolución futura, no MVP**.
 - La integración con ecosistemas corporativos (Copilot Studio, Vertex AI Agents) se marca como **evolución planificada**, no capacidad del MVP.
 
 
-Este documento describe el TO-BE funcional de la iniciativa luego del pivot estratégico validado en las reuniones de alineación. El sistema ya **no se presenta como un RAG conversacional** cuyo valor principal sea "chatear con documentos". El producto se reorienta hacia un **agente especializado de procesamiento documental basado en NER**.
+Este documento describe el TO-BE funcional de la iniciativa luego del pivot estratégico validado en las reuniones de alineación. El sistema ya **no se presenta como un RAG conversacional** cuyo valor principal sea "chatear con documentos". El producto se reorienta hacia un **agente especializado de procesamiento documental basado en LLM**.
 
 <div class="callout">
-<strong>Consulta al experto en modelos NER</strong><br>
-Documento estructurado en dos bloques: 8 propuestas técnicas pre-resueltas para validación rápida (Sí / No / Ajustar) y 5 preguntas abiertas que requieren criterio especializado.<br><br>
+<strong>Consulta al experto en arquitectura LLM</strong><br>
+Documento estructurado en dos bloques: propuestas técnicas pre-resueltas para validación rápida (Sí / No / Ajustar) y preguntas abiertas que requieren criterio especializado, todas orientadas al uso de LLM en la arquitectura de extracción documental.<br><br>
 <a href="preguntasexperto.html"><strong>Ver consulta al experto →</strong></a>
 </div>
 

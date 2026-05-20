@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mockup TO-BE — Agente de procesamiento documental</title>
+  <title>Mockup TO-BE — Document Intelligence Engine MultiTenant</title>
   <style>
     :root {
       --bg: #f3efe6;
@@ -238,9 +238,19 @@
   <!-- ══════════ SIDEBAR ══════════ -->
   <nav class="app-sidebar">
     <div class="logo-block">
-      <div class="ey">Agente documental</div>
-      <h2>DocAgent</h2>
-      <p>Extracción estructurada · Validación cruzada · API REST · FTP</p>
+      <div class="ey">Document Intelligence Engine</div>
+      <h2>DIE · MultiTenant</h2>
+      <p>Extracción LLM · CrossValidator · Alertas · API REST</p>
+    </div>
+
+    <div style="margin:0.5rem 0 0.75rem; padding:0.55rem 0.65rem; background:rgba(15,90,88,0.07); border:1px solid var(--line); border-radius:10px; font-size:0.78rem;">
+      <div style="font-size:0.63rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);margin-bottom:.22rem;">Tenant activo</div>
+      <select style="width:100%;border:1px solid var(--line-strong);border-radius:8px;padding:.32rem .55rem;font-size:0.8rem;background:white;color:var(--ink);font-family:inherit;">
+        <option>Constructora Norteamérica S.A.S.</option>
+        <option>Aseguradora Andes</option>
+        <option>Inmobiliaria Bogotá Prime</option>
+        <option>[CINTEL — Admin global]</option>
+      </select>
     </div>
 
     <div class="nav-label">Principal</div>
@@ -254,6 +264,10 @@
     <div class="nav-label">Tipos documentales</div>
     <button class="nav-btn" data-screen="admin-tipos"   onclick="go('admin-tipos',this)"><span class="ico">🛠</span> Administración</button>
     <button class="nav-btn" data-screen="entrenamiento" onclick="go('entrenamiento',this)"><span class="ico">🧠</span> Entrenamiento</button>
+
+    <div class="nav-label">Validación y Alertas</div>
+    <button class="nav-btn" data-screen="crossvalidator"  onclick="go('crossvalidator',this)"><span class="ico">⚠️</span> CrossValidator</button>
+    <button class="nav-btn" data-screen="alertas"         onclick="go('alertas',this)"><span class="ico">🔔</span> Alertas de discrepancia</button>
 
     <div class="nav-label">Procesamiento</div>
     <button class="nav-btn" data-screen="individual"    onclick="go('individual',this)"><span class="ico">📄</span> Individual</button>
@@ -274,45 +288,59 @@
     <!-- ──────────────────────────────────── -->
     <section class="screen active" id="screen-dashboard">
       <div class="ph">
-        <div class="ey">Inicio</div>
+        <div class="ey">Document Intelligence Engine MultiTenant</div>
         <h1>Dashboard</h1>
-        <p>Constructora Norteamérica S.A.S. — Procesamiento documental operativo</p>
+        <p>Constructora Norteamérica S.A.S. — Tenant activo · Procesamiento documental operativo</p>
       </div>
-      <div class="sg">
+      <div class="sg" style="grid-template-columns:repeat(6,1fr);">
         <div class="sc"><div class="sl">Lotes ejecutados</div><div class="sv">47</div><div class="ss">Últimos 90 días</div></div>
         <div class="sc"><div class="sl">Docs procesados</div><div class="sv">1 284</div><div class="ss">Total acumulado</div></div>
         <div class="sc"><div class="sl">Completitud media</div><div class="sv">96.3%</div><div class="ss">Campos extraídos</div></div>
         <div class="sc"><div class="sl">Match vs. referencia</div><div class="sv">88.7%</div><div class="ss">En lotes comparados</div></div>
+        <div class="sc" style="border-color:rgba(122,41,48,.3);background:var(--danger-soft);">
+          <div class="sl" style="color:var(--danger);">Alertas BLOCKING</div>
+          <div class="sv" style="color:var(--danger);">3</div>
+          <div class="ss" style="color:var(--danger);">Pendientes de resolución</div>
+        </div>
+        <div class="sc" style="border-color:rgba(141,74,31,.3);background:var(--warn-soft);">
+          <div class="sl" style="color:var(--warn);">Alertas WARNING</div>
+          <div class="sv" style="color:var(--warn);">8</div>
+          <div class="ss" style="color:var(--warn);">Requieren revisión</div>
+        </div>
       </div>
       <div class="grid2 mb2">
         <div class="card">
           <div class="ct">⚡ Actividad reciente</div>
           <div class="tw">
             <table class="dt">
-              <thead><tr><th>Lote</th><th>Tipo</th><th>Docs</th><th>Origen</th><th>Estado</th></tr></thead>
+              <thead><tr><th>Lote</th><th>Tipo</th><th>Docs</th><th>CrossVal</th><th>Alertas</th><th>Estado</th></tr></thead>
               <tbody>
-                <tr><td><strong>CTL-Mayo-P01</strong></td><td>Cert. T&L <span class="p p-prod">PROD</span></td><td>42</td><td>FTP</td><td><span class="p p-done">✓ Fin.</span></td></tr>
-                <tr><td><strong>CTL-Mayo-P02</strong></td><td>Cert. T&L <span class="p p-prod">PROD</span></td><td>56</td><td>FTP</td><td><span class="p p-run">↻ Activo</span></td></tr>
-                <tr><td><strong>CONTR-2026-01</strong></td><td>Contrato obra <span class="p p-beta">BETA</span></td><td>8</td><td>Manual</td><td><span class="p p-draft">⏸ Pendiente</span></td></tr>
+                <tr><td><strong>CTL-Mayo-P01</strong></td><td>Cert. T&L <span class="p p-prod">PROD</span> <span class="p p-acc" style="font-size:0.65rem;">LLM</span></td><td>42</td><td><span class="p p-done">✓</span></td><td><span class="p p-mismatch">3 BLOCK</span></td><td><span class="p p-done">✓ Fin.</span></td></tr>
+                <tr><td><strong>CTL-Mayo-P02</strong></td><td>Cert. T&L <span class="p p-prod">PROD</span> <span class="p p-acc" style="font-size:0.65rem;">LLM</span></td><td>56</td><td><span class="p p-pending">⏸</span></td><td>—</td><td><span class="p p-run">↻ Activo</span></td></tr>
+                <tr><td><strong>CONTR-2026-01</strong></td><td>Contrato obra <span class="p p-beta">BETA</span></td><td>8</td><td>—</td><td>—</td><td><span class="p p-draft">⏸ Pendiente</span></td></tr>
               </tbody>
             </table>
           </div>
         </div>
         <div class="card">
-          <div class="ct">📋 Tipos documentales</div>
+          <div class="ct">📋 Tipos documentales del tenant</div>
           <div class="tw">
             <table class="dt">
               <thead><tr><th>Tipo</th><th>Estado</th><th>Modalidad</th><th>Usos</th></tr></thead>
               <tbody>
-                <tr><td>Cert. Tradición y Libertad</td><td><span class="p p-prod">✅ PROD</span></td><td>Entrenado</td><td>892</td></tr>
-                <tr><td>Contrato de obra</td><td><span class="p p-beta">⚠️ BETA</span></td><td>Entrenado</td><td>179</td></tr>
+                <tr><td>Cert. Tradición y Libertad</td><td><span class="p p-prod">✅ PROD</span></td><td>LLM</td><td>892</td></tr>
+                <tr><td>Contrato de obra</td><td><span class="p p-beta">⚠️ BETA</span></td><td>LLM</td><td>179</td></tr>
                 <tr><td>Póliza HSE</td><td><span class="p p-dev">🔧 DEV</span></td><td>LLM</td><td>—</td></tr>
               </tbody>
             </table>
           </div>
         </div>
       </div>
-      <div class="co">
+      <div class="co warn">
+        <strong>3 alertas BLOCKING pendientes</strong> en lote CTL-Mayo-P01. Los documentos afectados no pueden aprobarse hasta resolver las alertas.
+        <button class="btn btn-d btn-sm" style="margin-left:1rem;" onclick="go('alertas',null)">🔔 Ver alertas →</button>
+      </div>
+      <div class="co" style="margin-top:0.75rem;">
         <strong>Lote en progreso:</strong> CTL-Mayo-P02 — 56 docs · 38 completados · 17 en cola · Origen: FTP
         <button class="btn btn-s btn-sm" style="margin-left:1rem;" onclick="go('detallelote',null)">Ver detalle →</button>
       </div>
@@ -371,7 +399,7 @@
               <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.2rem;">
                 <strong style="font-size:0.9rem;color:var(--ink);">Certificado de Tradición y Libertad</strong>
                 <span class="p p-prod">✅ PRODUCCIÓN</span>
-                <span class="p p-acc" style="font-size:0.68rem;">Entrenado</span>
+                <span class="p p-acc" style="font-size:0.68rem;">LLM</span>
               </div>
               <span style="font-size:0.8rem;color:var(--muted);">8 campos · 892 usos · Sector inmobiliario / construcción</span>
             </div>
@@ -383,7 +411,7 @@
               <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.2rem;">
                 <strong style="font-size:0.9rem;color:var(--ink);">Contrato de obra</strong>
                 <span class="p p-beta">⚠️ BETA</span>
-                <span class="p p-acc" style="font-size:0.68rem;">Entrenado</span>
+                <span class="p p-acc" style="font-size:0.68rem;">LLM</span>
               </div>
               <span style="font-size:0.8rem;color:var(--muted);">9 campos · 179 usos · Sector construcción</span>
               <div style="margin-top:0.45rem;padding:0.5rem 0.7rem;border-radius:8px;background:var(--warn-soft);border-left:3px solid var(--beta-color);font-size:0.78rem;color:var(--warn);">
@@ -554,7 +582,7 @@ clave_alineacion: "matricula_inmobiliaria"
       <div class="ph">
         <div class="ey">Administración</div>
         <h1>Tipos documentales</h1>
-        <p>Todo tipo documental pasa por entrenamiento antes de estar disponible para empresas.</p>
+        <p>Todos los tipos usan LLM como motor de extracción. El proceso es configuración de esquema y validación de calidad, no entrenamiento de modelos.</p>
       </div>
       <div class="stcards">
         <div class="stcard dev">
@@ -596,13 +624,13 @@ clave_alineacion: "matricula_inmobiliaria"
             <tr>
               <td><strong>Certificado de Tradición y Libertad</strong></td>
               <td><span class="p p-prod">✅ PRODUCCIÓN</span></td>
-              <td>Entrenado</td><td>8</td><td>320 docs</td><td>892</td>
+              <td>LLM</td><td>8</td><td>320 docs val.</td><td>892</td>
               <td><button class="btn btn-g btn-sm">Ver</button></td>
             </tr>
             <tr>
               <td><strong>Contrato de obra</strong></td>
               <td><span class="p p-beta">⚠️ BETA</span></td>
-              <td>Entrenado</td><td>9</td><td>85 docs</td><td>179</td>
+              <td>LLM</td><td>9</td><td>85 docs val.</td><td>179</td>
               <td>
                 <button class="btn btn-g btn-sm">Ver</button>
                 <button class="btn btn-s btn-sm" onclick="go('entrenamiento',null)">Entrenar</button>
@@ -611,7 +639,7 @@ clave_alineacion: "matricula_inmobiliaria"
             <tr>
               <td><strong>Póliza de seguro HSE</strong></td>
               <td><span class="p p-dev">🔧 EN DESARROLLO</span></td>
-              <td>LLM</td><td>6</td><td>12 docs</td><td>—</td>
+              <td>LLM</td><td>6</td><td>12 docs val.</td><td>—</td>
               <td><button class="btn btn-s btn-sm" onclick="go('entrenamiento',null)">Entrenar</button></td>
             </tr>
           </tbody>
@@ -626,10 +654,9 @@ clave_alineacion: "matricula_inmobiliaria"
         <div class="fg">
           <label>Modalidad de extracción</label>
           <select class="fs">
-            <option>Entrenado — alta precisión, requiere dataset (recomendado para producción)</option>
-            <option>Basado en LLM — sin dataset, menor precisión, útil para exploración</option>
+            <option>LLM (zero-shot / few-shot) — MVP actual — no requiere corpus anotado</option>
           </select>
-          <div class="hint">El tipo siempre inicia EN DESARROLLO. Requiere entrenamiento antes de estar disponible para empresas.</div>
+          <div class="hint">El MVP usa exclusivamente LLM. NER supervisado se evaluará post-piloto. El tipo inicia EN DESARROLLO hasta completar validación de calidad LLM.</div>
         </div>
         <div class="fg"><label>Formato de salida</label><select class="fs"><option>JSON + CSV</option><option>Solo JSON</option><option>Solo CSV</option></select></div>
         <button class="btn btn-p mt1" onclick="go('entrenamiento',null)">Crear y configurar campos →</button>
@@ -642,8 +669,8 @@ clave_alineacion: "matricula_inmobiliaria"
     <section class="screen" id="screen-entrenamiento">
       <div class="ph">
         <div class="ey">Administración · Póliza de seguro HSE</div>
-        <h1>Entrenamiento del tipo documental</h1>
-        <p>Carga documentos reales, valida la estructura extraída y promueve a BETA cuando sea estable.</p>
+        <h1>Configuración y validación del tipo (LLM)</h1>
+        <p>Define el esquema de campos, carga documentos de validación, verifica la extracción LLM y promueve a BETA cuando la calidad sea estable.</p>
       </div>
       <div class="co dev mb2"><strong>🔧 EN DESARROLLO</strong> — No disponible para empresas. Completa el entrenamiento para promover a BETA.</div>
       <div class="grid2 mb2">
@@ -664,34 +691,34 @@ clave_alineacion: "matricula_inmobiliaria"
           </div>
         </div>
         <div class="card">
-          <div class="ct">📊 Estado del dataset</div>
+          <div class="ct">📊 Estado de validación LLM</div>
           <div class="sg" style="grid-template-columns:1fr 1fr;margin-bottom:0.85rem;">
-            <div class="sc"><div class="sl">Docs cargados</div><div class="sv">12</div><div class="ss">Mínimo: 30</div></div>
+            <div class="sc"><div class="sl">Docs validados</div><div class="sv">12</div><div class="ss">Mínimo recomendado: 20</div></div>
             <div class="sc"><div class="sl">Completitud media</div><div class="sv">71%</div><div class="ss">Objetivo: 90%+</div></div>
           </div>
           <div class="pw">
-            <div class="pl"><span>Progreso dataset</span><span>12 / 30 docs</span></div>
-            <div class="pb"><div class="pf" style="width:40%;"></div></div>
+            <div class="pl"><span>Progreso validación</span><span>12 / 20 docs</span></div>
+            <div class="pb"><div class="pf" style="width:60%;"></div></div>
           </div>
-          <div class="co warn mt2">Dataset insuficiente. Carga al menos 18 documentos más.</div>
+          <div class="co warn mt2">Validación incompleta. Carga al menos 8 documentos más para evaluar la extracción LLM.</div>
         </div>
       </div>
       <div class="card mb2">
-        <div class="ct">📤 Cargar documentos de entrenamiento</div>
+        <div class="ct">📤 Cargar documentos de validación</div>
         <div class="uz">
           <div class="ui">📄</div>
           <p><strong>Arrastra pólizas HSE reales aquí</strong></p>
-          <p style="font-size:0.78rem;margin-top:0.22rem;">PDF o imagen · Sin datos sensibles de producción real</p>
+          <p style="font-size:0.78rem;margin-top:0.22rem;">PDF o imagen · Sin datos sensibles de producción real · Se usan para validar la extracción LLM</p>
         </div>
         <div class="flex gap mt2">
           <button class="btn btn-p">📤 Cargar</button>
-          <button class="btn btn-s">▶ Ejecutar inferencia</button>
+          <button class="btn btn-s">▶ Ejecutar extracción LLM de prueba</button>
         </div>
       </div>
       <div class="card" style="max-width:520px;">
         <div class="ct">🚀 Promover a siguiente estado</div>
-        <p style="font-size:0.86rem;color:var(--muted);margin-bottom:1rem;">Una vez el dataset esté completo y la precisión sea aceptable, promueve este tipo a BETA.</p>
-        <button class="btn btn-s" disabled style="opacity:0.45;cursor:not-allowed;">⚠️ Promover a BETA (requiere 30+ docs)</button>
+        <p style="font-size:0.86rem;color:var(--muted);margin-bottom:1rem;">Una vez la validación LLM sea satisfactoria (completitud ≥ 90 % en el set de validación), promueve este tipo a BETA.</p>
+        <button class="btn btn-s" disabled style="opacity:0.45;cursor:not-allowed;">⚠️ Promover a BETA (requiere completitud ≥ 90 % en validación)</button>
       </div>
     </section>
 
@@ -710,8 +737,8 @@ clave_alineacion: "matricula_inmobiliaria"
           <div class="fg">
             <label>Tipo documental</label>
             <select class="fs">
-              <option>Certificado de Tradición y Libertad ✅ PROD · Entrenado</option>
-              <option>Contrato de obra ⚠️ BETA · Entrenado</option>
+              <option>Certificado de Tradición y Libertad ✅ PROD · LLM</option>
+              <option>Contrato de obra ⚠️ BETA · LLM</option>
             </select>
             <div class="hint">Solo se muestran tipos en estado BETA o PRODUCCIÓN.</div>
           </div>
@@ -768,7 +795,7 @@ clave_alineacion: "matricula_inmobiliaria"
           </div>
           <div class="fg">
             <label>Tipo documental</label>
-            <select class="fs"><option>Certificado de Tradición y Libertad ✅ PROD</option><option>Contrato de obra ⚠️ BETA</option></select>
+            <select class="fs"><option>Certificado de Tradición y Libertad ✅ PROD · LLM</option><option>Contrato de obra ⚠️ BETA · LLM</option></select>
           </div>
           <div class="fg"><label>Formato de salida</label><select class="fs"><option>JSON + CSV</option><option>Solo JSON</option><option>Solo CSV</option></select></div>
           <div class="fg">
@@ -783,7 +810,7 @@ clave_alineacion: "matricula_inmobiliaria"
         </div>
         <div class="card">
           <div class="ct">↻ Lote en progreso — CTL-Mayo-P02</div>
-          <div style="font-size:0.78rem;color:var(--muted);margin-bottom:0.7rem;">ID: <code>LOTE-2026-047</code> · Origen: FTP · Tipo: Cert. T&L (PROD · Entrenado)</div>
+          <div style="font-size:0.78rem;color:var(--muted);margin-bottom:0.7rem;">ID: <code>LOTE-2026-047</code> · Origen: FTP · Tipo: Cert. T&L (PROD · LLM)</div>
           <div class="pw">
             <div class="pl"><span>Progreso</span><span>38 / 56 docs</span></div>
             <div class="pb"><div class="pf" style="width:68%;"></div></div>
@@ -875,21 +902,21 @@ clave_alineacion: "matricula_inmobiliaria"
           <tbody>
             <tr>
               <td><code>LOTE-2026-047</code></td><td><strong>CTL-Mayo-P02</strong></td>
-              <td>Cert. T&L <span class="p p-prod">PROD</span></td><td>FTP</td>
+              <td>Cert. T&L <span class="p p-prod">PROD</span> <span class="p p-acc" style="font-size:0.65rem;">LLM</span></td><td>FTP</td>
               <td>56</td><td>38</td><td>1</td><td>—</td><td>2026-05-18</td>
               <td><span class="p p-run">↻ Activo</span></td>
               <td><button class="btn btn-s btn-sm" onclick="go('detallelote',null)">Ver →</button></td>
             </tr>
             <tr>
               <td><code>LOTE-2026-046</code></td><td><strong>CTL-Mayo-P01</strong></td>
-              <td>Cert. T&L <span class="p p-prod">PROD</span></td><td>FTP</td>
+              <td>Cert. T&L <span class="p p-prod">PROD</span> <span class="p p-acc" style="font-size:0.65rem;">LLM</span></td><td>FTP</td>
               <td>42</td><td>42</td><td>0</td><td><span class="p p-match">✓</span></td><td>2026-05-12</td>
               <td><span class="p p-done">✓ Fin.</span></td>
               <td><button class="btn btn-g btn-sm" onclick="go('detallelote',null)">Ver →</button></td>
             </tr>
             <tr>
               <td><code>LOTE-2026-040</code></td><td><strong>CONTR-Mar-01</strong></td>
-              <td>Contrato <span class="p p-beta">BETA</span></td><td>Manual</td>
+              <td>Contrato <span class="p p-beta">BETA</span> <span class="p p-acc" style="font-size:0.65rem;">LLM</span></td><td>Manual</td>
               <td>12</td><td>11</td><td>1</td><td>—</td><td>2026-04-28</td>
               <td><span class="p p-done">✓ Fin.</span></td>
               <td><button class="btn btn-g btn-sm">Ver →</button></td>
@@ -906,7 +933,7 @@ clave_alineacion: "matricula_inmobiliaria"
       <div class="ph">
         <div class="ey">Resultados · LOTE-2026-047</div>
         <h1>CTL-Mayo-P02-Norteamérica</h1>
-        <p>Cert. T&L (PROD · Entrenado) · 56 docs · Origen: FTP · Iniciado 2026-05-18 14:22</p>
+        <p>Cert. T&L (PROD · LLM) · 56 docs · Origen: FTP · Iniciado 2026-05-18 14:22</p>
       </div>
       <div class="sg mb2">
         <div class="sc"><div class="sl">Total</div><div class="sv">56</div></div>
@@ -946,7 +973,7 @@ clave_alineacion: "matricula_inmobiliaria"
       <div class="ph">
         <div class="ey">Resultado · CTL_074822.pdf · EJE-2026-08814</div>
         <h1>Extracción completada</h1>
-        <p>7/8 campos · Cert. T&L (PROD · Entrenado) · Origen: carga manual · JSON + CSV disponibles</p>
+        <p>7/8 campos · Cert. T&L (PROD · LLM) · Origen: carga manual · JSON + CSV disponibles</p>
       </div>
       <div class="co">
         <strong>Extracción exitosa.</strong> El campo "Número de folios" no fue localizado. Los 7 campos restantes fueron extraídos con alta confianza. Salida: datos estructurados — no hay respuesta en lenguaje natural.
@@ -973,7 +1000,7 @@ clave_alineacion: "matricula_inmobiliaria"
   "id_ejecucion": "EJE-2026-08814",
   "tipo_documental": "certificado_tradicion_libertad",
   "estado_tipo": "produccion",
-  "modalidad_extraccion": "entrenado",
+  "modalidad_extraccion": "llm_zero_shot",
   "documento": "CTL_074822.pdf",
   "origen": "manual",
   "fecha_procesamiento": "2026-05-18T14:38:42Z",
@@ -992,9 +1019,188 @@ clave_alineacion: "matricula_inmobiliaria"
     "campos_esperados": 8,
     "campos_extraidos": 7,
     "porcentaje": 87.5
-  }
+  },
+  "estado_validacion_cruzada": "MISMATCH_DETECTADO",
+  "alertas_generadas": [
+    { "campo": "gravamenes", "severidad": "BLOCKING", "estado": "PENDIENTE" }
+  ]
 }</code></pre>
         </div>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────── -->
+    <!-- CROSSVALIDATOR                        -->
+    <!-- ──────────────────────────────────── -->
+    <section class="screen" id="screen-crossvalidator">
+      <div class="ph">
+        <div class="ey">Validación y Alertas</div>
+        <h1>CrossValidator</h1>
+        <p>Compara los campos extraídos contra una fuente de referencia (CSV / Excel). Genera resultados MATCH / MISMATCH / PENDIENTE por campo.</p>
+      </div>
+
+      <div class="co">
+        <strong>Componente MVP esencial.</strong> El CrossValidator opera sobre datos ya extraídos (StructuredExtractor) y compara campo a campo contra el ReferenceDataset del tenant. La comparación es determinística — no usa IA.
+      </div>
+
+      <div class="grid2 mb2">
+        <div class="card">
+          <div class="ct">📂 Fuente de referencia</div>
+          <div class="fg">
+            <label>Dataset de referencia del tenant</label>
+            <select class="fs">
+              <option>Catastro_Bogota_2026_v2.csv (activo)</option>
+              <option>Catastro_Bogota_2025_v1.csv (anterior)</option>
+              <option>+ Subir nuevo dataset...</option>
+            </select>
+            <p class="hint">El dataset de referencia es una entidad persistente reutilizable (ReferenceDataset). El tenant lo gestiona desde la sección de Configuración.</p>
+          </div>
+          <div class="fg">
+            <label>Lote de extracción a comparar</label>
+            <select class="fs">
+              <option>CTL-Mayo-P01 · 42 docs · Cert. T&L · Finalizado</option>
+              <option>CTL-Mayo-P02 · 56 docs · En proceso</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label>Normalización aplicada</label>
+            <select class="fs">
+              <option>Básica (trim + lowercase + espacios) — recomendada</option>
+              <option>Estricta (sin normalización — solo igualdad exacta)</option>
+              <option>Fechas + básica</option>
+            </select>
+          </div>
+          <button class="btn btn-p">⚖️ Ejecutar CrossValidator</button>
+        </div>
+        <div class="card">
+          <div class="ct">📊 Resumen de la última ejecución</div>
+          <div class="sg" style="grid-template-columns:1fr 1fr 1fr;">
+            <div class="sc"><div class="sl">MATCH</div><div class="sv" style="color:var(--success);">74%</div><div class="ss">264 campos</div></div>
+            <div class="sc"><div class="sl">MISMATCH</div><div class="sv" style="color:var(--danger);">18%</div><div class="ss">64 campos</div></div>
+            <div class="sc"><div class="sl">PENDIENTE</div><div class="sv" style="color:var(--warn);">8%</div><div class="ss">28 campos</div></div>
+          </div>
+          <div class="co warn" style="margin-top:0.75rem;">
+            <strong>64 MISMATCHes detectados.</strong> El DiscrepancyAlertEngine ha generado las alertas correspondientes. Ver pantalla de Alertas para gestionarlas.
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="ct">🔍 Resultados campo a campo — Lote CTL-Mayo-P01</div>
+        <div class="tw">
+          <div class="cr hdr"><span>Campo</span><span>Valor extraído (LLM)</span><span>Valor de referencia (catastro)</span><span>Resultado</span></div>
+          <div class="cr"><span>matricula_inmobiliaria</span><span>050-74822</span><span>050-74822</span><span><span class="p p-match">✓ MATCH</span></span></div>
+          <div class="cr"><span>propietario_actual</span><span>Inversiones Pacífico Ltda.</span><span>Inversiones Pacifico Ltda</span><span><span class="p p-match">✓ MATCH</span></span></div>
+          <div class="cr"><span>area_m2</span><span>1 240 m²</span><span>1240</span><span><span class="p p-match">✓ MATCH</span></span></div>
+          <div class="cr"><span>gravamenes</span><span>Hipoteca Banco Davivienda</span><span>Hipoteca Banco Colombia</span><span><span class="p p-mismatch">✗ MISMATCH</span></span></div>
+          <div class="cr"><span>fecha_expedicion</span><span>2026-04-03</span><span>2026-04-03</span><span><span class="p p-match">✓ MATCH</span></span></div>
+          <div class="cr"><span>municipio</span><span>Medellín</span><span>Medellin</span><span><span class="p p-match">✓ MATCH</span></span></div>
+          <div class="cr"><span>numero_folios</span><span>—</span><span>12</span><span><span class="p p-pending">⏸ PENDIENTE</span></span></div>
+        </div>
+        <div style="margin-top:0.75rem;display:flex;gap:0.65rem;">
+          <button class="btn btn-s btn-sm">⬇ Exportar CSV resultado</button>
+          <button class="btn btn-p btn-sm" onclick="go('alertas',null)">🔔 Ver alertas generadas →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────────── -->
+    <!-- ALERTAS DE DISCREPANCIA              -->
+    <!-- ──────────────────────────────────── -->
+    <section class="screen" id="screen-alertas">
+      <div class="ph">
+        <div class="ey">Validación y Alertas</div>
+        <h1>Alertas de discrepancia</h1>
+        <p>Gestión del ciclo de vida de las alertas generadas por el DiscrepancyAlertEngine. Clasificadas por severidad: BLOCKING · WARNING · INFO.</p>
+      </div>
+
+      <div class="co warn">
+        <strong>3 alertas BLOCKING pendientes</strong> en el lote CTL-Mayo-P01. Las alertas BLOCKING impiden la aprobación del documento hasta ser resueltas explícitamente.
+      </div>
+
+      <div class="sg" style="margin-bottom:1.3rem;grid-template-columns:repeat(4,1fr);">
+        <div class="sc"><div class="sl">BLOCKING pendientes</div><div class="sv" style="color:var(--danger);">3</div><div class="ss">Impiden aprobación</div></div>
+        <div class="sc"><div class="sl">WARNING pendientes</div><div class="sv" style="color:var(--warn);">8</div><div class="ss">Requieren revisión</div></div>
+        <div class="sc"><div class="sl">INFO</div><div class="sv" style="color:var(--accent);">12</div><div class="ss">Informativas</div></div>
+        <div class="sc"><div class="sl">Resueltas hoy</div><div class="sv" style="color:var(--success);">5</div><div class="ss">Ciclo completado</div></div>
+      </div>
+
+      <div class="card">
+        <div class="ct">🔔 Alertas activas — Lote CTL-Mayo-P01</div>
+        <div class="tw">
+          <table class="dt">
+            <thead><tr><th>Documento</th><th>Campo</th><th>Valor LLM</th><th>Valor referencia</th><th>Severidad</th><th>Estado</th><th>Acciones</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>CTL_074822.pdf</strong></td>
+                <td>gravamenes</td>
+                <td>Hipo. Davivienda</td>
+                <td>Hipo. Colombia</td>
+                <td><span class="p" style="background:#f8e3e2;color:#7a2930;font-weight:800;">● BLOCKING</span></td>
+                <td><span class="p p-draft">PENDIENTE</span></td>
+                <td><button class="btn btn-s btn-sm">Revisar</button></td>
+              </tr>
+              <tr>
+                <td><strong>CTL_031145.pdf</strong></td>
+                <td>propietario_actual</td>
+                <td>García Inmuebles</td>
+                <td>García Inmuebles S.A.</td>
+                <td><span class="p" style="background:#faeadb;color:#8d4a1f;font-weight:800;">⚠ WARNING</span></td>
+                <td><span class="p p-run">EN REVISIÓN</span></td>
+                <td><button class="btn btn-s btn-sm">Ver</button></td>
+              </tr>
+              <tr>
+                <td><strong>CTL_092871.pdf</strong></td>
+                <td>area_m2</td>
+                <td>850 m²</td>
+                <td>850.0 m²</td>
+                <td><span class="p" style="background:#e8f4fd;color:#1a4a8a;font-weight:800;">ℹ INFO</span></td>
+                <td><span class="p p-done">RESUELTA</span></td>
+                <td><button class="btn btn-g btn-sm">Historial</button></td>
+              </tr>
+              <tr>
+                <td><strong>CTL_018562.pdf</strong></td>
+                <td>numero_folios</td>
+                <td>— (no extraído)</td>
+                <td>14</td>
+                <td><span class="p" style="background:#f8e3e2;color:#7a2930;font-weight:800;">● BLOCKING</span></td>
+                <td><span class="p p-draft">PENDIENTE</span></td>
+                <td><button class="btn btn-s btn-sm">Revisar</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:1.1rem;">
+        <div class="ct">📝 Resolución de alerta — CTL_074822.pdf / gravamenes</div>
+        <div class="fg">
+          <label>Valor extraído por LLM</label>
+          <div style="padding:0.62rem 0.85rem;background:var(--danger-soft);border:1px solid rgba(122,41,48,.25);border-radius:10px;font-size:0.86rem;color:var(--danger);">Hipoteca Banco Davivienda</div>
+        </div>
+        <div class="fg">
+          <label>Valor en fuente de referencia</label>
+          <div style="padding:0.62rem 0.85rem;background:var(--accent-soft);border:1px solid rgba(15,90,88,.25);border-radius:10px;font-size:0.86rem;color:var(--accent-strong);">Hipoteca Banco Colombia</div>
+        </div>
+        <div class="fg">
+          <label>Decisión del revisor</label>
+          <select class="fs">
+            <option>-- Seleccionar --</option>
+            <option>Aprobar — el valor del documento es correcto (referencia desactualizada)</option>
+            <option>Corregir — usar valor de la referencia</option>
+            <option>Rechazar — documento requiere re-procesamiento</option>
+            <option>Ignorar — diferencia irrelevante para el proceso</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>Observaciones</label>
+          <textarea class="fi" rows="2" placeholder="Justificación de la decisión (requerida para BLOCKING)..."></textarea>
+        </div>
+        <div style="display:flex;gap:0.65rem;margin-top:0.65rem;">
+          <button class="btn btn-p">✓ Confirmar resolución</button>
+          <button class="btn btn-g">Cancelar</button>
+        </div>
+        <p class="hint" style="margin-top:0.55rem;">La resolución queda registrada en el Audit Service con: tenant_id, documento, campo, actor, decisión, timestamp. Inmutable.</p>
       </div>
     </section>
 

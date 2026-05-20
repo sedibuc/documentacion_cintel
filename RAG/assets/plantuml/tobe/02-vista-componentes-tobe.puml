@@ -1,0 +1,87 @@
+@startuml 02-vista-componentes-tobe
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 10
+skinparam componentStyle rectangle
+skinparam titleFontSize 14
+skinparam titleFontStyle bold
+skinparam packageBackgroundColor #FAFAFA
+skinparam arrowColor #444444
+skinparam legendBackgroundColor #FAFAFA
+
+title Vista 2 — Mapa de Componentes TO-BE\nAgente Documental CINTEL · LLM-first
+
+package "Frontend / UI" as FE #E8F4FD {
+  [Portal Admin] <<Tradicional>> #AED6F1
+  [Vista Carga y Lotes] <<Tradicional>> #AED6F1
+  [Vista Resultados] <<Tradicional>> #AED6F1
+  [Vista Revisión Humana] <<Tradicional>> #AED6F1
+  [Vista Q&A Documentos] <<IA/LLM>> #A9DFBF
+  [Vista Métricas] <<Tradicional>> #AED6F1
+}
+
+package "API Backend / BFF" as BE #E8F4FD {
+  [Auth / RBAC] <<Tradicional>> #AED6F1
+  [Tenant Service] <<Tradicional>> #AED6F1
+  [Document Service] <<Tradicional>> #AED6F1
+  [Batch Service] <<Tradicional>> #AED6F1
+  [DocType & Schema Service] <<Tradicional>> #AED6F1
+  [Results Service] <<Tradicional>> #AED6F1
+  [Audit Service] <<Tradicional>> #AED6F1
+}
+
+package "Capa IA / LLM Orchestration" as IA #E9F7EF {
+  [LLM Orchestrator] <<IA/LLM>> #A9DFBF
+  [Prompt Registry] <<IA/LLM>> #A9DFBF
+  [Schema Registry] <<Tradicional>> #AED6F1
+  [Structured Output Parser] <<IA/LLM>> #A9DFBF
+  [Validation Engine] <<Hibrido>> #D5F5E3
+}
+
+package "Revisión Humana" as HL #E8F4FD {
+  [Human Review Module] <<Tradicional>> #AED6F1
+}
+
+package "Persistencia" as PERS #EBF5FB {
+  database "PostgreSQL\n(Transaccional)" as DB #AED6F1
+  storage "File Storage\n(Documentos originales)" as FS #AED6F1
+}
+
+package "Servicios Externos" as EXT #F9F9F9 {
+  [LLM Provider\n(configurable)] <<IA/LLM>> #A9DFBF
+  [OCR Service] <<Tradicional>> #AED6F1
+}
+
+package "Observabilidad" as OBS #EAF2FF {
+  [Metrics & Observability] <<Tradicional>> #AED6F1
+}
+
+package "Fuera de Alcance Fase 1" as FORA #F4F6F7 {
+  [NER Service] <<Futuro>> #D5D8DC
+}
+
+FE --> BE : REST / HTTPS
+BE --> [Auth / RBAC]
+BE --> [LLM Orchestrator] : invoca extracción IA
+BE --> DB : persiste datos
+BE --> FS : almacena documentos
+[LLM Orchestrator] --> [Prompt Registry] : obtiene prompt
+[LLM Orchestrator] --> [Schema Registry] : obtiene esquema
+[LLM Orchestrator] --> [LLM Provider\n(configurable)] : inferencia
+[LLM Orchestrator] --> [Structured Output Parser]
+[Structured Output Parser] --> [Validation Engine]
+[Document Service] --> [OCR Service] : texto si aplica
+BE --> [Human Review Module]
+BE --> [Audit Service] : registra eventos
+BE --> [Metrics & Observability] : tokens, latencia
+
+legend right
+  | Color | Tipo |
+  |<#AED6F1> | Tradicional |
+  |<#A9DFBF> | IA / LLM |
+  |<#D5F5E3> | Híbrido (IA + reglas) |
+  |<#D5D8DC> | Futuro / Fuera Fase 1 |
+endlegend
+
+@enduml

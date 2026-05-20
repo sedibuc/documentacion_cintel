@@ -1,0 +1,68 @@
+@startuml 06-vista-seguridad-multitenant
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 10
+skinparam rectangleBorderThickness 1.5
+skinparam arrowColor #444444
+skinparam titleFontSize 14
+skinparam titleFontStyle bold
+skinparam noteBackgroundColor #FEF9E7
+skinparam noteBorderColor #F39C12
+skinparam legendBackgroundColor #FAFAFA
+
+title Document Intelligence Engine MultiTenant\nVista de Seguridad y Aislamiento MultiTenant
+
+rectangle "CINTEL (Operador de Plataforma)" as CINTEL #E8F4FD {
+  rectangle "Admin Console CINTEL\n- Gestionar tenants\n- Configurar planes\n- Ver metricas globales\n- Gestionar modelos LLM" as ADMIN #AED6F1
+}
+
+rectangle "Tenant A — Empresa Constructora X" as TA #E8F4FD {
+  rectangle "Usuario Operador A\nRol: OPERADOR" as UA1 #AED6F1
+  rectangle "Usuario Admin A\nRol: ADMIN" as UA2 #AED6F1
+  rectangle "Schema, tipos, prompts\nde Empresa X (privado)" as SA #AED6F1
+  rectangle "Documentos y extracciones\nde Empresa X (aislados)" as DA #AED6F1
+  rectangle "Alertas y resultados\nde Empresa X (privados)" as ALERTA_A #AED6F1
+}
+
+rectangle "Tenant B — Aseguradora Y" as TB #E8F4FD {
+  rectangle "Usuario Operador B\nRol: OPERADOR" as UB1 #AED6F1
+  rectangle "Usuario Admin B\nRol: ADMIN" as UB2 #AED6F1
+  rectangle "Schema, tipos, prompts\nde Aseguradora Y (privado)" as SB #AED6F1
+  rectangle "Documentos y extracciones\nde Aseguradora Y (aislados)" as DB #AED6F1
+  rectangle "Alertas y resultados\nde Aseguradora Y (privados)" as ALERTA_B #AED6F1
+}
+
+rectangle "Capa de Seguridad API Gateway" as GWAPISEC #FEF9E7 {
+  rectangle "JWT / OAuth2 validation\ntenant_id extraido de token" as JWT #FEF9E7
+  rectangle "RBAC enforcement\npor endpoint y recurso" as RBAC #FEF9E7
+  rectangle "Rate limiting por tenant" as RL #FEF9E7
+}
+
+rectangle "Motor Central (DIE Platform)" as ENGINE #E8F4FD {
+  rectangle "Todos los queries filtrados\npor tenant_id (Row-Level Security)" as RLS #AED6F1
+  rectangle "File Storage aislado\npor tenant (prefijo tenant_id/)" as FS #AED6F1
+  rectangle "Audit log inmutable\npor tenant" as AUDIT #AED6F1
+  rectangle "Prompt Registry compartido\npor tipo (versiones aisladas)" as PROMPT #AED6F1
+}
+
+rectangle "LLM Provider (Certificado)" as LLMP #E9F7EF {
+  rectangle "OpenAI / Groq (cloud cert.)\no Ollama on-premise\nSin retencion de datos del cliente\nconfigurado por contrato" as LLMC #A9DFBF
+}
+
+rectangle "Fuera del modelo" as FORA #F4F6F7 {
+  rectangle "NO existe acceso cruzado\nentre tenants en ninguna capa" as F1 #FADBD8
+  rectangle "NO existe chat/RAG compartido\nni contexto conversacional" as F2 #FADBD8
+}
+
+ADMIN --> GWAPISEC : HTTPS + token CINTEL
+UA1 --> GWAPISEC : HTTPS + token JWT (tenant_id=A)
+UB1 --> GWAPISEC : HTTPS + token JWT (tenant_id=B)
+GWAPISEC --> ENGINE : request + tenant_id validado
+ENGINE --> LLMC : prompt sin datos cross-tenant
+ENGINE --> SA : solo datos Tenant A
+ENGINE --> SB : solo datos Tenant B
+
+note bottom of LLMP #A9DFBF : No se usa para almacenar datos del cliente\nSoberania de datos garantizada por contrato\no infraestructura on-premise
+
+@enduml

@@ -1,276 +1,183 @@
-# Consulta al experto en modelos NER
+﻿# Cuestionario preliminar para experto en modelos — Document Intelligence Engine MultiTenant
 
 <div class="badge-row">
-<span class="badge">Contexto: TO-BE NER</span>
-<span class="badge">Destinatario: experto en modelos</span>
-<span class="badge">Pre-resueltas: 8 · Abiertas: 5</span>
+<span class="badge">Audiencia: experto en modelos de lenguaje e IA generativa</span>
+<span class="badge">Contexto: Document Intelligence Engine MultiTenant</span>
+<span class="badge">8 bloques de consulta exploratoria</span>
+<span class="badge badge-note">Consulta escrita · concepto técnico preliminar</span>
 </div>
 
-## Resumen ejecutivo
+> **Propósito y alcance:** Este cuestionario tiene como propósito solicitar al experto un concepto técnico preliminar sobre la factibilidad de implementar un Document Intelligence Engine orientado a extracción estructurada, validación cruzada y generación de alertas. Las respuestas serán utilizadas como insumo para enriquecer el micrositio de análisis y para orientar una evaluación exploratoria posterior. No se espera una selección final de modelos, proveedores ni arquitectura definitiva; cualquier recomendación deberá entenderse como criterio preliminar sujeto a validación con documentos reales del MVP.
 
-Este documento transforma el esquema original de investigación abierta en una **consulta estructurada de validación técnica**. El equipo ha elaborado propuestas iniciales razonables para los ítems que pueden resolverse desde estándares de industria, benchmarks conocidos y la arquitectura definida en el TO-BE. El experto dedica su tiempo únicamente donde existe incertidumbre crítica que no puede inferirse sin experiencia empírica directa.
+Este cuestionario está dirigido a un **experto en modelos de lenguaje e inteligencia artificial generativa**. Las decisiones de arquitectura tradicional (MultiTenant, bases de datos, queues, despliegue) ya fueron resueltas y están documentadas en el [Análisis técnico TO-BE](arquitectura-tobe.html).
 
-| Concepto | Valor |
-|---|---|
-| Bloque 1 — Validación rápida de propuestas pre-resueltas | 8 ítems |
-| Bloque 2 — Análisis especializado de preguntas abiertas | 5 preguntas |
-
-> Las propuestas del Bloque 1 son **baselines técnicos iniciales**, no decisiones finales. El experto puede aprobar, rechazar o ajustar cada una. Las preguntas del Bloque 2 no tienen propuesta previa porque dependen de criterio empírico no inferible.
+> **Perfil buscado:** Ingeniero de ML o arquitecto de IA con experiencia práctica en LLM para procesamiento e interpretación de documentos, extracción estructurada de información, prompt engineering en producción y evaluación de modelos. No se requiere experiencia en infraestructura, bases de datos o arquitectura de microservicios.
 
 ---
 
-## Bloque 1 — Propuestas pre-resueltas para validación rápida
+## Contexto del producto
 
-El equipo propone un baseline técnico para cada ítem. El experto revisa y responde: **Sí / No / Ajustar**.
+El **Document Intelligence Engine MultiTenant (DIE)** es un sistema que extrae campos estructurados desde documentos tipados —PDF, imágenes, DOCX—, los valida contra fuentes de referencia externas y genera alertas de discrepancia clasificadas como BLOCKING, WARNING o INFO.
 
----
+**El producto no es un chat ni un sistema de recuperación conversacional (RAG).** La necesidad central es:
 
-### B1-1 — Motor OCR y política de aceptación de documentos
+- Extracción estructurada de campos definidos en un schema.
+- Validación cruzada contra fuentes de referencia (registros, bases de datos, APIs externas).
+- Generación determinística de alertas de discrepancia por campo.
+- Trazabilidad y auditoría del resultado por documento.
 
-**Pregunta**: ¿Qué motor OCR usar según el tipo de documento y en qué umbral de calidad rechazar un documento sin pasar al NER?
-
-**Propuesta técnica del equipo**
-
-- **PDF nativo con capa de texto**: extracción directa con PyMuPDF (sin OCR). Costo cero de inferencia OCR.
-- **PDF escaneado o imagen**: Google Document AI como motor cloud principal para el MVP. Ofrece coordenadas de bloque (bounding boxes), confianza por token y soporte nativo para documentos colombianos multi-resolución. Tesseract como alternativa local de respaldo si el presupuesto no admite cloud.
-- **Preprocesamiento mínimo recomendado**: deskew automático + binarización adaptativa antes de enviar al OCR en documentos escaneados.
-- **Política de aceptación**: confianza OCR promedio < 0.6 → documento marcado como `ERROR` con código `OCR_QUALITY_LOW` sin pasar al NER. Confianza entre 0.6 y 0.8 → procesado con advertencia visible en el resultado.
-
-**Justificación resumida**: Google Document AI tiene el mejor desempeño documentado en formularios y documentos legales en español con layouts heterogéneos, preserva la posición de bloques necesaria si P2 deriva a layout-aware, y opera sobre HTTPS sin infraestructura adicional en el MVP. PyMuPDF para nativos elimina costo OCR en el escenario más frecuente (certificados digitales de la SNR).
-
-**Validación del experto**
-- [ ] Sí, estoy de acuerdo con la propuesta
-- [ ] No, propongo otro motor o política
-- [ ] Ajustar parcialmente — comentario:
+La arquitectura contempla una capa de **Content Extraction Strategy** que seleccionaría dinámicamente entre extracción nativa del archivo, procesamiento con LLM (texto o multimodal) y OCR como fallback para documentos escaneados o sin texto embebido confiable. Estos supuestos de diseño aún requieren validación con documentos reales.
 
 ---
 
-### B1-2 — Arquitectura base del modelo NER supervisado
+## Orientación para responder
 
-**Pregunta**: ¿Qué arquitectura y modelo base de NER supervisado usar para el piloto con documentos legales en español?
+El experto puede responder de forma breve y argumentada. Se valora que diferencie entre:
 
-**Propuesta técnica del equipo**
+- **Opinión preliminar basada en experiencia:** criterio técnico que puede orientar sin pruebas formales.
+- **Supuestos que deben validarse:** hipótesis técnicas que requieren experimento o muestra documental.
+- **Riesgos críticos:** aspectos que, si no se controlan, pueden comprometer la viabilidad del producto.
+- **Recomendaciones para prueba posterior:** qué experimentos mínimos deberían hacerse antes de tomar decisiones.
+- **Aspectos que no pueden concluirse sin PoC:** preguntas que requieren documentos reales para responderse con suficiente certeza.
 
-- **Modelo base**: `dccuchile/bert-base-spanish-wwm-cased` con capa de clasificación de tokens fine-tuned para NER de dominio.
-- **Razón**: es el modelo BERT más adoptado para español en tareas NER legales/administrativas, tiene benchmarks publicados en español y está disponible en Hugging Face sin restricciones de licencia comercial.
-- **Operación en MVP**: CPU (4 vCPU, 16 GB RAM). Throughput estimado: 30–60 documentos/hora en batch asíncrono con documentos de 2–5 páginas. GPU solo si el volumen del piloto supera 500 documentos/día de forma sostenida.
-- **Alternativa a evaluar si el experto rechaza**: `PlanTL-GOB-ES/roberta-base-bne` — mayor precisión en texto jurídico, mayor latencia.
+> Si alguna pregunta no puede responderse con suficiente certeza sin pruebas técnicas, indique qué información, muestra documental o experimento mínimo sería necesario para responderla.
 
-**Justificación resumida**: El procesamiento es batch, no tiempo real. La latencia de CPU (2–5 s/documento) es aceptable para el volumen piloto. El modelo BERT en español tiene la mayor base de referencia para comparación de resultados y facilita la transición del equipo de desarrollo. GPU se reserva para escalar, no para iniciar.
-
-**Validación del experto**
-- [ ] Sí, estoy de acuerdo con la propuesta
-- [ ] No, propongo otra arquitectura
-- [ ] Ajustar parcialmente — comentario:
+Las respuestas escritas serán integradas como insumo en el micrositio de análisis del proyecto y como base para diseñar una evaluación exploratoria posterior con documentos reales.
 
 ---
 
-### B1-3 — Formato de anotación y herramienta para el corpus
+## Estimación de tiempo
 
-**Pregunta**: ¿En qué formato anotar las entidades del corpus, con qué herramienta y qué nivel de acuerdo entre anotadores es aceptable?
+La siguiente tabla orienta el tiempo estimado por bloque. El experto no está obligado a responder en ningún orden particular ni dentro de un tiempo límite; la estimación se incluye para facilitar la organización de la respuesta escrita y el seguimiento del equipo.
 
-**Propuesta técnica del equipo**
-
-- **Formato de etiquetado**: BIO (Beginning-Inside-Outside). BIOES añade precisión para entidades de un solo token, pero incrementa la complejidad de las guías de anotación y el tiempo de formación de anotadores. Para el piloto con 3 tipos documentales y equipo pequeño, BIO es suficiente y más fácil de mantener.
-- **Herramienta**: Label Studio (open source, auto-hospedado). Permite importar PDFs, exportar en CoNLL-2003 y JSONL, y soporta flujos multi-anotador con cálculo de IAA integrado.
-- **Control de calidad**: inter-annotator agreement con Cohen's Kappa ≥ 0.80 antes de incluir documentos al corpus de entrenamiento. Documentos con Kappa < 0.80 pasan a revisión de árbitro.
-- **Casos límite definidos**: entidad ausente → no se anota (el modelo aprende a no extraer); entidad en tabla → se anota la celda como span completo; entidad parcial (e.g., año sin mes) → se anota lo disponible con etiqueta `_PARCIAL` en el nombre.
-
-**Justificación resumida**: BIO + Label Studio es la combinación más adoptada en proyectos NER de dominio con presupuesto controlado. Cohen's Kappa ≥ 0.80 es el estándar de referencia en NLP para considerar un corpus confiable. Label Studio elimina la necesidad de infraestructura de anotación propietaria.
-
-**Validación del experto**
-- [ ] Sí, estoy de acuerdo con la propuesta
-- [ ] No, propongo otro formato o herramienta
-- [ ] Ajustar parcialmente — comentario:
-
----
-
-### B1-4 — Estrategia de segmentación documental
-
-**Pregunta**: ¿Cómo dividir documentos de múltiples páginas para alimentar el modelo NER respetando el límite de tokens de BERT?
-
-**Propuesta técnica del equipo**
-
-- **Unidad de procesamiento NER**: página individual. Cada página se procesa como una secuencia independiente. El modelo recibe el texto de una página a la vez.
-- **Manejo de límite de tokens**: si una página supera 512 tokens (límite de BERT), se aplica ventana deslizante con solapamiento de 64 tokens entre ventanas. Las entidades detectadas en el solapamiento se deduplicaban por posición de carácter.
-- **Tablas**: extraídas como texto linealizado antes de pasar al NER (fila por fila, celda separada por `|`). No se usa detección estructural de tabla en el MVP.
-- **Trazabilidad**: cada entidad extraída lleva metadato de `página_origen` y `posición_carácter` en el resultado JSON.
-
-**Justificación resumida**: La segmentación por página es el balance estándar entre contexto disponible y gestión de tokens. El solapamiento de 64 tokens preserva el contexto en fronteras de ventana. La linealización de tablas es compatible con NER textual y no requiere infraestructura adicional en el MVP.
-
-**Validación del experto**
-- [ ] Sí, estoy de acuerdo con la propuesta
-- [ ] No, propongo otra estrategia de segmentación
-- [ ] Ajustar parcialmente — comentario:
+| Bloque | Tema | Preguntas | Tiempo estimado |
+|---|---|---|---|
+| 1 | Factibilidad general de la necesidad | 1–3 | 20–25 min |
+| 2 | Enfoques técnicos a explorar | 4–6 | 20–25 min |
+| 3 | Modelos o familias candidatas | 7–9 | 20–25 min |
+| 4 | Calidad, trazabilidad y control de errores | 10–13 | 25–30 min |
+| 5 | Soberanía, privacidad y operación multi-tenant | 14–16 | 20–25 min |
+| 6 | Riesgos críticos de implementación | 17–19 | 20–25 min |
+| 7 | Evaluación exploratoria posterior | 20–22 | 20–25 min |
+| 8 | Recomendaciones y advertencias finales | 23–25 | 20–25 min |
+| — | Plantilla comparativa (completar o comentar) | — | 10–15 min |
+| **Total** | 8 bloques · 25 preguntas | 1–25 | **~2h 45min – 3h 30min** |
 
 ---
 
-### B1-5 — Score de confianza y estrategia de fallback por entidad
+## Bloque 1 — Factibilidad general de la necesidad
 
-**Pregunta**: ¿Qué umbrales de confianza definen cuándo aceptar, marcar como pendiente o descartar una entidad extraída, y qué hacer cuando el modelo supervisado falla?
+*¿Es viable, con tecnologías actuales de IA documental, construir un sistema que extraiga campos estructurados desde documentos tipados, los valide contra fuentes de referencia y genere alertas de discrepancia?*
 
-**Propuesta técnica del equipo**
+**1.** ¿Qué tan madura considera que es la tecnología disponible hoy para abordar extracción estructurada de documentos complejos como certificados notariales, contratos y pólizas? ¿Cuáles son las principales brechas o limitaciones que anticipa?
 
-- **Fuente de confianza**: score softmax promedio de los tokens que componen cada entidad detectada. Exportado como campo `confianza` (0.0–1.0) por entidad en el JSON de salida.
-- **Umbrales de decisión**:
-  - `confianza ≥ 0.75` → entidad aceptada, incluida en el resultado.
-  - `0.50 ≤ confianza < 0.75` → entidad en `PENDIENTE` con flag `BAJA_CONFIANZA`. Se incluye el valor extraído como referencia pero no como dato confirmado.
-  - `confianza < 0.50` → campo marcado como no extraído (`PENDIENTE`), sin valor sugerido.
-- **Fallback**: si el NER supervisado no detecta una entidad requerida (campo obligatorio del esquema) con confianza aceptable, se lanza automáticamente un reintento con NER zero-shot/LLM. Si el reintento tampoco produce resultado, el campo pasa a `ERROR` con código `ENTITY_NOT_FOUND`.
+**2.** ¿Qué diferencia técnica relevante existe entre extracción estructurada con schema definido y generación de texto libre? ¿Afecta esa diferencia la viabilidad o el riesgo de implementación?
 
-**Justificación resumida**: El umbral 0.75 es conservador y coherente con la criticidad de documentos legales. El rango de baja confianza (0.50–0.75) preserva información útil sin afirmarla como válida. El fallback a zero-shot/LLM protege el flujo de comparación cruzada sin detener el lote.
-
-**Validación del experto**
-- [ ] Sí, estoy de acuerdo con umbrales y fallback
-- [ ] No, propongo umbrales distintos
-- [ ] Ajustar parcialmente — comentario:
+**3.** ¿Considera razonable la hipótesis de priorizar procesamiento nativo o multimodal del documento frente a OCR como paso obligatorio para documentos digitales? ¿Bajo qué condiciones ese supuesto podría fallar?
 
 ---
 
-### B1-6 — Normalización de entidades antes de la comparación cruzada
+## Bloque 2 — Enfoques técnicos a explorar
 
-**Pregunta**: ¿Cómo normalizar cada tipo de entidad extraída para que la comparación cruzada entre documentos no genere falsos `MISMATCH` por diferencias de formato?
+*¿Qué estrategias de extracción documental vale la pena explorar para el MVP?*
 
-**Propuesta técnica del equipo**
+**4.** ¿Qué enfoques técnicos considera razonable explorar para procesar documentos en formato PDF digital, PDF escaneado, imagen y documentos ofimáticos? ¿Cuáles priorizaría y por qué?
 
-| Tipo de entidad | Normalización propuesta | Comparación |
-|---|---|---|
-| Fechas | ISO 8601 (`YYYY-MM-DD`). Parser: `dateparser` con locale `es_CO`. | Exact match |
-| Montos y valores | Eliminar símbolo `$`, separadores de miles (`.`) y espacios. Resultado: entero o decimal con `.` como separador. | Exact match numérico |
-| Matrículas inmobiliarias | Formato canónico `NNN-NNNNNNN` sin espacios adicionales. | Exact match |
-| Nombres de personas | Unicode normalizado (NFC), mayúsculas, sin artículos iniciales. | Fuzzy match (Levenshtein ≤ 2) |
-| NIT / Cédula | Solo dígitos, sin guiones ni puntos. | Exact match |
-| Vigencias y plazos | Convertidos a días enteros desde fecha base. | Exact match numérico |
+**5.** ¿Cuándo tiene sentido usar un LLM multimodal o documental frente a extraer primero el texto y luego procesarlo con un LLM de texto? ¿Qué criterios deberían guiar esa decisión en una exploración inicial?
 
-- Fuzzy match aplicado **únicamente** a nombres de persona, con umbral de distancia Levenshtein ≤ 2 para tolerar variaciones tipográficas menores.
-- Todos los demás tipos: exact match sobre valor normalizado.
-
-**Justificación resumida**: Exact match sobre valor normalizado elimina la mayoría de falsos `MISMATCH` sin introducir ambigüedad. Fuzzy match acotado a nombres es el único caso donde la variación ortográfica es estructural (tildes, partículas, orden). La librería `dateparser` maneja correctamente los formatos de fecha en español colombiano.
-
-**Validación del experto**
-- [ ] Sí, estoy de acuerdo con la estrategia de normalización
-- [ ] No, propongo otra estrategia
-- [ ] Ajustar parcialmente — comentario:
+**6.** ¿Qué papel debería tener OCR en una estrategia de extracción documental moderna? ¿Para qué tipos de documentos sería difícil evitarlo? ¿Cuándo sería un paso innecesario o contraproducente?
 
 ---
 
-### B1-7 — Versionado de modelos y trazabilidad de resultados
+## Bloque 3 — Modelos o familias candidatas
 
-**Pregunta**: ¿Qué esquema de versionado usar para los modelos NER y cómo garantizar que cada resultado de extracción sea trazable al modelo que lo produjo?
+*¿Qué familias de modelos o proveedores valdría la pena explorar para este caso de uso?*
 
-**Propuesta técnica del equipo**
+**7.** ¿Qué familias de modelos o proveedores considera razonable incluir en una exploración inicial, tanto opciones cloud certificadas como modelos que podrían ejecutarse localmente? No se busca una selección final, sino candidatos que orienten una evaluación posterior.
 
-- **Esquema de versión**: `{tipo_documental}_v{major}.{minor}.{patch}`. Ejemplo: `certificado_tradicion_v1.2.0`. `major` cambia ante redefinición del esquema de entidades; `minor` ante reentrenamiento significativo; `patch` ante ajustes de hiperparámetros.
-- **Artefactos versionados**: pesos del modelo (carpeta Hugging Face), esquema de entidades (JSON), configuración de entrenamiento (YAML), métricas de evaluación (JSON con F1 por entidad).
-- **Almacenamiento**: DVC sobre repositorio Git existente, o carpeta versionada en el almacenamiento del servidor si DVC no está disponible en el MVP.
-- **Trazabilidad en resultados**: cada resultado de extracción incluye campo `modelo_version` en el JSON de salida. El historial de lotes en PostgreSQL almacena `modelo_version` junto al ID de lote.
-- **Rollback**: recargar el modelo de la versión anterior y re-procesar el lote afectado. La versión anterior permanece disponible hasta que la nueva supera 7 días en producción sin alertas.
+**8.** ¿Hay modelos o categorías de modelos que, por razones técnicas o de madurez, no recomendaría explorar en esta fase inicial? ¿Por qué?
 
-**Justificación resumida**: El esquema semver es inmediatamente comprensible para el equipo. La trazabilidad `modelo_version` en resultados responde directamente a la auditabilidad requerida para tipos documentales con consecuencias legales. La política de retención de 7 días da margen de rollback sin acumular modelos indefinidamente.
-
-**Validación del experto**
-- [ ] Sí, estoy de acuerdo con la estrategia de versionado
-- [ ] No, propongo otro esquema
-- [ ] Ajustar parcialmente — comentario:
+**9.** ¿Qué aspectos considera más relevantes para comparar opciones preliminares: soporte de formatos, multimodalidad, salida estructurada, soberanía, costo, latencia u otros? ¿Cuáles son los criterios que no deberían obviarse en una primera evaluación?
 
 ---
 
-### B1-8 — Instrumentación del pipeline para observabilidad operativa
+## Bloque 4 — Calidad, trazabilidad y control de errores
 
-**Pregunta**: ¿Qué métricas registrar por ejecución y qué umbrales de alerta configurar para detectar degradación del modelo antes de que afecte la operación?
+*¿Cómo se podría evaluar y controlar la calidad de la extracción estructurada?*
 
-**Propuesta técnica del equipo**
+**10.** ¿Qué criterios de calidad considera relevantes para evaluar preliminarmente la extracción estructurada? ¿Qué métricas deberían explorarse en una prueba posterior? No se busca establecer umbrales finales, sino identificar qué medir.
 
-Métricas a registrar en PostgreSQL por cada ejecución de documento dentro de un lote:
+**11.** ¿Qué mecanismos técnicos podrían ayudar a garantizar que los valores extraídos provienen del documento fuente y no del conocimiento interno del modelo? ¿Qué técnicas considera prioritarias explorar?
 
-| Métrica | Granularidad | Tipo |
-|---|---|---|
-| `latencia_ocr_ms` | Por documento | Numérico |
-| `latencia_ner_ms` | Por documento | Numérico |
-| `entidades_detectadas` | Por documento | Entero |
-| `entidades_esperadas` | Por documento | Entero |
-| `tasa_pendiente` | Por documento | Float (0–1) |
-| `confianza_promedio` | Por documento | Float (0–1) |
-| `estado_final` | Por documento | Enum: OK / WARN / ERROR |
+**12.** ¿Qué lineamientos generales considera importantes para controlar la extracción estructurada y reducir respuestas no sustentadas en el documento? ¿Zero-shot, few-shot u otro enfoque sería un punto de partida razonable para documentos como certificados notariales?
 
-Métricas de alerta a nivel de lote:
-- `tasa_pendiente` del lote > línea base del tipo + 20 % → alerta de revisión de modelo.
-- `tasa_error` del lote > 10 % → alerta de revisión de infraestructura.
-- `confianza_promedio` del lote < 0.65 → alerta de posible degradación.
-
-Canales de alerta para MVP: registro en tabla `alertas` de PostgreSQL + log estructurado. Notificaciones externas (webhook, correo) marcadas como evolución futura.
-
-**Justificación resumida**: Las métricas propuestas son las mínimas necesarias para detectar degradación (señal de P-abierta-4) y diagnosticar fallos sin revisar cada documento. Almacenar en PostgreSQL reutiliza la infraestructura existente del sistema y no requiere stack de observabilidad dedicado para el MVP.
-
-**Validación del experto**
-- [ ] Sí, estoy de acuerdo con el esquema de instrumentación
-- [ ] No, propongo otro esquema de métricas
-- [ ] Ajustar parcialmente — comentario:
+**13.** ¿Cómo podría detectarse que una extracción fue incompleta o de baja calidad antes de confiar en el resultado? ¿Qué señales o indicadores deberían monitorearse?
 
 ---
 
-## Bloque 2 — Preguntas abiertas que requieren criterio especializado
+## Bloque 5 — Soberanía, privacidad y operación multi-tenant
 
-Estas preguntas no tienen propuesta previa porque dependen de experiencia empírica en datasets similares, conocimiento de la operación real del dominio legal colombiano, o trade-offs que el equipo no puede resolver sin referencia de casos reales. Se mantienen abiertas y enfocadas.
+*¿Qué restricciones y condiciones mínimas aplican para procesar documentos sensibles con LLM?*
 
----
+**14.** ¿Qué condiciones o garantías mínimas deberían revisarse antes de usar un proveedor LLM cloud para procesar documentos con datos personales o sensibles? ¿Qué aspectos contractuales o técnicos son críticos?
 
-### A1 — ¿NER textual puro es suficiente para el certificado de tradición y libertad?
+**15.** ¿Existen opciones de procesamiento local u on-premise que considera maduras para este caso de uso? ¿Bajo qué condiciones recomendaría explorarlas frente a opciones cloud certificadas?
 
-**Contexto**: El certificado de tradición y libertad varía estructuralmente según la Oficina de Registro que lo emite. La matrícula inmobiliaria, los gravámenes y las anotaciones pueden aparecer en posiciones de página distintas, dentro de tablas con diagramaciones variables, o en texto continuo según la versión del formulario SNR. Un NER textual puro (sobre texto OCR linealizado) puede fallar cuando la posición relativa del campo es determinante para desambiguar la entidad —por ejemplo, el mismo número puede ser matrícula o folio según dónde aparece en la página. La respuesta condiciona la arquitectura completa del pipeline: si se necesita layout-aware, el OCR debe entregar bounding boxes, la arquitectura del modelo cambia (LayoutLM v3, LiLT), y el esfuerzo de implementación aumenta significativamente.
-
-**Respuesta esperada**: Evaluación basada en experiencia con documentos reales similares. ¿Puede un NER textual con contexto de ventana ampliada desambiguar correctamente las entidades del certificado de tradición? ¿O la variabilidad posicional hace inviable el enfoque textual para alcanzar precisión de producción? Si recomienda layout-aware: indicar si el esfuerzo incremental es viable dentro de un MVP y cuál es la arquitectura mínima viable (LayoutLM v3 base vs. fine-tuned vs. Donut).
+**16.** ¿Qué riesgos o limitaciones anticiparía para una solución que debe operar con múltiples tenants con distintos niveles de sensibilidad documental y distintos requisitos de soberanía?
 
 ---
 
-### A2 — ¿Cuántos documentos anotados se necesitan para alcanzar el umbral BETA?
+## Bloque 6 — Riesgos críticos de implementación
 
-**Contexto**: El proceso de entrenamiento parte de cero para los tres tipos del piloto. El equipo necesita saber cuántos documentos reales deben recolectarse y anotarse antes de iniciar el entrenamiento, para planificar el tiempo de anotación (que es el cuello de botella del piloto) y dimensionar el esfuerzo de preparación del corpus. Los tres tipos tienen distinta complejidad de esquema: el certificado de tradición tiene 7 campos clave con alta variabilidad posicional; el contrato de obra tiene 6 campos con redacción libre; la póliza HSE tiene 5 campos con formatos relativamente estandarizados. La respuesta impacta directamente el cronograma del piloto.
+*¿Cuáles son los riesgos técnicos más importantes a anticipar?*
 
-**Respuesta esperada**: Número mínimo de documentos anotados recomendado para arrancar el entrenamiento y obtener un modelo que pueda ser validado como BETA (no necesariamente con calidad de producción). Indicar si la recomendación varía significativamente entre los tres tipos del piloto. Si existen benchmarks publicados en dominios similares (documentos legales, formularios gubernamentales en español), referenciarlos como base.
+**17.** ¿Qué riesgos técnicos considera más críticos para este tipo de sistema? Puede incluir aspectos como: documentos escaneados de baja calidad, tablas complejas, sellos, firmas, documentos largos, variabilidad entre lotes o cualquier otro que considere relevante.
 
----
+**18.** ¿Qué limitaciones técnicas conocidas de los modelos LLM actuales podrían ser problemáticas para extracción estructurada de documentos del sector notarial y constructor colombiano?
 
-### A3 — ¿Qué umbrales de F1 definen BETA y PRODUCCIÓN para documentos con consecuencias legales?
-
-**Contexto**: El TO-BE establece que PRODUCCIÓN implica "garantía de precisión validada", pero no cuantifica el umbral. Para el certificado de tradición y libertad, un error en `PROPIETARIO_ACTUAL` o en `GRAVAMENES` tiene consecuencias patrimoniales directas. Para un contrato de obra, un error en `VALOR` tiene consecuencias contractuales. El umbral aceptable no es el mismo que para un formulario administrativo de bajo riesgo, y el equipo no tiene criterio para fijar ese número sin referencia de operación real en documentos similares.
-
-**Respuesta esperada**: F1 mínimo por entidad recomendado para la transición EN DESARROLLO → BETA y BETA → PRODUCCIÓN, diferenciado por nivel de riesgo (entidades con consecuencias patrimoniales vs. entidades descriptivas). Indicación de si el umbral aplica por entidad individual o como promedio ponderado del tipo. Recomendación sobre el tamaño mínimo del conjunto de evaluación para que el F1 sea estadísticamente representativo.
+**19.** ¿Qué factores de costo, latencia o escalabilidad considera que deberían tenerse en cuenta desde el diseño, incluso antes de una prueba exploratoria?
 
 ---
 
-### A4 — ¿Qué señales de degradación son observables en producción real con documentos legales colombianos?
+## Bloque 7 — Evaluación exploratoria posterior
 
-**Contexto**: El equipo propone como señales proxy la tasa de `PENDIENTE`, la tasa de `MISMATCH` en comparación cruzada y la confianza promedio (Bloque 1, ítem B1-8). Sin embargo, en producción real pueden existir patrones de degradación no capturados por estas métricas: por ejemplo, una entidad específica que empieza a fallar sistemáticamente mientras el promedio del lote sigue siendo aceptable, o una degradación estacional ligada a cambios en los formularios SNR o en los formatos notariales. El equipo necesita saber si las señales propuestas son suficientes o si existen señales adicionales críticas que la experiencia indica monitorear.
+*¿Qué pruebas mínimas deberían hacerse antes de tomar decisiones de implementación?*
 
-**Respuesta esperada**: Validación de si las tres señales proxy propuestas son suficientes para detectar degradación en producción con documentos legales colombianos, o si se deben agregar señales adicionales. Si existen patrones de degradación específicos del dominio (formularios SNR, cambios normativos, variaciones regionales), describirlos para incorporarlos al diseño del sistema de alertas. Criterio sobre la frecuencia de revisión manual recomendada en ausencia de alertas activas.
+**20.** ¿Qué experimentos mínimos recomendaría realizar con documentos reales antes de orientar la selección de un modelo o estrategia de extracción? ¿Cuántos documentos y de qué tipos serían representativos para una primera evaluación?
 
----
+**21.** ¿Qué criterios utilizaría para decidir si un enfoque vale la pena continuar explorando? ¿Qué señales indicarían que un candidato debe descartarse temprano?
 
-### A5 — ¿A partir de qué escala el throughput de CPU resulta insuficiente y el costo OCR cloud se vuelve un cuello de botella?
-
-**Contexto**: El equipo estima throughput de 30–60 documentos/hora en CPU (4 vCPU, 16 GB RAM) para el modelo BERT propuesto (B1-2), con Google Document AI como motor OCR cloud para documentos escaneados a un costo aproximado de USD 1.50 por 1.000 páginas. El equipo no dispone de referencia empírica para saber a partir de qué volumen diario esta combinación deja de ser viable operativamente, ni qué señales técnicas indican que la GPU es necesaria desde el arranque y no como decisión de escalado posterior.
-
-**Respuesta esperada**: Basándose en experiencia con implementaciones NER similares en producción (no en el piloto específico, cuyo volumen no está definido): ¿a partir de qué volumen diario el throughput de CPU de 30–60 docs/hora genera un backlog operativamente inaceptable? ¿Existe alguna característica del tipo documental —longitud, densidad de entidades, variabilidad de layout— que haga que el CPU sea insuficiente independientemente del volumen? ¿El costo por página de OCR cloud es el factor limitante habitual en pilotos de este tipo, o suele quedar absorbido por otros costos?
+**22.** ¿Qué aspectos del diseño actual considera que requieren validación con documentos reales antes de poder afirmar que el enfoque es viable?
 
 ---
 
-## Tabla de respuesta
+## Bloque 8 — Recomendaciones y advertencias finales
 
-Se solicita al experto completar la columna **Estimación** con el tiempo que considera necesario para analizar y responder cada pregunta, y enviar la tabla completa por correo electrónico a **mcubides@cintel.org.co** con copia a **drodriguez@cintel.org.co** para su aceptación.
+*Espacio para alertas tempranas, supuestos débiles y recomendaciones generales.*
 
-| Tipo de pregunta | Pregunta | Estimación |
-|---|---|---|
-| Pre-Resuelta | ¿Qué motor OCR usar según el tipo de documento y en qué umbral de calidad rechazar un documento sin pasar al NER? | |
-| Pre-Resuelta | ¿Qué arquitectura y modelo base de NER supervisado usar para el piloto con documentos legales en español? | |
-| Pre-Resuelta | ¿En qué formato anotar las entidades del corpus, con qué herramienta y qué nivel de acuerdo entre anotadores es aceptable? | |
-| Pre-Resuelta | ¿Cómo dividir documentos de múltiples páginas para alimentar el modelo NER respetando el límite de tokens de BERT? | |
-| Pre-Resuelta | ¿Qué umbrales de confianza definen cuándo aceptar, marcar como pendiente o descartar una entidad extraída, y qué hacer cuando el modelo supervisado falla? | |
-| Pre-Resuelta | ¿Cómo normalizar cada tipo de entidad extraída para que la comparación cruzada entre documentos no genere falsos MISMATCH por diferencias de formato? | |
-| Pre-Resuelta | ¿Qué esquema de versionado usar para los modelos NER y cómo garantizar que cada resultado de extracción sea trazable al modelo que lo produjo? | |
-| Pre-Resuelta | ¿Qué métricas registrar por ejecución y qué umbrales de alerta configurar para detectar degradación del modelo antes de que afecte la operación? | |
-| Abierta | ¿NER textual puro es suficiente para el certificado de tradición y libertad, o la variabilidad posicional hace necesario un enfoque layout-aware? | |
-| Abierta | ¿Cuántos documentos anotados se necesitan para arrancar el entrenamiento y obtener un modelo que pueda ser validado como BETA? | |
-| Abierta | ¿Qué umbrales de F1 definen las transiciones EN DESARROLLO → BETA y BETA → PRODUCCIÓN para documentos con consecuencias legales? | |
-| Abierta | ¿Qué señales de degradación son observables en producción real con documentos legales colombianos, más allá de las métricas proxy propuestas? | |
-| Abierta | ¿A partir de qué escala el throughput de CPU resulta insuficiente y el costo OCR cloud se vuelve un cuello de botella operativo? | |
+**23.** ¿Qué supuestos del diseño actual le parecen más débiles o arriesgados desde la perspectiva técnica? ¿Cuáles requieren validación urgente?
+
+**24.** ¿Hay aspectos de la necesidad o del diseño que, en su experiencia, suelen subestimarse en proyectos de extracción documental con LLM?
+
+**25.** ¿Qué recomendaría priorizar en un análisis exploratorio de 4–6 semanas para avanzar con confianza razonable hacia una prueba de concepto formal?
+
+---
+
+## Plantilla de evaluación comparativa preliminar
+
+> Esta plantilla puede ser utilizada como referencia durante la consulta. El experto puede completar, ajustar o reformular las columnas según su criterio. No representa un ranking final ni una selección cerrada; su propósito es orientar el análisis exploratorio posterior. Las versiones y disponibilidad de modelos deben ser confirmadas por el experto según el estado actual del mercado.
+
+| Modelo / familia | Tipo | Procesa PDF directo | Procesa imágenes | DOCX/XLSX o equiv. | Structured output | Evidencia por campo | Soberanía | On-prem viable | Límite contexto | Costo est. | Latencia | Riesgo principal | ¿Explorar? |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| GPT-4o / equivalente | Cloud | TBD | Sí | TBD | Sí | TBD | DPA Enterprise | No | TBD | TBD | TBD | TBD | TBD |
+| Gemini / equivalente | Cloud | TBD | Sí | TBD | Sí | TBD | DPA Vertex AI | No | TBD | TBD | TBD | TBD | TBD |
+| Claude / equivalente | Cloud | TBD | Sí | TBD | Sí | TBD | DPA | No | TBD | TBD | TBD | TBD | TBD |
+| Llama / equivalente | Local | No nativo | Con multimodal | TBD | TBD | TBD | Alta | Sí | TBD | TBD | TBD | TBD | TBD |
+| Qwen-VL / MiniCPM-V / equiv. | Local | No nativo | Sí | TBD | TBD | TBD | Alta | Sí | TBD | TBD | TBD | TBD | TBD |
+| LLaVA / equivalente | Local | No nativo | Sí | TBD | TBD | TBD | Alta | Sí | TBD | TBD | TBD | TBD | TBD |
+| Otro candidato (experto) | TBD | TBD | TBD | TBD | TBD | TBD | TBD | TBD | TBD | TBD | TBD | TBD | TBD |
+
+---
+
+*Las respuestas escritas del experto serán integradas en el [micrositio de análisis del proyecto](index.html) y servirán como insumo para diseñar la evaluación exploratoria posterior con documentos reales. Cualquier recomendación preliminar formulada aquí no equivale a un veredicto técnico definitivo ni reemplaza una prueba de concepto formal.*
+

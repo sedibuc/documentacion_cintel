@@ -1,8 +1,34 @@
 # Brechas y oportunidades
 
-## Punto de partida
+<div class="badge-row">
+<span class="badge">Análisis AS-IS → TO-BE</span>
+<span class="badge">Demostrador RAG → Document Intelligence Engine</span>
+<span class="badge">MultiTenant · CrossValidator · DiscrepancyAlertEngine</span>
+</div>
 
-El diagnóstico distingue entre el demostrador RAG actual y una posible arquitectura futura con mayores capacidades de control, memoria, trazabilidad y gobierno. Hoy existe un flujo RAG funcional, pero persisten brechas relevantes para soportar una evolución ordenada del sistema.
+> **Contexto de reposicionamiento (2026-05):** Las brechas descritas en esta sección fueron identificadas sobre el demostrador RAG actual (AS-IS). El sistema TO-BE propuesto — **Document Intelligence Engine MultiTenant** — resuelve estas brechas estructuralmente, no como parches, sino como un replanteamiento completo del producto.
+
+## Brecha de reposicionamiento: de RAG conversacional a Document Intelligence Engine
+
+La brecha más relevante no es técnica sino de producto: el demostrador actual es un sistema de Q&A conversacional sobre documentos (RAG), mientras que el valor operativo real que necesitan los clientes es convertir documentos tipados en datos estructurados, validar esos datos contra fuentes de referencia y gestionar las discrepancias encontradas.
+
+### Capacidades ausentes en el demostrador actual que son esenciales en el TO-BE
+
+| Capacidad | Demostrador RAG | Document Intelligence Engine TO-BE |
+|---|---|---|
+| MultiTenant Platform Core | ❌ Single-tenant | ✅ Esencial MVP — múltiples empresas aisladas |
+| CrossValidator (vs. referencia) | ❌ No disponible | ✅ Componente MVP — comparación vs. CSV/Excel |
+| DiscrepancyAlertEngine | ❌ No disponible | ✅ Componente MVP — BLOCKING/WARNING/INFO |
+| Alert Dashboard / Human Review | ❌ No disponible | ✅ Componente MVP — ciclo de vida de alertas |
+| DocumentSchemaRegistry | ❌ Sin esquema estructurado | ✅ Tipos y campos versionados por tenant |
+| StructuredExtractor LLM | ❌ Respuesta conversacional | ✅ JSON estructurado con confianza por campo |
+| API REST documentada | ❌ No disponible | ✅ Canal principal de integración |
+| Audit Service inmutable | ❌ Logs conversacionales | ✅ Trazabilidad por tenant/documento/operación |
+| Soberanía de datos garantizada | ⚠️ Parcial | ✅ On-premise u Ollama disponible por tenant |
+
+## Punto de partida — Diagnóstico del demostrador RAG
+
+El diagnóstico distingue entre el demostrador RAG actual y la arquitectura Document Intelligence Engine propuesta. El demostrador RAG tiene un flujo conversacional funcional pero carece de las capacidades estructurales que definen el nuevo producto.
 
 ## Coherencia técnica de configuración y dependencias
 

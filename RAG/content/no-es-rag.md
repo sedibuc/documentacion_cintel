@@ -1,13 +1,16 @@
-# Por qué esta solución NO es un RAG
+# Por qué esta solución NO es un RAG ni un sistema de Q&A
 
 <div class="badge-row">
 <span class="badge">Análisis técnico</span>
-<span class="badge">Paradigma: Procesamiento estructurado</span>
+<span class="badge">Producto: Document Intelligence Engine MultiTenant</span>
 <span class="badge">RAG: Fuera del alcance</span>
+<span class="badge">Chat / Q&A: Fuera del alcance</span>
 <span class="badge">Audiencia: técnica · arquitectura · producto</span>
 </div>
 
-Este documento argumenta con precisión técnica por qué el sistema en construcción **no es un RAG** (Retrieval-Augmented Generation). No es un matiz de implementación ni una decisión de diseño reversible: son dos paradigmas de procesamiento fundamentalmente distintos que resuelven problemas diferentes.
+Este documento argumenta con precisión técnica por qué el **Document Intelligence Engine MultiTenant (DIE)** no es un RAG (Retrieval-Augmented Generation) **ni tampoco un sistema de Q&A documental** con LLM. Son tres paradigmas de procesamiento fundamentalmente distintos que resuelven problemas diferentes. Esta distinción es una decisión de producto, no un matiz de implementación.
+
+> **Resumen ejecutivo:** El DIE convierte documentos tipados en datos estructurados, valida esos datos contra fuentes de referencia y gestiona alertas de discrepancia. No responde preguntas. No tiene chat. No tiene vectores. No recupera fragmentos. No genera texto libre.
 
 ---
 
@@ -109,21 +112,21 @@ Tutorial técnico completo: indexing, chunking, embeddings, vector store, retrie
 
 ### Definición del sistema
 
-El sistema es un **agente especializado de procesamiento documental**: recibe documentos tipados (PDF o imagen), extrae los campos definidos en un esquema estructurado, valida los resultados contra fuentes de referencia y expone los datos por API REST.
+El sistema es el **Document Intelligence Engine MultiTenant (DIE)**: convierte documentos tipados en datos estructurados, valida esos datos contra fuentes de referencia, genera alertas de discrepancia clasificadas por severidad y opera bajo un modelo multi-cliente (MultiTenant) controlado por CINTEL.
 
-No hay chat. No hay preguntas. No hay corpus de búsqueda. No hay generación de texto como salida.
+No hay chat. No hay preguntas. No hay corpus de búsqueda. No hay generación de texto como salida. No hay base vectorial. No hay Q&A.
 
 ### Capacidades principales del sistema
 
 | Capacidad | Descripción |
 |---|---|
-| **Extracción estructurada** | Lectura de campos predefinidos desde documentos tipados |
-| **Validación de completitud** | Campos extraídos vs. campos esperados en el esquema |
-| **Comparación cruzada** | Contraste campo a campo contra fuente de referencia externa |
-| **Procesamiento batch** | Ejecución en paralelo sobre múltiples documentos bajo un ID de lote |
-| **Trazabilidad** | Historial persistente por lote, por ejecución, con estado y descarga |
-| **API REST** | Tres endpoints JSON: individual, batch asíncrono y comparación |
-| **Integración FTP** | Lectura de documentos desde servidor del cliente sin carga manual |
+| **MultiTenant Platform Core** | Múltiples empresas cliente con datos completamente aislados |
+| **Extracción estructurada** | Lectura de campos predefinidos desde documentos tipados vía LLM |
+| **CrossValidator** | Comparación campo a campo contra CSV/Excel de referencia |
+| **DiscrepancyAlertEngine** | Alertas de discrepancia BLOCKING/WARNING/INFO con ciclo de vida |
+| **Alert Dashboard** | Human review, resolución de alertas, aprobación de documentos |
+| **API REST** | Canal principal de integración con sistemas clientes |
+| **Audit Service** | Trazabilidad inmutable por tenant/documento/operación |
 
 ### Naturaleza del procesamiento
 
@@ -147,34 +150,29 @@ La solución puede usar modelos de IA en etapas específicas y acotadas:
 
 | Etapa | Uso de IA | Naturaleza |
 |---|---|---|
-| Entrenamiento del tipo documental | Inferencia de estructura de campos | Clasificación / extracción supervisada |
-| Extracción en modo LLM | Llamada al LLM para inferir valores de campos | Estructuración puntual, no generación libre |
-| Extracción en modo entrenado | Modelo propio entrenado con dataset del tipo | Clasificación determinística |
+| Extracción de campos | LLM con esquema como prompt (zero-shot / few-shot) | Estructuración puntual, no generación libre |
 
 En todos los casos, la IA es un **instrumento de estructuración**, no el eje del producto. La salida no es texto generado: es un JSON con campos y valores.
 
 ---
 
-## 3. RAG vs. Solución propuesta — Comparación
+## 3. RAG vs. Q&A con LLM vs. Document Intelligence Engine
 
-| Dimensión | RAG | Solución propuesta |
-|---|---|---|
-| **Tipo de problema que resuelve** | Responder preguntas sobre un corpus de conocimiento | Convertir documentos tipados en datos estructurados |
-| **Tipo de entrada** | Query en lenguaje natural | Documento tipado + esquema de extracción |
-| **Tipo de procesamiento** | Búsqueda semántica + generación de texto | Extracción estructurada + validación de campos |
-| **Tipo de salida** | Texto generado en lenguaje natural | JSON / CSV con campos y valores |
-| **Dependencia de embeddings** | Esencial (vectorización del corpus y la query) | No requerida |
-| **Uso de vector DB** | Esencial (Pinecone, Weaviate, Chroma, AI Search...) | No requerida |
-| **Uso de LLM** | Central y obligatorio (generación de respuesta) | Opcional e instrumental (modo LLM del tipo) |
-| **Interacción con usuario** | Conversacional — el usuario pregunta libremente | Operacional — el usuario ejecuta procesos definidos |
-| **Naturaleza del contexto** | Dinámico — construido con chunks recuperados | Estático — esquema fijo predefinido por tipo |
-| **Persistencia del conocimiento** | En un índice vectorial del corpus | En el esquema del tipo documental entrenado |
-| **Casos de uso** | Chat, Q&A, copilots, exploración de conocimiento | Extracción, validación, comparación, reporting |
-| **Nivel de determinismo** | Bajo — respuesta probabilística del LLM | Alto — campos extraídos o marcados no encontrados |
-| **Trazabilidad** | Conversacional (historial de chat) | Por lote, por ejecución, por campo, descargable |
-| **Integración empresarial** | API de chat / completions | API REST estructurada con JSON tipado |
-| **Escalabilidad de corpus** | Requiere reindexado al cambiar el corpus | No hay corpus — se entrena el tipo, no un índice |
-| **Comportamiento ante ambigüedad** | El LLM genera algo plausible (hallucination risk) | El campo se marca como no extraído (sin fabricación) |
+| Dimensión | RAG | Q&A con LLM (sin vectores) | **Document Intelligence Engine** |
+|---|---|---|---|
+| **Problema que resuelve** | Responder preguntas sobre corpus | Responder preguntas sobre documentos | Convertir documentos en datos estructurados |
+| **Entrada** | Query en lenguaje natural | Pregunta libre + documento | Documento tipado + esquema de extracción |
+| **Procesamiento** | Búsqueda semántica + generación | LLM responde en lenguaje natural | LLM extrae campos + CrossValidator + Alertas |
+| **Salida** | Texto generado | Texto generado | JSON/CSV estructurado + alertas clasificadas |
+| **Embeddings / Vector DB** | Esencial | No requerido | **No requerido** |
+| **Chat / historial conversacional** | Presente | Presente | **No existe** |
+| **MultiTenant** | Raro | Raro | **Esencial MVP** |
+| **CrossValidator** | No aplica | No aplica | **Componente MVP** |
+| **DiscrepancyAlertEngine** | No aplica | No aplica | **Componente MVP** |
+| **Determinismo** | Bajo | Bajo | **Alto** (campos vs. nó encontrados) |
+| **Trazabilidad** | Conversacional | Conversacional | Por tenant/documento/operación |
+| **Integración empresarial** | API de chat | API de completions | **API REST estructurada** |
+| **Escalabilidad operativa** | Requiere reindexado | N/A | Configuración de tipo documental |
 
 ---
 
@@ -243,14 +241,15 @@ Ejemplos donde RAG es adecuado:
 
 <div class="callout">
 
-**Esta solución no es un RAG.** No tiene corpus de búsqueda, no vectoriza documentos, no usa retrieval semántico y no genera texto. Intentar encuadrarlo como RAG sería un error conceptual con consecuencias técnicas concretas: introduciría complejidad innecesaria (vector DB, indexado, prompt engineering), reduciría el determinismo de los resultados y haría el sistema más difícil de auditar.
+**Esta solución no es un RAG ni un sistema de Q&A.** No tiene corpus de búsqueda, no vectoriza documentos, no usa retrieval semántico y no genera texto libre. Intentar encuadrarlo como RAG o Q&A sería un error conceptual con consecuencias técnicas concretas: introduciría complejidad innecesaria (vector DB, indexado, gestión de conversaciones), reduciría el determinismo de los resultados y haría el sistema más difícil de auditar.
 
-El valor real del sistema está en tres capacidades:
+El valor real del **Document Intelligence Engine MultiTenant** está en cuatro capacidades:
 
-1. **Extracción estructurada** — convertir documentos tipados en datos operativos.
-2. **Validación cruzada** — contrastar resultados contra fuentes de referencia campo a campo.
-3. **Operación escalable** — procesamiento batch, trazabilidad por lote, integración por API.
+1. **Extracción estructurada** — convertir documentos tipados en datos operativos vía LLM.
+2. **CrossValidator** — contrastar resultados contra fuentes de referencia campo a campo.
+3. **DiscrepancyAlertEngine** — gestionar alertas de discrepancia con severidad y ciclo de vida.
+4. **MultiTenant** — operar para múltiples empresas cliente bajo control de CINTEL.
 
-RAG podría ser una herramienta complementaria para escenarios de exploración o Q&A sobre el historial de lotes pero **no es necesario, no es adecuado ni es parte del MVP** para resolver el problema central de procesamiento documental estructurado.
+RAG es la herramienta correcta para Q&A y exploración de corpus. El DIE es la herramienta correcta para extracción, validación y gestión de discrepancias documentales. Son productos diferentes para mercados diferentes.
 
 </div>
