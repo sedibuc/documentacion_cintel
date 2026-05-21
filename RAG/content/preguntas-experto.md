@@ -3,15 +3,13 @@
 <div class="badge-row">
 <span class="badge">Audiencia: experto en modelos de lenguaje e IA generativa</span>
 <span class="badge">Contexto: Document Intelligence Engine MultiTenant</span>
-<span class="badge">8 bloques de consulta exploratoria</span>
+<span class="badge">8 bloques · 26 preguntas</span>
 <span class="badge badge-note">Consulta escrita · concepto técnico preliminar</span>
 </div>
 
 > **Propósito y alcance:** Este cuestionario tiene como propósito solicitar al experto un concepto técnico preliminar sobre la factibilidad de implementar un Document Intelligence Engine orientado a extracción estructurada, validación cruzada y generación de alertas. Las respuestas serán utilizadas como insumo para enriquecer el micrositio de análisis y para orientar una evaluación exploratoria posterior. No se espera una selección final de modelos, proveedores ni arquitectura definitiva; cualquier recomendación deberá entenderse como criterio preliminar sujeto a validación con documentos reales del MVP.
 
 Este cuestionario está dirigido a un **experto en modelos de lenguaje e inteligencia artificial generativa**. Las decisiones de arquitectura tradicional (MultiTenant, bases de datos, queues, despliegue) ya fueron resueltas y están documentadas en el [Análisis técnico TO-BE](arquitectura-tobe.html).
-
-> **Perfil buscado:** Ingeniero de ML o arquitecto de IA con experiencia práctica en LLM para procesamiento e interpretación de documentos, extracción estructurada de información, prompt engineering en producción y evaluación de modelos. No se requiere experiencia en infraestructura, bases de datos o arquitectura de microservicios.
 
 ---
 
@@ -46,6 +44,7 @@ Las respuestas escritas serán integradas como insumo en el micrositio de análi
 
 ---
 
+
 ## Bloque 1 — Factibilidad general de la necesidad
 
 *¿Es viable, con tecnologías actuales de IA documental, construir un sistema que extraiga campos estructurados desde documentos tipados, los valide contra fuentes de referencia y genere alertas de discrepancia?*
@@ -67,6 +66,8 @@ Las respuestas escritas serán integradas como insumo en el micrositio de análi
 **5.** ¿Cuándo tiene sentido usar un LLM multimodal o documental frente a extraer primero el texto y luego procesarlo con un LLM de texto? ¿Qué criterios deberían guiar esa decisión en una exploración inicial?
 
 **6.** ¿Qué papel debería tener OCR en una estrategia de extracción documental moderna? ¿Para qué tipos de documentos sería difícil evitarlo? ¿Cuándo sería un paso innecesario o contraproducente?
+
+**26.** *(Decisión adoptada — formalizar criterio)* El MVP adoptó extracción vía LLM (zero-shot / few-shot) y postergó NER supervisado para una fase post-producción condicionada a la disponibilidad de un corpus anotado. ¿Considera que ese orden de prioridad es razonable para un piloto inicial con documentos notariales y pólizas HSE? ¿Bajo qué condiciones —volumen de documentos, variabilidad de formato, nivel de precisión requerido— recomendaría anticipar NER al MVP en lugar de dejarlo como mejora posterior?
 
 ---
 
