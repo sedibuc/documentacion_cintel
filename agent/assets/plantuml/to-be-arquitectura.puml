@@ -1,0 +1,110 @@
+@startuml to-be-arquitectura
+!theme plain
+skinparam backgroundColor #FDFAF4
+skinparam defaultFontName Segoe UI
+skinparam roundCorner 12
+skinparam ArrowColor #0f5a58
+skinparam ComponentBorderColor #0f5a58
+skinparam ComponentBackgroundColor #d6ebe8
+skinparam DatabaseBorderColor #8d4a1f
+skinparam DatabaseBackgroundColor #fff8ef
+skinparam NoteBackgroundColor #fffdf6
+skinparam NoteBorderColor #c8bfa8
+skinparam PackageBorderColor #0f5a58
+skinparam PackageBackgroundColor #f0f9f8
+skinparam ActorBackgroundColor #d6ebe8
+skinparam ActorBorderColor #0f5a58
+
+title Arquitectura TO-BE — Adaptador de Contenido Institucional
+
+actor "Comunicador\nInstitucional" as USUARIO
+
+package "Capa de Experiencia" #f0f9f8 {
+  component "Interfaz Web\n(Chat guiado + Onboarding\n+ Preview piezas)" as UI
+  component "Panel de\nObservabilidad" as OBS_UI
+}
+
+package "Orquestación Agéntica" #fff8ef {
+  component "Orquestador\nAgéntico\n(LangGraph)" as ORQUESTADOR
+  component "Agente\nEstratégico" as AGENTE_EST
+  component "Agente\nCreativo" as AGENTE_CREA
+  component "Módulo de\nGobernanza y\nValidación Humana" as GOBERNANZA
+}
+
+package "Repositorios de Contexto" #e8f5e9 {
+  database "OrganizationalContextStore\n(BrandGuidelinesStore)\nIdentidad · Tono · Audiencias\nCanales · Restricciones · Activos" as BGS
+  database "Histórico de\nCampañas\nBriefs · Piezas · Métricas\nFeedback · Etiquetas" as HISTORICO
+}
+
+package "Capa de Recuperación" #f5f0ff {
+  component "Motor de Recuperación\nde Contexto\n(Relacional / Documental / Vectorial)" as RETRIEVAL
+  component "Extracción Documental\n(OCR / Multimodal)" as OCR
+  component "Scraper Institucional" as SCRAPER
+}
+
+package "Capa de Modelos IA" #fce4ec {
+  component "LLM Multimodal\n(OpenAI / Gemini)" as LLM
+  component "Generación / Adaptación\nde Imagen\n(controlada, no obligatoria\nen sector público)" as IMG_GEN
+}
+
+package "Adaptadores Multicanal" #e3f2fd {
+  component "Email\n(MS Graph API)" as EMAIL
+  component "Instagram\n(Meta Graph API)" as INSTAGRAM
+  component "WhatsApp\n(Business API /\nexportación asistida)" as WHATSAPP
+  component "Web / Intranet\n(exportación asistida)" as WEB
+}
+
+package "Infraestructura" #f9f9f9 {
+  database "Base de Datos\n(PostgreSQL / SQLite)" as DB
+  component "Observabilidad\ny Métricas" as OBS
+}
+
+' Flujo principal usuario → sistema
+USUARIO --> UI : solicitud / conversación
+UI --> ORQUESTADOR : contexto + instrucción
+ORQUESTADOR --> AGENTE_EST : brief / objetivo
+ORQUESTADOR --> AGENTE_CREA : plan de comunicación
+ORQUESTADOR --> GOBERNANZA : pieza para revisión
+
+' Recuperación de contexto
+AGENTE_EST --> RETRIEVAL : consulta contexto
+AGENTE_CREA --> RETRIEVAL : consulta identidad\ny activos
+RETRIEVAL --> BGS : recupera perfil\ninstitucional
+RETRIEVAL --> HISTORICO : recupera campañas\nanteriores
+
+' Extracción de documentos (onboarding)
+UI --> OCR : documentos subidos
+UI --> SCRAPER : URL institucional
+OCR --> BGS : alimenta perfil
+SCRAPER --> BGS : alimenta perfil
+
+' Capa de modelos
+AGENTE_EST --> LLM : razonamiento\nestratégico
+AGENTE_CREA --> LLM : generación / adaptación\nde texto y briefs
+AGENTE_CREA --> IMG_GEN : adaptación imagen\n(activos o generación controlada)
+
+' Gobernanza y salida
+GOBERNANZA --> UI : vista previa + aprobación
+GOBERNANZA --> EMAIL : exportar / enviar
+GOBERNANZA --> INSTAGRAM : exportar / publicar
+GOBERNANZA --> WHATSAPP : exportar asistido
+GOBERNANZA --> WEB : exportar asistido
+
+' Persistencia y observabilidad
+ORQUESTADOR --> DB : persiste estado y\ntrazabilidad
+OBS --> DB : lee métricas
+OBS_UI --> OBS : visualiza
+
+note bottom of BGS
+  Núcleo del diferencial competitivo.
+  Se crea una sola vez en onboarding.
+  Todos los módulos lo consumen y enriquecen.
+end note
+
+note bottom of IMG_GEN
+  Generación IA de imágenes es opción controlada.
+  Flujo principal: banco de activos institucionales
+  licenciados. Obligatorio para sector público.
+end note
+
+@enduml

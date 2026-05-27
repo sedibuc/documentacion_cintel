@@ -44,6 +44,24 @@ Las respuestas escritas serán integradas como insumo en el micrositio de análi
 
 ---
 
+## Estimación de tiempo
+
+La siguiente tabla orienta el tiempo estimado por bloque. El experto no está obligado a responder en ningún orden particular ni dentro de un tiempo límite; la estimación se incluye para facilitar la organización de la respuesta escrita y el seguimiento del equipo.
+
+| Bloque | Tema | Preguntas | Tiempo estimado |
+|---|---|---|---|
+| 1 | Factibilidad general de la necesidad | 1–3 | 20–25 min |
+| 2 | Enfoques técnicos a explorar | 4–6, 26 | 25–30 min |
+| 3 | Modelos o familias candidatas | 7–9 | 20–25 min |
+| 4 | Calidad, trazabilidad y control de errores | 10–13 | 25–30 min |
+| 5 | Soberanía, privacidad y operación multi-tenant | 14–16 | 20–25 min |
+| 6 | Riesgos críticos de implementación | 17–19 | 20–25 min |
+| 7 | Evaluación exploratoria posterior | 20–22 | 20–25 min |
+| 8 | Recomendaciones y advertencias finales | 23–25 | 20–25 min |
+| — | Plantilla comparativa (completar o comentar) | — | 10–15 min |
+| **Total** | 8 bloques · 26 preguntas | 1–26 | **~2h 50min – 3h 35min** |
+
+---
 
 ## Bloque 1 — Factibilidad general de la necesidad
 

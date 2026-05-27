@@ -1,23 +1,26 @@
-# TO-BE — Módulo 2.1: Onboarding
+# TO-BE — Módulo 2.1: Onboarding institucional
 
-> Módulo de configuración inicial del sistema. Define el perfil institucional, marca y audiencia que usarán los demás agentes.
+> Módulo de creación del perfil institucional persistente. Su propósito no es configurar una sesión: es crear el **contexto organizacional acumulado** que el sistema usará en todas las interacciones posteriores, sin que el comunicador vuelva a re-explicar quién es la institución.
+
+> **Principio de diseño del demo:** La persistencia de marca debe ser el primer feature demostrado en los primeros 2 minutos de la sesión, no la generación de contenido. Si el demo no demuestra este diferencial de inmediato, los usuarios con madurez tecnológica (early adopters clave) no percibirán diferencial frente a ChatGPT.
 
 ---
 
-## 2.1 Onboarding
+## 2.1 Onboarding institucional
 
 ### Descripción funcional
 
-El módulo de Onboarding establece el contexto institucional y personal que el sistema usará en todas las interacciones posteriores. Su propósito es evitar que el usuario repita información en cada sesión y garantizar que los módulos de planeación y creación operen con datos coherentes desde el primer momento.
+El módulo de Onboarding institucional crea el **perfil institucional persistente** de la organización: el conjunto de datos que el sistema usará en todas las interacciones posteriores para adaptar el contenido con identidad institucional automáticamente. Su propósito no es capturar datos para una sola sesión, sino construir la **memoria institucional** que elimina la sobrecarga de dar contexto desde cero en cada sesión.
 
-El onboarding se organiza en cuatro etapas principales:
+El onboarding se organiza en cinco etapas:
 
-1. **Extracción automática desde la web de la empresa** — el sistema analiza el sitio e intenta precargar información relevante para revisión del usuario.
-2. **Enriquecimiento con manual de marca** — parámetros visuales oficiales (logos, colores, tipografías, reglas) que el sistema usará para generar piezas.
-3. **Carga de histórico de campañas** — contexto de ejecuciones anteriores que mejora la pertinencia del plan de comunicación.
-4. **Registro de la persona usuaria** — vinculación del colaborador a la empresa configurada.
+1. **Extracción automática desde la web de la institución** — el sistema analiza el sitio e intenta precargar información institucional para revisión del usuario.
+2. **Enriquecimiento con manual de marca / lineamientos visuales** — parámetros visuales oficiales (logos, colores, tipografías, reglas) que el sistema usará para adaptar piezas.
+3. **Captura de tono, audiencias y canales** — cómo comunica la institución, a quién y por dónde.
+4. **Carga de activos licenciados y restricciones** — banco de imágenes propias con derechos, restricciones regulatorias sobre generación de imágenes IA, flujos de aprobación.
+5. **Registro de la persona usuaria** — vinculación del comunicador a la institución configurada.
 
-La configuración institucional se realiza una sola vez por empresa y queda disponible para todos los usuarios asociados. Cuando un nuevo colaborador se incorpora a una empresa ya registrada, solo completa el paso de registro personal sin repetir las etapas anteriores.
+La configuración institucional se realiza **una sola vez** y queda disponible para todos los usuarios asociados. Cuando un nuevo colaborador se incorpora a una institución ya registrada, solo completa el registro personal.
 
 ---
 
@@ -108,6 +111,8 @@ Esta inferencia es aproximada. El usuario revisa y puede corregir o completar la
 #### Descripción
 
 Con la información estructural validada, el usuario puede cargar el manual de marca de la empresa en formato PDF. El sistema analiza el documento e intenta extraer los parámetros visuales oficiales. Al igual que con el scraping, la extracción es asistida: el usuario revisa y aprueba cada elemento antes de guardarlo.
+
+Para el MVP, esta lectura documental se realiza con LLM multimodal como flujo principal y con validación humana de campos críticos. OCR no forma parte del flujo objetivo de V1.
 
 Los parámetros extraídos del manual no se almacenan solo como referencia documental. Funcionan como **configuración activa** que el Agente Creativo usa al generar piezas: colores aplicados a fondos y textos, logos correctos según el formato, tipografías, zonas de seguridad, contrastes permitidos.
 
@@ -276,3 +281,20 @@ Un usuario con rol de administrador puede actualizar la información institucion
 | Administración y actualización | Administrador | Según cambios de marca o equipo |
 
 ---
+
+### Diagramas del módulo
+
+![Flujo completo de onboarding institucional](assets/img/diagramas/onboarding-completo.png)
+<a href="assets/plantuml/onboarding-completo.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+
+![Registro de empresa nueva](assets/img/diagramas/onboarding-empresa.png)
+<a href="assets/plantuml/onboarding-empresa.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+
+![Alta de usuario adicional](assets/img/diagramas/onboarding-usuario-adicional.png)
+<a href="assets/plantuml/onboarding-usuario-adicional.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+
+![Flujo de administración](assets/img/diagramas/onboarding-admin.png)
+<a href="assets/plantuml/onboarding-admin.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+
+![Actualización por administrador](assets/img/diagramas/onboarding-admin-actualizacion.png)
+<a href="assets/plantuml/onboarding-admin-actualizacion.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>

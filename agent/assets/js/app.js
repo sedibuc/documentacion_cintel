@@ -1,18 +1,33 @@
 (function (global) {
   const pages = {
+    // ── AS-IS ────────────────────────────────────────────────────────────────
     inicio: { file: "content/inicio.md", title: "Inicio" },
-    diagnostico: { file: "content/diagnostico.md", title: "Diagnóstico técnico inicial" },
-    arquitectura: { file: "content/arquitectura.md", title: "Arquitectura vigente" },
-    brechas: { file: "content/brechas.md", title: "Brechas y oportunidades" },
-    despliegue: { file: "content/despliegue.md", title: "Configuración y despliegue" },
-    costos: { file: "content/costos.md", title: "Servicios y costos" },
-    "to-be-contexto": { file: "content/to-be-contexto.md", title: "TO-BE — Visión funcional objetivo" },
-    "to-be-onboarding": { file: "content/to-be-onboarding.md", title: "TO-BE — Módulo 2.1: Onboarding" },
-    "to-be-agente-estrategico": { file: "content/to-be-agente-estrategico.md", title: "TO-BE — Módulo 2.2: Agente Estratégico" },
-    "to-be-agente-creativo": { file: "content/to-be-agente-creativo.md", title: "TO-BE — Módulo 2.3: Agente Creativo" },
-    "to-be-iteracion": { file: "content/to-be-iteracion.md", title: "TO-BE — Módulo 2.4: Ajuste de resultados" },
-    "to-be-historico": { file: "content/to-be-historico.md", title: "TO-BE — Módulo 2.5: Histórico" },
-    "mockup": { file: "content/mockup.md", title: "7. Prototipo navegable" }
+    diagnostico: { file: "content/diagnostico.md", title: "AS-IS — Diagnóstico técnico" },
+    arquitectura: { file: "content/arquitectura.md", title: "AS-IS — Arquitectura vigente" },
+    brechas: { file: "content/brechas.md", title: "AS-IS — Brechas y oportunidades" },
+    despliegue: { file: "content/despliegue.md", title: "AS-IS — Configuración y despliegue" },
+    costos: { file: "content/costos.md", title: "AS-IS — Servicios y costos" },
+    "mockup": { file: "content/mockup.md", title: "AS-IS — Prototipo / Demostrador" },
+    // ── TO-BE ─────────────────────────────────────────────────────────────────
+    "to-be": { file: "content/to-be.md", title: "TO-BE — Visión funcional objetivo" },
+    "to-be-objetivos-funcionales": { file: "content/to-be-objetivos-funcionales.md", title: "TO-BE — Objetivos funcionales y cobertura arquitectónica" },
+    "to-be-onboarding": { file: "content/to-be-onboarding.md", title: "TO-BE — Onboarding institucional" },
+    "to-be-contexto": { file: "content/to-be-contexto.md", title: "TO-BE — Contexto organizacional persistente" },
+    "to-be-agente-estrategico": { file: "content/to-be-agente-estrategico.md", title: "TO-BE — Agente Estratégico" },
+    "to-be-agente-creativo": { file: "content/to-be-agente-creativo.md", title: "TO-BE — Agente Creativo" },
+    "to-be-iteracion": { file: "content/to-be-iteracion.md", title: "TO-BE — Ajuste de resultados" },
+    "to-be-historico": { file: "content/to-be-historico.md", title: "TO-BE — Histórico y memoria organizacional" },
+    // ── Decisiones Técnicas ───────────────────────────────────────────────────
+    "to-be-arquitectura": { file: "content/to-be-arquitectura.md", title: "Decisiones Técnicas — Arquitectura TO-BE optimizada" },
+    "cronograma-implementacion-sprints": { file: "content/cronograma-implementacion-sprints.md", title: "Decisiones Técnicas — Cronograma de implementación por sprints" },
+    "preguntas-experto-tecnico": { file: "content/preguntas-experto-tecnico.md", title: "Decisiones Técnicas — Preguntas para experto técnico" },
+    "decisiones-modulos": { file: "content/decisiones-modulos.md", title: "Decisiones Técnicas — Mapa de módulos" },
+    "decisiones-modulos-contexto-datos": { file: "content/decisiones-modulos-contexto-datos.md", title: "Decisiones Técnicas — Módulos de contexto y datos" },
+    "decisiones-modulos-agentes-canales": { file: "content/decisiones-modulos-agentes-canales.md", title: "Decisiones Técnicas — Módulos de agentes y canales" },
+    "decisiones-modulos-gobernanza-operacion": { file: "content/decisiones-modulos-gobernanza-operacion.md", title: "Decisiones Técnicas — Módulos de gobernanza y operación" },
+    "decisiones-modulos-seguridad-escalado": { file: "content/decisiones-modulos-seguridad-escalado.md", title: "Decisiones Técnicas — Módulos de seguridad y escalado" },
+    // ── Análisis ──────────────────────────────────────────────────────────────
+    "analisis-cambio-contexto-to-be": { file: "content/analisis-cambio-contexto-to-be.md", title: "Análisis — Comparativa validación vs TO-BE final" }
   };
 
   const pageOrder = Object.keys(pages);

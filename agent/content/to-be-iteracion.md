@@ -172,11 +172,13 @@ El módulo de iteración no reemplaza a ninguno de los módulos anteriores: act�
 ### Diagramas
 
 ![Flujo de iteración controlada](assets/img/diagramas/iteracion-flujo.png)
+<a href="assets/plantuml/iteracion-flujo.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
 
 ![Tipos de ajuste y su alcance](assets/img/diagramas/iteracion-tipos-ajuste.png)
+<a href="assets/plantuml/iteracion-tipos-ajuste.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
 
 ![Integración con módulos del sistema](assets/img/diagramas/iteracion-integracion-modulos.png)
+<a href="assets/plantuml/iteracion-integracion-modulos.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
 
 
 > 🔗 **Prototipo navegable** — Consulte el flujo interactivo en la **[sección Prototipo navegable](mockup.html)**.
----

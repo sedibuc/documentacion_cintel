@@ -1,0 +1,47 @@
+@startuml
+title Mapa tecnico de modulos TO-BE
+
+package "Contexto y datos" {
+  [OrganizationalContextStore]
+  [BrandGuidelinesStore]
+  [OnboardingService]
+  [CompletenessScorer]
+  [CampaignHistoryStore]
+  [ContextRetrievalService]
+}
+
+package "Agentes y canales" {
+  [StrategicAgent]
+  [CreativeAgent]
+  [ChannelFormatters]
+}
+
+package "Gobernanza y operacion" {
+  [HumanValidationModule]
+  [ExportPublishingAdapter]
+  [ObservabilityService]
+}
+
+package "Seguridad y escalado" {
+  [TenantIsolationLayer]
+}
+
+[OnboardingService] --> [OrganizationalContextStore]
+[OnboardingService] --> [BrandGuidelinesStore]
+[OnboardingService] --> [CompletenessScorer]
+[ContextRetrievalService] --> [OrganizationalContextStore]
+[ContextRetrievalService] --> [CampaignHistoryStore]
+[StrategicAgent] --> [ContextRetrievalService]
+[CreativeAgent] --> [StrategicAgent]
+[CreativeAgent] --> [BrandGuidelinesStore]
+[ChannelFormatters] --> [CreativeAgent]
+[HumanValidationModule] --> [ChannelFormatters]
+[ExportPublishingAdapter] --> [HumanValidationModule]
+[ObservabilityService] ..> [OnboardingService]
+[ObservabilityService] ..> [StrategicAgent]
+[ObservabilityService] ..> [CreativeAgent]
+[ObservabilityService] ..> [ExportPublishingAdapter]
+[TenantIsolationLayer] ..> [OrganizationalContextStore]
+[TenantIsolationLayer] ..> [CampaignHistoryStore]
+
+@enduml

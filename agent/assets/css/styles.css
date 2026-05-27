@@ -186,6 +186,18 @@ samp {
   text-decoration: none;
 }
 
+/* Etiquetas de sección AS-IS / TO-BE / Análisis */
+.nav-section-label {
+  margin: 1.1rem 0 0.3rem 0.1rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--accent);
+  border-left: 3px solid var(--accent);
+}
+
 /* TO-BE submenu */
 .nav-group {
   display: grid;
@@ -447,6 +459,23 @@ samp {
   margin-top: -0.3rem;
   color: var(--muted);
   font-size: 0.95rem;
+}
+
+.content-panel a.diagram-download {
+  display: inline-block;
+  margin: 0.3rem 0 1rem;
+  padding: 0.3rem 0.85rem;
+  background: rgba(15, 90, 88, 0.06);
+  border: 1px solid rgba(15, 90, 88, 0.28);
+  border-radius: 6px;
+  color: var(--accent);
+  font-size: 0.87rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.content-panel a.diagram-download:hover {
+  background: rgba(15, 90, 88, 0.15);
 }
 
 .content-panel table {

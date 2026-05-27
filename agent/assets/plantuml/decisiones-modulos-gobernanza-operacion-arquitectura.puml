@@ -1,0 +1,15 @@
+@startuml
+title Flujo tecnico: Gobernanza y operacion
+
+participant HumanValidationModule
+participant ExportPublishingAdapter
+participant ObservabilityService
+participant ChannelAPI
+
+HumanValidationModule -> ObservabilityService: registrar decision humana
+HumanValidationModule -> ExportPublishingAdapter: liberar pieza aprobada
+ExportPublishingAdapter -> ChannelAPI: publicar o exportar
+ChannelAPI --> ExportPublishingAdapter: resultado de entrega
+ExportPublishingAdapter -> ObservabilityService: registrar estado, latencia y errores
+
+@enduml

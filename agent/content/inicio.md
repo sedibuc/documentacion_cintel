@@ -1,33 +1,36 @@
-# Documentación Técnica — Agente de Marketing IA
+# Documentación Técnica — Adaptador de Contenido Institucional
 
-**Proyecto:** Agente Conversacional de Marketing  
-**Versión del documento:** 1.0  
-**Fecha:** Marzo 2026
+**Proyecto:** Agente Conversacional de Comunicación Institucional
+**Versión del documento:** 2.0 (post-validación)
+**Fecha:** Mayo 2026
 
 ---
 
 ## ¿Qué es este sistema?
 
-El **Agente de Marketing IA** es una aplicación web conversacional que guía a un usuario de negocio a través de un flujo estructurado para generar, de forma asistida por inteligencia artificial:
+El **Adaptador de Contenido Institucional** es una aplicación web conversacional especializada para comunicadores de organizaciones públicas e institucionales que necesitan producir y publicar contenido multi-canal de forma recurrente, manteniendo coherencia con la identidad gráfica de su organización, **sin tener que dar contexto desde cero en cada sesión**.
 
-- Una **propuesta de campaña de marketing** (documento Markdown).
-- Un **plan de ejecución** detallado de la campaña.
-- **Activos visuales** generados por IA (imágenes para redes sociales).
-- Un **resumen por correo electrónico** enviado automáticamente al cliente.
+A diferencia de IAs generalistas (ChatGPT, Copilot, Claude), el sistema acumula y aplica el contexto institucional de la organización de forma persistente: ya sabe quién es la institución, cuál es su tono de comunicación, cuáles son sus audiencias, cuál es su identidad visual y cuál es el historial de comunicaciones anteriores.
 
-El agente opera en español y está orientado al mercado hispanoparlante.
+El diferencial no es la generación de texto —que ya está resuelta por el mercado— sino la **persistencia de marca y memoria organizacional acumulada**.
 
 ---
 
-## Objetivo funcional
+## JTBD principal del segmento
 
-Automatizar el proceso de diseño de campañas de marketing mediante un agente de IA que:
+> *Producir y publicar contenido institucional multi-canal de forma recurrente, cumpliendo la identidad gráfica de la organización, sin tener que dar contexto desde cero en cada sesión, y manteniendo coherencia entre campañas relacionadas, operando como responsable único o en equipo mínimo.*
 
-1. Recopila contexto del negocio del usuario (sitio web, productos, campañas históricas, cuenta de Instagram).
-2. Formula preguntas de profundización adaptadas al tema de la campaña.
-3. Genera una campaña coherente con el contexto del negocio.
-4. Produce imágenes alineadas con la identidad visual del cliente.
-5. Consolida y entrega el resultado vía email.
+**Segmento primario:** comunicación institucional pública — alcaldías intermedias, gobernaciones, universidades públicas, entidades regulatorias, ministerios. El marketing digital comercial es un caso de uso posible, no el núcleo del producto.
+
+---
+
+## Capacidades diferenciadoras
+
+1. **Contexto organizacional persistente** — la institución no vuelve a explicarse en cada sesión.
+2. **Persistencia de marca (Brand Persistence)** — lineamientos visuales, tono e identidad aplicados automáticamente.
+3. **Memoria histórica acumulada** — comunicaciones anteriores disponibles para continuidad temática.
+4. **Adaptación multi-canal** — Instagram, WhatsApp, email, web sin configurar desde cero cada canal.
+5. **Gobernanza institucional** — restricciones de imagen, derechos, banco de activos licenciados y flujos de aprobación.
 
 ---
 
@@ -47,14 +50,34 @@ Automatizar el proceso de diseño de campañas de marketing mediante un agente d
 
 ## Documentación disponible
 
+### AS-IS — Estado actual
+
 | Documento | Descripción |
 |---|---|
-| [Diagnóstico](diagnostico.html) | Análisis técnico inicial del sistema: stack, arquitectura, riesgos. |
+| [Diagnóstico](diagnostico.html) | Análisis técnico inicial del sistema vigente: stack, arquitectura, riesgos. |
 | [Arquitectura](arquitectura.html) | Componentes, relaciones y flujos principales con diagramas PlantUML. |
 | [Brechas](brechas.html) | Capacidades actuales vs. buenas prácticas; oportunidades de evolución. |
 | [Despliegue](despliegue.html) | Guía completa de configuración, variables de entorno y pasos de instalación. |
 | [Costos](costos.html) | Inventario de servicios IA, variables de costo y estimación por sesión. |
-| [TO-BE](to-be.html) | Visión funcional objetivo del sistema: módulos, flujos y alcance del MVP. |
+| [Prototipo / Demostrador](mockup.html) | Prototipo navegable del sistema vigente. |
+
+### TO-BE — Visión objetivo
+
+| Documento | Descripción |
+|---|---|
+| [Visión TO-BE](to-be.html) | Visión funcional del Adaptador de Contenido Institucional post-validación. |
+| [Onboarding institucional](to-be-onboarding.html) | Creación del perfil institucional persistente. |
+| [Contexto organizacional](to-be-contexto.html) | BrandGuidelinesStore: cómo el sistema acumula y aplica contexto institucional. |
+| [Agente Estratégico](to-be-agente-estrategico.html) | Interpreta objetivos institucionales, audiencias y restricciones. |
+| [Agente Creativo](to-be-agente-creativo.html) | Adapta piezas a la identidad institucional y al canal. |
+| [Ajuste de resultados](to-be-iteracion.html) | Refinamiento dentro del contexto institucional acumulado. |
+| [Histórico y memoria](to-be-historico.html) | Memoria organizacional acumulada y continuidad temática. |
+
+### Análisis
+
+| Documento | Descripción |
+|---|---|
+| [Cambio de contexto TO-BE](analisis-cambio-contexto-to-be.html) | Análisis de qué cambia en el TO-BE a partir de los hallazgos de validación. |
 
 ---
 

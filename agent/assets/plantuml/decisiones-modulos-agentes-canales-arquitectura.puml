@@ -1,0 +1,18 @@
+@startuml
+title Flujo tecnico: Agentes y canales
+
+actor Comunicador
+participant StrategicAgent
+participant CreativeAgent
+participant ChannelFormatters
+participant HumanValidationModule
+
+Comunicador -> StrategicAgent: objetivo y restricciones
+StrategicAgent --> Comunicador: plan estrategico estructurado
+Comunicador -> CreativeAgent: generar brief y piezas
+CreativeAgent -> ChannelFormatters: adaptar por canal
+ChannelFormatters --> CreativeAgent: piezas normalizadas
+CreativeAgent -> HumanValidationModule: enviar para revision
+HumanValidationModule --> Comunicador: aprobado/rechazado
+
+@enduml

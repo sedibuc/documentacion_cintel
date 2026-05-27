@@ -1,0 +1,20 @@
+@startuml
+title Flujo tecnico: Contexto y datos
+
+actor Usuario
+participant OnboardingService
+participant BrandGuidelinesStore
+participant OrganizationalContextStore
+participant CampaignHistoryStore
+participant ContextRetrievalService
+
+Usuario -> OnboardingService: iniciar onboarding
+OnboardingService -> BrandGuidelinesStore: extraer reglas de marca (LLM multimodal)
+OnboardingService -> OrganizationalContextStore: persistir perfil institucional
+OnboardingService -> CampaignHistoryStore: importar historico inicial
+Usuario -> ContextRetrievalService: solicitar contexto para campaña
+ContextRetrievalService -> OrganizationalContextStore: leer contexto activo
+ContextRetrievalService -> CampaignHistoryStore: leer campañas relevantes
+ContextRetrievalService --> Usuario: ContextPackage normalizado
+
+@enduml

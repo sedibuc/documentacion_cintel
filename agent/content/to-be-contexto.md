@@ -1,42 +1,56 @@
-# TO-BE — Visión funcional objetivo
+# TO-BE — Contexto organizacional persistente
 
-> Esta sección describe el **estado deseado del producto**: lo que el Agente de Marketing IA debería hacer, no lo que hace hoy. Sirve como referencia funcional para decisiones de arquitectura, estimación y evolución.
+> Esta sección describe el módulo diferenciador central del **Adaptador de Contenido Institucional**: el **BrandGuidelinesStore** o repositorio de contexto organizacional persistente. Es el componente que distingue el producto de cualquier IA generalista disponible en el mercado.
 
 ---
 
 ## 1. Descripción general
 
-El Agente de Marketing IA, en su visión **TO-BE**, es un sistema agéntico orientado a equipos de comunicación y marketing que necesitan transformar contexto institucional o comercial en salidas accionables de comunicación. Su propósito es ayudar a una organización a pasar de una idea de campaña a un conjunto de activos utilizables —plan, brief y piezas— mediante un flujo guiado, estructurado y reutilizable.
+El **BrandGuidelinesStore** (repositorio de lineamientos institucionales) es el módulo núcleo del sistema. Resuelve el dolor de mayor peso validado en campo: la **ausencia de contexto organizacional persistente** en todas las herramientas de IA disponibles en el mercado.
 
-A diferencia de un asistente genérico, el sistema parte de información base de la organización, de su audiencia y de su contexto de marca para producir resultados con mayor coherencia funcional. El objetivo del MVP no es garantizar automatización total ni consistencia absoluta en todas las generaciones, sino demostrar un flujo extremo a extremo que permita:
+> *"Ya con el contexto con que yo lo alimente, con que tenga toda la información, ya yo no tendría que salir a cada vez que le vas a hacer una pregunta, darle contexto de lo que estoy haciendo porque ya sabe de qué se trata y cómo lo manejamos."*
+> — Verónica Rangel Jaller, Pro Montería (sesión de validación, marzo 2026)
 
-- capturar contexto inicial de empresa y audiencia,
-- construir un plan de comunicación o comunicación,
-- derivar briefs creativos y piezas publicitarias,
-- permitir ajustes controlados del resultado,
-- y conservar trazabilidad básica de lo generado.
+A diferencia de herramientas como ChatGPT, Copilot, Canva for Teams o Jasper, el sistema **acumula y aplica automáticamente el contexto institucional** de la organización en cada sesión. El comunicador no re-explica quién es la institución cada vez que inicia un proyecto.
 
-En esta visión, el sistema se organiza en módulos funcionales claramente separados para distinguir:
+### Por qué esto es el diferencial y no la generación de texto
 
-- la **configuración base** del negocio,
-- la **planeación estratégica**,
-- la **ejecución creativa**,
-- el **ajuste del resultado**,
-- y la **consulta del histórico**.
+La investigación de validación confirmó que la generación de texto ya está resuelta en el mercado. Las tres entrevistadas usan ChatGPT, Copilot o Claude cotidianamente para generar texto. El verdadero cuello de botella es doble:
+
+1. **Sobrecarga de contexto:** cada sesión de IA obliga a re-explicar desde cero quién es la organización, su audiencia, su tono y su historial.
+2. **Adaptación gráfica:** pasar de "tengo el texto" a "tengo la pieza lista para publicar con mi identidad gráfica" consume más tiempo que el trabajo intelectual previo.
+
+Ninguna herramienta del mercado colombiano resuelve ambos cuellos de botella de forma integrada.
 
 ---
 
-## 2. Módulos del sistema
+## 2. Contenido del perfil institucional persistente
 
-El TO-BE se documenta en cinco módulos funcionales. Cada módulo tiene su propia página con descripción detallada, flujo funcional y diagramas.
+El BrandGuidelinesStore acumula el siguiente conjunto de datos por institución:
+
+| Categoría | Datos persistidos |
+|---|---|
+| **Identidad institucional** | Nombre, descripción, sector, misión, propuesta de valor |
+| **Tono y voz** | Estilo de comunicación, nivel de formalidad, restricciones de lenguaje |
+| **Audiencias** | Públicos objetivo por canal, segmentos internos y externos |
+| **Canales activos** | Instagram, WhatsApp, email, web, intranet, boletines |
+| **Identidad visual** | Logos, paleta de colores, tipografías, plantillas aprobadas |
+| **Activos licenciados** | Banco de imágenes propias con derechos de uso |
+| **Restricciones** | Imágenes IA, restricciones regulatorias, flujos de aprobación |
+| **Historial de comunicaciones** | Briefs anteriores, piezas generadas, campañas anteriores |
+| **Aprendizajes** | Qué funcionó, qué no, feedback del equipo, métricas básicas |
+
+### Módulos del sistema
+
+El TO-BE se documenta en módulos funcionales. Cada módulo consume y enriquece el BrandGuidelinesStore.
 
 | Módulo | Función | Página |
 |---|---|---|
-| **2.1 Onboarding** | Captura el contexto institucional, la identidad visual y el historial de campañas de la empresa | [→ Onboarding](to-be-onboarding.html) |
-| **2.2 Agente Estratégico** | Genera el plan de campaña en conversación con el usuario, usando el contexto del onboarding | [→ Agente Estratégico](to-be-agente-estrategico.html) |
-| **2.3 Agente Creativo** | Produce briefs de diseño y piezas de contenido a partir del plan de campaña | [→ Agente Creativo](to-be-agente-creativo.html) |
-| **2.4 Ajuste de resultados** | Permite refinar cualquier salida del sistema mediante instrucciones en lenguaje natural | [→ Ajuste de resultados](to-be-iteracion.html) |
-| **2.5 Histórico** | Almacena y permite recuperar campañas, briefs y piezas anteriores para reutilizarlos | [→ Histórico](to-be-historico.html) |
+| **Onboarding institucional** | Crea el perfil institucional persistente inicial | [→ Onboarding](to-be-onboarding.html) |
+| **Agente Estratégico** | Interpreta objetivos y restricciones institucionales para generar el plan de comunicación | [→ Agente Estratégico](to-be-agente-estrategico.html) |
+| **Agente Creativo** | Adapta piezas a la identidad institucional y al canal, usando el banco de activos | [→ Agente Creativo](to-be-agente-creativo.html) |
+| **Ajuste de resultados** | Refina salidas dentro del contexto institucional acumulado | [→ Ajuste de resultados](to-be-iteracion.html) |
+| **Histórico y memoria** | Memoria organizacional acumulada y fuente de aprendizaje | [→ Histórico](to-be-historico.html) |
 
 ---
 
@@ -62,4 +76,4 @@ Quedan por fuera del compromiso del MVP:
 
 ## 4. Nota de interpretación
 
-Esta sección TO-BE debe entenderse como **contextualización funcional objetivo** para apoyar decisiones de arquitectura, estimación y evolución del producto. No representa el comportamiento exacto del sistema actual, sino la referencia funcional hacia la que se quiere documentar y proyectar el Agente de Marketing IA.
+Esta sección TO-BE debe entenderse como **contextualización funcional objetivo** para apoyar decisiones de arquitectura, estimación y evolución del producto. No representa el comportamiento exacto del sistema actual, sino la referencia funcional hacia la que se quiere documentar y proyectar el Adaptador de Contenido Institucional.

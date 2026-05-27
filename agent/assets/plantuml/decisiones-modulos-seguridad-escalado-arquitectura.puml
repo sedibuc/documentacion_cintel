@@ -1,0 +1,20 @@
+@startuml
+title Controles tecnicos: Seguridad y escalado
+
+node "API Gateway" as GW
+node "Application Services" as APP
+database "Context DB" as CDB
+database "History DB" as HDB
+queue "Audit Log" as AUD
+
+component "AuthN/AuthZ" as AUTH
+component "TenantIsolationLayer" as TIL
+
+GW --> AUTH
+AUTH --> APP
+APP --> TIL
+TIL --> CDB : tenant_id scoped query
+TIL --> HDB : tenant_id scoped query
+APP --> AUD : eventos de acceso y cambios
+
+@enduml

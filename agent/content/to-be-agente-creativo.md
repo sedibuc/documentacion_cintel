@@ -1,19 +1,26 @@
-# TO-BE — Módulo 2.3: Agente Creativo
+# TO-BE — Módulo 2.4: Agente Creativo
 
-> Módulo de generación de briefs y piezas de contenido. Transforma el plan estratégico en materiales concretos por canal.
+> Módulo de adaptación de contenido institucional. Transforma el plan estratégico en piezas adaptadas a la identidad de la institución y al canal específico, usando el perfil institucional persistente y el banco de activos licenciados.
+
+> **Restricción crítica:** La generación de imágenes por IA **no debe ser el flujo principal** para el segmento de comunicación institucional pública. Entidades como CRC (Comisión de Regulación de Comunicaciones) tienen restricciones regulatorias explícitas sobre imágenes generadas por IA. El flujo principal debe basarse en el **banco de activos institucionales licenciados** cargados durante el onboarding.
 
 ---
 
-## 2.3 Agente Creativo (Agente 2)
+## 2.4 Agente Creativo
 
 ### Descripción funcional
 
-El Agente Creativo es el módulo de producción del sistema. Toma como entrada el plan de campaña elaborado por el Agente Estratégico y lo convierte en materiales listos para publicar o producir.
+El Agente Creativo es el módulo de **adaptación** del sistema, no de generación desde cero. Toma como entrada el plan de comunicación elaborado por el Agente Estratégico y adapta el contenido a la identidad institucional de la organización y al canal específico, usando el perfil institucional persistente del BrandGuidelinesStore.
+
+El hallazgo de validación es claro: el cuello de botella no es crear el texto, sino **pasar del texto a la pieza visual lista para publicar con la identidad institucional**. Este es el trabajo que más tiempo consume y el que menos herramientas resuelven de forma integrada.
+
+> *"Lo que más le toma a uno tiempo es más que crear el contenido de la pieza... es más pasarlo al diseño... sobre todo en un tema de seguir la línea gráfica estipulada ya por la organización que tenemos que sí o sí llevar esa misma línea gráfica."*
+> — Natalia Rozo Veloza, I4DIGITAL / CENIT
 
 Su trabajo se divide en dos fases distintas:
 
-- **Fase 1 — Brief de diseño:** el sistema genera un brief creativo específico que detalla qué debe producirse, para quién, en qué tono, con qué mensaje, en qué canal y con qué restricciones visuales.
-- **Fase 2 — Generación de piezas:** a partir del brief, el sistema genera una o varias piezas adaptadas al canal seleccionado (copy, estructura visual, variantes).
+- **Fase 1 — Brief de diseño institucional:** el sistema genera un brief creativo específico que detalla qué debe producirse, para quién, en qué tono, con qué mensaje, en qué canal y con qué lineamientos visuales institucionales.
+- **Fase 2 — Adaptación de piezas:** a partir del brief y del banco de activos institucionales, el sistema adapta una o varias piezas al canal seleccionado (copy, estructura visual, variantes).
 
 La diferencia entre estrategia, brief y pieza es fundamental para entender el producto:
 
@@ -104,7 +111,7 @@ Campaña: Transformación Digital 2025
     └── Pieza 4: Historia animada con link a whitepaper
 ```
 
-Esta vista muestra claramente la trazabilidad completa desde el objetivo de la campaña hasta cada pieza publicable. Es navegable y expandible en el interfaz.
+Esta vista muestra claramente la trazabilidad completa desde el objetivo de la campaña hasta cada pieza publicable. Es navegable y expandible en la interfaz.
 
 
 ---
@@ -151,12 +158,16 @@ En estos casos, el flujo es el siguiente:
 ### Diagramas del módulo
 
 ![Flujo general — Agente Creativo: fases y conexiones](assets/img/diagramas/agente-creativo-fases.png)
+<a href="assets/plantuml/agente-creativo-fases.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
 
 ![Relación jerárquica campaña → brief → piezas](assets/img/diagramas/agente-creativo-estructura-campana-brief-piezas.png)
+<a href="assets/plantuml/agente-creativo-estructura-campana-brief-piezas.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
 
 ![Flujo de pieza Instagram → métricas automáticas](assets/img/diagramas/agente-creativo-instagram-resultados.png)
+<a href="assets/plantuml/agente-creativo-instagram-resultados.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
 
 ![Flujo de pieza otros canales → carga manual de resultados](assets/img/diagramas/agente-creativo-feedback-manual.png)
+<a href="assets/plantuml/agente-creativo-feedback-manual.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
 
 > 🔗 **Prototipo navegable** — Consulte el flujo interactivo del agente en la **[sección Prototipo navegable](mockup.html)**.
 
@@ -217,3 +228,4 @@ Link registrado: instagram.com/p/xyz123
 ```
 
 ---
+

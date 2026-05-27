@@ -1,23 +1,24 @@
-# TO-BE — Módulo 2.2: Agente Estratégico
+# TO-BE — Módulo 2.3: Agente Estratégico
 
-> Módulo de generación del plan de campaña. Convierte el contexto de onboarding en una estrategia estructurada de marketing.
+> Módulo de planeación de comunicación institucional. Interpreta objetivos institucionales, audiencias, restricciones y canales para proponer el plan de comunicación, usando el perfil institucional persistente del BrandGuidelinesStore.
 
 ---
 
-## 2.2 Agente Estratégico (Agente 1)
+## 2.3 Agente Estratégico (Agente 1)
 
 ### Descripción funcional
 
-El Agente Estratégico es el entorno de trabajo donde el usuario construye, en conversación con la IA, el plan de comunicación o comunicación de su empresa. No es un formulario ni un asistente genérico: es un espacio de trabajo interactivo que combina el contexto institucional cargado durante el onboarding con el historial de campañas existentes y las instrucciones en lenguaje natural del usuario.
+El Agente Estratégico es el entorno de trabajo donde el comunicador construye, en conversación con la IA, el plan de comunicación institucional. No es un formulario ni un asistente genérico de marketing: es un espacio de trabajo interactivo que combina el **contexto institucional acumulado** del BrandGuidelinesStore con el histórico de comunicaciones y las instrucciones en lenguaje natural del comunicador.
 
-El agente analiza la empresa, sus productos y servicios, su marca y sus campañas anteriores. A partir de ese contexto, orienta la conversación hacia un plan de comunicación coherente, estructurado y alineado con la identidad de la organización.
+El agente interpreta los **objetivos institucionales** de la organización (no solo el objetivo de una campaña), sus audiencias, sus restricciones de comunicación y sus canales activos. A partir de ese contexto, orienta la conversación hacia un plan de comunicación coherente y alineado con la identidad institucional.
 
 **Lo que hace este módulo:**
-- Analiza el perfil de la empresa y sus servicios configurados en el onboarding.
-- Consulta el histórico de campañas para identificar patrones, canales y mensajes previos.
-- Conversa con el usuario para entender el objetivo de la nueva campaña.
-- Construye progresivamente un plan de comunicación durante la conversación.
-- Permite reutilizar campañas anteriores como punto de partida.
+- Analiza el perfil institucional de la organización configurado en el onboarding.
+- Consulta el histórico de comunicaciones para identificar patrones, canales y mensajes previos.
+- Conversa con el comunicador para entender el objetivo de la nueva comunicación o iniciativa.
+- Construye progresivamente un plan de comunicación institucional durante la conversación.
+- Respeta restricciones institucionales: nivel de formalidad, restricciones de lenguaje, canales permitidos.
+- Permite retomar comunicaciones anteriores como punto de partida.
 - Actualiza su razonamiento visible en tiempo real, mostrando qué está considerando.
 
 **Lo que NO hace en el MVP:**
@@ -179,10 +180,13 @@ Panel derecho actualiza:
 ### Diagramas de flujo
 
 ![Flujo principal del Agente Estratégico](assets/img/diagramas/agente-estrategico-flujo.png)
+<a href="assets/plantuml/agente-estrategico-flujo.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
 
 ![Flujo de reutilización de campaña anterior](assets/img/diagramas/agente-estrategico-reutilizacion.png)
+<a href="assets/plantuml/agente-estrategico-reutilizacion.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
 
 ![Flujo de iteración conversacional](assets/img/diagramas/agente-estrategico-conversacion.png)
+<a href="assets/plantuml/agente-estrategico-conversacion.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
 
 ---
 
@@ -223,3 +227,4 @@ y audiencia reorientada a sector público.
 ```
 
 ---
+

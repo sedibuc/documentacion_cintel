@@ -1,23 +1,30 @@
-# TO-BE — Módulo 2.5: Histórico
+# TO-BE — Módulo 2.6: Histórico y memoria organizacional
 
-> Módulo de memoria institucional. Permite navegar, consultar y reutilizar campañas anteriores generadas con el sistema.
+> Módulo de memoria institucional acumulada. Permite navegar, consultar y retomar comunicaciones anteriores para continuidad temática, aprendizaje y reutilización.
 
 ---
 
-## 2.5 Histórico
+## 2.6 Histórico y memoria organizacional
 
 ### Descripción funcional
 
-El módulo de Histórico es la memoria institucional del sistema. Almacena, organiza y permite recuperar toda la información generada durante el uso del Agente de Marketing IA: campañas, briefs, piezas y resultados.
+El módulo de Histórico es la **memoria organizacional acumulada** del sistema. No solo archiva comunicaciones pasadas: permite que el equipo **retome hilos temáticos anteriores**, haga segundas partes de comunicaciones y mantenga coherencia a lo largo del tiempo sin perder contexto.
 
-Su función central no es solo archivar, sino permitir que el equipo **aprenda de lo que ya funcionó** y **reutilice ese conocimiento** para crear nuevas campañas de forma más eficiente.
+Este cluster de dolor fue identificado en la validación con alta relevancia cruzada:
 
-**¿Por qué es importante?**
+> *"Cada vez que yo vaya a crear una campaña tengo que crear una nueva campaña... digamos que voy a hacer una campaña sobre los aceites... pero luego quiero hacer una segunda parte... Como cuando uno va a ChatGPT tiene diferentes chats de diferentes temas y decirle: '¿te acuerdas que hicimos una campaña hace dos meses sobre los aceites? Vamos a hacer la segunda parte.'"*
+> — Verónica Rangel Jaller, Pro Montería
 
-- Evita rehacer trabajo: el equipo puede recuperar campañas anteriores y adaptarlas.
-- Facilita la comparación: se pueden contrastar resultados entre periodos o canales.
-- Soporta la trazabilidad: cada pieza tiene un origen claro (campaña → brief → pieza).
-- Alimenta la iteración: el Agente puede usar campañas pasadas como punto de partida.
+> *"Voy a traer el histórico y ese histórico me va a permitir complementar la información para que con base en ella yo pueda construir una campaña más ajustada a la realidad conforme a lo que ya se venía haciendo."*
+> — Ana Elizabeth Parra Benítez, CRC
+
+**Funciones del módulo:**
+
+- Evita rehacer trabajo: recupera comunicaciones anteriores y las adapta.
+- Facilita la comparación entre periodos o canales.
+- Soporta la trazabilidad: cada pieza tiene origen claro (objetivo → plan → brief → pieza).
+- Alimenta la iteración: el Agente Estratégico usa el histórico como contexto de continuidad.
+- Acumula aprendizajes: qué funcionó, qué no, métricas básicas y feedback del equipo.
 
 **Conexión con otros módulos:**
 
@@ -118,13 +125,15 @@ Cada elemento del histórico expone sus metadatos de origen:
 ### Diagramas
 
 ![Estructura jerárquica de campañas](assets/img/diagramas/historico-estructura.png)
+<a href="assets/plantuml/historico-estructura.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
 
 ![Flujo de reutilización de campaña](assets/img/diagramas/historico-reutilizacion.png)
+<a href="assets/plantuml/historico-reutilizacion.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
 
 ![Fuentes de resultados](assets/img/diagramas/historico-resultados.png)
+<a href="assets/plantuml/historico-resultados.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
 
 
 > 🔗 **Prototipo navegable** — Consulte el flujo interactivo en la **[sección Prototipo navegable](mockup.html)**.
 
 
----
