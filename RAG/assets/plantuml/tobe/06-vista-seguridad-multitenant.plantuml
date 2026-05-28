@@ -1,0 +1,72 @@
+@startuml 06-vista-seguridad-multitenant
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 11
+skinparam packageBackgroundColor #E8F4FD
+skinparam packageBorderColor #2E86C1
+skinparam rectangleBorderThickness 1.5
+skinparam titleFontSize 14
+skinparam titleFontStyle bold
+skinparam noteBackgroundColor #FEF9E7
+skinparam noteBorderColor #F39C12
+
+title Vista 6 — Seguridad y MultiTenant\nAgente Documental CINTEL · <<Programacion Tradicional — No IA>>
+
+rectangle "<b>CAPA DE AUTENTICACION Y SESION</b>\n<<Tradicional>>" as AUTH #AED6F1 {
+  rectangle "Login / JWT / Sesión\n<<Tradicional>>" as A1 #C8E6FF
+  rectangle "Refresh Token\n<<Tradicional>>" as A2 #C8E6FF
+  rectangle "Verificación de identidad\n<<Tradicional>>" as A3 #C8E6FF
+}
+
+rectangle "<b>CAPA DE AUTORIZACION RBAC</b>\n<<Tradicional>>" as RBAC #AED6F1 {
+  rectangle "Roles por Tenant\n<<Tradicional>>" as R1 #C8E6FF
+  rectangle "Permisos por Rol\n<<Tradicional>>" as R2 #C8E6FF
+  rectangle "Verificación en cada request\n<<Tradicional>>" as R3 #C8E6FF
+}
+
+rectangle "<b>AISLAMIENTO MULTITENANT</b>\n<<Tradicional — No IA>>" as MT #D6EAF8 {
+  rectangle "tenant_id obligatorio\nen TODA query\n<<Filtro DB>>" as MT1 #AED6F1
+  rectangle "tenant_id en JWT\n<<Token>>" as MT2 #AED6F1
+  rectangle "Middleware de validación\ntenant por request\n<<Backend>>" as MT3 #AED6F1
+  rectangle "Aislamiento lógico\nde datos en PostgreSQL\n<<DB>>" as MT4 #AED6F1
+  rectangle "Configuraciones\naisladas por tenant\n<<DB>>" as MT5 #AED6F1
+}
+
+rectangle "<b>DATOS AISLADOS POR TENANT</b>" as DATA #E8F4FD {
+  rectangle "Documentos del Tenant\n<<tenant_id>>" as D1 #AED6F1
+  rectangle "Tipos Documentales\n<<tenant_id>>" as D2 #AED6F1
+  rectangle "Prompts y Esquemas\n<<global versionado\no por tenant>>" as D3 #AED6F1
+  rectangle "Resultados de Extracción\n<<tenant_id>>" as D4 #AED6F1
+  rectangle "Auditoría del Tenant\n<<tenant_id>>" as D5 #AED6F1
+}
+
+rectangle "<b>AUDITORÍA Y TRAZABILIDAD</b>\n<<Tradicional>>" as AUD #AED6F1 {
+  rectangle "Registro inmutable\nde todas las acciones\n<<AuditEvent>>" as AE1 #C8E6FF
+  rectangle "Quién, qué, cuándo\npor tenant\n<<Log>>" as AE2 #C8E6FF
+  rectangle "Retención configurable\npor política\n<<Config>>" as AE3 #C8E6FF
+}
+
+rectangle "<b>FUERA DE ALCANCE FASE 1</b>" as FORA #F4F6F7 {
+  rectangle "SSO / OAuth corporativo\n<<Futuro>>" as F1 #D5D8DC
+  rectangle "Licenciamiento / Facturación\npor tenant\n<<Futuro>>" as F2 #D5D8DC
+}
+
+AUTH --> RBAC : valida permisos
+RBAC --> MT : propaga tenant_id
+MT --> DATA : filtra por tenant_id
+DATA --> AUD : cada acción auditada
+
+note bottom of MT #AED6F1
+  El aislamiento MultiTenant es
+  100% programación tradicional.
+  No involucra IA en ningún punto.
+  Filtro obligatorio: WHERE tenant_id = ?
+end note
+
+legend right
+  |<#AED6F1> | Tradicional — Backend + DB |
+  |<#D5D8DC> | Futuro / Fuera Fase 1 |
+endlegend
+
+@enduml

@@ -282,11 +282,15 @@ El administrador registra la empresa, configura su perfil, establece la conexió
 
 ![Flujo de onboarding funcional de empresa](assets/img/diagramas/tobefuncional/flujo-onboarding.png)
 
+<a href="assets/plantuml/flujo-onboarding.plantuml" download class="diagram-download">⬇ Descargar fuente (.plantuml)</a>
+
 ### Flujo 2 — Extracción estructurada de documentos
 
 El operador selecciona el tipo documental, elige el origen (carga manual o FTP), configura el formato de salida y ejecuta la extracción. El agente procesa el documento y devuelve los campos definidos en el esquema.
 
 ![Flujo de extracción estructurada de documentos](assets/img/diagramas/tobefuncional/flujo-extraccion.png)
+
+<a href="assets/plantuml/flujo-extraccion.plantuml" download class="diagram-download">⬇ Descargar fuente (.plantuml)</a>
 
 Los campos no encontrados se marcan explícitamente como no extraídos. No hay respuesta en lenguaje natural ni interacción conversacional.
 
@@ -296,11 +300,15 @@ El operador carga una fuente de referencia (CSV o JSON) y ejecuta la comparació
 
 ![Flujo de comparación y validación cruzada](assets/img/diagramas/tobefuncional/flujo-comparacion.png)
 
+<a href="assets/plantuml/flujo-comparacion.plantuml" download class="diagram-download">⬇ Descargar fuente (.plantuml)</a>
+
 ### Flujo 4 — Procesamiento por lotes e historial
 
 El operador define el lote (nombre, tipo documental, formato de salida), elige el origen de los documentos (carga manual o FTP) y ejecuta. El sistema procesa en paralelo, asigna ID de lote y persiste el historial.
 
 ![Flujo de procesamiento por lotes e historial](assets/img/diagramas/tobefuncional/flujo-lotes.png)
+
+<a href="assets/plantuml/flujo-lotes.plantuml" download class="diagram-download">⬇ Descargar fuente (.plantuml)</a>
 
 ### Flujo 5 — Consulta y descarga de resultados
 
@@ -308,11 +316,15 @@ El operador accede al historial, selecciona un lote y descarga los resultados co
 
 ![Flujo de consulta y descarga de resultados](assets/img/diagramas/tobefuncional/flujo-resultados.png)
 
+<a href="assets/plantuml/flujo-resultados.plantuml" download class="diagram-download">⬇ Descargar fuente (.plantuml)</a>
+
 ### Flujo 6 — Administración de tipo documental
 
 El equipo administrador crea un nuevo tipo documental, define los campos, carga el dataset de entrenamiento, ejecuta el proceso y promueve el tipo entre estados hasta PRODUCCIÓN.
 
 ![Flujo de administración de tipo documental](assets/img/diagramas/tobefuncional/flujo-admin-tipos.png)
+
+<a href="assets/plantuml/flujo-admin-tipos.plantuml" download class="diagram-download">⬇ Descargar fuente (.plantuml)</a>
 
 ---
 

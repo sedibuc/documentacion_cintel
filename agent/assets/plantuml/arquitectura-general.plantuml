@@ -1,0 +1,39 @@
+@startuml
+!theme plain
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam packageStyle rectangle
+
+package "Frontend" {
+  [Web UI]
+}
+
+package "Backend Flask" {
+  [Routes]
+  [CampaignAgent]
+  [SSE Pipeline]
+}
+
+package "Servicios de infraestructura" {
+  [Auth JWT]
+  [Observability]
+  [DB Adapter]
+}
+
+package "Servicios externos" {
+  [OpenAI/Gemini]
+  [Meta Graph API]
+  [MS Graph API]
+}
+
+[Web UI] --> [Routes]
+[Routes] --> [CampaignAgent]
+[CampaignAgent] --> [SSE Pipeline]
+[CampaignAgent] --> [DB Adapter]
+[CampaignAgent] --> [OpenAI/Gemini]
+[CampaignAgent] --> [Meta Graph API]
+[CampaignAgent] --> [MS Graph API]
+[Routes] --> [Auth JWT]
+[Routes] --> [Observability]
+
+@enduml

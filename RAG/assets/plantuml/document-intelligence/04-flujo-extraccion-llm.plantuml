@@ -1,0 +1,84 @@
+@startuml 04-flujo-extraccion-llm
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 10
+skinparam sequenceArrowColor #444444
+skinparam sequenceBoxBorderColor #2E86C1
+skinparam sequenceParticipantBackgroundColor #E8F4FD
+skinparam sequenceParticipantBorderColor #2E86C1
+skinparam sequenceLifeLineBorderColor #AED6F1
+skinparam noteBackgroundColor #FEF9E7
+skinparam noteBorderColor #F39C12
+skinparam titleFontSize 14
+skinparam titleFontStyle bold
+
+title Document Intelligence Engine MultiTenant\nFlujo Detallado de Extraccion LLM
+
+participant "Batch Service\n<<Tradicional>>" as BS #AED6F1
+participant "DocumentSchemaRegistry\n<<Tradicional>>" as SR #AED6F1
+participant "Prompt Registry\n<<Tradicional>>" as PR #AED6F1
+participant "StructuredExtractor\n<<IA/LLM - Central>>" as SE #A9DFBF
+participant "LLM Orchestrator\n<<IA/LLM>>" as LO #A9DFBF
+participant "LLM Provider\n<<IA/LLM>>" as LLM #A9DFBF
+participant "Structured Output Parser\n<<IA/LLM>>" as OP #A9DFBF
+participant "Validation Engine\n<<Hibrido>>" as VE #D5F5E3
+participant "Audit Service\n<<Tradicional>>" as AS #AED6F1
+
+BS -> SE : iniciarExtraccion(doc_id, tipo_documental, representacion_normalizada, metodo_extraccion, tenant_id)
+activate SE
+
+SE -> SR : obtenerSchema(tipo_documental, tenant_id)
+activate SR
+SR --> SE : schema = { campos: [...], reglas: [...], version: "v3" }
+deactivate SR
+
+SE -> PR : obtenerPrompt(tipo_documental, estrategia="zero-shot")
+activate PR
+PR --> SE : prompt_template (version: "pt-ctl-v2.1")
+deactivate PR
+
+SE -> LO : construirContexto(representacion_normalizada, schema, prompt_template, metodo_extraccion)
+activate LO
+LO -> LO : tokenCount(contexto)
+note right #FEF9E7 : Verifica que el contexto\nno exceda ventana del modelo
+
+LO -> LLM : callLLM(model="gpt-4o", messages=[...], response_format=JSON)
+activate LLM
+note right #A9DFBF : Structured outputs o function calling\nforzar JSON Schema
+LLM --> LO : completion (JSON crudo + uso de tokens)
+deactivate LLM
+
+LO -> OP : parsear(completion, schema_esperado)
+activate OP
+OP -> OP : validarEstructura(JSON, schema_esperado)
+
+alt JSON valido y completo
+  OP --> LO : { campos: { nombre: "...", fecha: "...", ... }, confianza: {...}, extracion_parcial: false }
+else JSON invalido o truncado
+  OP --> LO : { error: "parse_error", raw: "..." }
+  LO -> LLM : reintento con instruccion corregida (intento 2/3)
+  LLM --> LO : completion corregida
+  LO -> OP : parsear(completion2, schema_esperado)
+  OP --> LO : { campos: {...}, confianza: {...}, extracion_parcial: false }
+end
+
+LO --> SE : resultadoExtraccion (campos_extraidos, tokens_usados, modelo_usado, prompt_version)
+deactivate LO
+
+SE -> VE : validar(campos_extraidos, schema.reglas, tenant_id)
+activate VE
+VE --> SE : validacionResult = { VALIDO, faltantes: [], invalidos: [] }
+deactivate VE
+
+SE -> AS : registrarTrazaExtraccion(tenant_id, doc_id, metodo_extraccion, modelo, prompt_v, tokens_entrada, tokens_salida, latencia_ms, resultado)
+activate AS
+AS --> SE : traza_id registrada
+deactivate AS
+
+SE --> BS : { campos_extraidos, validacion, confianza_por_campo, traza_id, estado: "EXTRAIDO" }
+deactivate SE
+
+note over BS, AS #E8F8E0 : Datos estructurados disponibles para CrossValidator y DiscrepancyAlertEngine\nsin ninguna interaccion conversacional / chat / RAG
+
+@enduml

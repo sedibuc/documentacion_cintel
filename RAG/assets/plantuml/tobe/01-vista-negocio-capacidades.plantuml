@@ -1,0 +1,49 @@
+@startuml 01-vista-negocio-capacidades
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 11
+skinparam rectangleBorderThickness 1.5
+skinparam rectangleRoundCorner 6
+skinparam titleFontSize 14
+skinparam titleFontStyle bold
+skinparam legendBackgroundColor #FAFAFA
+skinparam legendBorderColor #CCCCCC
+
+title Vista 1 — Arquitectura de Negocio: Capacidades TO-BE\nAgente Documental CINTEL · LLM-first · Fase 1 MVP
+
+rectangle "<b>SISTEMA DE INFORMACIÓN TRADICIONAL</b>" as SIT #E8F4FD {
+  rectangle "Gestión de Tenants\n<i><<Tradicional>></i>" as C01 #AED6F1
+  rectangle "Usuarios y Roles\n<i><<Tradicional>></i>" as C02 #AED6F1
+  rectangle "Tipos Documentales\n<i><<Tradicional>></i>" as C03 #AED6F1
+  rectangle "Gestión Documental\n<i><<Tradicional>></i>" as C04 #AED6F1
+  rectangle "Gestión de Lotes\n<i><<Tradicional>></i>" as C05 #AED6F1
+  rectangle "Revisión Humana\n<i><<Tradicional + Humano>></i>" as C06 #AED6F1
+  rectangle "Auditoría y Trazabilidad\n<i><<Tradicional>></i>" as C07 #AED6F1
+  rectangle "Observabilidad Técnica\n<i><<Tradicional>></i>" as C08 #AED6F1
+  rectangle "APIs REST / Integración\n<i><<Tradicional>></i>" as C09 #AED6F1
+}
+
+rectangle "<b>CAPACIDADES IA / LLM — FASE 1 MVP</b>" as CIA #E9F7EF {
+  rectangle "Extracción Estructurada\n<i><<IA / LLM>></i>" as C10 #A9DFBF
+  rectangle "Interpretación Semántica\n<i><<IA / LLM>></i>" as C11 #A9DFBF
+  rectangle "Normalización asistida\n<i><<IA / LLM>></i>" as C12 #A9DFBF
+  rectangle "Validación Semántica\n<i><<IA / LLM>></i>" as C13 #A9DFBF
+  rectangle "Resumen y Explicación\n<i><<IA / LLM>></i>" as C14 #A9DFBF
+  rectangle "Q&A sobre Documentos\n<i><<IA / LLM>></i>" as C15 #A9DFBF
+}
+
+rectangle "<b>FUERA DE ALCANCE — EVALUACIÓN FUTURA</b>" as FAF #F4F6F7 {
+  rectangle "NER Supervisado\n<i><<Futuro / Post-producción>></i>" as C16 #D5D8DC
+  rectangle "Fine-tuning especializado\n<i><<Futuro>></i>" as C17 #D5D8DC
+  rectangle "Dataset etiquetado NER\n<i><<Futuro>></i>" as C18 #D5D8DC
+}
+
+legend right
+  | Color | Tipo |
+  |<#AED6F1> | Tradicional (backend, DB, reglas) |
+  |<#A9DFBF> | IA / LLM (Fase 1 MVP) |
+  |<#D5D8DC> | Futuro / Fuera de Fase 1 |
+endlegend
+
+@enduml

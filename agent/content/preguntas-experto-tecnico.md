@@ -21,12 +21,21 @@ Validar y ajustar decisiones técnicas de alto impacto para el Adaptador de Cont
 
 ---
 
-## 3. Preguntas priorizadas para validación
+## 3. Estimación de tiempo
+
+Por definir
+
+---
+
+## 4. Preguntas priorizadas para validación
 
 ### P-00. Formalización de lectura de marca con LLM (sin OCR)
 
 **Decisión propuesta para formalizar:**
 La lectura de manuales de marca institucional en MVP se realiza con LLM multimodal como camino principal. OCR no forma parte del flujo objetivo de V1.
+
+**Flujo al que aplica:**
+Aplica al flujo de onboarding o actualización de contexto institucional, cuando un usuario administrador carga manuales de marca, guías visuales o documentos de lineamientos para que el sistema los convierta en reglas reutilizables por los agentes. La pregunta busca confirmar si ese flujo puede operar con lectura multimodal directa del documento, sin introducir OCR como paso estándar de V1.
 
 **Pregunta al experto:**
 ¿Se formaliza esta decisión como lineamiento técnico vigente para MVP, con revisión humana de los campos críticos extraídos?
@@ -37,15 +46,15 @@ Sí/No con condiciones explícitas de calidad mínima, tipos documentales cubier
 **Criterio de validación:**
 Si la respuesta es afirmativa, el diseño base de BrandGuidelinesStore se congela con pipeline LLM multimodal + validación humana, sin incorporar OCR en V1.
 
-**Tiempo sugerido:**
-0.5 horas.
-
 ---
 
 ### P-01. Cobertura de LLM multimodal en manuales de marca
 
 **Decisión inicial propuesta:**
 Usar LLM multimodal directo para PDF/DOCX/imágenes de marca en el flujo principal.
+
+**Flujo al que aplica:**
+Aplica al mismo flujo de carga y lectura de documentos de marca, pero ya no desde la decisión conceptual sino desde su cobertura real en operación. El usuario sube PDFs, DOCX o imágenes institucionales y el sistema debe extraer tono, restricciones, activos y lineamientos aun cuando el documento tenga tablas, anexos, capturas o páginas parcialmente escaneadas.
 
 **Pregunta al experto:**
 ¿Qué cobertura real de calidad se espera para documentos institucionales complejos (tablas, anexos, versiones escaneadas parciales)?
@@ -56,15 +65,15 @@ Tabla por tipo de documento, calidad esperada, riesgo y recomendación operativa
 **Criterio de validación:**
 La cobertura objetivo para operación estable de V1 debe ser >=80% en los documentos típicos del segmento.
 
-**Tiempo sugerido:**
-1.5 horas.
-
 ---
 
 ### P-02. Estrategia híbrida de recuperación de contexto
 
 **Decisión inicial propuesta:**
 Usar recuperación híbrida gradual: base estructurada para contexto crítico y capa documental/vectorial para anexos extensos.
+
+**Flujo al que aplica:**
+Aplica al flujo en el que un usuario quiere generar una campaña nueva o reutilizar campañas anteriores y el sistema debe recuperar contexto útil desde dos fuentes: datos estructurados persistidos y documentos históricos extensos, como briefs, aprobaciones, piezas previas o anexos largos. La pregunta busca validar si ese flujo debe resolverse con una estrategia híbrida o si conviene irse desde V1 por un enfoque más simple y único.
 
 **Pregunta al experto:**
 ¿La estrategia híbrida propuesta es adecuada para MVP multicliente con memoria organizacional y restricciones institucionales?
@@ -75,122 +84,119 @@ Riesgos, ajustes recomendados y condición para activar vector DB desde V1.
 **Criterio de validación:**
 Si >70% del contexto crítico queda modelado estructuradamente, se mantiene prioridad estructurada.
 
-**Tiempo sugerido:**
-2 horas.
+---
+
+### P-03. Representacion minima de marca util para el modelo
+
+**Decisión inicial propuesta:**
+Extraer y persistir un conjunto acotado de atributos de marca que realmente mejore el comportamiento del modelo en generación de campañas.
+
+**Flujo al que aplica:**
+Aplica al flujo donde un usuario carga manuales de marca y luego espera que el modelo genere campañas alineadas con identidad, tono y restricciones institucionales. La pregunta no busca definir todo el modelo de datos del producto, sino identificar qué atributos realmente condicionan la inferencia y mejoran la calidad de salida del modelo.
+
+**Pregunta al experto:**
+¿Qué atributos de marca o contexto institucional suelen aportar más señal útil al modelo en generación controlada y cuáles aportan poco valor práctico en una primera versión?
+
+**Respuesta esperada:**
+Lista de atributos de alta señal para el modelo + atributos secundarios o diferibles, con justificación.
+
+**Criterio de validación:**
+La salida debe permitir priorizar un conjunto pequeño de variables que mejore consistencia, tono y restricciones sin sobrecargar el contexto de inferencia.
 
 ---
 
-### P-03. Alcance mínimo del núcleo de marca
+### P-04. Uso de modelos generativos de imagen bajo restricciones de marca
 
 **Decisión inicial propuesta:**
-Definir un set mínimo de atributos de marca para demostrar valor en MVP sin sobrediseño.
+Tratar la generacion de imagen con IA como capacidad opcional y controlada, evaluando si los modelos actuales permiten respetar lineamientos institucionales con suficiente consistencia.
+
+**Flujo al que aplica:**
+Aplica al flujo de producción de piezas visuales cuando, además del texto, se evalúa si un modelo generativo puede proponer o producir imágenes alineadas con lineamientos institucionales. El foco aquí es estrictamente técnico: qué tan controlable es hoy la generación o adaptación de imagen respecto a estilo, consistencia de marca, restricciones visuales y variabilidad no deseada.
 
 **Pregunta al experto:**
-¿Qué campos son estrictamente mínimos en V1 y cuáles deben diferirse a V2 sin perder el diferencial del producto?
+¿Qué tan viable es usar modelos generativos de imagen o edición asistida para producir piezas institucionales con restricciones de marca estrictas, y qué mecanismos de control recomendaría explorar?
 
 **Respuesta esperada:**
-Lista mínima obligatoria + lista diferible con justificación.
+Evaluacion de viabilidad, riesgos tecnicos y tecnicas recomendadas de control (prompting, reference images, adapters, human review).
 
 **Criterio de validación:**
-El mínimo debe cubrir identidad, tono, audiencias, activos y restricciones por canal.
-
-**Tiempo sugerido:**
-1.5 horas.
+Si el experto identifica alta variabilidad o bajo control sobre identidad visual, la generacion de imagen no debe tratarse como capacidad central del MVP.
 
 ---
 
-### P-04. Imagen institucional: activos licenciados vs IA
+### P-05. Adaptacion de salidas por canal con modelos
 
 **Decisión inicial propuesta:**
-Mantener activos licenciados como flujo principal en V1 y tratar generación IA como opción controlada.
+Usar el sistema para generar variantes de contenido por canal a partir de un mismo contexto institucional y una misma intención de campaña.
+
+**Flujo al que aplica:**
+Aplica al flujo donde, a partir de una estrategia o brief, el sistema debe producir piezas distintas para email, Instagram, WhatsApp o web/intranet. La pregunta busca entender si esa adaptación puede resolverse con un solo modelo y buen prompting, o si conviene usar especialización por tipo de salida, plantillas o validaciones distintas según canal.
 
 **Pregunta al experto:**
-¿Qué alternativa minimiza riesgo legal/regulatorio para entidades públicas y mantiene viabilidad operativa del MVP?
+¿Qué tan realista es esperar que un mismo modelo genere salidas consistentes y de calidad para varios canales, y en qué casos recomendaría separar prompts, validadores o incluso familias de modelos por tipo de pieza?
 
 **Respuesta esperada:**
-Comparativo por opción con recomendación por segmento.
+Tabla o lista por canal con nivel de dificultad, riesgos de calidad y recomendacion tecnica de especializacion.
 
 **Criterio de validación:**
-Si el riesgo regulatorio de IA generativa es medio-alto, no se usa como flujo principal en V1.
-
-**Tiempo sugerido:**
-1.5 horas.
+La respuesta debe permitir decidir si la adaptacion multicanal puede construirse sobre un nucleo comun de inferencia o si requiere tratamiento diferenciado desde el MVP.
 
 ---
 
-### P-05. Publicación automática vs exportación asistida
+### P-06. Separacion entre agente estrategico y agente creativo
 
 **Decisión inicial propuesta:**
-Mantener offline-first/exportación asistida en V1 y automatización gradual por canal en V2.
+Mantener una separacion entre una etapa de generacion estrategica y una etapa de generacion creativa, en lugar de resolver todo con una sola inferencia monolitica.
+
+**Flujo al que aplica:**
+Aplica al flujo donde primero se produce un encuadre estrategico de campaña y luego se generan piezas concretas. La pregunta busca saber si, desde el punto de vista de modelos, conviene separar esas tareas para reducir confusiones de instruccion, mejorar control y permitir evaluacion intermedia, o si un solo paso de inferencia podria ser suficiente.
 
 **Pregunta al experto:**
-Por canal (email, Instagram, WhatsApp, web/intranet), ¿qué modo es recomendable en MVP según madurez API y riesgo operativo?
+¿La separacion entre etapa estrategica y etapa creativa suele mejorar calidad, control y trazabilidad del resultado frente a una sola inferencia end-to-end? ¿En que condiciones no valdria la pena?
 
 **Respuesta esperada:**
-Tabla por canal con modo recomendado, restricciones y riesgo.
+Comparativa entre pipeline por etapas vs inferencia unica, con riesgos y condiciones de uso.
 
 **Criterio de validación:**
-Solo automatizar en V1 cuando exista API madura + permisos viables + riesgo bajo.
-
-**Tiempo sugerido:**
-2 horas.
+Si el experto considera que separar tareas mejora control y reduce errores de instruccion, se mantiene el enfoque modular para V1.
 
 ---
 
-### P-06. Motor de orquestación agéntica
+### P-07. Evaluacion y observabilidad de calidad del modelo
 
 **Decisión inicial propuesta:**
-Mantener LangGraph por soporte de estados, aprobaciones y trazabilidad.
+Instrumentar en V1 un conjunto minimo de señales para medir calidad, costo y estabilidad del comportamiento del modelo.
+
+**Flujo al que aplica:**
+Aplica al seguimiento de todos los pasos donde interviene inferencia: lectura de marca, recuperacion de contexto, generacion estrategica y produccion de piezas. La pregunta busca definir que debe observarse para saber si el modelo esta fallando por costo, latencia, deriva de calidad, baja adherencia a marca o uso deficiente del contexto.
 
 **Pregunta al experto:**
-¿LangGraph cubre adecuadamente el flujo TO-BE o existe alternativa superior con menor riesgo de implementación?
+¿Qué metricas o señales considera criticas para evaluar la calidad del modelo en V1 y detectar fallas relevantes sin depender solo de juicio subjetivo humano?
 
 **Respuesta esperada:**
-Comparativa breve y recomendación final.
+Lista priorizada de metricas o señales de evaluacion: adherencia a instrucciones, consistencia de tono, grounding, latencia, costo, tasa de retrabajo u otras.
 
 **Criterio de validación:**
-Si cubre estados, trazabilidad y human-in-the-loop sin brechas críticas, se mantiene.
-
-**Tiempo sugerido:**
-2 horas.
+La salida debe permitir definir un set minimo de evaluacion continua del modelo para piloto controlado.
 
 ---
 
-### P-07. Observabilidad mínima de MVP
+### P-08. Privacidad y aislamiento en flujos soportados por modelos
 
 **Decisión inicial propuesta:**
-Instrumentar en V1 latencia, errores, costo de IA, trazabilidad por campaña y estados de aprobación.
+Operar modelos o proveedores de IA sobre informacion de multiples organizaciones sin contaminar contexto, caches, prompts ni trazas entre tenants.
+
+**Flujo al que aplica:**
+Aplica a todos los flujos donde el sistema envia contexto institucional a modelos para leer documentos, recuperar historico o generar piezas. La pregunta no se centra en RBAC o arquitectura general, sino en los riesgos propios del uso de modelos: mezcla accidental de contexto, retencion en logs, entrenamiento no deseado, fugas via prompts o caches compartidos.
 
 **Pregunta al experto:**
-¿Qué set de métricas es crítico en V1 y cuál puede diferirse a V2 sin perder auditabilidad?
+¿Qué riesgos especificos de privacidad o contaminacion de contexto deben vigilarse cuando un mismo sistema de modelos atiende multiples organizaciones, y que salvaguardas considera minimas?
 
 **Respuesta esperada:**
-Lista crítica/opcional por categoría técnica y funcional.
+Lista de riesgos y salvaguardas tecnicas relacionadas con uso de modelos, memoria, logs, caches, fine-tuning y politicas del proveedor.
 
 **Criterio de validación:**
-Debe permitir auditoría de extremo a extremo por campaña.
-
-**Tiempo sugerido:**
-1 hora.
-
----
-
-### P-08. Seguridad y aislamiento multi-organización
-
-**Decisión inicial propuesta:**
-Aislamiento lógico por tenant_id desde Sprint 0 con control de acceso por organización.
-
-**Pregunta al experto:**
-¿Ese nivel de aislamiento es suficiente para piloto institucional o requiere controles adicionales obligatorios en V1?
-
-**Respuesta esperada:**
-Checklist mínimo de seguridad para salida a piloto.
-
-**Criterio de validación:**
-No debe existir riesgo crítico de fuga inter-tenant.
-
-**Tiempo sugerido:**
-2 horas.
+La respuesta debe permitir definir controles minimos para usar modelos con informacion institucional sensible sin riesgo alto de mezcla o exposicion entre tenants.
 
 ---
 
@@ -198,6 +204,9 @@ No debe existir riesgo crítico de fuga inter-tenant.
 
 **Decisión inicial propuesta:**
 Seleccionar proveedor con matriz ponderada, no por preferencia única.
+
+**Flujo al que aplica:**
+Aplica a varios flujos donde interviene IA, especialmente lectura de contexto institucional, generación estratégica y producción creativa. La pregunta busca definir con qué criterios debe elegirse el proveedor o familia de modelos que soportará esos flujos, considerando español institucional colombiano, costo, latencia, seguridad, calidad de salida y facilidad de operación.
 
 **Pregunta al experto:**
 ¿Qué criterios y pesos recomienda para español institucional colombiano?
@@ -208,48 +217,26 @@ Matriz con pesos (100%) y candidatos prioritarios.
 **Criterio de validación:**
 La matriz debe ser utilizable por comité técnico para decisión de MVP.
 
-**Tiempo sugerido:**
-1.5 horas.
-
 ---
 
-### P-10. Cierre de decisiones dentro de 20 horas
 
-**Decisión inicial propuesta:**
-Cerrar en esta ronda solo decisiones de alto impacto sin depender de PoC extensa.
-
-**Pregunta al experto:**
-¿Qué decisiones se pueden cerrar con confianza en 20 horas y cuáles requieren PoC adicional?
-
-**Respuesta esperada:**
-Tres listas: cerrables, requieren PoC, dependencias.
-
-**Criterio de validación:**
-La salida debe permitir actualizar arquitectura sin bloquear MVP por investigación prolongada.
-
-**Tiempo sugerido:**
-1 hora.
-
----
-
-## 4. Matriz resumida de uso de respuestas
+## 5. Matriz resumida de uso de respuestas
 
 | Pregunta | Decisión que valida | Umbral principal | Acción si se cumple | Acción si no se cumple |
 |---|---|---|---|---|
 | P-00/P-01 | Lectura de marca con LLM | Cobertura documental >=80% | Mantener LLM multimodal sin OCR en V1 | Replantear alcance documental de V1 |
 | P-02 | Recuperación de contexto | Contexto estructurable >70% | Base estructurada + vectorial opcional | Priorizar diseño vectorial desde V1 |
-| P-03 | Núcleo mínimo de marca | Set mínimo demostrable y trazable | Mantener alcance V1 | Ajustar modelo de datos |
-| P-04 | Política de imagen | Riesgo regulatorio aceptable | Activos licenciados + IA controlada | Restringir IA generativa |
-| P-05 | Modo por canal | API viable + riesgo bajo | Automatización puntual | Exportación asistida |
-| P-06 | Orquestación | Cobertura de estados y aprobación | Mantener LangGraph | Evaluar alternativa |
-| P-07 | Observabilidad MVP | Auditoría E2E posible | Instrumentar set crítico | Aumentar instrumentación V1 |
-| P-08 | Aislamiento multi-tenant | Sin riesgo crítico inter-tenant | Mantener diseño Sprint 0 | Endurecer seguridad |
+| P-03 | Variables de marca para inferencia | Alta señal util para el modelo | Priorizar set corto de contexto | Reducir o rediseñar atributos cargados al prompt |
+| P-04 | Generación visual con IA | Control aceptable de consistencia | Explorar uso controlado de imagen IA | Sacar esa capacidad del núcleo MVP |
+| P-05 | Adaptación multicanal | Calidad consistente por canal | Mantener núcleo común con especialización ligera | Separar prompts, validadores o modelos |
+| P-06 | Pipeline por etapas | Mejora control/calidad frente a inferencia única | Mantener separación estratégico/creativo | Simplificar o rediseñar pipeline |
+| P-07 | Evaluación del modelo | Set mínimo de señales objetivas | Instrumentar evaluación continua | Reforzar medición antes del piloto |
+| P-08 | Privacidad en uso de modelos | Sin riesgo alto de contaminación entre tenants | Operar con salvaguardas mínimas definidas | Restringir proveedores o memoria compartida |
 | P-09 | Selección LLM | Matriz ponderada lista | Seleccionar candidato MVP | Ajustar criterios |
-| P-10 | Cierre de consulta | Decisiones priorizadas cerrables | Actualizar arquitectura | Separar PoC y replanificar |
 
 ---
 
-## 5. Resultado esperado para el micrositio
+## 6. Resultado esperado para el micrositio
 
 Las respuestas de esta página alimentan directamente la [Arquitectura TO-BE optimizada](to-be-arquitectura.html) para pasar decisiones de estado propuesta a estado validada.
 

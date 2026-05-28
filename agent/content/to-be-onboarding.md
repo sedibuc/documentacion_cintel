@@ -1,4 +1,4 @@
-# TO-BE — Módulo 2.1: Onboarding institucional
+# TO-BE  Módulo 2.1: Onboarding institucional
 
 > Módulo de creación del perfil institucional persistente. Su propósito no es configurar una sesión: es crear el **contexto organizacional acumulado** que el sistema usará en todas las interacciones posteriores, sin que el comunicador vuelva a re-explicar quién es la institución.
 
@@ -14,17 +14,17 @@ El módulo de Onboarding institucional crea el **perfil institucional persistent
 
 El onboarding se organiza en cinco etapas:
 
-1. **Extracción automática desde la web de la institución** — el sistema analiza el sitio e intenta precargar información institucional para revisión del usuario.
-2. **Enriquecimiento con manual de marca / lineamientos visuales** — parámetros visuales oficiales (logos, colores, tipografías, reglas) que el sistema usará para adaptar piezas.
-3. **Captura de tono, audiencias y canales** — cómo comunica la institución, a quién y por dónde.
-4. **Carga de activos licenciados y restricciones** — banco de imágenes propias con derechos, restricciones regulatorias sobre generación de imágenes IA, flujos de aprobación.
-5. **Registro de la persona usuaria** — vinculación del comunicador a la institución configurada.
+1. **Extracción automática desde la web de la institución**  el sistema analiza el sitio e intenta precargar información institucional para revisión del usuario.
+2. **Enriquecimiento con manual de marca / lineamientos visuales**  parámetros visuales oficiales (logos, colores, tipografías, reglas) que el sistema usará para adaptar piezas.
+3. **Captura de tono, audiencias y canales**  cómo comunica la institución, a quién y por dónde.
+4. **Carga de activos licenciados y restricciones**  banco de imágenes propias con derechos, restricciones regulatorias sobre generación de imágenes IA, flujos de aprobación.
+5. **Registro de la persona usuaria**  vinculación del comunicador a la institución configurada.
 
 La configuración institucional se realiza **una sola vez** y queda disponible para todos los usuarios asociados. Cuando un nuevo colaborador se incorpora a una institución ya registrada, solo completa el registro personal.
 
 ---
 
-### Etapa 1 — Extracción automática desde la web
+### Etapa 1  Extracción automática desde la web
 
 #### Descripción
 
@@ -46,18 +46,10 @@ Por eso, todo lo detectado se presenta al usuario para que lo revise, corrija y 
 El sitio web generalmente no lista los productos en formato estructurado. El sistema extrae bloques de texto que pueden corresponder a servicios, áreas de trabajo, soluciones o líneas de negocio. Este contenido puede aparecer mezclado con artículos, noticias, estudios o eventos.
 
 El usuario ve todo lo detectado y puede:
-- seleccionar qué entradas corresponden a productos o servicios reales,
-- editar el texto de cada entrada,
-- agregar servicios que no fueron detectados,
-- eliminar entradas que no correspondan.
 
 **Ejemplo de extracción real (caso CINTEL):**
 
 El sistema puede extraer fragmentos como:
-- "Vigilancia tecnológica e inteligencia competitiva"
-- "Transformación Digital — Acelerando la adopción de tecnología en empresas"
-- "Publicaciones y estudios de prospectiva"
-- "Noticias: CINTEL participa en evento de IA..."
 
 De esos fragmentos, el usuario selecciona los que realmente son servicios y descarta los demás.
 
@@ -65,19 +57,18 @@ De esos fragmentos, el usuario selecciona los que realmente son servicios y desc
 
 Adicionalmente, el sistema intenta inferir elementos visuales a partir del CSS y las imágenes del sitio:
 
-- colores primarios y secundarios utilizados en la interfaz
-- logos visibles en la página
-- estilos generales de la marca
 
 Esta inferencia es aproximada. El usuario revisa y puede corregir o completar la información visual en la siguiente etapa (carga del manual de marca).
 
-#### Diagrama de flujo — extracción web
+#### Diagrama de flujo  extracción web
 
 ![Flujo de scraping y extracción de información de la empresa](assets/img/diagramas/flujo-scraping.png)
 
-> 🔗 **Prototipo navegable** — Consulte el flujo interactivo completo en la **[sección Prototipo navegable](mockup.html)**.
+<a href="assets/plantuml/flujo-scraping.plantuml" download class="diagram-download">Descargar fuente (.plantuml)</a>
 
-#### Ejemplo de salida — información estructural validada
+>  **Prototipo navegable**  Consulte el flujo interactivo completo en la **[sección Prototipo navegable](mockup.html)**.
+
+#### Ejemplo de salida  información estructural validada
 
 ```markdown
 ## Perfil institucional (validado por el usuario)
@@ -106,7 +97,7 @@ Esta inferencia es aproximada. El usuario revisa y puede corregir o completar la
 
 ---
 
-### Etapa 2 — Manual de marca
+### Etapa 2  Manual de marca
 
 #### Descripción
 
@@ -147,22 +138,22 @@ El sistema detecta los valores de color definidos en el manual y los presenta co
 - reglas generales de marca aplicables a piezas digitales (proporciones, contrastes mínimos, formatos por canal).
 
 
-> 🔗 **Mockups navegables** — Los prototipos de este módulo están centralizados en la **[sección 7. Mockup](mockup.html)**. Desde allí puede recorrer el flujo completo del sistema.
+>  **Mockups navegables**  Los prototipos de este módulo están centralizados en la **[sección 7. Mockup](mockup.html)**. Desde allí puede recorrer el flujo completo del sistema.
 
-#### Ejemplo de salida — parámetros de marca configurados
+#### Ejemplo de salida  parámetros de marca configurados
 
 ```markdown
 ## Configuración de marca (validada por el usuario)
 
 **Logos registrados:**
-- Logo principal: cintel-logo-color.svg — uso general
-- Logo blanco: cintel-logo-blanco.svg — fondos oscuros
-- Ícono reducido: cintel-icono.svg — espacios pequeños
+- Logo principal: cintel-logo-color.svg  uso general
+- Logo blanco: cintel-logo-blanco.svg  fondos oscuros
+- Ícono reducido: cintel-icono.svg  espacios pequeños
 
 **Paleta de colores:**
-- Primario: #004B8D (azul institucional) — fondos, cabeceras
-- Secundario: #00A651 (verde de acento) — CTAs, destacados
-- Neutro claro: #F5F5F5 — fondos de tarjetas
+- Primario: #004B8D (azul institucional)  fondos, cabeceras
+- Secundario: #00A651 (verde de acento)  CTAs, destacados
+- Neutro claro: #F5F5F5  fondos de tarjetas
 - Texto principal: #1A1A1A
 
 **Tipografías:**
@@ -173,13 +164,13 @@ El sistema detecta los valores de color definidos en el manual y los presenta co
 - Zona de seguridad del logo: 20 px mínimo
 - No deformar proporciones del logo
 - Contraste mínimo texto/fondo: 4.5:1
-- Instagram post: 1080×1080 px
-- Banner LinkedIn: 1200×627 px
+- Instagram post: 10801080 px
+- Banner LinkedIn: 1200627 px
 ```
 
 ---
 
-### Etapa 3 — Histórico de campañas
+### Etapa 3  Histórico de campañas
 
 #### Descripción
 
@@ -197,9 +188,9 @@ En el MVP no se requiere procesamiento avanzado: basta con que el sistema lea el
 El usuario puede revisar las filas detectadas, corregir columnas mal interpretadas y confirmar antes de guardar.
 
 
-> 🔗 **Mockups navegables** — Los prototipos de este módulo están centralizados en la **[sección 7. Mockup](mockup.html)**. Desde allí puede recorrer el flujo completo del sistema.
+>  **Mockups navegables**  Los prototipos de este módulo están centralizados en la **[sección 7. Mockup](mockup.html)**. Desde allí puede recorrer el flujo completo del sistema.
 
-#### Ejemplo de salida — histórico cargado
+#### Ejemplo de salida  histórico cargado
 
 ```markdown
 ## Histórico de campañas (cargado desde archivo)
@@ -208,12 +199,12 @@ El usuario puede revisar las filas detectadas, corregir columnas mal interpretad
 |---|---|---|---|
 | ANDICOM 2025 | LinkedIn + Email | "La IA aplicada ya está aquí" | 320 registros |
 | Estudio prospectiva 2024 | Email | "Descarga el informe..." | 140 descargas |
-| Webinar transformación digital | LinkedIn | "Únete a la conversación..." | 85 asistentes |
+| Webinar transformación digital | LinkedIn | "nete a la conversación..." | 85 asistentes |
 ```
 
 ---
 
-### Etapa 4 — Registro de persona
+### Etapa 4  Registro de persona
 
 #### Descripción
 
@@ -226,7 +217,7 @@ Con la empresa configurada, el usuario registra sus datos personales. Este paso 
 - canales de trabajo habituales.
 
 
-> 🔗 **Mockups navegables** — Los prototipos de este módulo están centralizados en la **[sección 7. Mockup](mockup.html)**. Desde allí puede recorrer el flujo completo del sistema.
+>  **Mockups navegables**  Los prototipos de este módulo están centralizados en la **[sección 7. Mockup](mockup.html)**. Desde allí puede recorrer el flujo completo del sistema.
 
 #### Ejemplo de salida
 
@@ -242,18 +233,18 @@ Con la empresa configurada, el usuario registra sus datos personales. Este paso 
 
 ---
 
-### Etapa 5 — Alta de usuario adicional
+### Etapa 5  Alta de usuario adicional
 
 #### Descripción
 
 Cuando la empresa ya está registrada, un nuevo colaborador no repite ninguna de las etapas anteriores. El sistema ofrece un flujo reducido donde el usuario busca su empresa y solo completa sus datos personales. La configuración institucional, la marca y el histórico permanecen intactos.
 
 
-> 🔗 **Mockups navegables** — Los prototipos de este módulo están centralizados en la **[sección 7. Mockup](mockup.html)**. Desde allí puede recorrer el flujo completo del sistema.
+>  **Mockups navegables**  Los prototipos de este módulo están centralizados en la **[sección 7. Mockup](mockup.html)**. Desde allí puede recorrer el flujo completo del sistema.
 
 ---
 
-### Etapa 6 — Administración posterior
+### Etapa 6  Administración posterior
 
 #### Descripción
 
@@ -285,16 +276,16 @@ Un usuario con rol de administrador puede actualizar la información institucion
 ### Diagramas del módulo
 
 ![Flujo completo de onboarding institucional](assets/img/diagramas/onboarding-completo.png)
-<a href="assets/plantuml/onboarding-completo.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+<a href="assets/plantuml/onboarding-completo.plantuml" download class="diagram-download"> Descargar fuente (.plantuml)</a>
 
 ![Registro de empresa nueva](assets/img/diagramas/onboarding-empresa.png)
-<a href="assets/plantuml/onboarding-empresa.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+<a href="assets/plantuml/onboarding-empresa.plantuml" download class="diagram-download"> Descargar fuente (.plantuml)</a>
 
 ![Alta de usuario adicional](assets/img/diagramas/onboarding-usuario-adicional.png)
-<a href="assets/plantuml/onboarding-usuario-adicional.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+<a href="assets/plantuml/onboarding-usuario-adicional.plantuml" download class="diagram-download"> Descargar fuente (.plantuml)</a>
 
 ![Flujo de administración](assets/img/diagramas/onboarding-admin.png)
-<a href="assets/plantuml/onboarding-admin.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+<a href="assets/plantuml/onboarding-admin.plantuml" download class="diagram-download"> Descargar fuente (.plantuml)</a>
 
 ![Actualización por administrador](assets/img/diagramas/onboarding-admin-actualizacion.png)
-<a href="assets/plantuml/onboarding-admin-actualizacion.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+<a href="assets/plantuml/onboarding-admin-actualizacion.plantuml" download class="diagram-download"> Descargar fuente (.plantuml)</a>

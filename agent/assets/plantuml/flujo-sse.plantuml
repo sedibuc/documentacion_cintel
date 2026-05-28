@@ -1,0 +1,23 @@
+@startuml
+!theme plain
+skinparam backgroundColor white
+skinparam shadowing false
+
+actor Usuario
+participant Browser
+participant "/api/stream" as API
+participant CampaignAgent as Agent
+participant SseSink as Sink
+participant ChunkingMiddleware as Chunk
+participant ObserveMiddleware as Obs
+
+Usuario -> Browser: Envia mensaje
+Browser -> API: SSE request
+API -> Agent: stream_run()
+Agent -> Sink: publish(event)
+Sink -> Chunk: chunk(event)
+Chunk -> Obs: observe(chunk)
+Obs -> API: stream chunk
+API -> Browser: SSE event
+Browser -> Usuario: Render incremental
+@enduml

@@ -1,0 +1,26 @@
+@startuml
+!theme plain
+skinparam backgroundColor white
+skinparam shadowing false
+start
+:Introduce;
+:Captura email;
+:Captura Instagram;
+if (Tiene sitio web?) then (si)
+  :Solicitar URL;
+  :Procesar URL;
+endif
+:Captura historial;
+:Captura tema;
+repeat
+  :Pregunta dinamica;
+  :Procesar respuesta;
+repeat while (Falta contexto?) is (si)
+:Resumir campana;
+if (Resumen aprobado?) then (si)
+  :generate_campaign;
+else (no)
+  :Solicitar datos extra;
+endif
+stop
+@enduml

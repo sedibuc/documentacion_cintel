@@ -1,0 +1,202 @@
+@startuml 05-vista-datos-conceptual
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 10
+skinparam classBackgroundColor #E8F4FD
+skinparam classBorderColor #2E86C1
+skinparam classArrowColor #444444
+skinparam titleFontSize 14
+skinparam titleFontStyle bold
+skinparam noteBackgroundColor #FEF9E7
+skinparam noteBorderColor #F39C12
+
+title Document Intelligence Engine MultiTenant\nVista de Datos Conceptual
+
+class Tenant <<Tradicional>> #AED6F1 {
+  + tenant_id : UUID
+  + nombre_empresa : String
+  + plan : Enum(BASICO, PRO, ENTERPRISE)
+  + contacto_email : String
+  + activo : Boolean
+  + creado_en : DateTime
+}
+
+class TenantUser <<Tradicional>> #AED6F1 {
+  + user_id : UUID
+  + tenant_id : UUID
+  + email : String
+  + rol : Enum(OPERADOR, ADMIN, REVISOR)
+  + activo : Boolean
+}
+
+class DocumentType <<Tradicional>> #AED6F1 {
+  + tipo_id : UUID
+  + tenant_id : UUID
+  + nombre : String
+  + version : String
+  + activo : Boolean
+}
+
+class FieldSchema <<Tradicional>> #AED6F1 {
+  + field_id : UUID
+  + tipo_id : UUID
+  + nombre : String
+  + tipo_dato : String
+  + obligatorio : Boolean
+  + regla_validacion : String
+}
+
+class PromptVersion <<IA / LLM>> #A9DFBF {
+  + prompt_id : UUID
+  + tipo_id : UUID
+  + version : String
+  + estrategia : Enum(ZERO_SHOT, FEW_SHOT)
+  + template : Text
+  + activo : Boolean
+  + creado_en : DateTime
+}
+
+class Document <<Tradicional>> #AED6F1 {
+  + doc_id : UUID
+  + tenant_id : UUID
+  + tipo_id : UUID
+  + batch_id : UUID
+  + nombre_archivo : String
+  + storage_path : String
+  + estado : Enum(PENDIENTE, PROCESANDO, EXTRAIDO, ERROR)
+  + subido_en : DateTime
+}
+
+class Batch <<Tradicional>> #AED6F1 {
+  + batch_id : UUID
+  + tenant_id : UUID
+  + descripcion : String
+  + estado : Enum(PENDIENTE, EN_PROCESO, COMPLETADO)
+  + total_docs : Integer
+  + creado_en : DateTime
+}
+
+class DocumentContentExtraction <<Tradicional>> #AED6F1 {
+  + extraction_id : UUID
+  + doc_id : UUID
+  + method : Enum(NATIVE_TEXT, LLM_MULTIMODAL, OCR_FALLBACK, MANUAL_UPLOAD)
+  + status : Enum(PENDING, SUCCESS, FAILED)
+  + quality_score : Float
+  + extracted_content_uri : String
+  + content_hash : String
+  + model_used : String
+  + ocr_engine : String
+  + error_message : String
+  + created_at : DateTime
+}
+
+class NormalizedDocumentRepresentation <<Tradicional>> #AED6F1 {
+  + repr_id : UUID
+  + doc_id : UUID
+  + extraction_id : UUID
+  + representation_type : Enum(TEXT, STRUCTURED, IMAGE_REF)
+  + content_uri : String
+  + content_hash : String
+  + version : Integer
+  + created_at : DateTime
+}
+
+class ExtractionRun <<IA / LLM>> #A9DFBF {
+  + run_id : UUID
+  + doc_id : UUID
+  + repr_id : UUID
+  + tenant_id : UUID
+  + metodo_extraccion : Enum(NATIVE_TEXT, LLM_MULTIMODAL, OCR_FALLBACK)
+  + modelo_usado : String
+  + prompt_version : String
+  + tokens_entrada : Integer
+  + tokens_salida : Integer
+  + latencia_ms : Integer
+  + estado : Enum(EXITOSO, FALLIDO, PARCIAL)
+  + ejecutado_en : DateTime
+}
+
+class ExtractedField <<IA / LLM>> #A9DFBF {
+  + extracted_id : UUID
+  + run_id : UUID
+  + field_id : UUID
+  + valor_extraido : String
+  + confianza : Float
+  + estado : Enum(EXTRAIDO, NO_ENCONTRADO, AMBIGUO)
+}
+
+class ReferenceDataset <<Tradicional>> #AED6F1 {
+  + ref_id : UUID
+  + tenant_id : UUID
+  + tipo_id : UUID
+  + nombre_archivo : String
+  + storage_path : String
+  + subido_en : DateTime
+}
+
+class CrossValidationRun <<Tradicional>> #AED6F1 {
+  + cv_run_id : UUID
+  + run_id : UUID
+  + ref_id : UUID
+  + ejecutado_en : DateTime
+  + total_campos : Integer
+  + match_count : Integer
+  + mismatch_count : Integer
+}
+
+class CrossValidationResult <<Tradicional>> #AED6F1 {
+  + cvr_id : UUID
+  + cv_run_id : UUID
+  + field_id : UUID
+  + valor_extraido : String
+  + valor_referencia : String
+  + resultado : Enum(MATCH, MISMATCH, PENDIENTE)
+}
+
+class DiscrepancyAlert <<Tradicional>> #AED6F1 {
+  + alert_id : UUID
+  + cvr_id : UUID
+  + tenant_id : UUID
+  + severidad : Enum(BLOCKING, WARNING, INFO)
+  + estado : Enum(PENDIENTE, EN_REVISION, RESUELTA, IGNORADA)
+  + asignado_a : UUID
+  + resolucion : Text
+  + creado_en : DateTime
+  + resuelto_en : DateTime
+}
+
+class AuditLog <<Tradicional>> #AED6F1 {
+  + log_id : UUID
+  + tenant_id : UUID
+  + entidad : String
+  + entidad_id : UUID
+  + accion : String
+  + actor_id : UUID
+  + datos_anteriores : JSONB
+  + datos_nuevos : JSONB
+  + timestamp : DateTime
+}
+
+Document ||--o{ DocumentContentExtraction : "genera"
+DocumentContentExtraction ||--|| NormalizedDocumentRepresentation : "produce"
+NormalizedDocumentRepresentation ||--o{ ExtractionRun : "insumo de"
+Tenant ||--o{ TenantUser : "tiene"
+Tenant ||--o{ DocumentType : "configura"
+Tenant ||--o{ Document : "posee"
+Tenant ||--o{ Batch : "genera"
+Tenant ||--o{ ReferenceDataset : "carga"
+DocumentType ||--o{ FieldSchema : "define"
+DocumentType ||--o{ PromptVersion : "tiene"
+Batch ||--o{ Document : "agrupa"
+Document ||--o{ ExtractionRun : "genera"
+ExtractionRun ||--o{ ExtractedField : "produce"
+ExtractionRun ||--|| CrossValidationRun : "puede tener"
+ReferenceDataset ||--o{ CrossValidationRun : "fuente de verdad"
+CrossValidationRun ||--o{ CrossValidationResult : "genera"
+CrossValidationResult ||--o| DiscrepancyAlert : "puede disparar"
+Tenant ||--o{ AuditLog : "registra"
+
+note bottom of DiscrepancyAlert #FEF9E7 : Sin Chat/RAG:\nNo hay Conversation, Message\nni contexto conversacional
+
+@enduml

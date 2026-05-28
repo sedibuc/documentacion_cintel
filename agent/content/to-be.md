@@ -1,4 +1,4 @@
-# TO-BE — Adaptador de Contenido Institucional
+# TO-BE  Adaptador de Contenido Institucional
 
 > Visión funcional objetivo post-validación. Esta sección describe el **estado deseado del producto** según los hallazgos de las sesiones de validación con comunicadoras institucionales realizadas en marzo 2026. No describe el estado actual del demostrador.
 
@@ -8,7 +8,7 @@
 
 El **Adaptador de Contenido Institucional**, en su visión **TO-BE**, es un sistema agéntico especializado para comunicadores institucionales que necesitan producir y publicar contenido multi-canal de forma recurrente, manteniendo coherencia con la identidad gráfica de su organización, **sin tener que dar contexto desde cero en cada sesión**.
 
-El diferencial central frente a IAs generalistas (ChatGPT, Copilot, Claude) no es la calidad de la generación de texto —que ya está resuelta en el mercado— sino la **persistencia de marca y memoria organizacional acumulada**: el sistema ya sabe quién es la organización, cuál es su tono, cuáles son sus audiencias, cuál es su identidad visual y cuál es el historial de comunicaciones anteriores.
+El diferencial central frente a IAs generalistas (ChatGPT, Copilot, Claude) no es la calidad de la generación de texto que ya está resuelta en el mercado sino la **persistencia de marca y memoria organizacional acumulada**: el sistema ya sabe quién es la organización, cuál es su tono, cuáles son sus audiencias, cuál es su identidad visual y cuál es el historial de comunicaciones anteriores.
 
 Los hallazgos de validación identificaron el JTBD principal del segmento:
 
@@ -30,7 +30,7 @@ En esta visión, el sistema se organiza en módulos funcionales claramente separ
 - el **ajuste del resultado** dentro del contexto acumulado,
 - y la **memoria organizacional** (histórico y aprendizajes).
 
-> **Segmento primario:** Comunicación institucional pública — alcaldías intermedias, gobernaciones, universidades públicas, entidades regulatorias (CRC, ministerios, entes de control). El marketing digital comercial es un caso de uso posible, no el núcleo del producto.
+> **Segmento primario:** Comunicación institucional pública  alcaldías intermedias, gobernaciones, universidades públicas, entidades regulatorias (CRC, ministerios, entes de control). El marketing digital comercial es un caso de uso posible, no el núcleo del producto.
 
 ---
 
@@ -46,16 +46,16 @@ El módulo de Onboarding establece el contexto institucional y personal que el s
 
 El onboarding se organiza en cuatro etapas principales:
 
-1. **Extracción automática desde la web de la empresa** — el sistema analiza el sitio e intenta precargar información relevante para revisión del usuario.
-2. **Enriquecimiento con manual de marca** — parámetros visuales oficiales (logos, colores, tipografías, reglas) que el sistema usará para generar piezas.
-3. **Carga de histórico de campañas** — contexto de ejecuciones anteriores que mejora la pertinencia del plan de comunicación.
-4. **Registro de la persona usuaria** — vinculación del colaborador a la empresa configurada.
+1. **Extracción automática desde la web de la empresa**  el sistema analiza el sitio e intenta precargar información relevante para revisión del usuario.
+2. **Enriquecimiento con manual de marca**  parámetros visuales oficiales (logos, colores, tipografías, reglas) que el sistema usará para generar piezas.
+3. **Carga de histórico de campañas**  contexto de ejecuciones anteriores que mejora la pertinencia del plan de comunicación.
+4. **Registro de la persona usuaria**  vinculación del colaborador a la empresa configurada.
 
 La configuración institucional se realiza una sola vez por empresa y queda disponible para todos los usuarios asociados. Cuando un nuevo colaborador se incorpora a una empresa ya registrada, solo completa el paso de registro personal sin repetir las etapas anteriores.
 
 ---
 
-### Etapa 1 — Extracción automática desde la web
+### Etapa 1  Extracción automática desde la web
 
 #### Descripción
 
@@ -86,7 +86,7 @@ El usuario ve todo lo detectado y puede:
 
 El sistema puede extraer fragmentos como:
 - "Vigilancia tecnológica e inteligencia competitiva"
-- "Transformación Digital — Acelerando la adopción de tecnología en empresas"
+- "Transformación Digital  Acelerando la adopción de tecnología en empresas"
 - "Publicaciones y estudios de prospectiva"
 - "Noticias: CINTEL participa en evento de IA..."
 
@@ -105,18 +105,18 @@ Esta inferencia es aproximada. El usuario revisa y puede corregir o completar la
 #### Diagramas de flujo
 
 ![Flujo completo de onboarding institucional](assets/img/diagramas/onboarding-completo.png)
-<a href="assets/plantuml/onboarding-completo.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+<a href="assets/plantuml/onboarding-completo.plantuml" download class="diagram-download"> Descargar fuente (.plantuml)</a>
 
 ![Flujo de usuario adicional](assets/img/diagramas/onboarding-usuario-adicional.png)
-<a href="assets/plantuml/onboarding-usuario-adicional.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+<a href="assets/plantuml/onboarding-usuario-adicional.plantuml" download class="diagram-download"> Descargar fuente (.plantuml)</a>
 
 ![Flujo de administración y actualización posterior](assets/img/diagramas/onboarding-admin.png)
-<a href="assets/plantuml/onboarding-admin.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+<a href="assets/plantuml/onboarding-admin.plantuml" download class="diagram-download"> Descargar fuente (.plantuml)</a>
 
 
-> 🔗 **Mockups navegables** — Los prototipos de este módulo están centralizados en la **[sección 7. Mockup](mockup.html)**. Desde allí puede recorrer el flujo completo del sistema.
+>  **Mockups navegables**  Los prototipos de este módulo están centralizados en la **[sección 7. Mockup](mockup.html)**. Desde allí puede recorrer el flujo completo del sistema.
 
-#### Ejemplo de salida — información estructural validada
+#### Ejemplo de salida  información estructural validada
 
 ```markdown
 ## Perfil institucional (validado por el usuario)
@@ -145,7 +145,7 @@ Esta inferencia es aproximada. El usuario revisa y puede corregir o completar la
 
 ---
 
-### Etapa 2 — Manual de marca
+### Etapa 2  Manual de marca
 
 #### Descripción
 
@@ -186,22 +186,22 @@ El sistema detecta los valores de color definidos en el manual y los presenta co
 - reglas generales de marca aplicables a piezas digitales (proporciones, contrastes mínimos, formatos por canal).
 
 
-> 🔗 **Mockups navegables** — Los prototipos de este módulo están centralizados en la **[sección 7. Mockup](mockup.html)**. Desde allí puede recorrer el flujo completo del sistema.
+>  **Mockups navegables**  Los prototipos de este módulo están centralizados en la **[sección 7. Mockup](mockup.html)**. Desde allí puede recorrer el flujo completo del sistema.
 
-#### Ejemplo de salida — parámetros de marca configurados
+#### Ejemplo de salida  parámetros de marca configurados
 
 ```markdown
 ## Configuración de marca (validada por el usuario)
 
 **Logos registrados:**
-- Logo principal: cintel-logo-color.svg — uso general
-- Logo blanco: cintel-logo-blanco.svg — fondos oscuros
-- Ícono reducido: cintel-icono.svg — espacios pequeños
+- Logo principal: cintel-logo-color.svg  uso general
+- Logo blanco: cintel-logo-blanco.svg  fondos oscuros
+- Ícono reducido: cintel-icono.svg  espacios pequeños
 
 **Paleta de colores:**
-- Primario: #004B8D (azul institucional) — fondos, cabeceras
-- Secundario: #00A651 (verde de acento) — CTAs, destacados
-- Neutro claro: #F5F5F5 — fondos de tarjetas
+- Primario: #004B8D (azul institucional)  fondos, cabeceras
+- Secundario: #00A651 (verde de acento)  CTAs, destacados
+- Neutro claro: #F5F5F5  fondos de tarjetas
 - Texto principal: #1A1A1A
 
 **Tipografías:**
@@ -212,13 +212,13 @@ El sistema detecta los valores de color definidos en el manual y los presenta co
 - Zona de seguridad del logo: 20 px mínimo
 - No deformar proporciones del logo
 - Contraste mínimo texto/fondo: 4.5:1
-- Instagram post: 1080×1080 px
-- Banner LinkedIn: 1200×627 px
+- Instagram post: 10801080 px
+- Banner LinkedIn: 1200627 px
 ```
 
 ---
 
-### Etapa 3 — Histórico de campañas
+### Etapa 3  Histórico de campañas
 
 #### Descripción
 
@@ -236,9 +236,9 @@ En el MVP no se requiere procesamiento avanzado: basta con que el sistema lea el
 El usuario puede revisar las filas detectadas, corregir columnas mal interpretadas y confirmar antes de guardar.
 
 
-> 🔗 **Mockups navegables** — Los prototipos de este módulo están centralizados en la **[sección 7. Mockup](mockup.html)**. Desde allí puede recorrer el flujo completo del sistema.
+>  **Mockups navegables**  Los prototipos de este módulo están centralizados en la **[sección 7. Mockup](mockup.html)**. Desde allí puede recorrer el flujo completo del sistema.
 
-#### Ejemplo de salida — histórico cargado
+#### Ejemplo de salida  histórico cargado
 
 ```markdown
 ## Histórico de campañas (cargado desde archivo)
@@ -247,12 +247,12 @@ El usuario puede revisar las filas detectadas, corregir columnas mal interpretad
 |---|---|---|---|
 | ANDICOM 2025 | LinkedIn + Email | "La IA aplicada ya está aquí" | 320 registros |
 | Estudio prospectiva 2024 | Email | "Descarga el informe..." | 140 descargas |
-| Webinar transformación digital | LinkedIn | "Únete a la conversación..." | 85 asistentes |
+| Webinar transformación digital | LinkedIn | "nete a la conversación..." | 85 asistentes |
 ```
 
 ---
 
-### Etapa 4 — Registro de persona
+### Etapa 4  Registro de persona
 
 #### Descripción
 
@@ -265,7 +265,7 @@ Con la empresa configurada, el usuario registra sus datos personales. Este paso 
 - canales de trabajo habituales.
 
 
-> 🔗 **Mockups navegables** — Los prototipos de este módulo están centralizados en la **[sección 7. Mockup](mockup.html)**. Desde allí puede recorrer el flujo completo del sistema.
+>  **Mockups navegables**  Los prototipos de este módulo están centralizados en la **[sección 7. Mockup](mockup.html)**. Desde allí puede recorrer el flujo completo del sistema.
 
 #### Ejemplo de salida
 
@@ -281,18 +281,18 @@ Con la empresa configurada, el usuario registra sus datos personales. Este paso 
 
 ---
 
-### Etapa 5 — Alta de usuario adicional
+### Etapa 5  Alta de usuario adicional
 
 #### Descripción
 
 Cuando la empresa ya está registrada, un nuevo colaborador no repite ninguna de las etapas anteriores. El sistema ofrece un flujo reducido donde el usuario busca su empresa y solo completa sus datos personales. La configuración institucional, la marca y el histórico permanecen intactos.
 
 
-> 🔗 **Mockups navegables** — Los prototipos de este módulo están centralizados en la **[sección 7. Mockup](mockup.html)**. Desde allí puede recorrer el flujo completo del sistema.
+>  **Mockups navegables**  Los prototipos de este módulo están centralizados en la **[sección 7. Mockup](mockup.html)**. Desde allí puede recorrer el flujo completo del sistema.
 
 ---
 
-### Etapa 6 — Administración posterior
+### Etapa 6  Administración posterior
 
 #### Descripción
 
@@ -348,7 +348,7 @@ El agente analiza la empresa, sus productos y servicios, su marca y sus campaña
 
 El Agente Estratégico se presenta como un entorno tipo IDE de marketing: un espacio de trabajo con múltiples paneles que reflejan tanto la conversación como el contexto y el razonamiento del agente.
 
-#### Panel izquierdo — Contexto de empresa
+#### Panel izquierdo  Contexto de empresa
 
 Muestra la información institucional configurada en el onboarding:
 - productos y servicios (los que el usuario validó a partir del scraping),
@@ -357,13 +357,13 @@ Muestra la información institucional configurada en el onboarding:
 
 El usuario puede filtrar o seleccionar qué elementos incluir como contexto de la campaña en curso. Si quiere enfocar el plan en un servicio específico, lo marca aquí.
 
-#### Editor central — Conversación con el agente
+#### Editor central  Conversación con el agente
 
 El espacio principal es una conversación en lenguaje natural. El usuario escribe sus instrucciones y el agente responde con texto, razonamiento y fragmentos del plan. La conversación es el mecanismo de construcción: cada intercambio refina el plan.
 
 El agente no espera que el usuario llene formularios: hace preguntas cuando necesita aclaración, propone cuando tiene suficiente contexto y explica sus decisiones.
 
-#### Panel derecho — Razonamiento del agente
+#### Panel derecho  Razonamiento del agente
 
 Muestra en tiempo real lo que el agente está considerando:
 - objetivos identificados a partir de la conversación,
@@ -374,11 +374,11 @@ Muestra en tiempo real lo que el agente está considerando:
 
 Este panel hace visible la "inteligencia" del agente: el usuario puede ver cómo se actualiza a medida que avanza la conversación.
 
-#### Panel superior — Campañas históricas
+#### Panel superior  Campañas históricas
 
 Permite al usuario seleccionar una campaña anterior como punto de partida. Cuando se selecciona una campaña, el agente la incorpora como contexto adicional y puede proponer una nueva versión adaptada al objetivo actual.
 
-#### Panel inferior — Entrada y salida
+#### Panel inferior  Entrada y salida
 
 La barra inferior tiene el campo de texto donde el usuario escribe. Encima del input, a medida que la conversación avanza, se muestra el plan de comunicación generado de forma incremental.
 
@@ -424,7 +424,7 @@ Agente:  Con base en el perfil de CINTEL, identifico que este tema conecta
          marca o promover un servicio específico?
 
 Panel derecho actualiza:
-  · Empresa: CINTEL — sector innovación y TI
+  · Empresa: CINTEL  sector innovación y TI
   · Tema identificado: transformación digital
   · Esperando: definición de objetivo
 
@@ -496,25 +496,25 @@ Panel derecho actualiza:
 ### Diagramas de flujo
 
 ![Flujo principal del Agente Estratégico](assets/img/diagramas/agente-estrategico-flujo.png)
-<a href="assets/plantuml/agente-estrategico-flujo.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+<a href="assets/plantuml/agente-estrategico-flujo.plantuml" download class="diagram-download"> Descargar fuente (.plantuml)</a>
 
 ![Flujo de reutilización de campaña anterior](assets/img/diagramas/agente-estrategico-reutilizacion.png)
-<a href="assets/plantuml/agente-estrategico-reutilizacion.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+<a href="assets/plantuml/agente-estrategico-reutilizacion.plantuml" download class="diagram-download"> Descargar fuente (.plantuml)</a>
 
 ![Flujo de iteración conversacional](assets/img/diagramas/agente-estrategico-conversacion.png)
-<a href="assets/plantuml/agente-estrategico-conversacion.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+<a href="assets/plantuml/agente-estrategico-conversacion.plantuml" download class="diagram-download"> Descargar fuente (.plantuml)</a>
 
 ---
 
 
-> 🔗 **Mockups navegables** — Los prototipos de este módulo están centralizados en la **[sección 7. Mockup](mockup.html)**. Desde allí puede recorrer el flujo completo del sistema.
+>  **Mockups navegables**  Los prototipos de este módulo están centralizados en la **[sección 7. Mockup](mockup.html)**. Desde allí puede recorrer el flujo completo del sistema.
 
 ---
 
-### Ejemplo de salida — plan de comunicación generado
+### Ejemplo de salida  plan de comunicación generado
 
 ```markdown
-# Plan de comunicación — ANDICOM 2026 (sector público)
+# Plan de comunicación  ANDICOM 2026 (sector público)
 
 ## Objetivo
 Incrementar registros al evento, con foco en tomadores de decisión
@@ -537,7 +537,7 @@ Campaña informativa con énfasis en casos de aplicación en el sector público,
 resultados concretos y agenda práctica del evento.
 
 ## Base histórica utilizada
-ANDICOM 2025 — 320 registros — canales: LinkedIn + email
+ANDICOM 2025  320 registros  canales: LinkedIn + email
 Adaptación: mensaje actualizado para reflejar adopción real en Colombia
 y audiencia reorientada a sector público.
 ```
@@ -552,8 +552,8 @@ El Agente Creativo es el módulo de producción del sistema. Toma como entrada e
 
 Su trabajo se divide en dos fases distintas:
 
-- **Fase 1 — Brief de diseño:** el sistema genera un brief creativo específico que detalla qué debe producirse, para quién, en qué tono, con qué mensaje, en qué canal y con qué restricciones visuales.
-- **Fase 2 — Generación de piezas:** a partir del brief, el sistema genera una o varias piezas adaptadas al canal seleccionado (copy, estructura visual, variantes).
+- **Fase 1  Brief de diseño:** el sistema genera un brief creativo específico que detalla qué debe producirse, para quién, en qué tono, con qué mensaje, en qué canal y con qué restricciones visuales.
+- **Fase 2  Generación de piezas:** a partir del brief, el sistema genera una o varias piezas adaptadas al canal seleccionado (copy, estructura visual, variantes).
 
 La diferencia entre estrategia, brief y pieza es fundamental para entender el producto:
 
@@ -568,7 +568,7 @@ Un brief puede generar múltiples piezas. Una campaña puede generar múltiples 
 
 ---
 
-### Fase 1 — Brief de diseño
+### Fase 1  Brief de diseño
 
 A partir de la campaña seleccionada, el sistema construye un brief creativo que sirve como instrucción precisa para la producción de piezas.
 
@@ -592,7 +592,7 @@ El brief es visible y editable antes de proceder a la generación de piezas.
 **Ejemplo de brief generado:**
 
 ```
-Nombre:           LinkedIn institucional — TD Sector Público 2025
+Nombre:           LinkedIn institucional  TD Sector Público 2025
 Campaña base:     Transformación Digital 2025
 Objetivo:         Generar leads calificados en entidades públicas
 Audiencia:        Directivos de TI, líderes de digitalización
@@ -608,7 +608,7 @@ Observaciones:    Evitar lenguaje exclusivamente técnico. Incluir dato estadís
 
 ---
 
-### Fase 2 — Generación de piezas
+### Fase 2  Generación de piezas
 
 A partir del brief, el sistema genera las piezas adaptadas al canal. Cada pieza es una unidad de contenido lista para revisar, exportar o publicar.
 
@@ -628,7 +628,7 @@ Un brief puede generar múltiples variantes de una misma pieza (por ejemplo, ver
 
 ---
 
-### Estructura jerárquica: Campaña → Brief → Piezas
+### Estructura jerárquica: Campaña  Brief  Piezas
 
 El sistema organiza todos los activos en una estructura jerárquica navegable que permite rastrear el origen de cada pieza.
 
@@ -636,12 +636,12 @@ El sistema organiza todos los activos en una estructura jerárquica navegable qu
 
 ```
 Campaña: Transformación Digital 2025
-├── Brief 1: LinkedIn institucional
-│   ├── Pieza 1: Post "Acompañamos al sector público"
-│   └── Pieza 2: Artículo "5 claves para la TD en entidades"
-└── Brief 2: Instagram — captación de leads
-    ├── Pieza 3: Post visual con CTA de descarga
-    └── Pieza 4: Historia animada con link a whitepaper
+ Brief 1: LinkedIn institucional
+    Pieza 1: Post "Acompañamos al sector público"
+    Pieza 2: Artículo "5 claves para la TD en entidades"
+ Brief 2: Instagram  captación de leads
+     Pieza 3: Post visual con CTA de descarga
+     Pieza 4: Historia animada con link a whitepaper
 ```
 
 Esta vista muestra claramente la trazabilidad completa desde el objetivo de la campaña hasta cada pieza publicable. Es navegable y expandible en la interfaz.
@@ -653,7 +653,7 @@ Esta vista muestra claramente la trazabilidad completa desde el objetivo de la c
 
 Una vez publicada una pieza, el sistema puede capturar métricas de desempeño. El mecanismo varía según el canal.
 
-#### A. Piezas de Instagram — seguimiento automático
+#### A. Piezas de Instagram  seguimiento automático
 
 Para piezas publicadas en Instagram, el flujo de resultados permite:
 
@@ -672,7 +672,7 @@ Métricas disponibles:
 > Este seguimiento es automático y no requiere carga manual de datos.
 
 
-#### B. Otros canales — carga manual de resultados
+#### B. Otros canales  carga manual de resultados
 
 Para canales distintos a Instagram (LinkedIn, Email, Landing page, Eventos, etc.), los resultados no se capturan automáticamente.
 
@@ -690,17 +690,17 @@ En estos casos, el flujo es el siguiente:
 
 ### Diagramas del módulo
 
-![Flujo general — Agente Creativo: fases y conexiones](assets/img/diagramas/agente-creativo-fases.png)
-<a href="assets/plantuml/agente-creativo-fases.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+![Flujo general  Agente Creativo: fases y conexiones](assets/img/diagramas/agente-creativo-fases.png)
+<a href="assets/plantuml/agente-creativo-fases.plantuml" download class="diagram-download"> Descargar fuente (.plantuml)</a>
 
-![Flujo de pieza Instagram → métricas automáticas](assets/img/diagramas/agente-creativo-instagram-resultados.png)
-<a href="assets/plantuml/agente-creativo-instagram-resultados.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+![Flujo de pieza Instagram  métricas automáticas](assets/img/diagramas/agente-creativo-instagram-resultados.png)
+<a href="assets/plantuml/agente-creativo-instagram-resultados.plantuml" download class="diagram-download"> Descargar fuente (.plantuml)</a>
 
-![Flujo de pieza otros canales → carga manual de resultados](assets/img/diagramas/agente-creativo-feedback-manual.png)
-<a href="assets/plantuml/agente-creativo-feedback-manual.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+![Flujo de pieza otros canales  carga manual de resultados](assets/img/diagramas/agente-creativo-feedback-manual.png)
+<a href="assets/plantuml/agente-creativo-feedback-manual.plantuml" download class="diagram-download"> Descargar fuente (.plantuml)</a>
 
-![Relación jerárquica campaña → brief → piezas](assets/img/diagramas/agente-creativo-estructura-campana-brief-piezas.png)
-<a href="assets/plantuml/agente-creativo-estructura-campana-brief-piezas.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+![Relación jerárquica campaña  brief  piezas](assets/img/diagramas/agente-creativo-estructura-campana-brief-piezas.png)
+<a href="assets/plantuml/agente-creativo-estructura-campana-brief-piezas.plantuml" download class="diagram-download"> Descargar fuente (.plantuml)</a>
 
 ---
 
@@ -709,9 +709,9 @@ En estos casos, el flujo es el siguiente:
 #### Brief generado
 
 ```
-Nombre:         LinkedIn institucional — TD Sector Público 2025
+Nombre:         LinkedIn institucional  TD Sector Público 2025
 Campaña:        Transformación Digital 2025
-Objetivo:       Generar leads — directivos de TI sector público
+Objetivo:       Generar leads  directivos de TI sector público
 Canal:          LinkedIn
 Tipo de pieza:  Post institucional
 Mensaje:        CINTEL acompaña al sector público en su transformación digital
@@ -729,12 +729,12 @@ La transformación digital del sector público no es un destino, es un proceso.
 Las entidades que avanzan con más seguridad tienen algo en común: un acompañamiento 
 estructurado, con visión de largo plazo y experiencia en implementación.
 
-En CINTEL llevamos más de 25 años ayudando a organizaciones a navegar ese camino — 
+En CINTEL llevamos más de 25 años ayudando a organizaciones a navegar ese camino  
 con evidencia, metodología y foco en resultados reales.
 
-👉 Descarga nuestro estudio: "Ruta de Transformación Digital en el Sector Público"
+ Descarga nuestro estudio: "Ruta de Transformación Digital en el Sector Público"
 
-→ [enlace]
+ [enlace]
 
 #TransformaciónDigital #GobiernoDigital #CINTEL
 ```
@@ -742,20 +742,20 @@ con evidencia, metodología y foco en resultados reales.
 #### Panel de resultados (Instagram)
 
 ```
-Pieza: Post visual — "Ruta TD Sector Público"
+Pieza: Post visual  "Ruta TD Sector Público"
 Canal: Instagram
 Fecha de publicación: 15/03/2025
 Link registrado: instagram.com/p/xyz123
 
-─────────────────────────────────────
+
   Likes           312
   Comentarios      18
   Guardados        47
   Alcance       4.200
   Interacciones   391
   Engagement     9,3%
-─────────────────────────────────────
-Última actualización: hace 4 horas
+
+ltima actualización: hace 4 horas
 ```
 
 ---
@@ -836,7 +836,7 @@ Qué puede cambiar: extensión, estructura, tono, énfasis temático, elementos 
 
 El flujo de ajuste es el mismo independientemente del tipo (estrategia, brief o pieza):
 
-1. **El usuario visualiza el resultado actual** — plan, brief o pieza generada.
+1. **El usuario visualiza el resultado actual**  plan, brief o pieza generada.
 2. **El usuario escribe una instrucción** en lenguaje natural en el campo de ajuste.
 3. **El sistema combina** el resultado anterior con la nueva instrucción y el contexto de campaña activo.
 4. **El agente genera una nueva versión** del resultado.
@@ -849,14 +849,14 @@ El sistema mantiene en todo momento el contexto de campaña (empresa, sector, se
 
 ### Ejemplos de uso (completos)
 
-#### Caso A — Ajuste de estrategia
+#### Caso A  Ajuste de estrategia
 
 El Agente Estratégico generó un plan orientado a posicionamiento de marca. El usuario quiere redirigirlo hacia generación de leads.
 
 **Resultado original (fragmento):**
 
 > Objetivo principal: Fortalecer el posicionamiento institucional de CINTEL como referente en transformación digital para el sector público.
-> Canal prioritario: LinkedIn — contenido educativo.
+> Canal prioritario: LinkedIn  contenido educativo.
 > Métrica clave: Alcance orgánico y engagement.
 
 **Instrucción del usuario:**
@@ -864,19 +864,19 @@ El Agente Estratégico generó un plan orientado a posicionamiento de marca. El 
 
 **Nueva versión generada (fragmento):**
 
-> Objetivo principal: Generar leads calificados — directivos de TI y gerentes de transformación digital en entidades públicas.
-> Canal prioritario: LinkedIn — contenido orientado a conversión con formularios de captación.
+> Objetivo principal: Generar leads calificados  directivos de TI y gerentes de transformación digital en entidades públicas.
+> Canal prioritario: LinkedIn  contenido orientado a conversión con formularios de captación.
 > Métrica clave: Leads generados por campaña, tasa de apertura en seguimiento por email.
 >
 > *Nota del sistema: Esta versión fue generada como ajuste orientado. Los elementos no mencionados en la instrucción pueden haber variado.*
 
-#### Caso B — Ajuste de pieza
+#### Caso B  Ajuste de pieza
 
 El Agente Creativo generó un post de LinkedIn con tono educativo. El usuario quiere una versión más corta y directa.
 
 **Resultado original:**
 
-> La transformación digital del sector público no es un destino, es un proceso. Las entidades que avanzan con más seguridad tienen algo en común: acompañamiento estructurado, con visión de largo plazo y experiencia en implementación. En CINTEL llevamos más de 25 años ayudando a organizaciones a navegar ese camino. 👉 Descarga nuestro estudio: "Ruta de Transformación Digital en el Sector Público"
+> La transformación digital del sector público no es un destino, es un proceso. Las entidades que avanzan con más seguridad tienen algo en común: acompañamiento estructurado, con visión de largo plazo y experiencia en implementación. En CINTEL llevamos más de 25 años ayudando a organizaciones a navegar ese camino.  Descarga nuestro estudio: "Ruta de Transformación Digital en el Sector Público"
 
 **Instrucción del usuario:**
 > "Reduce el texto y hazlo más directo. Solo el gancho y el CTA."
@@ -884,11 +884,11 @@ El Agente Creativo generó un post de LinkedIn con tono educativo. El usuario qu
 **Nueva versión generada:**
 
 > 25 años acompañando la transformación digital del sector público en Colombia.
-> 👉 Descarga el estudio: "Ruta de Transformación Digital" → [enlace]
+>  Descarga el estudio: "Ruta de Transformación Digital"  [enlace]
 >
 > *Nota del sistema: Se redujo el cuerpo del texto según la instrucción. El tono y los hashtags pueden haberse ajustado.*
 
-#### Caso C — Ajuste de brief
+#### Caso C  Ajuste de brief
 
 **Instrucción del usuario:**
 > "Cambia el tono a institucional. Este brief es para un correo que va a secretarios de despacho."
@@ -928,16 +928,16 @@ El módulo de iteración no reemplaza a ninguno de los módulos anteriores: act�
 ### Diagramas
 
 ![Flujo de iteración controlada](assets/img/diagramas/iteracion-flujo.png)
-<a href="assets/plantuml/iteracion-flujo.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+<a href="assets/plantuml/iteracion-flujo.plantuml" download class="diagram-download"> Descargar fuente (.plantuml)</a>
 
 ![Tipos de ajuste y su alcance](assets/img/diagramas/iteracion-tipos-ajuste.png)
-<a href="assets/plantuml/iteracion-tipos-ajuste.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+<a href="assets/plantuml/iteracion-tipos-ajuste.plantuml" download class="diagram-download"> Descargar fuente (.plantuml)</a>
 
 ![Integración con módulos del sistema](assets/img/diagramas/iteracion-integracion-modulos.png)
-<a href="assets/plantuml/iteracion-integracion-modulos.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+<a href="assets/plantuml/iteracion-integracion-modulos.plantuml" download class="diagram-download"> Descargar fuente (.plantuml)</a>
 
 
-> 🔗 **Mockups navegables** — Los prototipos de este módulo están centralizados en la **[sección 7. Mockup](mockup.html)**. Desde allí puede recorrer el flujo completo del sistema.
+>  **Mockups navegables**  Los prototipos de este módulo están centralizados en la **[sección 7. Mockup](mockup.html)**. Desde allí puede recorrer el flujo completo del sistema.
 ---
 
 ## 2.5 Histórico
@@ -952,7 +952,7 @@ Su función central no es solo archivar, sino permitir que el equipo **aprenda d
 
 - Evita rehacer trabajo: el equipo puede recuperar campañas anteriores y adaptarlas.
 - Facilita la comparación: se pueden contrastar resultados entre periodos o canales.
-- Soporta la trazabilidad: cada pieza tiene un origen claro (campaña → brief → pieza).
+- Soporta la trazabilidad: cada pieza tiene un origen claro (campaña  brief  pieza).
 - Alimenta la iteración: el Agente puede usar campañas pasadas como punto de partida.
 
 **Conexión con otros módulos:**
@@ -983,12 +983,12 @@ Cada campaña se organiza como una estructura expandible en tres niveles:
 
 ```
 Campaña
-├── Brief 1
-│   ├── Pieza A (copy Instagram)
-│   ├── Pieza B (copy LinkedIn)
-│   └── Pieza C (asunto email)
-└── Brief 2
-    └── Pieza D (banner web)
+ Brief 1
+    Pieza A (copy Instagram)
+    Pieza B (copy LinkedIn)
+    Pieza C (asunto email)
+ Brief 2
+     Pieza D (banner web)
 ```
 
 Esta vista permite navegar el árbol completo de una campaña: desde el plan estratégico hasta cada pieza de contenido individual.
@@ -1012,7 +1012,7 @@ Desde cualquier campaña del histórico, el usuario puede iniciar una nueva ejec
 
 > **Usuario:** "Quiero ver campañas de 2024"
 >
-> **Sistema:** *(muestra lista filtrada: 4 campañas de 2024 — ANDICOM, Correo institucional, Lanzamiento IA, Black Friday)*
+> **Sistema:** *(muestra lista filtrada: 4 campañas de 2024  ANDICOM, Correo institucional, Lanzamiento IA, Black Friday)*
 >
 > **Usuario:** "Usa ANDICOM 2024 como base para 2025"
 >
@@ -1037,7 +1037,7 @@ Cada elemento del histórico expone sus metadatos de origen:
 1. El usuario accede al módulo de Histórico
 2. Aplica filtros o busca una campaña específica (año, tipo, canal, nombre)
 3. Selecciona una campaña del listado
-4. Navega la estructura jerárquica (Campaña → Briefs → Piezas)
+4. Navega la estructura jerárquica (Campaña  Briefs  Piezas)
 5. Consulta resultados disponibles: automáticos (Instagram) o cargados manualmente
 6. Elige una acción:
    - **Ver detalle**: examina el contenido completo de la campaña
@@ -1054,16 +1054,16 @@ Cada elemento del histórico expone sus metadatos de origen:
 ### Diagramas
 
 ![Estructura jerárquica de campañas](assets/img/diagramas/historico-estructura.png)
-<a href="assets/plantuml/historico-estructura.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+<a href="assets/plantuml/historico-estructura.plantuml" download class="diagram-download"> Descargar fuente (.plantuml)</a>
 
 ![Flujo de reutilización de campaña](assets/img/diagramas/historico-reutilizacion.png)
-<a href="assets/plantuml/historico-reutilizacion.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+<a href="assets/plantuml/historico-reutilizacion.plantuml" download class="diagram-download"> Descargar fuente (.plantuml)</a>
 
 ![Fuentes de resultados](assets/img/diagramas/historico-resultados.png)
-<a href="assets/plantuml/historico-resultados.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+<a href="assets/plantuml/historico-resultados.plantuml" download class="diagram-download"> Descargar fuente (.plantuml)</a>
 
 
-> 🔗 **Mockups navegables** — Los prototipos de este módulo están centralizados en la **[sección 7. Mockup](mockup.html)**. Desde allí puede recorrer el flujo completo del sistema.
+>  **Mockups navegables**  Los prototipos de este módulo están centralizados en la **[sección 7. Mockup](mockup.html)**. Desde allí puede recorrer el flujo completo del sistema.
 
 
 ---
@@ -1072,12 +1072,12 @@ Cada elemento del histórico expone sus metadatos de origen:
 
 En el MVP, la visión TO-BE prioriza demostrar el diferencial central desde el primer minuto de la sesión:
 
-1. **[Onboarding institucional](to-be-onboarding.html)** — Creación del perfil institucional persistente. **La persistencia de marca debe ser el primer feature demostrado**, no la generación de contenido.
-2. **[Contexto organizacional (BrandGuidelinesStore)](to-be-contexto.html)** — El sistema demuestra que ya conoce la organización en sesiones posteriores sin re-configuración.
-3. **[Agente Estratégico](to-be-agente-estrategico.html)** — Propone plan de comunicación institucional usando el contexto acumulado.
-4. **[Agente Creativo](to-be-agente-creativo.html)** — Adapta piezas por canal con identidad institucional aplicada. Usa banco de activos licenciados como flujo principal.
-5. **[Ajuste de resultados](to-be-iteracion.html)** — Refinamiento dentro del contexto institucional acumulado.
-6. **[Histórico y memoria](to-be-historico.html)** — Recuperar y retomar comunicaciones anteriores para continuidad temática.
+1. **[Onboarding institucional](to-be-onboarding.html)**  Creación del perfil institucional persistente. **La persistencia de marca debe ser el primer feature demostrado**, no la generación de contenido.
+2. **[Contexto organizacional (BrandGuidelinesStore)](to-be-contexto.html)**  El sistema demuestra que ya conoce la organización en sesiones posteriores sin re-configuración.
+3. **[Agente Estratégico](to-be-agente-estrategico.html)**  Propone plan de comunicación institucional usando el contexto acumulado.
+4. **[Agente Creativo](to-be-agente-creativo.html)**  Adapta piezas por canal con identidad institucional aplicada. Usa banco de activos licenciados como flujo principal.
+5. **[Ajuste de resultados](to-be-iteracion.html)**  Refinamiento dentro del contexto institucional acumulado.
+6. **[Histórico y memoria](to-be-historico.html)**  Recuperar y retomar comunicaciones anteriores para continuidad temática.
 
 Quedan por fuera del compromiso del MVP:
 
@@ -1098,3 +1098,4 @@ Esta sección TO-BE debe entenderse como **referencia funcional objetivo post-va
 El reposicionamiento del producto de "generador de campañas de marketing" a "Adaptador de Contenido Institucional" no es semántico: define el roadmap técnico, el diferencial frente a IAs generalistas y el argumento de venta ante el segmento institucional colombiano.
 
 > Trazabilidad: `context/analisis_md/04_Resultados_Validacion_MKT_v2.docx.md` · `context/analisis_md/05_Decisiones_Producto_MKT_v2.docx.md`
+

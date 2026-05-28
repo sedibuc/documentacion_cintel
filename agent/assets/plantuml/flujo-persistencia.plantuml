@@ -1,0 +1,13 @@
+@startuml
+!theme plain
+skinparam backgroundColor white
+skinparam shadowing false
+
+start
+:Recibir estado del agente;
+:Actualizar snapshot conversacional;
+:Append en bitacora de eventos;
+:Persistir entidades de campana;
+:Guardar trazas de observabilidad;
+stop
+@enduml

@@ -67,7 +67,7 @@ Canales: ChannelFormatters + Export/PublishingAdapter
 ```
 
 ![Arquitectura TO-BE - visión general de componentes](assets/img/diagramas/to-be-arquitectura.png)
-<a href="assets/plantuml/to-be-arquitectura.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+<a href="assets/plantuml/to-be-arquitectura.plantuml" download class="diagram-download">⬇ Descargar fuente (.plantuml)</a>
 
 ---
 
@@ -214,3 +214,4 @@ La página [Preguntas para experto técnico](preguntas-experto-tecnico.html) val
 ---
 
 Trazabilidad: [TO-BE funcional](to-be.html) · [Objetivos funcionales](to-be-objetivos-funcionales.html) · [Contexto organizacional](to-be-contexto.html) · [Onboarding](to-be-onboarding.html) · [Agente Estratégico](to-be-agente-estrategico.html) · [Agente Creativo](to-be-agente-creativo.html) · [Histórico](to-be-historico.html) · [Preguntas para experto técnico](preguntas-experto-tecnico.html)
+

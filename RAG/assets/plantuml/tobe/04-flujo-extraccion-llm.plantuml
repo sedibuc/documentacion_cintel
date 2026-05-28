@@ -1,0 +1,88 @@
+@startuml 04-flujo-extraccion-llm
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 11
+skinparam sequenceArrowThickness 1.5
+skinparam sequenceArrowColor #2E86C1
+skinparam sequenceBoxBackgroundColor #E8F4FD
+skinparam sequenceBoxBorderColor #AED6F1
+skinparam participantBackgroundColor #AED6F1
+skinparam participantBorderColor #2E86C1
+skinparam titleFontSize 14
+skinparam titleFontStyle bold
+skinparam noteBackgroundColor #FEF9E7
+skinparam noteBorderColor #F39C12
+
+title Vista 4 — Flujo de Extracción Estructurada con LLM\nFase 1 MVP · NER no incluido · LLM-first
+
+actor "Operador" as OP
+participant "Document\nService\n<<Tradicional>>" as DS #AED6F1
+participant "Schema\nRegistry\n<<Tradicional>>" as SR #AED6F1
+participant "Prompt\nRegistry\n<<Tradicional>>" as PR #AED6F1
+participant "LLM\nOrchestrator\n<<IA/LLM>>" as LO #A9DFBF
+participant "Context\nBuilder\n<<IA/LLM>>" as CB #A9DFBF
+participant "LLM Provider\n(configurable)\n<<IA/LLM>>" as LLM #A9DFBF
+participant "Output\nParser\n<<IA/LLM>>" as OP2 #A9DFBF
+participant "Validation\nEngine\n<<Hibrido>>" as VE #D5F5E3
+participant "Audit &\nMetrics\n<<Tradicional>>" as AM #AED6F1
+
+OP -> DS : solicita extracción\n(doc_id, tipo_documental)
+
+DS -> SR : obtiene esquema vigente\n(tipo, versión, campos esperados)
+SR --> DS : ExtractionSchema v{n}
+
+DS -> PR : obtiene prompt activo\n(tipo_documental, estado=PROD)
+PR --> DS : PromptTemplate v{n}
+
+DS -> LO : invoca extracción\n(texto_segmentado, esquema, prompt)
+
+note over LO #A9DFBF
+  <<IA / LLM>> — Componente central
+  LLM-first: no hay NER en Fase 1
+end note
+
+LO -> CB : construye contexto\n(texto + instrucciones + esquema JSON)
+CB --> LO : contexto_final
+
+LO -> LLM : POST /chat/completions\n(model, messages, response_format=json)
+note right of LLM #A9DFBF
+  Proveedor configurable:
+  GPT-4o mini (cloud)
+  Groq / Mistral
+  Ollama (on-premise)
+end note
+
+LLM --> LO : respuesta JSON raw
+
+LO -> OP2 : parsea JSON estructurado\n(valida formato de salida)
+
+alt Respuesta válida
+  OP2 --> LO : campos_extraidos {}
+else JSON inválido o incompleto
+  LO -> LLM : reintento con prompt ajustado\n(hasta 3 intentos)
+  LLM --> LO : respuesta corregida
+  OP2 --> LO : campos_extraidos {}
+end
+
+LO -> VE : valida campos contra esquema\n(tipos, obligatorios, rangos, catálogos)
+
+alt Validación OK
+  VE --> LO : resultado_validado + score
+else Errores de validación
+  VE --> LO : resultado_parcial + errores[]
+end
+
+LO --> DS : ExtractedResult\n{campos, score, errores, prompt_version, model_version}
+
+DS -> AM : registra trazabilidad\n(doc_id, prompt_v, schema_v, model, tokens_in, tokens_out, latencia_ms, costo_est)
+AM --> DS : audit_event_id
+
+DS --> OP : resultado estructurado\n+ indicadores de calidad
+
+note over OP, AM #FEF9E7
+  Si score < umbral configurado: resultado va a revisión humana.
+  NER supervisado no existe en Fase 1. Evaluación post-producción.
+end note
+
+@enduml

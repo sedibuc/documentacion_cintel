@@ -50,7 +50,7 @@ Esta página define el módulo técnico que habilita aislamiento multi-organizac
 ### 5.3 Diagrama técnico del dominio
 
 ![Arquitectura de seguridad y escalado](assets/img/diagramas/decisiones-modulos-seguridad-escalado-arquitectura.png)
-<a href="assets/plantuml/decisiones-modulos-seguridad-escalado-arquitectura.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+<a href="assets/plantuml/decisiones-modulos-seguridad-escalado-arquitectura.plantuml" download class="diagram-download"> Descargar fuente (.plantuml)</a>
 
 ### 5.4 Criterios de aceptación
 
@@ -61,3 +61,4 @@ Esta página define el módulo técnico que habilita aislamiento multi-organizac
 ---
 
 Trazabilidad: [Mapa de módulos](decisiones-modulos.html) · [Arquitectura TO-BE](to-be-arquitectura.html)
+

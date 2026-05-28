@@ -1,0 +1,80 @@
+@startuml iteracion-integracion-modulos
+skinparam backgroundColor #1a202c
+skinparam defaultFontColor #d4dae6
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 13
+
+skinparam component {
+  BackgroundColor #1e2533
+  BorderColor #4db8b5
+  FontColor #d4dae6
+}
+
+skinparam package {
+  BackgroundColor #161b27
+  BorderColor #4db8b5
+  FontColor #4db8b5
+  FontStyle bold
+}
+
+skinparam interface {
+  BackgroundColor #0f5a58
+  BorderColor #4db8b5
+  FontColor #f0ece3
+}
+
+skinparam arrow {
+  Color #4db8b5
+  FontColor #9ba5b4
+  FontSize 11
+}
+
+skinparam note {
+  BackgroundColor #8d4a1f
+  BorderColor #d4a47a
+  FontColor #f0ece3
+}
+
+title Integración del módulo de ajuste con el sistema
+
+package "2.1 Onboarding" {
+  [Contexto de campaña\n(empresa · sector · servicios)] as ctx
+}
+
+package "2.2 Agente Estratégico" {
+  [Plan de campaña] as plan
+}
+
+package "2.3 Agente Creativo" {
+  [Brief de diseño] as brief
+  [Piezas generadas] as piezas
+}
+
+package "2.4 Ajuste de resultados" #0f5a58 {
+  [Instrucción del usuario] as instruccion
+  [Motor de iteración] as motor
+  [Nueva versión del resultado] as resultado
+}
+
+package "2.5 Histórico" {
+  [Versiones anteriores] as historico
+}
+
+ctx --> plan : alimenta
+ctx --> brief : alimenta
+plan --> instruccion : resultado ajustable
+brief --> instruccion : resultado ajustable
+piezas --> instruccion : resultado ajustable
+instruccion --> motor : combina resultado + instrucción
+ctx ..> motor : contexto siempre activo
+motor --> resultado : genera
+historico ..> motor : versiones previas\n(consulta opcional)
+
+note right of motor
+  No garantiza consistencia
+  exacta entre iteraciones.
+  Resultado orientado,
+  no determinístico.
+end note
+
+@enduml

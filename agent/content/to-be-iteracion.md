@@ -1,4 +1,4 @@
-# TO-BE — Módulo 2.4: Ajuste de resultados (Iteración controlada)
+# TO-BE  Módulo 2.4: Ajuste de resultados (Iteración controlada)
 
 > Módulo de refinamiento iterativo. Permite ajustar cualquier resultado generado mediante instrucciones en lenguaje natural.
 
@@ -80,7 +80,7 @@ Qué puede cambiar: extensión, estructura, tono, énfasis temático, elementos 
 
 El flujo de ajuste es el mismo independientemente del tipo (estrategia, brief o pieza):
 
-1. **El usuario visualiza el resultado actual** — plan, brief o pieza generada.
+1. **El usuario visualiza el resultado actual**  plan, brief o pieza generada.
 2. **El usuario escribe una instrucción** en lenguaje natural en el campo de ajuste.
 3. **El sistema combina** el resultado anterior con la nueva instrucción y el contexto de campaña activo.
 4. **El agente genera una nueva versión** del resultado.
@@ -93,14 +93,14 @@ El sistema mantiene en todo momento el contexto de campaña (empresa, sector, se
 
 ### Ejemplos de uso (completos)
 
-#### Caso A — Ajuste de estrategia
+#### Caso A  Ajuste de estrategia
 
 El Agente Estratégico generó un plan orientado a posicionamiento de marca. El usuario quiere redirigirlo hacia generación de leads.
 
 **Resultado original (fragmento):**
 
 > Objetivo principal: Fortalecer el posicionamiento institucional de CINTEL como referente en transformación digital para el sector público.
-> Canal prioritario: LinkedIn — contenido educativo.
+> Canal prioritario: LinkedIn  contenido educativo.
 > Métrica clave: Alcance orgánico y engagement.
 
 **Instrucción del usuario:**
@@ -108,19 +108,19 @@ El Agente Estratégico generó un plan orientado a posicionamiento de marca. El 
 
 **Nueva versión generada (fragmento):**
 
-> Objetivo principal: Generar leads calificados — directivos de TI y gerentes de transformación digital en entidades públicas.
-> Canal prioritario: LinkedIn — contenido orientado a conversión con formularios de captación.
+> Objetivo principal: Generar leads calificados  directivos de TI y gerentes de transformación digital en entidades públicas.
+> Canal prioritario: LinkedIn  contenido orientado a conversión con formularios de captación.
 > Métrica clave: Leads generados por campaña, tasa de apertura en seguimiento por email.
 >
 > *Nota del sistema: Esta versión fue generada como ajuste orientado. Los elementos no mencionados en la instrucción pueden haber variado.*
 
-#### Caso B — Ajuste de pieza
+#### Caso B  Ajuste de pieza
 
 El Agente Creativo generó un post de LinkedIn con tono educativo. El usuario quiere una versión más corta y directa.
 
 **Resultado original:**
 
-> La transformación digital del sector público no es un destino, es un proceso. Las entidades que avanzan con más seguridad tienen algo en común: acompañamiento estructurado, con visión de largo plazo y experiencia en implementación. En CINTEL llevamos más de 25 años ayudando a organizaciones a navegar ese camino. 👉 Descarga nuestro estudio: "Ruta de Transformación Digital en el Sector Público"
+> La transformación digital del sector público no es un destino, es un proceso. Las entidades que avanzan con más seguridad tienen algo en común: acompañamiento estructurado, con visión de largo plazo y experiencia en implementación. En CINTEL llevamos más de 25 años ayudando a organizaciones a navegar ese camino.  Descarga nuestro estudio: "Ruta de Transformación Digital en el Sector Público"
 
 **Instrucción del usuario:**
 > "Reduce el texto y hazlo más directo. Solo el gancho y el CTA."
@@ -128,11 +128,11 @@ El Agente Creativo generó un post de LinkedIn con tono educativo. El usuario qu
 **Nueva versión generada:**
 
 > 25 años acompañando la transformación digital del sector público en Colombia.
-> 👉 Descarga el estudio: "Ruta de Transformación Digital" → [enlace]
+>  Descarga el estudio: "Ruta de Transformación Digital"  [enlace]
 >
 > *Nota del sistema: Se redujo el cuerpo del texto según la instrucción. El tono y los hashtags pueden haberse ajustado.*
 
-#### Caso C — Ajuste de brief
+#### Caso C  Ajuste de brief
 
 **Instrucción del usuario:**
 > "Cambia el tono a institucional. Este brief es para un correo que va a secretarios de despacho."
@@ -172,13 +172,13 @@ El módulo de iteración no reemplaza a ninguno de los módulos anteriores: act�
 ### Diagramas
 
 ![Flujo de iteración controlada](assets/img/diagramas/iteracion-flujo.png)
-<a href="assets/plantuml/iteracion-flujo.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+<a href="assets/plantuml/iteracion-flujo.plantuml" download class="diagram-download"> Descargar fuente (.plantuml)</a>
 
 ![Tipos de ajuste y su alcance](assets/img/diagramas/iteracion-tipos-ajuste.png)
-<a href="assets/plantuml/iteracion-tipos-ajuste.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+<a href="assets/plantuml/iteracion-tipos-ajuste.plantuml" download class="diagram-download"> Descargar fuente (.plantuml)</a>
 
 ![Integración con módulos del sistema](assets/img/diagramas/iteracion-integracion-modulos.png)
-<a href="assets/plantuml/iteracion-integracion-modulos.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+<a href="assets/plantuml/iteracion-integracion-modulos.plantuml" download class="diagram-download"> Descargar fuente (.plantuml)</a>
 
 
-> 🔗 **Prototipo navegable** — Consulte el flujo interactivo en la **[sección Prototipo navegable](mockup.html)**.
+>  **Prototipo navegable**  Consulte el flujo interactivo en la **[sección Prototipo navegable](mockup.html)**.

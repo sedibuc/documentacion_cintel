@@ -1,4 +1,4 @@
-# TO-BE — Módulo 2.3: Agente Estratégico
+# TO-BE  Módulo 2.3: Agente Estratégico
 
 > Módulo de planeación de comunicación institucional. Interpreta objetivos institucionales, audiencias, restricciones y canales para proponer el plan de comunicación, usando el perfil institucional persistente del BrandGuidelinesStore.
 
@@ -32,7 +32,7 @@ El agente interpreta los **objetivos institucionales** de la organización (no s
 
 El Agente Estratégico se presenta como un entorno tipo IDE de marketing: un espacio de trabajo con múltiples paneles que reflejan tanto la conversación como el contexto y el razonamiento del agente.
 
-#### Panel izquierdo — Contexto de empresa
+#### Panel izquierdo  Contexto de empresa
 
 Muestra la información institucional configurada en el onboarding:
 - productos y servicios (los que el usuario validó a partir del scraping),
@@ -41,13 +41,13 @@ Muestra la información institucional configurada en el onboarding:
 
 El usuario puede filtrar o seleccionar qué elementos incluir como contexto de la campaña en curso. Si quiere enfocar el plan en un servicio específico, lo marca aquí.
 
-#### Editor central — Conversación con el agente
+#### Editor central  Conversación con el agente
 
 El espacio principal es una conversación en lenguaje natural. El usuario escribe sus instrucciones y el agente responde con texto, razonamiento y fragmentos del plan. La conversación es el mecanismo de construcción: cada intercambio refina el plan.
 
 El agente no espera que el usuario llene formularios: hace preguntas cuando necesita aclaración, propone cuando tiene suficiente contexto y explica sus decisiones.
 
-#### Panel derecho — Razonamiento del agente
+#### Panel derecho  Razonamiento del agente
 
 Muestra en tiempo real lo que el agente está considerando:
 - objetivos identificados a partir de la conversación,
@@ -58,11 +58,11 @@ Muestra en tiempo real lo que el agente está considerando:
 
 Este panel hace visible la "inteligencia" del agente: el usuario puede ver cómo se actualiza a medida que avanza la conversación.
 
-#### Panel superior — Campañas históricas
+#### Panel superior  Campañas históricas
 
 Permite al usuario seleccionar una campaña anterior como punto de partida. Cuando se selecciona una campaña, el agente la incorpora como contexto adicional y puede proponer una nueva versión adaptada al objetivo actual.
 
-#### Panel inferior — Entrada y salida
+#### Panel inferior  Entrada y salida
 
 La barra inferior tiene el campo de texto donde el usuario escribe. Encima del input, a medida que la conversación avanza, se muestra el plan de comunicación generado de forma incremental.
 
@@ -108,7 +108,7 @@ Agente:  Con base en el perfil de CINTEL, identifico que este tema conecta
          marca o promover un servicio específico?
 
 Panel derecho actualiza:
-  · Empresa: CINTEL — sector innovación y TI
+  · Empresa: CINTEL  sector innovación y TI
   · Tema identificado: transformación digital
   · Esperando: definición de objetivo
 
@@ -180,25 +180,25 @@ Panel derecho actualiza:
 ### Diagramas de flujo
 
 ![Flujo principal del Agente Estratégico](assets/img/diagramas/agente-estrategico-flujo.png)
-<a href="assets/plantuml/agente-estrategico-flujo.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+<a href="assets/plantuml/agente-estrategico-flujo.plantuml" download class="diagram-download"> Descargar fuente (.plantuml)</a>
 
 ![Flujo de reutilización de campaña anterior](assets/img/diagramas/agente-estrategico-reutilizacion.png)
-<a href="assets/plantuml/agente-estrategico-reutilizacion.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+<a href="assets/plantuml/agente-estrategico-reutilizacion.plantuml" download class="diagram-download"> Descargar fuente (.plantuml)</a>
 
 ![Flujo de iteración conversacional](assets/img/diagramas/agente-estrategico-conversacion.png)
-<a href="assets/plantuml/agente-estrategico-conversacion.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+<a href="assets/plantuml/agente-estrategico-conversacion.plantuml" download class="diagram-download"> Descargar fuente (.plantuml)</a>
 
 ---
 
 
-> 🔗 **Prototipo navegable** — Consulte el flujo interactivo del agente en la **[sección Prototipo navegable](mockup.html)**.
+>  **Prototipo navegable**  Consulte el flujo interactivo del agente en la **[sección Prototipo navegable](mockup.html)**.
 
 ---
 
-### Ejemplo de salida — plan de comunicación generado
+### Ejemplo de salida  plan de comunicación generado
 
 ```markdown
-# Plan de comunicación — ANDICOM 2026 (sector público)
+# Plan de comunicación  ANDICOM 2026 (sector público)
 
 ## Objetivo
 Incrementar registros al evento, con foco en tomadores de decisión
@@ -221,10 +221,11 @@ Campaña informativa con énfasis en casos de aplicación en el sector público,
 resultados concretos y agenda práctica del evento.
 
 ## Base histórica utilizada
-ANDICOM 2025 — 320 registros — canales: LinkedIn + email
+ANDICOM 2025  320 registros  canales: LinkedIn + email
 Adaptación: mensaje actualizado para reflejar adopción real en Colombia
 y audiencia reorientada a sector público.
 ```
 
 ---
+
 

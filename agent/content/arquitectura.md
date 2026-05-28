@@ -130,11 +130,15 @@ Este diagrama resume la topología lógica del sistema y las dependencias entre 
 
 ![Arquitectura lógica general](assets/img/diagramas/arquitectura-general.png)
 
+<a href="assets/plantuml/arquitectura-general.plantuml" download class="diagram-download">⬇ Descargar fuente (.plantuml)</a>
+
 ### 3.2 Flujo conversacional real del grafo
 
 Este flujo refleja la secuencia real del `CampaignAgent` definida en LangGraph. Se ajusta respecto de versiones previas para mostrar nodos que sí existen en código, como `ask_url` y `ask_campaign_docs`, y para dejar explícito que la confirmación del resumen puede devolver al lazo de captura adicional.
 
 ![Flujo conversacional real del grafo](assets/img/diagramas/flujo-grafo.png)
+
+<a href="assets/plantuml/flujo-grafo.plantuml" download class="diagram-download">⬇ Descargar fuente (.plantuml)</a>
 
 ### 3.3 Flujo interno de `generate_campaign`
 
@@ -142,11 +146,15 @@ Este diagrama descompone el nodo más costoso y más relevante del sistema. La i
 
 ![Flujo interno de generate_campaign](assets/img/diagramas/flujo-generate-campaign.png)
 
+<a href="assets/plantuml/flujo-generate-campaign.plantuml" download class="diagram-download">⬇ Descargar fuente (.plantuml)</a>
+
 ### 3.4 Flujo SSE / streaming
 
 La ruta SSE es crítica porque condiciona la experiencia conversacional y la observabilidad del sistema. El diagrama muestra el encadenamiento real entre `Routes /api/stream`, `CampaignAgent`, `LangGraph`, `SseSink` y los middlewares de chunking y métricas antes de volver al navegador.
 
 ![Flujo SSE](assets/img/diagramas/flujo-sse.png)
+
+<a href="assets/plantuml/flujo-sse.plantuml" download class="diagram-download">⬇ Descargar fuente (.plantuml)</a>
 
 ### 3.5 Flujo de scraping + enriquecimiento
 
@@ -154,17 +162,23 @@ Este diagrama documenta el recorrido desde la URL proporcionada por el usuario h
 
 ![Flujo de scraping y extracción de contexto](assets/img/diagramas/flujo-scraping.png)
 
+<a href="assets/plantuml/flujo-scraping.plantuml" download class="diagram-download">⬇ Descargar fuente (.plantuml)</a>
+
 ### 3.6 Flujo de Instagram + OCR opcional
 
 La integración con Instagram aporta campañas previas y señales de contexto; el OCR es un paso posterior y opcional, no parte de la obtención inicial desde Meta. El diagrama deja explícito ese desacople para evitar confundir la llamada al Graph API con el enriquecimiento multimodal.
 
 ![Flujo de Instagram y OCR opcional](assets/img/diagramas/flujo-instagram-ocr.png)
 
+<a href="assets/plantuml/flujo-instagram-ocr.plantuml" download class="diagram-download">⬇ Descargar fuente (.plantuml)</a>
+
 ### 3.7 Flujo de persistencia conversacional
 
 La persistencia conversacional se resuelve con snapshot actual y bitácora append-only. Esta vista es importante porque complementa la memoria en RAM de LangGraph con una traza durable para auditoría, reconsulta y análisis histórico.
 
 ![Persistencia de conversación](assets/img/diagramas/flujo-persistencia.png)
+
+<a href="assets/plantuml/flujo-persistencia.plantuml" download class="diagram-download">⬇ Descargar fuente (.plantuml)</a>
 
 ---
 

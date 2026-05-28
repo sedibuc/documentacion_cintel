@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portafolio de Micrositios | CINTEL</title>
+  <style>
+    :root {
+      --bg: #f3efe6;
+      --panel: rgba(255, 252, 246, 0.94);
+      --ink: #1e2430;
+      --muted: #586171;
+      --line: rgba(30, 36, 48, 0.14);
+      --accent: #0f5a58;
+      --accent-strong: #073534;
+      --accent-soft: #d6ebe8;
+      --shadow: 0 24px 60px rgba(26, 32, 41, 0.12);
+      --radius: 20px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: "Aptos", "Segoe UI Variable", "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(15, 90, 88, 0.16), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(185, 119, 53, 0.12), transparent 30%),
+        linear-gradient(180deg, #f7f1e7 0%, #f0ece3 50%, #ece7de 100%);
+      line-height: 1.6;
+    }
+
+    .container {
+      width: min(1120px, 92vw);
+      margin: 0 auto;
+      padding: 3rem 0 2.4rem;
+    }
+
+    .hero {
+      padding: 2.4rem;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .eyebrow {
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    h1 {
+      margin: 0.35rem 0 0.65rem;
+      font-size: clamp(2rem, 4.2vw, 3.2rem);
+      line-height: 1.05;
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 70ch;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.1rem;
+      margin-top: 1.35rem;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.78);
+      padding: 1.15rem;
+    }
+
+    .card h2 {
+      margin: 0 0 0.35rem;
+      font-size: 1.25rem;
+      color: var(--accent-strong);
+    }
+
+    .card p {
+      margin: 0 0 0.95rem;
+      color: var(--muted);
+      min-height: 4.5rem;
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      padding: 0.62rem 1rem;
+      font-weight: 700;
+      text-decoration: none;
+      border: 1px solid transparent;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    .btn-primary {
+      background: var(--accent-strong);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 22px rgba(7, 53, 52, 0.24);
+    }
+
+    .btn-secondary {
+      background: var(--accent-soft);
+      border-color: rgba(15, 90, 88, 0.22);
+      color: var(--accent-strong);
+    }
+
+    .btn-secondary:hover {
+      background: #cae4e0;
+      transform: translateY(-1px);
+    }
+
+    footer {
+      margin-top: 1.2rem;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <section class="hero">
+      <p class="eyebrow">Portafolio documental</p>
+      <h1>Micrositios de arquitectura y evolución de soluciones IA</h1>
+      <p>
+        Punto de entrada unificado para la documentación ejecutiva y técnica de dos iniciativas: una solución
+        de Document Intelligence y una plataforma de agentes de IA. Ambos micrositios comparten estructura
+        de navegación comparable y mantienen su contenido especializado por proyecto.
+      </p>
+
+      <div class="cards">
+        <article class="card">
+          <h2>Micrositio RAG / Document Intelligence</h2>
+          <p>
+            Diagnóstico del estado actual, arquitectura AS-IS y TO-BE, brechas, decisiones por módulos,
+            cronograma, despliegue y recomendaciones para evolucionar a un Document Intelligence Engine.
+          </p>
+          <div class="actions">
+            <a class="btn btn-primary" href="RAG/index.html">Entrar al micrositio RAG</a>
+            <a class="btn btn-secondary" href="RAG/README.md">Ver README RAG</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>Micrositio Agentes de IA</h2>
+          <p>
+            Documentación de arquitectura basada en agentes para planeación y creación de contenidos:
+            contexto, diagnóstico, TO-BE funcional, decisiones técnicas, cronograma y cierre de recomendaciones.
+          </p>
+          <div class="actions">
+            <a class="btn btn-primary" href="agent/index.html">Entrar al micrositio agent</a>
+            <a class="btn btn-secondary" href="agent/README.md">Ver README agent</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>Micrositio Seguimiento Contractual</h2>
+          <p>
+            Seguimiento de cumplimiento contractual de segunda fase para RAG y Agent: matriz de entregables,
+            faltantes explícitos, riesgos, estado por proyecto y plan de cierre de brechas.
+          </p>
+          <div class="actions">
+            <a class="btn btn-primary" href="seguimiento-contractual/index.html">Entrar a seguimiento contractual</a>
+            <a class="btn btn-secondary" href="seguimiento-contractual/README.md">Ver README seguimiento</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <footer>
+      Recomendación: abrir desde servidor local para carga de contenido Markdown por fetch.
+    </footer>
+  </main>
+</body>
+</html>

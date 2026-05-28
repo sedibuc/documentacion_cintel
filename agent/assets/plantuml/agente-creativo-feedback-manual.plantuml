@@ -1,0 +1,57 @@
+@startuml agente-creativo-feedback-manual
+skinparam backgroundColor #1a202c
+skinparam defaultFontColor #d4dae6
+skinparam defaultFontName "Segoe UI"
+skinparam activityBackgroundColor #1e2533
+skinparam activityBorderColor #586171
+skinparam activityFontColor #e8f4f3
+skinparam arrowColor #9ba5b4
+skinparam noteBackgroundColor #252d3d
+skinparam noteBorderColor #586171
+skinparam noteFontColor #9ba5b4
+
+title Agente Creativo - Otros canales: Carga manual de resultados
+
+start
+note right
+  Flujo de retroalimentacion posterior.
+  Independiente del flujo de generacion.
+  No ocurre en tiempo real.
+end note
+:Usuario publica pieza en canal;
+note right
+  LinkedIn, Email, Evento, Landing.
+  Sin integracion automatica.
+end note
+
+:Tiempo transcurre - resultados disponibles;
+
+:Usuario accede a la seccion de resultados de la pieza;
+:Selecciona la pieza correspondiente;
+:Hace clic en "Cargar resultados";
+
+:Sistema muestra selector de archivo;
+note right
+  Formatos aceptados:
+  Excel (.xlsx) o CSV (.csv)
+end note
+
+:Usuario sube archivo con datos de resultados;
+
+:Sistema hace preview de datos importados;
+note right
+  Vista previa de columnas:
+  fecha, canal, metrica, valor
+end note
+
+if (Datos validos?) then (Si)
+  :Usuario confirma importacion;
+  :Sistema asocia resultados a la pieza;
+  :Resultados visibles en el panel de la pieza;
+else (No - error en formato)
+  :Sistema muestra mensaje de error;
+  :Usuario corrige el archivo y reintenta;
+endif
+
+stop
+@enduml

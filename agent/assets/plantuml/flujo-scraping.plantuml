@@ -1,0 +1,16 @@
+@startuml
+!theme plain
+skinparam backgroundColor white
+skinparam shadowing false
+
+start
+:Usuario entrega URL;
+:RequestsScraper descarga contenido;
+if (Bloqueo?) then (si)
+  :Selenium fallback opcional;
+endif
+:Normalizar texto;
+:Enriquecer con LLM;
+:Persistir contexto institucional;
+stop
+@enduml

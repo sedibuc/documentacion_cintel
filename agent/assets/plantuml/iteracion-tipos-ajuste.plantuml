@@ -1,0 +1,92 @@
+@startuml iteracion-tipos-ajuste
+skinparam backgroundColor #1a202c
+skinparam defaultFontColor #d4dae6
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 12
+
+skinparam package {
+  BackgroundColor #1e2533
+  BorderColor #4db8b5
+  FontColor #4db8b5
+  FontStyle bold
+}
+
+skinparam class {
+  BackgroundColor #161b27
+  BorderColor #4db8b5
+  FontColor #d4dae6
+  AttributeFontColor #9ba5b4
+  HeaderBackgroundColor #0f5a58
+  HeaderFontColor #f0ece3
+}
+
+skinparam arrow {
+  Color #4db8b5
+  FontColor #9ba5b4
+  FontSize 11
+}
+
+title Tipos de ajuste y su alcance
+
+package "Agente Estratégico" {
+  class "Plan de campaña" as plan {
+    Objetivo general
+    Audiencia objetivo
+    Canales priorizados
+    Mensajes clave
+    KPIs propuestos
+  }
+}
+
+package "Agente Creativo — Fase 1" {
+  class "Brief de diseño" as brief {
+    Tono de comunicación
+    Mensaje principal
+    CTA
+    Restricciones
+    Audiencia específica
+  }
+}
+
+package "Agente Creativo — Fase 2" {
+  class "Pieza de contenido" as pieza {
+    Extensión del texto
+    Estructura
+    Tono
+    Énfasis temático
+    Elementos de formato
+  }
+}
+
+class "Ajuste de\nestrategia" as adj_est #0f5a58 {
+  "Hazlo más enfocado en leads"
+  "Cambia la audiencia"
+  "Reduce los canales"
+  "Más énfasis institucional"
+}
+
+class "Ajuste de\nbrief" as adj_brief #0f5a58 {
+  "Hazlo más formal"
+  "Cambia el CTA"
+  "Restringe imágenes stock"
+  "Enfoca en segmento"
+}
+
+class "Ajuste de\npieza" as adj_pieza #0f5a58 {
+  "Reduce el texto"
+  "Más llamativo"
+  "Cambia el enfoque"
+  "Elimina hashtags"
+}
+
+adj_est --> plan : modifica
+adj_brief --> brief : modifica
+adj_pieza --> pieza : modifica
+
+note bottom of adj_est
+  No determinístico:
+  los resultados pueden variar
+  entre iteraciones
+end note
+
+@enduml

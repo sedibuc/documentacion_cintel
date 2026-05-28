@@ -1,0 +1,59 @@
+@startuml 01-vista-negocio-capacidades
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 11
+skinparam rectangleBorderThickness 1.5
+skinparam titleFontSize 14
+skinparam titleFontStyle bold
+skinparam legendBackgroundColor #FAFAFA
+
+title Document Intelligence Engine MultiTenant\nVista de Negocio — Capacidades del Producto
+
+rectangle "<b>DOCUMENT INTELLIGENCE ENGINE — CAPACIDADES ESENCIALES MVP</b>" as MVP #E8F4FD {
+
+  rectangle "MultiTenant Platform Core\n<i><<Tradicional — Esencial>></i>\n· Empresas cliente / tenants\n· Usuarios y roles por tenant\n· Configuraciones por tenant\n· Aislamiento por tenant_id" as MT #AED6F1
+
+  rectangle "Document Schema Registry\n<i><<Tradicional>></i>\n· Tipos documentales\n· Campos esperados\n· Reglas de validacion\n· Versionamiento" as SR #AED6F1
+
+  rectangle "Document Intake Service\n<i><<Tradicional>></i>\n· Carga individual y por lote\n· Registro de metadatos\n· File Storage\n· Estado de procesamiento" as DS #AED6F1
+
+  rectangle "Content Extraction Strategy\n<i><<Procesamiento — Hibrido>></i>\n· Extraccion nativa (PDF/DOCX/XLSX/CSV digitales)\n· LLM multimodal si modelo y soberania lo permiten\n· OCR solo como fallback (escaneados/imagenes)\n· Control de integridad y trazabilidad del metodo" as CES #D5E8D4
+
+  rectangle "StructuredExtractor\n<i><<IA / LLM — Central>></i>\n· Extraccion de campos\n· Salida JSON estructurada\n· Confianza por campo\n· Trazabilidad LLM" as SE #A9DFBF
+
+  rectangle "LLM Orchestrator\n<i><<IA / LLM>></i>\n· Seleccion de modelo\n· Prompt Registry\n· Reintentos controlados\n· Registro de tokens/costos" as LO #A9DFBF
+
+  rectangle "CrossValidator\n<i><<Tradicional — Nucleo>></i>\n· Comparacion vs. CSV/Excel\n· Deteccion de diferencias\n· Clasificacion de discrepancias" as CV #AED6F1
+
+  rectangle "DiscrepancyAlertEngine\n<i><<Tradicional>></i>\n· Alertas por discrepancia\n· Severidad: BLOCKING/WARNING/INFO\n· Estado de resolucion\n· Notificacion email/webhook" as DA #AED6F1
+
+  rectangle "Alert Dashboard / Human Review\n<i><<Tradicional>></i>\n· Ver documentos y campos\n· Resolver alertas\n· Aprobar/corregir/rechazar\n· Trazabilidad de revision" as AD #AED6F1
+
+  rectangle "API REST documentada\n<i><<Tradicional — Canal principal>></i>\n· POST /documents · /batches\n· POST /extract · /validate\n· GET /alerts · /extraction-runs" as API #AED6F1
+
+  rectangle "Audit and Observability\n<i><<Tradicional>></i>\n· Trazabilidad por tenant/documento\n· Metricas de latencia y tokens\n· Auditoria funcional inmutable" as AO #AED6F1
+
+  rectangle "Soberania de Datos\n<i><<Requisito Transversal>></i>\n· On-premise o cloud certificado\n· Infraestructura controlada\n· Sin dependencia de nube abierta" as SD #FEF9E7
+}
+
+rectangle "<b>FUERA DE ALCANCE — FASE 1</b>" as FORA #F4F6F7 {
+  rectangle "Chat / RAG Conversacional\n<i><<No MVP — No implementar>></i>" as F1 #FADBD8
+  rectangle "Q&A libre sobre documentos\n<i><<No MVP>></i>" as F2 #FADBD8
+  rectangle "NER especializado\n<i><<Futuro condicional>></i>" as F3 #D5D8DC
+  rectangle "Fine-tuning de LLMs\n<i><<Futuro condicional>></i>" as F4 #D5D8DC
+  rectangle "Conectores ERP/BD cliente\n<i><<Futuro / Post-MVP>></i>" as F5 #D5D8DC
+  rectangle "Reemplazo Copilot / Gemini\n<i><<No es el posicionamiento>></i>" as F6 #FADBD8
+}
+
+legend right
+  | Color | Tipo |
+  |<#AED6F1> | Tradicional (MVP esencial) |
+  |<#A9DFBF> | IA / LLM (MVP) |
+  |<#D5E8D4> | Content Extraction Strategy (Hibrido) |
+  |<#FEF9E7> | Requisito transversal |
+  |<#FADBD8> | Fuera del alcance — No implementar |
+  |<#D5D8DC> | Futuro condicional / Post-MVP |
+endlegend
+
+@enduml

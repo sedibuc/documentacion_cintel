@@ -1,0 +1,33 @@
+@startuml
+!theme plain
+skinparam backgroundColor white
+skinparam shadowing false
+
+package "Interfaz" {
+  [Web Chat UI]
+}
+
+package "Backend" {
+  [FastAPI/Flask API]
+  [RAG Orchestrator]
+}
+
+package "Pipeline documental" {
+  [OCR]
+  [Embedding Service]
+  [Vector DB]
+}
+
+package "Servicios externos" {
+  [LLM Provider]
+  [Storage]
+}
+
+[Web Chat UI] --> [FastAPI/Flask API]
+[FastAPI/Flask API] --> [RAG Orchestrator]
+[RAG Orchestrator] --> [OCR]
+[RAG Orchestrator] --> [Embedding Service]
+[RAG Orchestrator] --> [Vector DB]
+[RAG Orchestrator] --> [LLM Provider]
+[RAG Orchestrator] --> [Storage]
+@enduml

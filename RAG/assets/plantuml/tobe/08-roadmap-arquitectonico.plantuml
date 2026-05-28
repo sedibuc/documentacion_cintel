@@ -1,0 +1,65 @@
+﻿@startuml 08-roadmap-arquitectonico
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 10
+skinparam packageBackgroundColor #FAFAFA
+skinparam packageBorderColor #AAAAAA
+skinparam rectangleBorderThickness 1.5
+skinparam titleFontSize 14
+skinparam titleFontStyle bold
+skinparam noteBackgroundColor #FEF9E7
+skinparam noteBorderColor #F39C12
+skinparam legendBackgroundColor #FAFAFA
+
+title Vista 8 - Roadmap Arquitectonico por Fases\nAgente Documental CINTEL · LLM-first · NER fuera de Fase 1
+
+package "FASE 1: MVP LLM-first (~3 meses)" as F1 #AED6F1 {
+  rectangle "Auth + MultiTenant + RBAC\n<<Tradicional>>" as T01 #C8E6FF
+  rectangle "Gestion Documental + Lotes\n<<Tradicional>>" as T02 #C8E6FF
+  rectangle "LLM Orchestrator + Prompt Registry\n<<IA / LLM>>" as T03 #A9DFBF
+  rectangle "Schema Registry + Output Parser\n<<IA / LLM>>" as T04 #A9DFBF
+  rectangle "Revision Humana + UI Operativa\n<<Tradicional>>" as T05 #C8E6FF
+}
+
+package "FASE 2: Hardening productivo (~2 meses)" as F2 #D6EAF8 {
+  rectangle "Observabilidad avanzada (OTel)\n<<Tradicional>>" as T06 #C8E6FF
+  rectangle "Prompt versionado + CI/CD prompts\n<<IA / LLM>>" as T07 #A9DFBF
+  rectangle "Metricas de calidad LLM + dashboards\n<<IA / LLM>>" as T08 #A9DFBF
+  rectangle "Webhooks + integraciones externas\n<<Tradicional>>" as T09 #C8E6FF
+}
+
+package "FASE 3: Evaluacion NER (condicional)\nSolo si evidencia lo justifica" as F3 #F4F6F7 {
+  rectangle "Analisis costo/beneficio LLM vs NER\n<<Decision estrategica>>" as T10 #D5D8DC
+  rectangle "Spike: pipeline NER experimental\n<<Exploracion>>" as T11 #D5D8DC
+  rectangle "NER Supervisado\n<<Futuro condicional>>" as T12 #D5D8DC
+}
+
+package "FASE 4: Escala y automatizacion" as F4 #E9F7EF {
+  rectangle "Kubernetes + auto-scaling\n<<Tradicional>>" as T13 #C8E6FF
+  rectangle "Conectores avanzados (SFTP, ERP)\n<<Tradicional>>" as T14 #C8E6FF
+  rectangle "Comparacion semantica multi-documento\n<<IA / LLM>>" as T15 #A9DFBF
+}
+
+F1 -right-> F2 : piloto en produccion
+F2 -right-> F3 : evidencia acumulada
+F3 -right-> F4 : arquitectura estabilizada
+
+note bottom of F3
+  NER queda fuera de Fase 1 y Fase 2.
+  Se evalua solo con evidencia real de
+  produccion: limitaciones del LLM que
+  prompting o validaciones no resuelven.
+end note
+
+legend right
+  | Color | Descripcion |
+  |<#AED6F1> | Fase 1 MVP (en curso) |
+  |<#D6EAF8> | Fase 2 Hardening |
+  |<#F4F6F7> | Fase 3 Evaluacion NER (condicional) |
+  |<#E9F7EF> | Fase 4 Escala |
+  |<#A9DFBF> | Componente IA / LLM |
+  |<#D5D8DC> | Futuro / No en Fase 1 |
+endlegend
+
+@enduml

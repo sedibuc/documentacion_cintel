@@ -1,0 +1,68 @@
+@startuml flujo-extraccion
+skinparam backgroundColor #f7f1e7
+skinparam activity {
+  BackgroundColor #ffffff
+  BorderColor #0f5a58
+  BorderThickness 1.5
+  FontSize 13
+  FontName "Segoe UI"
+  ArrowColor #0f5a58
+  ArrowFontSize 11
+  StartColor #0f5a58
+  EndColor #073534
+  DiamondBackgroundColor #d6ebe8
+  DiamondBorderColor #0f5a58
+}
+skinparam note {
+  BackgroundColor #d6ebe8
+  BorderColor #0f5a58
+}
+skinparam title {
+  FontSize 16
+  FontStyle bold
+  FontColor #073534
+}
+
+title Flujo 2 — Extracción estructurada de documentos
+
+start
+:Operador selecciona tipo documental\n(solo tipos BETA o PRODUCCIÓN);
+:Sistema carga el esquema de campos\ndefinidos para ese tipo;
+:Operador selecciona formato de salida\n(JSON o CSV);
+:Operador elige origen del documento;
+
+if (¿Origen?) then (Carga manual)
+  :Operador carga el archivo\n(PDF o imagen);
+else (FTP)
+  :Sistema lista archivos en carpeta FTP;
+  :Operador selecciona el archivo a procesar;
+endif
+
+:Operador inicia el procesamiento;
+:Agente preprocesa el documento\n(normalización, detección de idioma);
+:Agente aplica modelo de extracción\nsegún modalidad del tipo documental;
+note right
+  Tipo entrenado: alta precisión, estable.
+  Tipo LLM: rápido, mayor variabilidad.
+end note
+
+if (¿Documento legible?) then (Sí)
+  :Extrae campos estructurados\nconforme al esquema definido;
+  :Valida completitud\n(campos esperados vs. extraídos);
+  if (¿Todos los campos encontrados?) then (Sí)
+    :Genera resultado completo (JSON / CSV);
+  else (Parcial)
+    :Genera resultado con campos faltantes\nmarcados como "no extraído";
+  endif
+else (No legible)
+  :Registra error con razón del fallo;
+endif
+
+:Sistema asigna ID de ejecución;
+:Persiste resultado y metadatos;
+:Muestra resultado estructurado al operador;
+:Habilita descarga en JSON o CSV;
+:Resultado disponible también por API REST;
+stop
+
+@enduml

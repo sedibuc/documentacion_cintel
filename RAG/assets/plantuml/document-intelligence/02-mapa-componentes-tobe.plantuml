@@ -1,0 +1,108 @@
+@startuml 02-mapa-componentes-tobe
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 10
+skinparam componentStyle rectangle
+skinparam arrowColor #444444
+skinparam titleFontSize 14
+skinparam titleFontStyle bold
+skinparam legendBackgroundColor #FAFAFA
+
+title Document Intelligence Engine MultiTenant\nMapa de Componentes TO-BE
+
+actor "Usuario Operador\n(empresa cliente)" as UO
+actor "Sistema integrador\n(cliente externo)" as SI
+
+package "API Gateway / BFF" as GW #E8F4FD {
+  [API Gateway] <<Tradicional>> #AED6F1
+}
+
+package "Autenticacion y Tenants" as AUTH #E8F4FD {
+  [Auth / RBAC Service] <<Tradicional>> #AED6F1
+  [Tenant Management Service] <<Tradicional>> #AED6F1
+}
+
+package "Gestion Documental" as DOCS #E8F4FD {
+  [Document Service] <<Tradicional>> #AED6F1
+  [Batch Service] <<Tradicional>> #AED6F1
+  [Content Extraction Strategy Service] <<Procesamiento Hibrido>> #D5E8D4
+  note bottom of [Content Extraction Strategy Service] #FEF9E7
+    Extraccion nativa PDF/DOCX/XLSX\nLLM multimodal (si aplica)\nOCR fallback (solo escaneados)
+  end note
+  [OCR Engine] <<Fallback>> #FEF9E7
+  [DocumentSchemaRegistry] <<Tradicional>> #AED6F1
+}
+
+package "Extraccion Estructurada IA" as IA #E9F7EF {
+  [StructuredExtractor] <<IA/LLM>> #A9DFBF
+  [LLM Orchestrator] <<IA/LLM>> #A9DFBF
+  [Prompt Registry] <<Tradicional+IA>> #A9DFBF
+  [Structured Output Parser] <<IA/LLM>> #A9DFBF
+}
+
+package "Validacion y Alertas" as VAL #E8F4FD {
+  [Validation Engine] <<Hibrido>> #D5F5E3
+  [CrossValidator] <<Tradicional>> #AED6F1
+  [DiscrepancyAlertEngine] <<Tradicional>> #AED6F1
+  [Alert Dashboard] <<Tradicional>> #AED6F1
+}
+
+package "Auditoria y Observabilidad" as OBS #EAF2FF {
+  [Audit Service] <<Tradicional>> #AED6F1
+  [Observability Service] <<Tradicional>> #AED6F1
+}
+
+package "Persistencia" as PERS #EBF5FB {
+  database "PostgreSQL" as DB #AED6F1
+  storage "File / Object Storage" as FS #AED6F1
+}
+
+package "LLM Provider\n(local/cloud certificado)" as LLM #E9F7EF {
+  [OpenAI / Groq / Ollama] <<IA/LLM>> #A9DFBF
+}
+
+package "Fuera de Alcance MVP" as FORA #F4F6F7 {
+  [Chat / RAG Conversacional] <<No MVP>> #FADBD8
+  [NER Service] <<Futuro>> #D5D8DC
+}
+
+UO --> [API Gateway] : HTTPS
+SI --> [API Gateway] : REST API
+[API Gateway] --> [Auth / RBAC Service]
+[API Gateway] --> [Tenant Management Service]
+[API Gateway] --> [Document Service]
+[API Gateway] --> [Batch Service]
+[Document Service] --> [Content Extraction Strategy Service]
+[Content Extraction Strategy Service] ..> [OCR Engine] : fallback (escaneados/imagenes)
+[Content Extraction Strategy Service] ..> [LLM Orchestrator] : LLM multimodal/documental
+[Content Extraction Strategy Service] --> DB
+[Document Service] --> FS
+[Batch Service] --> [StructuredExtractor] : invoca extraccion con representacion normalizada
+[DocumentSchemaRegistry] --> DB
+[StructuredExtractor] --> [LLM Orchestrator]
+[StructuredExtractor] --> [DocumentSchemaRegistry] : obtiene schema
+[LLM Orchestrator] --> [Prompt Registry]
+[LLM Orchestrator] --> [OpenAI / Groq / Ollama]
+[LLM Orchestrator] --> [Structured Output Parser]
+[Structured Output Parser] --> [Validation Engine]
+[Validation Engine] --> [CrossValidator]
+[CrossValidator] --> [DiscrepancyAlertEngine]
+[DiscrepancyAlertEngine] --> [Alert Dashboard]
+[DiscrepancyAlertEngine] --> DB
+[Alert Dashboard] --> DB
+[API Gateway] --> [Audit Service]
+[API Gateway] --> [Observability Service]
+
+legend right
+  | Color | Tipo |
+  |<#AED6F1> | Tradicional |
+  |<#A9DFBF> | IA / LLM |
+  |<#D5F5E3> | Hibrido |
+  |<#D5E8D4> | Content Extraction Strategy (Hibrido) |
+  |<#FEF9E7> | OCR Engine (Fallback) |
+  |<#FADBD8> | Fuera de alcance MVP |
+  |<#D5D8DC> | Futuro |
+endlegend
+
+@enduml

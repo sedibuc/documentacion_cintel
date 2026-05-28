@@ -1,0 +1,14 @@
+@startuml
+!theme plain
+skinparam backgroundColor white
+skinparam shadowing false
+start
+:Usuario pregunta en UI;
+:Backend valida sesion;
+:Generar embedding de la consulta;
+:Buscar contexto en Vector DB;
+:Construir prompt con contexto;
+:LLM genera respuesta;
+:Entregar respuesta al usuario;
+stop
+@enduml

@@ -1,4 +1,4 @@
-# TO-BE — Módulo 2.4: Agente Creativo
+# TO-BE  Módulo 2.4: Agente Creativo
 
 > Módulo de adaptación de contenido institucional. Transforma el plan estratégico en piezas adaptadas a la identidad de la institución y al canal específico, usando el perfil institucional persistente y el banco de activos licenciados.
 
@@ -15,12 +15,12 @@ El Agente Creativo es el módulo de **adaptación** del sistema, no de generaci�
 El hallazgo de validación es claro: el cuello de botella no es crear el texto, sino **pasar del texto a la pieza visual lista para publicar con la identidad institucional**. Este es el trabajo que más tiempo consume y el que menos herramientas resuelven de forma integrada.
 
 > *"Lo que más le toma a uno tiempo es más que crear el contenido de la pieza... es más pasarlo al diseño... sobre todo en un tema de seguir la línea gráfica estipulada ya por la organización que tenemos que sí o sí llevar esa misma línea gráfica."*
-> — Natalia Rozo Veloza, I4DIGITAL / CENIT
+>  Natalia Rozo Veloza, I4DIGITAL / CENIT
 
 Su trabajo se divide en dos fases distintas:
 
-- **Fase 1 — Brief de diseño institucional:** el sistema genera un brief creativo específico que detalla qué debe producirse, para quién, en qué tono, con qué mensaje, en qué canal y con qué lineamientos visuales institucionales.
-- **Fase 2 — Adaptación de piezas:** a partir del brief y del banco de activos institucionales, el sistema adapta una o varias piezas al canal seleccionado (copy, estructura visual, variantes).
+- **Fase 1  Brief de diseño institucional:** el sistema genera un brief creativo específico que detalla qué debe producirse, para quién, en qué tono, con qué mensaje, en qué canal y con qué lineamientos visuales institucionales.
+- **Fase 2  Adaptación de piezas:** a partir del brief y del banco de activos institucionales, el sistema adapta una o varias piezas al canal seleccionado (copy, estructura visual, variantes).
 
 La diferencia entre estrategia, brief y pieza es fundamental para entender el producto:
 
@@ -35,7 +35,7 @@ Un brief puede generar múltiples piezas. Una campaña puede generar múltiples 
 
 ---
 
-### Fase 1 — Brief de diseño
+### Fase 1  Brief de diseño
 
 A partir de la campaña seleccionada, el sistema construye un brief creativo que sirve como instrucción precisa para la producción de piezas.
 
@@ -59,7 +59,7 @@ El brief es visible y editable antes de proceder a la generación de piezas.
 **Ejemplo de brief generado:**
 
 ```
-Nombre:           LinkedIn institucional — TD Sector Público 2025
+Nombre:           LinkedIn institucional  TD Sector Público 2025
 Campaña base:     Transformación Digital 2025
 Objetivo:         Generar leads calificados en entidades públicas
 Audiencia:        Directivos de TI, líderes de digitalización
@@ -75,7 +75,7 @@ Observaciones:    Evitar lenguaje exclusivamente técnico. Incluir dato estadís
 
 ---
 
-### Fase 2 — Generación de piezas
+### Fase 2  Generación de piezas
 
 A partir del brief, el sistema genera las piezas adaptadas al canal. Cada pieza es una unidad de contenido lista para revisar, exportar o publicar.
 
@@ -95,7 +95,7 @@ Un brief puede generar múltiples variantes de una misma pieza (por ejemplo, ver
 
 ---
 
-### Estructura jerárquica: Campaña → Brief → Piezas
+### Estructura jerárquica: Campaña  Brief  Piezas
 
 El sistema organiza todos los activos en una estructura jerárquica navegable que permite rastrear el origen de cada pieza.
 
@@ -103,12 +103,12 @@ El sistema organiza todos los activos en una estructura jerárquica navegable qu
 
 ```
 Campaña: Transformación Digital 2025
-├── Brief 1: LinkedIn institucional
-│   ├── Pieza 1: Post "Acompañamos al sector público"
-│   └── Pieza 2: Artículo "5 claves para la TD en entidades"
-└── Brief 2: Instagram — captación de leads
-    ├── Pieza 3: Post visual con CTA de descarga
-    └── Pieza 4: Historia animada con link a whitepaper
+ Brief 1: LinkedIn institucional
+    Pieza 1: Post "Acompañamos al sector público"
+    Pieza 2: Artículo "5 claves para la TD en entidades"
+ Brief 2: Instagram  captación de leads
+     Pieza 3: Post visual con CTA de descarga
+     Pieza 4: Historia animada con link a whitepaper
 ```
 
 Esta vista muestra claramente la trazabilidad completa desde el objetivo de la campaña hasta cada pieza publicable. Es navegable y expandible en la interfaz.
@@ -120,7 +120,7 @@ Esta vista muestra claramente la trazabilidad completa desde el objetivo de la c
 
 Una vez publicada una pieza, el sistema puede capturar métricas de desempeño. El mecanismo varía según el canal.
 
-#### A. Piezas de Instagram — seguimiento automático
+#### A. Piezas de Instagram  seguimiento automático
 
 Para piezas publicadas en Instagram, el flujo de resultados permite:
 
@@ -139,7 +139,7 @@ Métricas disponibles:
 > Este seguimiento es automático y no requiere carga manual de datos.
 
 
-#### B. Otros canales — carga manual de resultados
+#### B. Otros canales  carga manual de resultados
 
 Para canales distintos a Instagram (LinkedIn, Email, Landing page, Eventos, etc.), los resultados no se capturan automáticamente.
 
@@ -157,19 +157,19 @@ En estos casos, el flujo es el siguiente:
 
 ### Diagramas del módulo
 
-![Flujo general — Agente Creativo: fases y conexiones](assets/img/diagramas/agente-creativo-fases.png)
-<a href="assets/plantuml/agente-creativo-fases.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+![Flujo general  Agente Creativo: fases y conexiones](assets/img/diagramas/agente-creativo-fases.png)
+<a href="assets/plantuml/agente-creativo-fases.plantuml" download class="diagram-download"> Descargar fuente (.plantuml)</a>
 
-![Relación jerárquica campaña → brief → piezas](assets/img/diagramas/agente-creativo-estructura-campana-brief-piezas.png)
-<a href="assets/plantuml/agente-creativo-estructura-campana-brief-piezas.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+![Relación jerárquica campaña  brief  piezas](assets/img/diagramas/agente-creativo-estructura-campana-brief-piezas.png)
+<a href="assets/plantuml/agente-creativo-estructura-campana-brief-piezas.plantuml" download class="diagram-download"> Descargar fuente (.plantuml)</a>
 
-![Flujo de pieza Instagram → métricas automáticas](assets/img/diagramas/agente-creativo-instagram-resultados.png)
-<a href="assets/plantuml/agente-creativo-instagram-resultados.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+![Flujo de pieza Instagram  métricas automáticas](assets/img/diagramas/agente-creativo-instagram-resultados.png)
+<a href="assets/plantuml/agente-creativo-instagram-resultados.plantuml" download class="diagram-download"> Descargar fuente (.plantuml)</a>
 
-![Flujo de pieza otros canales → carga manual de resultados](assets/img/diagramas/agente-creativo-feedback-manual.png)
-<a href="assets/plantuml/agente-creativo-feedback-manual.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+![Flujo de pieza otros canales  carga manual de resultados](assets/img/diagramas/agente-creativo-feedback-manual.png)
+<a href="assets/plantuml/agente-creativo-feedback-manual.plantuml" download class="diagram-download"> Descargar fuente (.plantuml)</a>
 
-> 🔗 **Prototipo navegable** — Consulte el flujo interactivo del agente en la **[sección Prototipo navegable](mockup.html)**.
+>  **Prototipo navegable**  Consulte el flujo interactivo del agente en la **[sección Prototipo navegable](mockup.html)**.
 
 ---
 
@@ -178,9 +178,9 @@ En estos casos, el flujo es el siguiente:
 #### Brief generado
 
 ```
-Nombre:         LinkedIn institucional — TD Sector Público 2025
+Nombre:         LinkedIn institucional  TD Sector Público 2025
 Campaña:        Transformación Digital 2025
-Objetivo:       Generar leads — directivos de TI sector público
+Objetivo:       Generar leads  directivos de TI sector público
 Canal:          LinkedIn
 Tipo de pieza:  Post institucional
 Mensaje:        CINTEL acompaña al sector público en su transformación digital
@@ -198,12 +198,12 @@ La transformación digital del sector público no es un destino, es un proceso.
 Las entidades que avanzan con más seguridad tienen algo en común: un acompañamiento 
 estructurado, con visión de largo plazo y experiencia en implementación.
 
-En CINTEL llevamos más de 25 años ayudando a organizaciones a navegar ese camino — 
+En CINTEL llevamos más de 25 años ayudando a organizaciones a navegar ese camino  
 con evidencia, metodología y foco en resultados reales.
 
-👉 Descarga nuestro estudio: "Ruta de Transformación Digital en el Sector Público"
+ Descarga nuestro estudio: "Ruta de Transformación Digital en el Sector Público"
 
-→ [enlace]
+ [enlace]
 
 #TransformaciónDigital #GobiernoDigital #CINTEL
 ```
@@ -211,21 +211,22 @@ con evidencia, metodología y foco en resultados reales.
 #### Panel de resultados (Instagram)
 
 ```
-Pieza: Post visual — "Ruta TD Sector Público"
+Pieza: Post visual  "Ruta TD Sector Público"
 Canal: Instagram
 Fecha de publicación: 15/03/2025
 Link registrado: instagram.com/p/xyz123
 
-─────────────────────────────────────
+
   Likes           312
   Comentarios      18
   Guardados        47
   Alcance       4.200
   Interacciones   391
   Engagement     9,3%
-─────────────────────────────────────
-Última actualización: hace 4 horas
+
+ltima actualización: hace 4 horas
 ```
 
 ---
+
 

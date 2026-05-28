@@ -1,0 +1,75 @@
+@startuml agente-creativo-fases
+skinparam backgroundColor #1a202c
+skinparam defaultFontColor #d4dae6
+skinparam defaultFontName "Segoe UI"
+skinparam activityBackgroundColor #1e2533
+skinparam activityBorderColor #4db8b5
+skinparam activityFontColor #e8f4f3
+skinparam arrowColor #4db8b5
+skinparam noteBackgroundColor #252d3d
+skinparam noteBorderColor #4db8b5
+skinparam noteFontColor #9ba5b4
+skinparam partitionBackgroundColor #161b27
+skinparam partitionBorderColor #4db8b5
+
+title Agente Creativo — Flujo general de módulo
+
+|Agente Estratégico|
+start
+:Genera plan de campaña estructurado;
+note right
+  Objetivo, audiencia,
+  canales, mensaje,
+  campaña base
+end note
+:Envía plan al Agente Creativo;
+
+|Agente Creativo|
+:** FASE 1 — BRIEF DE DISEÑO **;
+:Recibe el plan estratégico;
+:Identifica canal y formato objetivo;
+:Construye brief creativo;
+note right
+  Nombre, objetivo, audiencia,
+  mensaje, tono, canal, CTA,
+  tipo de pieza, restricciones
+end note
+:Presenta brief al usuario;
+if (¿Usuario aprueba el brief?) then (Sí — o ajusta)
+  :Brief confirmado;
+else (No — solicita revisión)
+  :Usuario edita parámetros del brief;
+  :Brief actualizado;
+endif
+
+:** FASE 2 — GENERACIÓN DE PIEZAS **;
+:Procesa brief aprobado;
+:Genera piezas según canal;
+note right
+  Post, carrusel, banner,
+  mailing, copy landing, etc.
+end note
+:Presenta piezas al usuario;
+if (¿Pieza aprobada?) then (Sí)
+  :Pieza lista para publicar / exportar;
+else (Ajustar)
+  :Usuario da instrucción de ajuste;
+  :Agente genera versión revisada;
+endif
+
+|Canal de publicación|
+:Usuario publica la pieza;
+if (¿Canal es Instagram?) then (Sí)
+  :Registra link de publicación;
+  :Sistema consulta métricas automáticamente;
+  :Panel de resultados actualizado;
+else (Otro canal)
+  :Usuario carga resultados manualmente;
+  note right
+    Excel / CSV
+  end note
+  :Resultados asociados a la pieza;
+endif
+
+stop
+@enduml

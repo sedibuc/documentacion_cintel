@@ -1,0 +1,13 @@
+@startuml
+!theme plain
+skinparam backgroundColor white
+skinparam shadowing false
+
+rectangle "R1\nInsumos documentales heterogeneos\nMitigacion: estrategia de extraccion + completitud" as r1
+rectangle "R2\nFuentes de referencia incompletas\nMitigacion: plantilla y validacion previa" as r2
+rectangle "R3\nLatencia/costo LLM en escala\nMitigacion: metricas operativas + tuning" as r3
+rectangle "R4\nRiesgo de aislamiento multi-tenant\nMitigacion: RBAC + pruebas + auditoria" as r4
+
+r1 -[hidden]- r2
+r3 -[hidden]- r4
+@enduml

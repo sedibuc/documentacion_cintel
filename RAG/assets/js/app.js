@@ -1,19 +1,36 @@
 (function (global) {
   const pages = {
     inicio: { file: "content/inicio.md", title: "Inicio" },
+    contexto: { file: "content/contexto.md", title: "Contexto del proyecto" },
     diagnostico: { file: "content/diagnostico.md", title: "Diagnóstico técnico inicial" },
     arquitectura: { file: "content/arquitectura.md", title: "Arquitectura vigente" },
     brechas: { file: "content/brechas.md", title: "Brechas y oportunidades" },
     despliegue: { file: "content/despliegue.md", title: "Configuración y despliegue" },
     costos: { file: "content/costos.md", title: "Servicios y costos" },
+    mockup: { file: "content/mockup.md", title: "Mockup / Prototipo" },
     tobefuncional: { file: "content/to-be-funcional.md", title: "TO-BE funcional — Document Intelligence Engine MultiTenant" },
-    arquitecturatobe: { file: "content/arquitectura-tobe.md", title: "Arquitectura TO-BE — Document Intelligence Engine MultiTenant" },
+    arquitecturatobe: { file: "content/arquitectura-tobe.md", title: "Arquitectura TO-BE — Document Intelligence Engine MultiTenant", href: "arquitectura-tobe.html" },
+    servicioscostostobe: { file: "content/servicios-costos-tobe.md", title: "Servicios y costos TO-BE — Proyección de segunda entrega", href: "servicios-costos-tobe.html" },
+    decisionesmodulos: { file: "content/decisiones-modulos.md", title: "Decisiones de diseño por módulos", href: "decisiones-modulos.html" },
+    cronograma: { file: "content/cronograma-implementacion.md", title: "Cronograma de implementación", href: "cronograma-implementacion.html" },
     preguntasexperto: { file: "content/preguntas-experto.md", title: "Cuestionario preliminar para experto en modelos — Document Intelligence Engine MultiTenant" },
-    noesrag: { file: "content/no-es-rag.md", title: "Por qué esta solución no es un RAG ni un sistema de Q&A" }
+    noesrag: { file: "content/no-es-rag.md", title: "Por qué esta solución no es un RAG ni un sistema de Q&A" },
+    conclusiones: { file: "content/conclusiones.md", title: "Conclusiones y recomendaciones" }
   };
 
   const pageOrder = Object.keys(pages);
   let searchIndex = null;
+
+  function getPageFile(pageKey) {
+    const page = pages[pageKey];
+    if (!page) {
+      return "index.html";
+    }
+    if (page.href) {
+      return page.href;
+    }
+    return `${pageKey === "inicio" ? "index" : pageKey}.html`;
+  }
 
   function getPageNeighbors(pageKey) {
     const currentIndex = pageOrder.indexOf(pageKey);
@@ -131,10 +148,10 @@
     nav.setAttribute("aria-label", "Navegación entre secciones");
 
     const previousMarkup = neighbors.previous
-      ? `<a class="page-nav-link prev" href="${neighbors.previous === "inicio" ? "index" : neighbors.previous}.html"><span>Anterior</span><strong>${pages[neighbors.previous].title}</strong></a>`
+      ? `<a class="page-nav-link prev" href="${getPageFile(neighbors.previous)}"><span>Anterior</span><strong>${pages[neighbors.previous].title}</strong></a>`
       : '<span class="page-nav-spacer" aria-hidden="true"></span>';
     const nextMarkup = neighbors.next
-      ? `<a class="page-nav-link next" href="${neighbors.next === "inicio" ? "index" : neighbors.next}.html"><span>Siguiente</span><strong>${pages[neighbors.next].title}</strong></a>`
+      ? `<a class="page-nav-link next" href="${getPageFile(neighbors.next)}"><span>Siguiente</span><strong>${pages[neighbors.next].title}</strong></a>`
       : '<span class="page-nav-spacer" aria-hidden="true"></span>';
 
     nav.innerHTML = `${previousMarkup}${nextMarkup}`;
@@ -184,7 +201,7 @@
       Object.entries(pages).map(async ([key, config]) => {
         const response = await fetch(config.file);
         const text = await response.text();
-        return { key, title: config.title, file: `${key === "inicio" ? "index" : key}.html`, text };
+        return { key, title: config.title, file: getPageFile(key), text };
       })
     );
     searchIndex = entries;

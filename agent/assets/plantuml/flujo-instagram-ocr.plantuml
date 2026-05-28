@@ -1,0 +1,15 @@
+@startuml
+!theme plain
+skinparam backgroundColor white
+skinparam shadowing false
+
+start
+:Consultar Meta Graph API;
+:Obtener posts y metricas;
+if (Hay imagenes sin texto?) then (si)
+  :OCR opcional;
+endif
+:Consolidar contexto de campana;
+:Guardar en historial;
+stop
+@enduml

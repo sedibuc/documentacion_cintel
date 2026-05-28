@@ -1,0 +1,17 @@
+@startuml
+!theme plain
+skinparam backgroundColor white
+skinparam shadowing false
+start
+:Cargar documento;
+if (Documento escaneado?) then (si)
+  :OCR;
+else (no)
+  :Extraer texto nativo;
+endif
+:Chunking documental;
+:Generar embeddings;
+:Persistir en Vector DB;
+:Registrar metadatos;
+stop
+@enduml

@@ -61,7 +61,7 @@ Documentar características técnicas por módulo y su relación con el MVP y el
 ### 5.3 Diagrama técnico de referencia
 
 ![Mapa técnico de módulos TO-BE](assets/img/diagramas/decisiones-modulos-mapa-arquitectura.png)
-<a href="assets/plantuml/decisiones-modulos-mapa-arquitectura.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+<a href="assets/plantuml/decisiones-modulos-mapa-arquitectura.plantuml" download class="diagram-download"> Descargar fuente (.plantuml)</a>
 
 ### 5.4 Criterios de aceptación de arquitectura
 
@@ -72,3 +72,4 @@ Documentar características técnicas por módulo y su relación con el MVP y el
 ---
 
 Trazabilidad: [Arquitectura TO-BE](to-be-arquitectura.html) · [Preguntas para experto técnico](preguntas-experto-tecnico.html)
+

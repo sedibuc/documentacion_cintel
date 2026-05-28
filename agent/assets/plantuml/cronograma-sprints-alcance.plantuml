@@ -1,0 +1,18 @@
+@startuml
+!theme plain
+skinparam backgroundColor white
+skinparam shadowing false
+left to right direction
+
+rectangle "Sprint 0\nBase tecnica\nDB + tenant_id" as s0
+rectangle "Sprint 1\nContexto\nOnboarding base" as s1
+rectangle "Sprint 2\nMarca\nCompletenessScorer" as s2
+rectangle "Sprint 3\nEstrategico\nBrief institucional" as s3
+rectangle "Sprint 4\nCreativo\nCanales" as s4
+rectangle "Sprint 5\nGobernanza\nAprobaciones" as s5
+rectangle "Sprint 6\nHistorico\nReutilizacion" as s6
+rectangle "Sprint 7\nOperacion MVP\nHardening" as s7
+rectangle "Sprint 8\nPiloto\nE2E + seguridad" as s8
+
+s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7 --> s8
+@enduml

@@ -88,7 +88,7 @@ Eventos:
 ## 5. Diagrama técnico del dominio
 
 ![Arquitectura de gobernanza y operación](assets/img/diagramas/decisiones-modulos-gobernanza-operacion-arquitectura.png)
-<a href="assets/plantuml/decisiones-modulos-gobernanza-operacion-arquitectura.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+<a href="assets/plantuml/decisiones-modulos-gobernanza-operacion-arquitectura.plantuml" download class="diagram-download"> Descargar fuente (.plantuml)</a>
 
 ## 6. Criterios de aceptación
 
@@ -99,3 +99,4 @@ Eventos:
 ---
 
 Trazabilidad: [Mapa de módulos](decisiones-modulos.html) · [Preguntas para experto técnico](preguntas-experto-tecnico.html)
+

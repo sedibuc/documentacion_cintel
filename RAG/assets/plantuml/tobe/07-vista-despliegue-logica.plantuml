@@ -1,0 +1,97 @@
+@startuml 07-vista-despliegue-logica
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 10
+skinparam nodeBackgroundColor #AED6F1
+skinparam nodeBorderColor #2E86C1
+skinparam componentStyle rectangle
+skinparam titleFontSize 14
+skinparam titleFontStyle bold
+skinparam noteBackgroundColor #FEF9E7
+skinparam noteBorderColor #F39C12
+skinparam arrowColor #444444
+
+title Vista 7 — Arquitectura de Despliegue Lógica (Fase 1 MVP)\nAgente Documental CINTEL · LLM-first
+
+node "Navegador del Usuario" as BROWSER #D6EAF8 {
+  [SPA / Web App\nHTML + JS + CSS] #C8E6FF
+}
+
+node "Servidor Web / CDN\n(Nginx / Static host)" as WEB #AED6F1 {
+  [Archivos estáticos\n+ Frontend assets] #C8E6FF
+}
+
+node "API Backend\n(FastAPI / Flask)" as APIB #AED6F1 {
+  [API REST\n(Auth, Docs, Batch, Results)] #C8E6FF
+  [Worker Queue\n(Celery / RQ)] #C8E6FF
+  [OCR Client\n(llamada a servicio externo)] #C8E6FF
+}
+
+node "Base de Datos\n(PostgreSQL)" as PG #AED6F1 {
+  [Datos transaccionales\nTenants, Docs, Runs,\nResultados, Auditoría] #C8E6FF
+}
+
+node "Cola de tareas\n(Redis)" as REDIS #AED6F1 {
+  [Queue de procesamiento\nasíncrono por lote] #C8E6FF
+}
+
+node "Almacenamiento de Archivos\n(Filesystem MVP /\nMinIO S3-compatible)" as STORAGE #AED6F1 {
+  [Documentos originales\nArchivos procesados] #C8E6FF
+}
+
+node "Servicio OCR\n(Externo / Tesseract / API)" as OCR #AED6F1 {
+  [OCR REST Service] #C8E6FF
+}
+
+node "LLM Provider\n(Configurable)" as LLMNODE #A9DFBF {
+  [OpenAI API\nGPT-4o mini (cloud)] <<IA/LLM>> #A9DFBF
+  [Groq / Mistral\n(alternativa cloud)] <<IA/LLM>> #A9DFBF
+  [Ollama\n(on-premise)] <<IA/LLM>> #A9DFBF
+}
+
+node "Observabilidad\n(Fase 1: logging estructurado)" as OBS #AED6F1 {
+  [Logs JSON\n(structlog / loguru)] #C8E6FF
+  [Métricas básicas\n(Prometheus ligero)] #C8E6FF
+}
+
+node "Infraestructura\n(Docker Compose — MVP)" as INFRA #D6EAF8 {
+  [docker-compose.yml\n(backend + db + redis\n+ storage + ocr)] #C8E6FF
+}
+
+node "Evolución futura\n(Kubernetes / Cloud)" as FUT #D5D8DC {
+  [K8s + Helm\nCI/CD automatizado] <<Futuro>> #D5D8DC
+  [NER Service\n(evaluación post-producción)] <<Futuro>> #D5D8DC
+}
+
+BROWSER --> WEB : HTTPS
+WEB --> APIB : proxy reverso
+APIB --> PG : SQL / ORM
+APIB --> REDIS : enqueue tasks
+APIB --> STORAGE : lee/escribe archivos
+APIB --> OCR : texto si aplica
+[Worker Queue\n(Celery / RQ)] --> LLMNODE : HTTP(S) — inferencia LLM
+[Worker Queue\n(Celery / RQ)] --> PG : persiste resultados
+APIB --> OBS : logs + métricas
+
+note right of LLMNODE #A9DFBF
+  Proveedor LLM configurable
+  mediante variable de entorno.
+  Fase 1: GPT-4o mini recomendado.
+  On-premise: Ollama disponible.
+  NER: fuera de Fase 1.
+end note
+
+note right of INFRA #AED6F1
+  MVP: Docker Compose local o VM.
+  Un solo nodo para validar concepto.
+  Evolución a K8s en Fase 2.
+end note
+
+legend right
+  |<#AED6F1> | Componente Tradicional |
+  |<#A9DFBF> | IA / LLM |
+  |<#D5D8DC> | Futuro / Fuera Fase 1 |
+endlegend
+
+@enduml

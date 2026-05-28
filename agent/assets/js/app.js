@@ -2,6 +2,7 @@
   const pages = {
     // ── AS-IS ────────────────────────────────────────────────────────────────
     inicio: { file: "content/inicio.md", title: "Inicio" },
+    contexto: { file: "content/contexto.md", title: "Contexto del proyecto" },
     diagnostico: { file: "content/diagnostico.md", title: "AS-IS — Diagnóstico técnico" },
     arquitectura: { file: "content/arquitectura.md", title: "AS-IS — Arquitectura vigente" },
     brechas: { file: "content/brechas.md", title: "AS-IS — Brechas y oportunidades" },
@@ -10,6 +11,7 @@
     "mockup": { file: "content/mockup.md", title: "AS-IS — Prototipo / Demostrador" },
     // ── TO-BE ─────────────────────────────────────────────────────────────────
     "to-be": { file: "content/to-be.md", title: "TO-BE — Visión funcional objetivo" },
+    "to-be-servicios-costos": { file: "content/to-be-servicios-costos.md", title: "TO-BE — Servicios y costos proyectados" },
     "to-be-objetivos-funcionales": { file: "content/to-be-objetivos-funcionales.md", title: "TO-BE — Objetivos funcionales y cobertura arquitectónica" },
     "to-be-onboarding": { file: "content/to-be-onboarding.md", title: "TO-BE — Onboarding institucional" },
     "to-be-contexto": { file: "content/to-be-contexto.md", title: "TO-BE — Contexto organizacional persistente" },
@@ -27,7 +29,8 @@
     "decisiones-modulos-gobernanza-operacion": { file: "content/decisiones-modulos-gobernanza-operacion.md", title: "Decisiones Técnicas — Módulos de gobernanza y operación" },
     "decisiones-modulos-seguridad-escalado": { file: "content/decisiones-modulos-seguridad-escalado.md", title: "Decisiones Técnicas — Módulos de seguridad y escalado" },
     // ── Análisis ──────────────────────────────────────────────────────────────
-    "analisis-cambio-contexto-to-be": { file: "content/analisis-cambio-contexto-to-be.md", title: "Análisis — Comparativa validación vs TO-BE final" }
+    "analisis-cambio-contexto-to-be": { file: "content/analisis-cambio-contexto-to-be.md", title: "Análisis — Comparativa validación vs TO-BE final" },
+    "conclusiones": { file: "content/conclusiones.md", title: "Conclusiones y recomendaciones" }
   };
 
   const pageOrder = Object.keys(pages);

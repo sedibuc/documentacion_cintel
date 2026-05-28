@@ -1,0 +1,96 @@
+@startuml 03-flujo-carga-procesamiento
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 11
+skinparam activityBackgroundColor #AED6F1
+skinparam activityBorderColor #2E86C1
+skinparam activityArrowColor #444444
+skinparam activityDiamondBackgroundColor #D6EAF8
+skinparam activityDiamondBorderColor #2E86C1
+skinparam titleFontSize 14
+skinparam titleFontStyle bold
+skinparam noteBackgroundColor #FEF9E7
+skinparam noteBorderColor #F39C12
+
+title Vista 3 — Flujo de Carga y Procesamiento Documental\nAgente Documental CINTEL · Pasos tradicionales vs. IA/LLM
+
+|#E8F4FD| <b>Usuario / Operador</b> |
+|#E8F4FD| <b>Backend (Tradicional)</b> |
+|#E9F7EF| <b>Capa IA / LLM</b> |
+
+|Usuario / Operador|
+start
+:Carga documento(s)\no define lote;
+
+|Backend (Tradicional)|
+note right #AED6F1 : <<Tradicional>>\nRegistro de metadatos
+:Registra documento\ny metadatos en BD;
+:Almacena archivo original\nen File Storage;
+:Valida formato del archivo\n(PDF, imagen, tamaño);
+
+if (¿Formato válido?) then (No)
+  :Marca documento\ncomo ERROR;
+  stop
+else (Sí)
+endif
+
+:Extrae texto base\n(si tiene capa de texto);
+
+if (¿Requiere OCR?) then (Sí)
+  note right #AED6F1 : <<Tradicional>>\nOCR externo si aplica
+  :Llama a servicio OCR;
+  :Recibe texto reconocido;
+else (No)
+endif
+
+:Normaliza y segmenta texto\npara contexto LLM;
+
+note right #AED6F1 : <<Tradicional>>\nIdentificación de tipo\npor metadata o regla
+
+:Identifica tipo documental\ny obtiene esquema vigente;
+:Obtiene versión activa\nde prompt para el tipo;
+
+|Capa IA / LLM|
+note right #A9DFBF : <<IA / LLM>>\nInferencia estructurada
+
+:Construye contexto\npara el LLM;
+:Invoca LLM con prompt\nversionado + texto segmentado;
+:Parsea salida estructurada\n(JSON Schema esperado);
+:Valida respuesta contra\nesquema + reglas;
+
+if (¿Salida válida?) then (No)
+  :Reintenta con variación\nde prompt (hasta 3 veces);
+  if (¿Reintento exitoso?) then (No)
+    :Marca extracción\ncomo FALLIDA;
+    stop
+  else (Sí)
+  endif
+else (Sí)
+endif
+
+|Backend (Tradicional)|
+note right #AED6F1 : <<Tradicional>>\nPersistencia de resultado
+:Persiste campos extraídos\ny resultado estructurado;
+:Calcula score de confianza\n(completitud de campos);
+
+if (¿Score < umbral revisión?) then (Sí)
+  :Envía a bandeja\nde revisión humana;
+
+  |Usuario / Operador|
+  :Revisa campos, confirma\nó corrige resultado;
+
+  |Backend (Tradicional)|
+  :Registra decisión humana\ny observaciones;
+else (No)
+endif
+
+:Guarda resultado final\naprobado;
+:Registra evento en auditoría;
+:Actualiza métricas:\ntokens, latencia, costo estimado;
+
+|Usuario / Operador|
+:Ve resultado estructurado\ny puede descargarlo;
+stop
+
+@enduml

@@ -1,0 +1,13 @@
+@startuml
+!theme plain
+skinparam backgroundColor white
+skinparam shadowing false
+
+rectangle "R1\nInsumos de marca incompletos\nMitigacion: checklist + gate S1" as r1
+rectangle "R2\nRetrasos en seguridad multi-org\nMitigacion: hardening desde S0" as r2
+rectangle "R3\nCalidad variable de salidas IA\nMitigacion: validacion humana + metricas" as r3
+rectangle "R4\nDeriva de alcance MVP\nMitigacion: control de backlog quincenal" as r4
+
+r1 -[hidden]- r2
+r3 -[hidden]- r4
+@enduml

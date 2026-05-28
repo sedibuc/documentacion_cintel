@@ -1,0 +1,18 @@
+@startuml
+!theme plain
+skinparam backgroundColor white
+skinparam shadowing false
+
+start
+:Construir brief estrategico;
+fork
+  :Generar plan de ejecucion;
+fork again
+  :Generar prompts de imagen;
+  :Generar imagenes;
+end fork
+:Persistir artefactos de campana;
+:Enviar correo de resumen (background);
+:Emitir eventos SSE al cliente;
+stop
+@enduml

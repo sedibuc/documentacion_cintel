@@ -24,40 +24,37 @@
 
 ## 3. Diagrama de Gantt
 
-```mermaid
-gantt
-    title Cronograma de implementación (inicio: 2026-07-01)
-    dateFormat  YYYY-MM-DD
-    axisFormat  %d-%m-%Y
+![Diagrama de Gantt del cronograma de implementación](assets/img/diagramas/cronograma-gantt.png)
 
-    section Planeación y base
-    Sprint 0: s0, 2026-07-01, 14d
+<a href="assets/plantuml/cronograma-gantt.plantuml" download class="diagram-download">⬇ Descargar fuente (.plantuml)</a>
 
-    section Núcleo de contexto
-    Sprint 1: s1, 2026-07-15, 14d
-    Sprint 2: s2, 2026-07-29, 14d
+## 4. Sprints y alcance por iteración
 
-    section Agentes
-    Sprint 3: s3, 2026-08-12, 14d
-    Sprint 4: s4, 2026-08-26, 14d
+![Presentación gráfica de sprints y alcance por sprint](assets/img/diagramas/cronograma-sprints-alcance.png)
 
-    section Gobernanza y memoria
-    Sprint 5: s5, 2026-09-09, 14d
-    Sprint 6: s6, 2026-09-23, 14d
+<a href="assets/plantuml/cronograma-sprints-alcance.plantuml" download class="diagram-download">⬇ Descargar fuente (.plantuml)</a>
 
-    section MVP y piloto
-    Sprint 7: s7, 2026-10-07, 14d
-    Sprint 8: s8, 2026-10-21, 14d
-```
-
-## 4. Hitos de control
+## 5. Hitos de control
 
 - Hito 1 (fin Sprint 2): Perfil institucional persistente operativo.
 - Hito 2 (fin Sprint 4): Flujo completo de estrategia + creatividad por canal.
 - Hito 3 (fin Sprint 6): Memoria organizacional y recuperación contextual habilitadas.
 - Hito 4 (fin Sprint 8): MVP estabilizado y listo para piloto controlado.
 
-## 5. Dependencias críticas
+## 6. Riesgos y mitigación
+
+![Riesgos y mitigación del plan de implementación](assets/img/diagramas/cronograma-riesgos-mitigacion.png)
+
+<a href="assets/plantuml/cronograma-riesgos-mitigacion.plantuml" download class="diagram-download">⬇ Descargar fuente (.plantuml)</a>
+
+| Riesgo | Impacto | Mitigación |
+|---|---|---|
+| Insumos de marca incompletos | Alto | Checklist de entrada y gate de calidad en Sprint 1 |
+| Retrasos en seguridad multi-organización | Alto | Hardening técnico y checklist de seguridad desde Sprint 0 |
+| Variabilidad en calidad de salidas IA | Medio | Validación humana obligatoria y métricas por canal |
+| Deriva de alcance del MVP | Medio | Control de cambios quincenal y priorización estricta de backlog |
+
+## 7. Dependencias críticas
 
 - Disponibilidad de insumos de marca por cliente para validar lectura con LLM.
 - Definición temprana de checklist de seguridad multi-organización.

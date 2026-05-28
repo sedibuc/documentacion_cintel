@@ -1,4 +1,4 @@
-# TO-BE — Módulo 2.6: Histórico y memoria organizacional
+# TO-BE  Módulo 2.6: Histórico y memoria organizacional
 
 > Módulo de memoria institucional acumulada. Permite navegar, consultar y retomar comunicaciones anteriores para continuidad temática, aprendizaje y reutilización.
 
@@ -13,16 +13,16 @@ El módulo de Histórico es la **memoria organizacional acumulada** del sistema.
 Este cluster de dolor fue identificado en la validación con alta relevancia cruzada:
 
 > *"Cada vez que yo vaya a crear una campaña tengo que crear una nueva campaña... digamos que voy a hacer una campaña sobre los aceites... pero luego quiero hacer una segunda parte... Como cuando uno va a ChatGPT tiene diferentes chats de diferentes temas y decirle: '¿te acuerdas que hicimos una campaña hace dos meses sobre los aceites? Vamos a hacer la segunda parte.'"*
-> — Verónica Rangel Jaller, Pro Montería
+>  Verónica Rangel Jaller, Pro Montería
 
 > *"Voy a traer el histórico y ese histórico me va a permitir complementar la información para que con base en ella yo pueda construir una campaña más ajustada a la realidad conforme a lo que ya se venía haciendo."*
-> — Ana Elizabeth Parra Benítez, CRC
+>  Ana Elizabeth Parra Benítez, CRC
 
 **Funciones del módulo:**
 
 - Evita rehacer trabajo: recupera comunicaciones anteriores y las adapta.
 - Facilita la comparación entre periodos o canales.
-- Soporta la trazabilidad: cada pieza tiene origen claro (objetivo → plan → brief → pieza).
+- Soporta la trazabilidad: cada pieza tiene origen claro (objetivo  plan  brief  pieza).
 - Alimenta la iteración: el Agente Estratégico usa el histórico como contexto de continuidad.
 - Acumula aprendizajes: qué funcionó, qué no, métricas básicas y feedback del equipo.
 
@@ -54,12 +54,12 @@ Cada campaña se organiza como una estructura expandible en tres niveles:
 
 ```
 Campaña
-├── Brief 1
-│   ├── Pieza A (copy Instagram)
-│   ├── Pieza B (copy LinkedIn)
-│   └── Pieza C (asunto email)
-└── Brief 2
-    └── Pieza D (banner web)
+ Brief 1
+    Pieza A (copy Instagram)
+    Pieza B (copy LinkedIn)
+    Pieza C (asunto email)
+ Brief 2
+     Pieza D (banner web)
 ```
 
 Esta vista permite navegar el árbol completo de una campaña: desde el plan estratégico hasta cada pieza de contenido individual.
@@ -83,7 +83,7 @@ Desde cualquier campaña del histórico, el usuario puede iniciar una nueva ejec
 
 > **Usuario:** "Quiero ver campañas de 2024"
 >
-> **Sistema:** *(muestra lista filtrada: 4 campañas de 2024 — ANDICOM, Correo institucional, Lanzamiento IA, Black Friday)*
+> **Sistema:** *(muestra lista filtrada: 4 campañas de 2024  ANDICOM, Correo institucional, Lanzamiento IA, Black Friday)*
 >
 > **Usuario:** "Usa ANDICOM 2024 como base para 2025"
 >
@@ -108,7 +108,7 @@ Cada elemento del histórico expone sus metadatos de origen:
 1. El usuario accede al módulo de Histórico
 2. Aplica filtros o busca una campaña específica (año, tipo, canal, nombre)
 3. Selecciona una campaña del listado
-4. Navega la estructura jerárquica (Campaña → Briefs → Piezas)
+4. Navega la estructura jerárquica (Campaña  Briefs  Piezas)
 5. Consulta resultados disponibles: automáticos (Instagram) o cargados manualmente
 6. Elige una acción:
    - **Ver detalle**: examina el contenido completo de la campaña
@@ -125,15 +125,16 @@ Cada elemento del histórico expone sus metadatos de origen:
 ### Diagramas
 
 ![Estructura jerárquica de campañas](assets/img/diagramas/historico-estructura.png)
-<a href="assets/plantuml/historico-estructura.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+<a href="assets/plantuml/historico-estructura.plantuml" download class="diagram-download"> Descargar fuente (.plantuml)</a>
 
 ![Flujo de reutilización de campaña](assets/img/diagramas/historico-reutilizacion.png)
-<a href="assets/plantuml/historico-reutilizacion.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+<a href="assets/plantuml/historico-reutilizacion.plantuml" download class="diagram-download"> Descargar fuente (.plantuml)</a>
 
 ![Fuentes de resultados](assets/img/diagramas/historico-resultados.png)
-<a href="assets/plantuml/historico-resultados.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+<a href="assets/plantuml/historico-resultados.plantuml" download class="diagram-download"> Descargar fuente (.plantuml)</a>
 
 
-> 🔗 **Prototipo navegable** — Consulte el flujo interactivo en la **[sección Prototipo navegable](mockup.html)**.
+>  **Prototipo navegable**  Consulte el flujo interactivo en la **[sección Prototipo navegable](mockup.html)**.
+
 
 

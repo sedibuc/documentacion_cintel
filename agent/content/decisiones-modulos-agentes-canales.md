@@ -87,7 +87,7 @@ Esta página define las características técnicas de los módulos que transform
 ## 6. Diagrama técnico del dominio
 
 ![Arquitectura de agentes y canales](assets/img/diagramas/decisiones-modulos-agentes-canales-arquitectura.png)
-<a href="assets/plantuml/decisiones-modulos-agentes-canales-arquitectura.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+<a href="assets/plantuml/decisiones-modulos-agentes-canales-arquitectura.plantuml" download class="diagram-download"> Descargar fuente (.plantuml)</a>
 
 ## 7. Criterios de aceptación
 
@@ -98,3 +98,4 @@ Esta página define las características técnicas de los módulos que transform
 ---
 
 Trazabilidad: [Mapa de módulos](decisiones-modulos.html) · [Módulos de gobernanza y operación](decisiones-modulos-gobernanza-operacion.html)
+

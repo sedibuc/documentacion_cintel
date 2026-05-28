@@ -1,0 +1,191 @@
+@startuml 05-vista-datos-conceptual
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 10
+skinparam classBackgroundColor #AED6F1
+skinparam classBorderColor #2E86C1
+skinparam classArrowColor #2E86C1
+skinparam titleFontSize 14
+skinparam titleFontStyle bold
+skinparam noteBackgroundColor #FEF9E7
+skinparam noteBorderColor #F39C12
+
+title Vista 5 — Modelo de Datos Conceptual TO-BE\nAgente Documental CINTEL · LLM-first
+
+' === MULTITENANT ===
+class Tenant <<Tradicional>> #AED6F1 {
+  + tenant_id : UUID
+  + nombre : String
+  + estado : Enum(activo, suspendido)
+  + configuracion : JSONB
+  + created_at : Timestamp
+}
+
+class User <<Tradicional>> #AED6F1 {
+  + user_id : UUID
+  + tenant_id : UUID
+  + email : String
+  + password_hash : String
+  + estado : Enum
+}
+
+class Role <<Tradicional>> #AED6F1 {
+  + role_id : UUID
+  + tenant_id : UUID
+  + nombre : String
+  + permisos : String[]
+}
+
+' === DOCUMENTOS ===
+class Document <<Tradicional>> #AED6F1 {
+  + document_id : UUID
+  + tenant_id : UUID
+  + tipo_documental_id : UUID
+  + batch_id : UUID
+  + nombre_archivo : String
+  + ruta_storage : String
+  + estado : Enum
+  + uploaded_at : Timestamp
+}
+
+class DocumentBatch <<Tradicional>> #AED6F1 {
+  + batch_id : UUID
+  + tenant_id : UUID
+  + nombre : String
+  + origen : Enum(manual, ftp, api)
+  + estado : Enum
+  + created_at : Timestamp
+}
+
+' === TIPOS Y ESQUEMAS ===
+class DocumentType <<Tradicional>> #AED6F1 {
+  + tipo_id : UUID
+  + tenant_id : UUID
+  + nombre : String
+  + estado : Enum(dev, beta, prod)
+  + created_at : Timestamp
+}
+
+class ExtractionSchema <<Tradicional>> #AED6F1 {
+  + schema_id : UUID
+  + tipo_id : UUID
+  + version : String
+  + estado : Enum
+  + created_at : Timestamp
+}
+
+class SchemaField <<Tradicional>> #AED6F1 {
+  + field_id : UUID
+  + schema_id : UUID
+  + nombre_campo : String
+  + tipo_dato : Enum
+  + obligatorio : Boolean
+  + reglas_validacion : JSONB
+}
+
+' === PROMPTS ===
+class PromptTemplate <<IA/LLM>> #A9DFBF {
+  + prompt_id : UUID
+  + tipo_id : UUID
+  + nombre : String
+  + created_at : Timestamp
+}
+
+class PromptVersion <<IA/LLM>> #A9DFBF {
+  + version_id : UUID
+  + prompt_id : UUID
+  + version : String
+  + texto_prompt : Text
+  + estado : Enum(dev, beta, prod)
+  + modelo_recomendado : String
+  + created_at : Timestamp
+}
+
+' === EJECUCIONES Y RESULTADOS ===
+class ExtractionRun <<IA/LLM>> #A9DFBF {
+  + run_id : UUID
+  + document_id : UUID
+  + prompt_version_id : UUID
+  + schema_id : UUID
+  + modelo_usado : String
+  + tokens_entrada : Int
+  + tokens_salida : Int
+  + latencia_ms : Int
+  + costo_estimado : Decimal
+  + estado : Enum
+  + created_at : Timestamp
+}
+
+class ExtractedField <<IA/LLM>> #A9DFBF {
+  + ef_id : UUID
+  + run_id : UUID
+  + nombre_campo : String
+  + valor_extraido : Text
+  + confianza : Float
+  + es_nulo : Boolean
+}
+
+' === REVISIÓN HUMANA ===
+class HumanReview <<Tradicional>> #AED6F1 {
+  + review_id : UUID
+  + run_id : UUID
+  + revisor_id : UUID
+  + estado : Enum(pendiente, aprobado, rechazado)
+  + campos_corregidos : JSONB
+  + observaciones : Text
+  + reviewed_at : Timestamp
+}
+
+' === AUDITORÍA ===
+class AuditEvent <<Tradicional>> #AED6F1 {
+  + event_id : UUID
+  + tenant_id : UUID
+  + user_id : UUID
+  + entidad : String
+  + entidad_id : UUID
+  + accion : String
+  + detalle : JSONB
+  + timestamp : Timestamp
+}
+
+class ObservabilityMetric <<Tradicional>> #AED6F1 {
+  + metric_id : UUID
+  + tenant_id : UUID
+  + run_id : UUID
+  + nombre_metrica : String
+  + valor : Float
+  + timestamp : Timestamp
+}
+
+' === RELACIONES ===
+Tenant "1" --> "0..*" User : tiene
+Tenant "1" --> "0..*" DocumentType : administra
+Tenant "1" --> "0..*" DocumentBatch : crea
+DocumentBatch "1" --> "0..*" Document : contiene
+Document "0..*" --> "1" DocumentType : clasificado como
+DocumentType "1" --> "0..*" ExtractionSchema : define
+ExtractionSchema "1" --> "0..*" SchemaField : compone
+DocumentType "1" --> "0..*" PromptTemplate : usa
+PromptTemplate "1" --> "0..*" PromptVersion : versiona
+Document "1" --> "0..*" ExtractionRun : origina
+ExtractionRun "1" --> "0..*" ExtractedField : produce
+ExtractionRun "0..1" --> "0..1" HumanReview : asignada a
+User "1" --> "0..*" HumanReview : revisa
+Tenant "1" --> "0..*" AuditEvent : registra
+ExtractionRun "1" --> "0..*" ObservabilityMetric : genera
+
+note bottom of Tenant #AED6F1
+  Aislamiento por tenant_id
+  en todas las entidades.
+  <<Tradicional — no IA>>
+end note
+
+note right of ExtractionRun #A9DFBF
+  Trazabilidad completa:
+  prompt, esquema, modelo,
+  tokens, costo, latencia.
+  <<IA / LLM>>
+end note
+
+@enduml

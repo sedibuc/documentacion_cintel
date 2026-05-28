@@ -1,0 +1,93 @@
+@startuml 03-flujo-procesamiento-documentos
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 10
+skinparam activityBackgroundColor #AED6F1
+skinparam activityBorderColor #2E86C1
+skinparam activityArrowColor #444444
+skinparam activityDiamondBackgroundColor #D6EAF8
+skinparam activityDiamondBorderColor #2E86C1
+skinparam titleFontSize 14
+skinparam titleFontStyle bold
+skinparam noteBackgroundColor #FEF9E7
+skinparam noteBorderColor #F39C12
+
+title Document Intelligence Engine MultiTenant\nFlujo de Procesamiento de Documentos
+
+|#E8F4FD|Cliente / Operador|
+start
+:Carga documento o lote\n(API REST o UI);
+
+|#E8F4FD|API / Backend (Tradicional)|
+note right #AED6F1 : <<Tradicional>>\nMultiTenant: valida\ntenant_id y permisos RBAC
+:Valida tenant y permisos;
+:Document Service registra\nmetadatos y estado;
+:File Storage guarda\narchivo original;
+:Valida formato del archivo;
+
+if (Formato valido?) then (No)
+  :Marca ERROR;
+  |Cliente / Operador|
+  :Recibe notificacion\nde error de formato;
+  stop
+else (Si)
+endif
+
+note right #D5E8D4 : <<Content Extraction Strategy>>\nLLM-first: OCR solo como fallback
+if (¿Documento con texto/estructura digital?) then (Si)
+  :Extraccion nativa\n(PDF parser, DOCX, XLSX, CSV, HTML);
+else (No)
+  if (¿Modelo soporta multimodal/documental?) then (Si)
+    :LLM multimodal/documental\n(archivo directo al modelo);
+  else (No)
+    :OCR fallback\n(solo escaneados/imagenes sin texto);
+    note right #FEF3C7 : OCR puede introducir errores.\nControl de calidad obligatorio.
+  endif
+endif
+:Normalized Document Representation\n(contenido + metodo_extraccion + hash + original_uri);
+:DocumentSchemaRegistry\nretorna schema vigente del tipo;
+:Prompt Registry retorna\nprompt versionado activo;
+
+|#E9F7EF|Capa IA / LLM|
+note right #A9DFBF : <<IA / LLM>>\nLLM-first · Sin NER en MVP
+:LLM Orchestrator construye\ncontexto (representacion_normalizada + schema + prompt);
+:Invoca LLM Provider\n(cloud certificado / on-premise);
+:Structured Output Parser\ngenera JSON con campos extraidos;
+
+if (Salida valida?) then (No)
+  :Reintento con prompt ajustado\n(hasta 3 veces);
+  if (Reintento OK?) then (No)
+    :Marca extraccion FALLIDA;
+    stop
+  else (Si)
+  endif
+else (Si)
+endif
+
+|#E8F4FD|Validacion y Alertas (Tradicional)|
+note right #AED6F1 : <<Tradicional>>\nValidacion deterministica
+:Validation Engine valida\ntipo/formato/obligatorios/rangos;
+
+note right #AED6F1 : <<Tradicional>>\nCrossValidator Fase 1
+:CrossValidator compara\ncontra CSV/Excel de referencia;
+:Clasifica por campo:\nMATCH / MISMATCH / PENDIENTE;
+:DiscrepancyAlertEngine\ngenera alertas de discrepancia;
+:Clasifica severidad:\nBLOCKING / WARNING / INFO;
+
+|API / Backend (Tradicional)|
+:Persiste resultado estructurado\ny alertas en PostgreSQL;
+:Audit Service registra traza\n(tenant, doc, metodo_extraccion, prompt_v, modelo, tokens, latencia);
+
+|Cliente / Operador|
+:Ve resultado en Alert Dashboard;
+if (Hay alertas?) then (Si)
+  :Revisa, corrige o aprueba\ncampos con discrepancia;
+  |API / Backend (Tradicional)|
+  :Human Review registra\ndecision y observaciones;
+else (No)
+endif
+:Resultado aprobado disponible\nvía API REST (JSON/CSV);
+stop
+
+@enduml

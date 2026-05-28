@@ -120,7 +120,7 @@ Esta página detalla los módulos que sostienen el perfil institucional persiste
 ## 5. Diagrama técnico del dominio
 
 ![Arquitectura de contexto y datos](assets/img/diagramas/decisiones-modulos-contexto-datos-arquitectura.png)
-<a href="assets/plantuml/decisiones-modulos-contexto-datos-arquitectura.puml" download class="diagram-download">⬇ Descargar fuente (.puml)</a>
+<a href="assets/plantuml/decisiones-modulos-contexto-datos-arquitectura.plantuml" download class="diagram-download"> Descargar fuente (.plantuml)</a>
 
 ## 6. Criterios de aceptación
 
@@ -131,3 +131,4 @@ Esta página detalla los módulos que sostienen el perfil institucional persiste
 ---
 
 Trazabilidad: [Mapa de módulos](decisiones-modulos.html) · [Arquitectura TO-BE](to-be-arquitectura.html)
+

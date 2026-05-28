@@ -1,0 +1,73 @@
+@startuml flujo-lotes
+skinparam backgroundColor #f7f1e7
+skinparam activity {
+  BackgroundColor #ffffff
+  BorderColor #0f5a58
+  BorderThickness 1.5
+  FontSize 13
+  FontName "Segoe UI"
+  ArrowColor #0f5a58
+  ArrowFontSize 11
+  StartColor #0f5a58
+  EndColor #073534
+  DiamondBackgroundColor #d6ebe8
+  DiamondBorderColor #0f5a58
+}
+skinparam note {
+  BackgroundColor #d6ebe8
+  BorderColor #0f5a58
+}
+skinparam title {
+  FontSize 16
+  FontStyle bold
+  FontColor #073534
+}
+
+title Flujo 4 — Procesamiento por lotes e historial de lotes
+
+start
+:Operador accede al módulo\nde procesamiento por lotes;
+:Define nombre del lote\n(ej. "CTL-Mayo-2026-Norteamérica");
+:Selecciona tipo documental\ny formato de salida (JSON / CSV);
+:Elige origen de los documentos;
+
+if (¿Origen?) then (Carga manual)
+  :Carga múltiples archivos\n(arrastrar o seleccionar);
+else (FTP)
+  :Sistema conecta al servidor FTP configurado;
+  :Lista archivos disponibles en la carpeta;
+  :Operador selecciona carpeta\no archivos específicos;
+endif
+
+:Operador confirma inicio de procesamiento;
+:Sistema asigna ID único al lote;
+:Sistema encola documentos para procesamiento;
+
+repeat
+  :Procesa un documento:\nextrae campos según esquema del tipo;
+  if (¿Extracción exitosa?) then (Sí)
+    :Documento: Completado;
+  else (Error)
+    :Documento: Error con razón registrada;
+  endif
+  :Barra de progreso actualizada;
+repeat while (¿Quedan documentos en la cola?) is (Sí)
+->No;
+
+:Sistema calcula estadísticas del lote\n(total, completados, errores, tiempo);
+:Estado del lote cambia a Finalizado;
+:Lote persistido en historial;
+:Resultados disponibles por API REST\n(GET /api/v1/lotes/{id});
+
+note right
+  Notificación automática por correo
+  o webhook: evolución futura,
+  no parte del MVP.
+end note
+
+:Operador consulta el historial de lotes;
+:Operador selecciona lote y revisa detalle;
+:Operador descarga resultados (JSON / CSV);
+stop
+
+@enduml

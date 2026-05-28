@@ -1,0 +1,83 @@
+@startuml
+
+skinparam backgroundColor #1a202c
+skinparam defaultFontColor #d4dae6
+skinparam defaultFontSize 12
+skinparam arrowColor #4db8b5
+skinparam ArrowFontColor #9ba5b4
+skinparam ArrowFontSize 11
+skinparam borderColor #2d3748
+skinparam shadowing false
+
+skinparam classBorderColor #2d3748
+skinparam classFontColor #f0ece3
+skinparam classBackgroundColor #1e2533
+skinparam classAttributeFontColor #9ba5b4
+skinparam classAttributeIconSize 0
+skinparam packageBackgroundColor #161b27
+skinparam packageBorderColor #2d3748
+skinparam packageFontColor #4db8b5
+skinparam noteBorderColor #4db8b5
+skinparam noteBackgroundColor #0c3030
+skinparam noteFontColor #7fcba7
+skinparam titleFontColor #f0ece3
+skinparam titleFontSize 14
+
+title <b>Estructura jerárquica del Histórico</b>
+
+package "Histórico" {
+
+  class Campaña #1e2533 {
+    + nombre : String
+    + fecha_creacion : Date
+    + objetivo : String
+    + canales : List
+    + estado : String
+    --
+    + verEstructura()
+    + verResultados()
+    + usarComoBase()
+  }
+
+  class Brief #1e2533 {
+    + nombre : String
+    + canal : String
+    + audiencia : String
+    + tono : String
+    --
+    + verPiezas()
+    + reutilizar()
+  }
+
+  class Pieza #1e2533 {
+    + tipo : String
+    + contenido : Text
+    + fecha : Date
+    + version : Int
+    --
+    + verDetalle()
+    + copiarContenido()
+  }
+
+}
+
+Campaña "1" *-down-> "1..*" Brief : contiene >
+Brief "1" *-down-> "1..*" Pieza : genera >
+
+note right of Campaña
+  Punto de entrada principal.
+  Puede filtrarse por año,
+  tipo o canal.
+end note
+
+note right of Brief
+  Cada brief corresponde
+  a un canal o segmento.
+end note
+
+note bottom of Pieza
+  Copy Instagram, texto email,
+  asunto, banner, copy LinkedIn...
+end note
+
+@enduml

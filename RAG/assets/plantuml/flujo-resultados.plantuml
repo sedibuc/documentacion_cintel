@@ -1,0 +1,59 @@
+@startuml flujo-resultados
+skinparam backgroundColor #f7f1e7
+skinparam activity {
+  BackgroundColor #ffffff
+  BorderColor #0f5a58
+  BorderThickness 1.5
+  FontSize 13
+  FontName "Segoe UI"
+  ArrowColor #0f5a58
+  ArrowFontSize 11
+  StartColor #0f5a58
+  EndColor #073534
+  DiamondBackgroundColor #d6ebe8
+  DiamondBorderColor #0f5a58
+}
+skinparam note {
+  BackgroundColor #d6ebe8
+  BorderColor #0f5a58
+}
+skinparam title {
+  FontSize 16
+  FontStyle bold
+  FontColor #073534
+}
+
+title Flujo 5 — Consulta y descarga de resultados
+
+start
+:Operador accede al historial de lotes;
+:Visualiza lista de lotes con:\n- ID, nombre, fecha, tipo documental\n- Estado (en progreso / finalizado / error)\n- Cantidad de documentos;
+
+:Selecciona un lote específico;
+:Sistema muestra detalle del lote\n(estadísticas y tabla de documentos);
+
+if (¿Lote con comparación?) then (Sí)
+  :Muestra columna de estado\n(MATCH / MISMATCH / PENDIENTE / ERROR);
+  :Permite filtrar por estado;
+else (Solo extracción)
+  :Muestra campos extraídos\npor documento;
+endif
+
+:Operador explora resultados\nindividuales por documento;
+
+if (¿Necesita descarga?) then (Sí)
+  :Selecciona formato de descarga\n(JSON completo / CSV plano);
+  :Sistema genera archivo\ncon todos los registros del lote;
+  :Descarga se inicia automáticamente;
+else (Solo consulta)
+  :Operador visualiza campos\nen pantalla;
+endif
+
+note right
+  Futuro: notificación automática
+  por correo o webhook al finalizar
+  el lote. No forma parte del MVP.
+end note
+stop
+
+@enduml

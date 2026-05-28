@@ -1,36 +1,46 @@
-# Micrositio del diagnóstico RAG
+# Micrositio RAG / Document Intelligence
 
-Sitio estático en HTML, CSS y JavaScript que carga contenido Markdown desde la carpeta content y lo renderiza en el navegador.
+Micrositio estático para documentar el proyecto de evolución hacia un Document Intelligence Engine (DIE) multi-tenant, conservando el análisis AS-IS y la propuesta TO-BE.
 
-## Requisito para abrirlo
+## Ejecución local
 
-El sitio usa fetch para cargar los archivos Markdown. Por eso debe servirse desde un servidor local simple y no abrirse directamente con file://.
-
-## Opción rápida con Python
+Este sitio carga Markdown con fetch, por lo que requiere servidor HTTP local.
 
 ```bash
 python -m http.server 8000
 ```
 
-Luego abrir:
+Abrir en navegador:
 
 ```text
-http://localhost:8000/
+http://localhost:8000/RAG/
 ```
 
-## Estructura principal
+## Estructura de navegación
 
-- index.html
-- diagnostico.html
-- arquitectura.html
-- brechas.html
-- despliegue.html
-- costos.html
-- assets/css/styles.css
-- assets/js/markdown-loader.js
-- assets/js/app.js
-- content/
+- Inicio
+- Contexto del proyecto
+- Diagnóstico técnico
+- Arquitectura vigente
+- Brechas y oportunidades
+- Configuración y despliegue
+- Servicios y costos
+- Mockup / Prototipo
+- TO-BE funcional
+- Arquitectura TO-BE
+- Por qué no es un RAG
+- Decisiones de diseño por módulos
+- Cronograma de implementación
+- Preguntas para experto
+- Conclusiones y recomendaciones
 
-## Fuente de contenido
+## Organización de carpetas
 
-El contenido se construyó a partir de source/diagnostico_rag.md.
+- `content/`: fuente editable del contenido por página.
+- `assets/`: estilos, scripts y shell de navegación compartida.
+- `source/`: documento técnico base de referencia.
+- `notes/`: notas y trazabilidad editorial.
+
+## Archivos técnicos no navegables
+
+Archivos de soporte como árboles de directorio o notas internas se conservan en el repositorio, pero no se exponen en la navegación pública del micrositio.

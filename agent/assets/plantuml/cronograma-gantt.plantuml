@@ -1,0 +1,14 @@
+@startuml
+@startgantt
+Project starts 2026-07-01
+[ Sprint 0 - Base tecnica ] starts 2026-07-01 and lasts 14 days
+[ Sprint 1 - Contexto ] starts 2026-07-15 and lasts 14 days
+[ Sprint 2 - Marca y completitud ] starts 2026-07-29 and lasts 14 days
+[ Sprint 3 - Agente estrategico ] starts 2026-08-12 and lasts 14 days
+[ Sprint 4 - Agente creativo ] starts 2026-08-26 and lasts 14 days
+[ Sprint 5 - Gobernanza ] starts 2026-09-09 and lasts 14 days
+[ Sprint 6 - Historico ] starts 2026-09-23 and lasts 14 days
+[ Sprint 7 - Operacion MVP ] starts 2026-10-07 and lasts 14 days
+[ Sprint 8 - Piloto ] starts 2026-10-21 and lasts 14 days
+@endgantt
+@enduml

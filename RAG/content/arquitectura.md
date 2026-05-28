@@ -139,16 +139,22 @@ Los siguientes diagramas se presentan como apoyo visual de la arquitectura y de 
 
 ![Arquitectura lógica general del demostrador RAG](./assets/img/diagramas/arquitectura-general.png)
 
+<a href="assets/plantuml/arquitectura-general.plantuml" download class="diagram-download">⬇ Descargar fuente (.plantuml)</a>
+
 Vista resumida de componentes, dependencias y puntos principales de integración del demostrador.
 
 ### Flujo de consulta
 
 ![Consulta RAG desde interfaz web hasta recuperación e inferencia](./assets/img/diagramas/flujo-consulta.png)
 
+<a href="assets/plantuml/flujo-consulta.plantuml" download class="diagram-download">⬇ Descargar fuente (.plantuml)</a>
+
 Secuencia de recuperación, composición de contexto y generación de respuesta para el chat RAG.
 
 ### Flujo de ingesta
 
 ![Ingesta, OCR, embeddings e indexación](./assets/img/diagramas/flujo-ingesta.png)
+
+<a href="assets/plantuml/flujo-ingesta.plantuml" download class="diagram-download">⬇ Descargar fuente (.plantuml)</a>
 
 Recorrido técnico desde carga documental hasta procesamiento, embeddings e indexación vectorial.
