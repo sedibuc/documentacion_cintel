@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Core Transversal CINTEL &mdash; Dashboard</title>
+  <style>
+    :root{--ink:#1a2035;--muted:#52607a;--line:rgba(26,36,70,.12);--accent:#1a3f8a;--accent-soft:#dce5f5;--accent-strong:#0d2558;--purple:#5a3a9a;--shadow:0 20px 60px rgba(20,30,65,.13);--radius:20px}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{min-height:100vh;font-family:"Aptos","Segoe UI Variable","Segoe UI",sans-serif;font-size:15px;line-height:1.6;color:var(--ink);background:radial-gradient(circle at 15% 20%,rgba(26,63,138,.14),transparent 30%),radial-gradient(circle at 85% 80%,rgba(100,60,180,.09),transparent 30%),linear-gradient(160deg,#eef1f9,#e8ecf5)}
+    .topbar{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:58px;background:rgba(255,255,255,.85);backdrop-filter:blur(18px);border-bottom:1px solid var(--line);box-shadow:0 1px 12px rgba(20,30,65,.07)}
+    .topbar-brand{display:flex;align-items:center;gap:.75rem}
+    .topbar-brand .dot{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,var(--accent),var(--accent-strong));display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:900;color:white}
+    .topbar-brand .name{font-size:.9rem;font-weight:800;color:var(--accent-strong)}
+    .topbar-brand .sub{font-size:.72rem;color:var(--muted)}
+    .topbar-right{display:flex;align-items:center;gap:.55rem}
+    .user-pill{display:flex;align-items:center;gap:.5rem;padding:.32rem .75rem .32rem .45rem;border:1px solid var(--line);border-radius:999px;background:rgba(248,252,255,.9);font-size:.82rem}
+    .user-pill .av{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#5a7fd6);color:white;font-size:.65rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .user-pill .un{font-weight:700}
+    .btn{display:inline-flex;align-items:center;gap:.28rem;padding:.38rem .85rem;border-radius:999px;border:1px solid transparent;font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit;transition:background .12s,transform .1s}
+    .btn:active{transform:scale(.97)}
+    .btn-ob{background:var(--accent-soft);color:var(--accent-strong);border-color:rgba(26,63,138,.2)}
+    .btn-ob:hover{background:#c8d8f0}
+    .btn-out{background:transparent;color:var(--muted);border-color:var(--line)}
+    .btn-out:hover{background:rgba(26,36,70,.05)}
+    .login-wrap{min-height:calc(100vh - 58px);display:flex;align-items:center;justify-content:center;padding:2rem}
+    .login-card{width:100%;max-width:380px;padding:2.2rem 1.8rem;border:1px solid var(--line);border-radius:22px;background:rgba(248,252,255,.97);box-shadow:var(--shadow)}
+    .ey{font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.18em;color:var(--accent);margin-bottom:.2rem}
+    .login-card h1{font-size:1.55rem;color:var(--accent-strong);line-height:1.1;margin-bottom:.35rem}
+    .login-card>p{color:var(--muted);font-size:.86rem;margin-bottom:1.5rem}
+    .fg{margin-bottom:.85rem}
+    .fg label{display:block;font-size:.8rem;font-weight:700;margin-bottom:.25rem}
+    .fi,.fs{width:100%;padding:.62rem .8rem;border:1px solid rgba(26,36,70,.2);border-radius:10px;background:white;color:var(--ink);font-size:.86rem;font-family:inherit}
+    .fi:focus,.fs:focus{outline:2px solid var(--accent);outline-offset:1px}
+    .login-btn{width:100%;padding:.9rem;border:0;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-strong));color:white;font-size:.95rem;font-weight:700;font-family:inherit;cursor:pointer;margin-top:.35rem;transition:opacity .15s,transform .12s}
+    .login-btn:hover{opacity:.9;transform:translateY(-1px)}
+    .login-err{display:none;margin-top:.6rem;padding:.6rem .85rem;border-radius:9px;background:#f8e3e2;color:#7a2930;font-size:.83rem}
+    .login-err.show{display:block}
+    #view-dash{display:none}
+    .dash-wrap{max-width:860px;margin:0 auto;padding:3rem 2rem 4rem}
+    .dash-hero{text-align:center;margin-bottom:2.8rem}
+    .dash-hero h1{font-size:clamp(1.7rem,3vw,2.4rem);line-height:1.08;color:var(--accent-strong);margin-bottom:.5rem}
+    .dash-hero p{color:var(--muted);font-size:.95rem}
+    .app-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem}
+    .app-card{position:relative;overflow:hidden;padding:2rem 1.8rem 1.6rem;border:1px solid var(--line);border-radius:var(--radius);background:rgba(248,252,255,.92);box-shadow:var(--shadow);cursor:pointer;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:.5rem;transition:transform .18s,box-shadow .18s,border-color .18s}
+    .app-card::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;border-radius:var(--radius) var(--radius) 0 0}
+    .app-card:hover{transform:translateY(-4px);box-shadow:0 32px 70px rgba(20,30,65,.16);border-color:rgba(26,63,138,.22)}
+    .ac-die::before{background:linear-gradient(90deg,#1a3f8a,#4a7fd8)}
+    .ac-agent::before{background:linear-gradient(90deg,#5a3a9a,#a060e0)}
+    .app-card .ico{font-size:2.2rem;margin-bottom:.2rem}
+    .app-card .tag{font-size:.63rem;font-weight:800;text-transform:uppercase;letter-spacing:.14em;color:var(--muted)}
+    .app-card h2{font-size:1.25rem;color:var(--accent-strong);line-height:1.15}
+    .app-card p{font-size:.86rem;color:var(--muted);flex:1}
+    .app-card .go{display:inline-flex;align-items:center;gap:.3rem;margin-top:.5rem;font-size:.82rem;font-weight:700}
+    .ac-die .go{color:var(--accent)}
+    .ac-agent .go{color:var(--purple)}
+    .ob-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(10,16,40,.45);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:1.5rem}
+    .ob-overlay.open{display:flex}
+    .ob-modal{width:100%;max-width:520px;border:1px solid var(--line);border-radius:22px;background:rgba(248,252,255,.98);box-shadow:0 40px 90px rgba(10,16,40,.25);overflow:hidden}
+    .ob-header{padding:1.4rem 1.6rem 1rem;border-bottom:1px solid var(--line);display:flex;align-items:flex-start;justify-content:space-between}
+    .ob-header h2{font-size:1.2rem;color:var(--accent-strong);line-height:1.1}
+    .ob-close{background:none;border:none;font-size:1.1rem;cursor:pointer;color:var(--muted);padding:.2rem .4rem;border-radius:6px;line-height:1}
+    .ob-close:hover{background:rgba(26,36,70,.07)}
+    .ob-steps{display:flex;padding:.9rem 1.6rem .75rem;border-bottom:1px solid var(--line)}
+    .ob-step{flex:1;display:flex;flex-direction:column;align-items:center;gap:.22rem}
+    .ob-step .dot{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:800;border:2px solid var(--line);color:var(--muted);background:white;transition:all .2s}
+    .ob-step .lbl{font-size:.66rem;font-weight:600;color:var(--muted);text-align:center}
+    .ob-step.done .dot{background:#1a5c2a;border-color:#1a5c2a;color:white}
+    .ob-step.act .dot{background:var(--accent);border-color:var(--accent);color:white}
+    .ob-step.act .lbl{color:var(--accent-strong);font-weight:800}
+    .ob-body{padding:1.4rem 1.6rem;min-height:210px}
+    .ob-panel{display:none}
+    .ob-panel.active{display:block}
+    .ob-panel h3{font-size:1rem;color:var(--accent-strong);margin-bottom:.3rem}
+    .ob-panel p{font-size:.86rem;color:var(--muted);margin-bottom:1rem}
+    .ob-footer{padding:.9rem 1.6rem;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;background:rgba(240,244,255,.5)}
+    .ob-counter{font-size:.78rem;color:var(--muted)}
+    .ob-nav{display:flex;gap:.5rem}
+    .btn-wiz-back{background:transparent;color:var(--muted);border-color:var(--line)}
+    .btn-wiz-back:hover{background:rgba(26,36,70,.05)}
+    .btn-wiz-next{background:var(--accent-strong);color:white}
+    .btn-wiz-next:hover{background:#091d45}
+    .btn-wiz-fin{background:#1a5c2a;color:white}
+    .btn-wiz-fin:hover{background:#134420}
+    .frow{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+    .chip-list{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.4rem}
+    .chip{display:inline-flex;align-items:center;gap:.3rem;padding:.3rem .65rem;border-radius:999px;border:1px solid var(--line);font-size:.78rem;cursor:pointer;user-select:none;transition:background .12s}
+    .chip.sel{background:var(--accent-soft);border-color:rgba(26,63,138,.3);color:var(--accent-strong);font-weight:700}
+    .callout{padding:.7rem .9rem;border-radius:10px;border-left:3px solid var(--accent);background:var(--accent-soft);color:var(--accent-strong);font-size:.83rem;margin-top:.8rem}
+    .callout.ok{border-color:#1a5c2a;background:#d6eddb;color:#1a5c2a}
+    @media(max-width:640px){.app-grid{grid-template-columns:1fr}.topbar{padding:0 1rem}.dash-wrap{padding:2rem 1rem 3rem}}
+  </style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-brand">
+    <div class="dot">CI</div>
+    <div>
+      <div class="name">CINTEL &middot; Plataforma IA</div>
+      <div class="sub">Core Transversal</div>
+    </div>
+  </div>
+  <div class="topbar-right" id="topbar-right"></div>
+</header>
+
+<!-- LOGIN -->
+<div id="view-login">
+  <div class="login-wrap">
+    <div class="login-card">
+      <p class="ey">Acceso unificado &middot; CINTEL</p>
+      <h1>Inicia sesi&oacute;n</h1>
+      <p>Un &uacute;nico acceso para todas las soluciones del portafolio.</p>
+      <div class="fg">
+        <label for="l-user">Correo corporativo</label>
+        <input id="l-user" class="fi" type="text" placeholder="nombre@empresa.co" autocomplete="username">
+      </div>
+      <div class="fg">
+        <label for="l-org">Organizaci&oacute;n</label>
+        <input id="l-org" class="fi" type="text" placeholder="Nombre de tu organizaci&oacute;n">
+      </div>
+      <button class="login-btn" id="login-btn">Ingresar &rarr;</button>
+      <div class="login-err" id="login-err">Ingresa tu correo y organizaci&oacute;n para continuar.</div>
+    </div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="view-dash">
+  <div class="dash-wrap">
+    <div class="dash-hero">
+      <p class="ey">Portafolio de soluciones</p>
+      <h1 id="welcome-msg">Bienvenid@</h1>
+      <p>Selecciona la soluci&oacute;n que necesitas. Tu sesi&oacute;n se comparte entre todas las aplicaciones.</p>
+    </div>
+    <div class="app-grid">
+      <a class="app-card ac-die" href="../RAG/index.html">
+        <div class="ico">&#128196;</div>
+        <div class="tag">Extracci&oacute;n de documentos</div>
+        <h2>Document Intelligence Engine</h2>
+        <p>Extrae campos estructurados de documentos con validaci&oacute;n cruzada, alertas de discrepancia y auditor&iacute;a completa por tenant.</p>
+        <div class="go">Ir al m&oacute;dulo de documentos &rarr;</div>
+      </a>
+      <a class="app-card ac-agent" href="../agent/index.html">
+        <div class="ico">&#10024;</div>
+        <div class="tag">Generaci&oacute;n de contenido</div>
+        <h2>Adaptador de Contenido Institucional</h2>
+        <p>Genera campa&ntilde;as de marketing adaptadas por canal con identidad de marca persistente y ciclo de aprobaci&oacute;n humana.</p>
+        <div class="go" style="color:var(--purple)">Ir al m&oacute;dulo de agente &rarr;</div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ONBOARDING WIZARD -->
+<div class="ob-overlay" id="ob-overlay">
+  <div class="ob-modal" role="dialog" aria-modal="true" aria-labelledby="ob-title">
+    <div class="ob-header">
+      <div>
+        <p class="ey">Configuraci&oacute;n inicial</p>
+        <h2 id="ob-title">Onboarding de la organizaci&oacute;n</h2>
+      </div>
+      <button class="ob-close" onclick="closeOb()" title="Cerrar">&#10005;</button>
+    </div>
+    <div class="ob-steps">
+      <div class="ob-step act" data-i="0"><div class="dot">1</div><div class="lbl">Organizaci&oacute;n</div></div>
+      <div class="ob-step"    data-i="1"><div class="dot">2</div><div class="lbl">Contexto</div></div>
+      <div class="ob-step"    data-i="2"><div class="dot">3</div><div class="lbl">Usuarios</div></div>
+      <div class="ob-step"    data-i="3"><div class="dot">4</div><div class="lbl">Activaci&oacute;n</div></div>
+    </div>
+    <div class="ob-body">
+      <!-- Paso 1 -->
+      <div class="ob-panel active" id="op-0">
+        <h3>Datos de la organizaci&oacute;n</h3>
+        <p>Registra la empresa cliente. Esto crea un espacio de trabajo aislado (tenant) en la plataforma.</p>
+        <div class="frow">
+          <div class="fg"><label>Nombre legal</label><input class="fi" value="CINTEL"></div>
+          <div class="fg"><label>Nombre corto</label><input class="fi" value="CINTEL"></div>
+        </div>
+        <div class="frow">
+          <div class="fg"><label>Dominio corporativo</label><input class="fi" value="cintel.co"></div>
+          <div class="fg"><label>Pa&iacute;s</label><select class="fs"><option>Colombia</option><option>M&eacute;xico</option><option>Chile</option></select></div>
+        </div>
+        <div class="fg"><label>Plan de servicio</label>
+          <select class="fs"><option>Starter</option><option>Professional</option><option selected>Enterprise</option></select>
+        </div>
+      </div>
+      <!-- Paso 2 -->
+      <div class="ob-panel" id="op-1">
+        <h3>Contexto institucional</h3>
+        <p>Define el perfil de marca que las soluciones usar&aacute;n en cada operaci&oacute;n, sin que el usuario deba reexplicarlo.</p>
+        <div class="fg"><label>Tono de comunicaci&oacute;n</label>
+          <div class="chip-list">
+            <div class="chip sel" onclick="this.classList.toggle('sel')">Profesional</div>
+            <div class="chip"     onclick="this.classList.toggle('sel')">Cercano</div>
+            <div class="chip sel" onclick="this.classList.toggle('sel')">T&eacute;cnico</div>
+            <div class="chip"     onclick="this.classList.toggle('sel')">Innovador</div>
+            <div class="chip"     onclick="this.classList.toggle('sel')">Acad&eacute;mico</div>
+          </div>
+        </div>
+        <div class="fg" style="margin-top:.85rem"><label>Restricciones regulatorias (opcional)</label>
+          <input class="fi" placeholder="Ej: No publicar datos financieros sin aprobaci&oacute;n legal">
+        </div>
+        <div class="callout">Las soluciones DIE y Agent leer&aacute;n este contexto autom&aacute;ticamente en cada operaci&oacute;n.</div>
+      </div>
+      <!-- Paso 3 -->
+      <div class="ob-panel" id="op-2">
+        <h3>Usuarios y roles</h3>
+        <p>Agrega los miembros del equipo que tendr&aacute;n acceso y define sus permisos por soluci&oacute;n.</p>
+        <div class="frow">
+          <div class="fg"><label>Correo</label><input class="fi" placeholder="usuario@cintel.co"></div>
+          <div class="fg"><label>Rol</label>
+            <select class="fs"><option>Administrador</option><option>Operador DIE</option><option>Creativo Agent</option><option>Auditor</option></select>
+          </div>
+        </div>
+        <button class="btn btn-ob" style="font-size:.78rem;padding:.3rem .7rem">+ Agregar otro usuario</button>
+        <div class="callout" style="margin-top:.85rem">La invitaci&oacute;n se env&iacute;a por correo con un enlace de un solo uso v&aacute;lido por 48&nbsp;horas.</div>
+      </div>
+      <!-- Paso 4 -->
+      <div class="ob-panel" id="op-3">
+        <h3>Listo para activar</h3>
+        <p>Hemos configurado tu organizaci&oacute;n. Al confirmar, el espacio de trabajo quedar&aacute; activo para todos los usuarios invitados.</p>
+        <div style="display:flex;flex-direction:column;gap:.45rem;margin-bottom:.9rem">
+          <label style="display:flex;align-items:center;gap:.6rem;font-size:.86rem;cursor:pointer"><input type="checkbox" checked style="accent-color:#1a5c2a;width:.9rem;height:.9rem"> Organizaci&oacute;n registrada</label>
+          <label style="display:flex;align-items:center;gap:.6rem;font-size:.86rem;cursor:pointer"><input type="checkbox" checked style="accent-color:#1a5c2a;width:.9rem;height:.9rem"> Contexto institucional guardado</label>
+          <label style="display:flex;align-items:center;gap:.6rem;font-size:.86rem;cursor:pointer"><input type="checkbox" checked style="accent-color:#1a5c2a;width:.9rem;height:.9rem"> Al menos un usuario administrador activo</label>
+        </div>
+        <div class="callout ok">&#10003; Todo listo. Haz clic en <strong>Activar</strong> para comenzar a usar las soluciones.</div>
+      </div>
+    </div>
+    <div class="ob-footer">
+      <span class="ob-counter" id="ob-counter">Paso 1 de 4</span>
+      <div class="ob-nav">
+        <button class="btn btn-wiz-back" id="ob-back" onclick="obNav(-1)" style="display:none">&larr; Atr&aacute;s</button>
+        <button class="btn btn-wiz-next" id="ob-next" onclick="obNav(1)">Siguiente &rarr;</button>
+        <button class="btn btn-wiz-fin"  id="ob-fin"  onclick="finishOb()" style="display:none">&#10003; Activar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var SK='cintel_session', sess=null;
+  function load(){try{sess=JSON.parse(localStorage.getItem(SK));}catch(e){sess=null;}
+    if(sess&&Date.now()-sess.ts>28800000){sess=null;localStorage.removeItem(SK);}}
+  function save(d){sess=Object.assign({},d,{ts:Date.now()});localStorage.setItem(SK,JSON.stringify(sess));}
+  function ini(n){var p=(n||'?').trim().split(/\s+/);return p.length===1?p[0].slice(0,2).toUpperCase():(p[0][0]+p[p.length-1][0]).toUpperCase();}
+  function toName(e){return(e||'').replace(/@.*/,'').replace(/[._]/g,' ').replace(/\b\w/g,function(c){return c.toUpperCase();});}
+  function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  function renderBar(){
+    var el=document.getElementById('topbar-right');
+    if(!sess){el.innerHTML='';return;}
+    var first=(sess.name||'').split(' ')[0];
+    el.innerHTML='<div class="user-pill"><div class="av">'+ini(sess.name)+'</div>'
+      +'<span class="un">'+esc(first)+'</span>'
+      +'<span style="color:var(--muted);font-size:.74rem">&nbsp;&middot;&nbsp;'+esc(sess.org)+'</span></div>'
+      +'<button class="btn btn-ob" onclick="openOb()">&#128640; Onboarding</button>'
+      +'<button class="btn btn-out" onclick="doLogout()">Cerrar sesi&oacute;n</button>';
+  }
+  document.getElementById('login-btn').addEventListener('click',doLogin);
+  ['l-user','l-org'].forEach(function(id){
+    document.getElementById(id).addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
+  });
+  function doLogin(){
+    var u=document.getElementById('l-user').value.trim();
+    var o=document.getElementById('l-org').value.trim();
+    var err=document.getElementById('login-err');
+    if(!u||!o){err.classList.add('show');return;}
+    err.classList.remove('show');
+    save({name:toName(u),org:o});
+    showDash();
+  }
+  function showDash(){
+    document.getElementById('view-login').style.display='none';
+    document.getElementById('view-dash').style.display='block';
+    var wm=document.getElementById('welcome-msg');
+    if(wm&&sess)wm.textContent='Bienvenid@, '+(sess.name||'').split(' ')[0];
+    renderBar();
+  }
+  window.doLogout=function(){
+    localStorage.removeItem(SK);sess=null;
+    document.getElementById('view-dash').style.display='none';
+    document.getElementById('view-login').style.display='';
+    renderBar();
+  };
+  var CUR=0,TOTAL=4;
+  window.openOb=function(){CUR=0;renderOb();document.getElementById('ob-overlay').classList.add('open');};
+  window.closeOb=function(){document.getElementById('ob-overlay').classList.remove('open');};
+  window.obNav=function(d){CUR=Math.max(0,Math.min(TOTAL-1,CUR+d));renderOb();};
+  window.finishOb=function(){closeOb();};
+  function renderOb(){
+    for(var i=0;i<TOTAL;i++){var p=document.getElementById('op-'+i);if(p)p.classList.toggle('active',i===CUR);}
+    document.querySelectorAll('.ob-step').forEach(function(s){
+      var idx=+s.dataset.i;s.classList.remove('act','done');
+      if(idx<CUR){s.classList.add('done');s.querySelector('.dot').textContent='\u2713';}
+      else if(idx===CUR){s.classList.add('act');s.querySelector('.dot').textContent=idx+1;}
+      else{s.querySelector('.dot').textContent=idx+1;}
+    });
+    document.getElementById('ob-counter').textContent='Paso '+(CUR+1)+' de '+TOTAL;
+    document.getElementById('ob-back').style.display=CUR===0?'none':'';
+    document.getElementById('ob-next').style.display=CUR<TOTAL-1?'':'none';
+    document.getElementById('ob-fin').style.display=CUR===TOTAL-1?'':'none';
+  }
+  document.getElementById('ob-overlay').addEventListener('click',function(e){if(e.target===this)closeOb();});
+  load();if(sess)showDash();
+})();
+</script>
+</body>
+</html>

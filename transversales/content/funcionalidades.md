@@ -242,19 +242,39 @@ El objetivo es mostrar cómo estas capacidades podrían empaquetarse como un **p
 
 ---
 
-### F-15 — Gestión de conversaciones y sesiones
+### F-15 — Gestión de sesiones y dashboard centralizado
 
-**Descripción:** Módulo para gestionar el estado de interacciones o flujos de trabajo de larga duración: sesiones de extracción por lote, ciclos de generación multi-paso, flujos de aprobación humana y contexto de conversación por usuario.
+**Descripción:** Módulo unificado de gestión de sesiones de usuario con dos capas complementarias: (a) estado de flujos de trabajo internos (procesamiento por lotes, ciclos de generación, aprobaciones), y (b) sesión transversal de usuario compartida entre todas las aplicaciones del portafolio con un **dashboard centralizado** como hub de navegación.
 
-**Aplicación en DIE:** Gestión del estado de procesamiento por lote (Celery + Redis): documentos en cola, en proceso, completados, fallidos. Persistencia del estado entre reintentos.
+**Aplicación en DIE:** Gestión del estado de procesamiento por lote (Celery + Redis): documentos en cola, en proceso, completados, fallidos. Persistencia del estado entre reintentos y notificación de cambios de estado.
 
-**Aplicación en Agent:** ADK framework gestiona el estado de las sesiones de generación: contexto acumulado entre iteraciones, historial de versiones del contenido, estado de aprobación por canal.
+**Aplicación en Agent:** ADK framework gestiona el estado de las sesiones de generación: contexto acumulado entre iteraciones, historial de versiones del contenido, estado de aprobación por canal. La sesión persiste el perfil institucional activo para no requerir re-carga de contexto.
 
-**Valor como componente reutilizable:** Un `SessionStore` estándar basado en Redis y PostgreSQL permite gestionar el estado de flujos de trabajo complejos en cualquier proyecto, sin reimplementar la lógica de persistencia y recuperación de estado.
+**Componente transversal — Session Hub:**
 
-**Prioridad:** Media
+El `SessionManager` del Core Transversal emite un **JWT de sesión compartida** al autenticarse el usuario, que propaga su identidad (`tenant_id`, `user_id`, `role`, `solutions`) a todos los micrositios sin re-autenticación:
 
-**Observaciones técnicas:** Separar el estado efímero (Redis, para operaciones en curso) del estado persistente (PostgreSQL, para historial). Implementar expiración automática de sesiones inactivas. Registrar transiciones de estado en el `AuditService`.
+```
+[Login centralizado]
+        │  JWT emitido
+        ▼
+[Dashboard Hub — hub de navegaciones]
+   ├──→ [DIE / RAG Micrositio]  (lee JWT de localStorage)
+   ├──→ [Agent Micrositio]       (lee JWT de localStorage)
+   └──→ [Transversal Docs]       (indicador de sesión en topbar)
+```
+
+El **Dashboard centralizado** es la pantalla principal tras el login. Muestra:
+- Tarjetas de acceso a cada solución activa para el tenant
+- Métricas consolidadas: documentos procesados, campañas activas, consumo de tokens
+- Actividad reciente unificada (DIE + Agent + Onboarding)
+- Estado de la sesión con tiempo restante y botón de logout global
+
+**Valor como componente reutilizable:** Un `SessionManager` estándar con dashboard integrado elimina la necesidad de re-autenticación entre aplicaciones, centraliza el control de acceso y da al usuario una vista unificada del ecosistema CINTEL. Es el diferencial de experiencia de usuario del portafolio.
+
+**Prioridad:** Alta
+
+**Observaciones técnicas:** Implementar JWT con claims de soluciones activas (`["die", "agent"]`). Usar `localStorage` para propagación entre micrositios del mismo origen. Implementar expiración configurable (8h por defecto, con aviso a los 30 min). Registrar `session.create`, `session.refresh` y `session.close` en el `AuditService`. Ver prototipo funcional en [Mockup — Prototipo navegable](mockup.html).
 
 ---
 
@@ -420,17 +440,36 @@ El objetivo es mostrar cómo estas capacidades podrían empaquetarse como un **p
 
 ### F-26 — Onboarding de nuevos clientes
 
-**Descripción:** Flujo estandarizado para incorporar un nuevo tenant a la plataforma: registro de organización, configuración inicial (esquemas, lineamientos, canales), creación de usuarios administradores, validación de configuración y activación del servicio.
+**Descripción:** Flujo estandarizado de **5 fases** para incorporar un nuevo tenant al portafolio CINTEL. Es el primer punto de contacto funcional del cliente con la plataforma y el módulo que garantiza que el sistema cuente con toda la información necesaria para operar con identidad institucional desde el primer día.
 
-**Aplicación en DIE:** `OnboardingService` que crea el registro de tenant, configura esquemas de extracción iniciales, crea usuario administrador y valida la configuración antes de activar la extracción.
+| Fase | Nombre | Responsable | Duración est. |
+|---|---|---|---|
+| 1 | Registro de organización | Admin CINTEL | 15 min |
+| 2 | Carga de contexto institucional | Cliente (asistido) | 30–60 min |
+| 3 | Creación de usuarios y roles | Admin cliente | 15 min |
+| 4 | Configuración técnica de soluciones | Técnico CINTEL | 30 min |
+| 5 | Tour guiado y activación | Cliente + CINTEL | 30 min |
 
-**Aplicación en Agent:** Flujo de onboarding que carga el contexto organizacional inicial (lineamientos de marca, historia de la empresa, canales activos), crea usuarios y valida la completitud del contexto (`CompletenessScorer`).
+**Aplicación en DIE:** El `OnboardingOrchestrator` crea el registro de tenant, configura esquemas de extracción iniciales, crea usuario administrador y valida la configuración antes de activar la extracción. La Fase 2 captura los tipos de documentos contratados y los umbrales de validación.
 
-**Valor como componente reutilizable:** Un `OnboardingOrchestrator` que ejecute un flujo estándar (con pasos específicos por tipo de proyecto) garantiza que ningún tenant quede con configuración incompleta, reduce el tiempo de activación y mejora la experiencia del cliente.
+**Aplicación en Agent:** La Fase 2 carga el contexto organizacional completo (tono de marca ponderado, audiencias, canales, restricciones regulatorias, manual de marca PDF) mediante extracción automática desde la web + enriquecimiento manual. Esto alimenta el `OrganizationalContextStore` que el agente consultará en cada generación.
 
-**Prioridad:** Media
+**Funcionalidad clave — Extracción web asistida (Fase 2):**
+El sistema analiza el sitio web institucional del cliente e intenta pre-poblar: nombre, sector, servicios, canales de comunicación y paleta de colores. El resultado se presenta para revisión y corrección antes de persistirse. El principio es: *el sistema asiste; el usuario decide*.
 
-**Observaciones técnicas:** Implementar como flujo de pasos verificables (wizard). Validar completitud de configuración antes de activar operaciones. Registrar cada paso del onboarding en el `AuditService`. Soportar onboarding parcial (guardar progreso y continuar).
+**Criterios de activación:**
+- `tenant_id` creado y en estado `active`
+- Contexto institucional validado y persistido (completitud ≥ 80 %)
+- Al menos 1 usuario `org_admin` activo
+- Configuración técnica de todas las soluciones validada
+- Tour completado y confirmado
+- Evento de activación registrado en `AuditService`
+
+**Valor como componente reutilizable:** Un `OnboardingOrchestrator` que ejecute este flujo de 5 fases — con pasos específicos configurables por tipo de proyecto — garantiza que ningún tenant quede con configuración incompleta, reduce el tiempo de activación a menos de 4 horas y mejora decisivamente la experiencia del cliente en su primer contacto con la plataforma.
+
+**Prioridad:** Alta
+
+**Observaciones técnicas:** Implementar como wizard navegable (pasos 1–5 verificables). Soportar onboarding parcial: guardar progreso por fase y permitir reanudar. Registrar cada paso en el `AuditService` con usuario, timestamp y hash. Validar completitud con `CompletenessScorer` antes de activar. Ver el flujo completo en el [prototipo funcional](mockup.html) del Core Transversal.
 
 ---
 
@@ -438,8 +477,8 @@ El objetivo es mostrar cómo estas capacidades podrían empaquetarse como un **p
 
 | Prioridad | Funcionalidades |
 |-----------|----------------|
-| **Alta** | F-01 Multi-tenancy · F-02 AuthN/AuthZ · F-03 Gestión de usuarios · F-04 Administración de organizaciones · F-06 Auditoría · F-07 Configuración por ambiente · F-10 Seguridad · F-12 LLM Gateway · F-19 Despliegue · F-20 CI/CD |
-| **Media** | F-05 Gestión documental · F-08 Observabilidad · F-09 Manejo de logs · F-11 Gestión de permisos · F-14 Prompt Registry · F-15 Gestión de sesiones · F-16 Manejo de archivos · F-17 Monitoreo de uso · F-18 Control de costos · F-22 Versionamiento · F-26 Onboarding |
+| **Alta** | F-01 Multi-tenancy · F-02 AuthN/AuthZ · F-03 Gestión de usuarios · F-04 Administración de organizaciones · F-06 Auditoría · F-07 Configuración por ambiente · F-10 Seguridad · F-12 LLM Gateway · F-15 Sesiones y dashboard · F-19 Despliegue · F-20 CI/CD · F-26 Onboarding |
+| **Media** | F-05 Gestión documental · F-08 Observabilidad · F-09 Manejo de logs · F-11 Gestión de permisos · F-14 Prompt Registry · F-16 Manejo de archivos · F-17 Monitoreo de uso · F-18 Control de costos · F-22 Versionamiento |
 | **Baja** | F-13 Conectores externos · F-21 Parametrización · F-23 Reutilización de UI · F-24 Navegación base · F-25 Estructura de documentación |
 
 Las 10 funcionalidades de prioridad **Alta** conforman el núcleo mínimo viable del *Core Transversal* y deben implementarse en las primeras dos fases del cronograma antes de que cualquier proyecto nuevo arranque sobre este scaffolding.

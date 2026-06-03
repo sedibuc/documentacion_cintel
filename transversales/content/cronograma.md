@@ -61,28 +61,39 @@ Los módulos del Core son adoptados de forma **incremental** por los proyectos d
 
 ---
 
-### Sprint 1 — Multi-tenancy y gestión de usuarios
+### Sprint 1 — Multi-tenancy, gestión de usuarios y Onboarding
 
-**Objetivo:** Implementar el núcleo multi-tenant del Core: registro de tenants, aislamiento de datos y gestión de usuarios.
+**Objetivo:** Implementar el núcleo multi-tenant del Core: registro de tenants, aislamiento de datos, gestión de usuarios y el módulo de **Onboarding de clientes** con Dashboard centralizado y sesión compartida — los primeros tres módulos del portafolio con experiencia de usuario funcional.
+
+> Ver documentación detallada del módulo: [Onboarding de clientes](onboarding.html) · [Prototipo funcional navegable](mockup.html)
 
 **Actividades:**
 1. Definir modelo de datos: `Tenant`, `User`, `Role`, `Permission`. Crear migraciones con Alembic.
 2. Implementar `Tenant Registry`: CRUD de organizaciones con configuración por tenant.
 3. Implementar `Tenant Isolation Layer`: middleware que inyecta `tenant_id` y aplica filtros. Configurar PostgreSQL RLS.
 4. Implementar `User Manager`: CRUD de usuarios, asignación de roles por tenant.
-5. Implementar `Onboarding Orchestrator`: flujo de pasos verificables para nuevos tenants.
-6. Escribir tests de aislamiento: verificar que un tenant no puede leer ni escribir datos de otro.
-7. Documentar API de administración (OpenAPI).
+5. Implementar `Onboarding Orchestrator` — flujo de **5 fases** verificables:
+   - Fase 1: registro de organización (`tenant_id`, plan, soluciones, cuota)
+   - Fase 2: carga de contexto institucional con extracción web asistida y ponderación de tono de marca
+   - Fase 3: creación de usuarios y asignación de roles granulares por solución
+   - Fase 4: configuración técnica de DIE y Agent para el tenant
+   - Fase 5: tour guiado y activación formal con checklist de criterios
+6. Implementar `Session Manager y Dashboard Hub`: JWT transversal con claims por tenant + pantalla de dashboard centralizado que agrupa DIE, Agent y Documentación bajo un único punto de acceso.
+7. Escribir tests de aislamiento: verificar que un tenant no puede leer ni escribir datos de otro.
+8. Documentar API de administración (OpenAPI).
 
 **Entregables:**
-- `TenantRegistry`, `TenantIsolationLayer`, `UserManager` y `OnboardingOrchestrator` funcionales.
+- `TenantRegistry`, `TenantIsolationLayer`, `UserManager`, `OnboardingOrchestrator` y `SessionManager` funcionales.
 - Migraciones de base de datos versionadas y reproducibles.
 - Tests de aislamiento multi-tenant con cobertura > 90 %.
 - Documentación de API (OpenAPI/Swagger).
+- **Módulo de Onboarding** documentado con las 5 fases, criterios de activación y referencia al prototipo funcional.
 
 **Criterios de cierre:**
 - Tests de aislamiento pasan: un tenant no puede acceder a datos de otro.
-- Onboarding registra un nuevo tenant en menos de 5 pasos verificados.
+- El flujo completo de onboarding (5 fases) activa un tenant en < 4 horas de tiempo operativo.
+- El Dashboard Hub muestra tarjetas de las soluciones activas del tenant con sesión compartida funcional.
+- Todos los pasos del onboarding están registrados en el `AuditService` con usuario, timestamp y hash.
 
 ---
 
@@ -204,7 +215,7 @@ Los módulos del Core son adoptados de forma **incremental** por los proyectos d
 | Sprint | Objetivo | Duración | Dependencias |
 |---|---|---|---|
 | **Sprint 0** — Seguridad, configuración e infraestructura base | AuthN/JWT, RBAC, Security Middleware, CI/CD, Docker Compose | 2 semanas | Ninguna |
-| **Sprint 1** — Multi-tenancy y gestión de usuarios | Tenant Registry, RLS, User Manager, Onboarding | 2 semanas | Sprint 0 |
+| **Sprint 1** — Multi-tenancy, usuarios y Onboarding | Tenant Registry, RLS, User Manager, Onboarding (5 fases), Session Hub + Dashboard | 2 semanas | Sprint 0 |
 | **Sprint 2** — LLM Gateway y Prompt Registry | LLM Router, Rate Limiter, Retry/Fallback, Caché, Cost Controller | 2 semanas | Sprints 0–1 |
 | **Sprint 3** — Observabilidad, auditoría y scaffolding | Audit Service, Grafana, Helm Charts, CLI scaffold, OWASP | 2 semanas | Sprints 0–2 |
 | **Total** | Core Transversal completo y validado | **8 semanas** | — |

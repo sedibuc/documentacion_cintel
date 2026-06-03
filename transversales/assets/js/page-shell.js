@@ -15,6 +15,10 @@
     if (global.SiteApp && typeof global.SiteApp.init === "function") {
       global.SiteApp.init();
     }
+
+    if (global.CintelSession && typeof global.CintelSession.renderIndicator === "function") {
+      global.CintelSession.renderIndicator();
+    }
   } catch (error) {
     const message = window.location.protocol === "file:"
       ? "El shell del sitio se carga por fetch. Ejecute el micrositio con un servidor estático, por ejemplo: python -m http.server 8000"

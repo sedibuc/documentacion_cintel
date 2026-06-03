@@ -20,27 +20,27 @@ skinparam component {
   FontColor #1a2035
 }
 
-package "Capa 1 — Presentación / UI Base" #e8eef8 {
+package "Capa 1 - Presentacion / UI Base" #e8eef8 {
   [API Gateway]
   [Shell Genérico de Micrositio]
   [Plantillas de Interfaz]
 }
 
-package "Capa 2 — Seguridad Transversal" #e0e8f5 {
+package "Capa 2 - Seguridad Transversal" #e0e8f5 {
   [AuthN Service (JWT)]
   [RBAC Engine]
   [Security Middleware]
   [Secret Manager]
 }
 
-package "Capa 3 — Multi-Tenant Core" #d8e2f2 {
+package "Capa 3 - Multi-Tenant Core" #d8e2f2 {
   [Tenant Registry]
   [Tenant Isolation Layer]
   [Onboarding Orchestrator]
   [User Manager]
 }
 
-package "Capa 4 — LLM Gateway y Gestión de IA" #cfd9ef {
+package "Capa 4 - LLM Gateway y Gestion de IA" #cfd9ef {
   [LLM Router]
   [Rate Limiter por Tenant]
   [Retry & Fallback Manager]
@@ -49,7 +49,7 @@ package "Capa 4 — LLM Gateway y Gestión de IA" #cfd9ef {
   [Cost Controller]
 }
 
-package "Capa 5 — Observabilidad y Auditoría" #c7d0ec {
+package "Capa 5 - Observabilidad y Auditoria" #c7d0ec {
   [Audit Service]
   [Metrics Collector]
   [MLFlow Integration]
@@ -57,7 +57,7 @@ package "Capa 5 — Observabilidad y Auditoría" #c7d0ec {
   [Log Aggregator]
 }
 
-package "Capa 6 — Infraestructura y DevOps" #bec8e9 {
+package "Capa 6 - Infraestructura y DevOps" #bec8e9 {
   [CI/CD Pipeline Template]
   [Docker Compose Base]
   [Kubernetes Helm Charts]

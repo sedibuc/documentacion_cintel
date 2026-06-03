@@ -4,7 +4,9 @@
     inicio: { file: "content/inicio.md", title: "Inicio — Arquitectura Transversal" },
     funcionalidades: { file: "content/funcionalidades.md", title: "Funcionalidades transversales", href: "funcionalidades.html" },
     arquitectura: { file: "content/arquitectura.md", title: "Arquitectura transversal", href: "arquitectura.html" },
-    cronograma: { file: "content/cronograma.md", title: "Cronograma de implementación de arquitectura transversal", href: "cronograma.html" }
+    cronograma: { file: "content/cronograma.md", title: "Cronograma de implementación de arquitectura transversal", href: "cronograma.html" },
+    onboarding: { file: "content/onboarding.md", title: "Onboarding — Incorporación de clientes", href: "onboarding.html" },
+    mockup: { file: "content/mockup.md", title: "Mockup — Prototipo navegable: Onboarding y Dashboard", href: "mockup.html" }
   };
 
   const pageOrder = Object.keys(pages);

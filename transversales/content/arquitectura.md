@@ -58,8 +58,9 @@ La arquitectura del Core Transversal se organiza en **seis capas horizontales**,
 **Módulos comunes:**
 - **Tenant Registry:** CRUD de organizaciones, configuración por tenant, gestión de estado (activo/inactivo) y cuotas.
 - **Tenant Isolation Layer:** Middleware que inyecta `tenant_id` en todas las operaciones y aplica filtros de aislamiento (PostgreSQL RLS o equivalente).
-- **Onboarding Orchestrator:** Flujo verificable de incorporación de nuevos clientes con validación de completitud.
+- **Onboarding Orchestrator:** Flujo verificable de incorporación de nuevos clientes en **5 fases**: (1) registro de organización, (2) carga de contexto institucional con extracción web asistida, (3) creación de usuarios y roles, (4) configuración técnica de soluciones, (5) tour guiado y activación. Ver documentación completa en [Onboarding de clientes](onboarding.html) · Prototipo navegable en [Mockup funcional](mockup.html).
 - **User Manager:** CRUD de usuarios, asignación de roles por tenant, gestión del ciclo de vida de cuentas.
+- **Session Manager y Dashboard Hub:** Gestión de la sesión transversal de usuario. Emite un token con los claims del tenant (`tenant_id`, `user_id`, `role`, `solutions[]`) que comparten todos los micrositios del portafolio sin re-autenticación. El **Dashboard centralizado** es la pantalla principal tras el login: hub de navegación con tarjetas por solución, métricas consolidadas y actividad reciente.
 
 **Límite con proyectos específicos:** Cada proyecto define su configuración específica de tenant (esquemas de extracción en DIE, lineamientos de marca en Agent) como extensión del `TenantRegistry`, sin modificar el núcleo.
 

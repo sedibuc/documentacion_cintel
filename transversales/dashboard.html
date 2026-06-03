@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CINTEL — Dashboard de aplicaciones</title>
+  <link rel="stylesheet" href="assets/css/styles.css?v=20260603">
+  <style>
+    /* ─── Dashboard-specific layout ─── */
+    .dashboard-root {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .dashboard-topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 2rem;
+      background: rgba(240, 244, 255, 0.92);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(26, 36, 70, 0.12);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .dashboard-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .dashboard-brand-logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #1a3f8a 0%, #0d2558 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.1rem;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+    }
+
+    .dashboard-brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .dashboard-brand-text strong {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #1a2035;
+    }
+
+    .dashboard-brand-text span {
+      font-size: 0.72rem;
+      color: #52607a;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-weight: 700;
+    }
+
+    /* ─── Login screen ─── */
+    .login-screen {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 420px;
+      padding: 2.5rem 2rem;
+      border: 1px solid rgba(26, 36, 70, 0.12);
+      border-radius: 24px;
+      background: rgba(250, 252, 255, 0.92);
+      box-shadow: 0 24px 60px rgba(20, 30, 65, 0.14);
+    }
+
+    .login-card .eyebrow {
+      margin: 0 0 0.25rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #1a3f8a;
+    }
+
+    .login-card h1 {
+      margin: 0 0 0.5rem;
+      font-size: 1.75rem;
+      line-height: 1.1;
+      color: #101a35;
+    }
+
+    .login-card p {
+      margin: 0 0 1.8rem;
+      color: #52607a;
+      font-size: 0.95rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #1a2035;
+    }
+
+    .form-group input,
+    .form-group select {
+      padding: 0.85rem 1rem;
+      border: 1px solid rgba(26, 36, 70, 0.2);
+      border-radius: 12px;
+      background: white;
+      color: #1a2035;
+      font-size: 0.95rem;
+      font-family: inherit;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #1a3f8a;
+      box-shadow: 0 0 0 3px rgba(26, 63, 138, 0.15);
+    }
+
+    .login-btn {
+      width: 100%;
+      margin-top: 0.5rem;
+      padding: 1rem;
+      border: 0;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #1a3f8a 0%, #0d2558 100%);
+      color: white;
+      font-size: 1rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .login-btn:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+    }
+
+    .login-error {
+      display: none;
+      margin-top: 0.75rem;
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+      background: #f8e3e2;
+      color: #7a2930;
+      font-size: 0.9rem;
+    }
+
+    .login-error.visible {
+      display: block;
+    }
+
+    .login-note {
+      margin-top: 1.25rem;
+      color: #52607a;
+      font-size: 0.85rem;
+      text-align: center;
+    }
+
+    /* ─── Dashboard main ─── */
+    .dashboard-main {
+      display: none;
+      flex: 1;
+      padding: 2rem;
+      gap: 1.5rem;
+      flex-direction: column;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .dashboard-main.visible {
+      display: flex;
+    }
+
+    /* Session bar */
+    .session-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding: 1rem 1.4rem;
+      border: 1px solid rgba(26, 36, 70, 0.12);
+      border-radius: 16px;
+      background: rgba(250, 252, 255, 0.9);
+      box-shadow: 0 4px 16px rgba(20, 30, 65, 0.07);
+    }
+
+    .session-bar-left {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+    }
+
+    .session-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1a3f8a, #6440c8);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .session-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+
+    .session-name {
+      font-weight: 700;
+      color: #1a2035;
+      font-size: 0.95rem;
+    }
+
+    .session-meta {
+      color: #52607a;
+      font-size: 0.82rem;
+    }
+
+    .session-tokens {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .session-tokens-label {
+      font-size: 0.78rem;
+      color: #52607a;
+    }
+
+    .token-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .token-track {
+      width: 120px;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(26, 36, 70, 0.12);
+      overflow: hidden;
+    }
+
+    .token-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #1a3f8a, #6440c8);
+      transition: width 0.4s ease;
+    }
+
+    .token-text {
+      font-size: 0.78rem;
+      color: #52607a;
+      white-space: nowrap;
+    }
+
+    .session-bar-actions {
+      display: flex;
+      gap: 0.6rem;
+      align-items: center;
+    }
+
+    .session-time-badge {
+      padding: 0.35rem 0.8rem;
+      border-radius: 999px;
+      background: rgba(26, 63, 138, 0.1);
+      color: #1a3f8a;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .btn-logout {
+      padding: 0.45rem 1rem;
+      border: 1px solid rgba(122, 41, 48, 0.3);
+      border-radius: 999px;
+      background: transparent;
+      color: #7a2930;
+      font-size: 0.82rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .btn-logout:hover {
+      background: #f8e3e2;
+    }
+
+    /* Welcome headline */
+    .dashboard-headline {
+      margin: 0;
+    }
+
+    .dashboard-headline h2 {
+      margin: 0 0 0.25rem;
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      color: #101a35;
+    }
+
+    .dashboard-headline p {
+      margin: 0;
+      color: #52607a;
+      font-size: 0.95rem;
+    }
+
+    /* App grid */
+    .app-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.2rem;
+    }
+
+    .app-card {
+      display: flex;
+      flex-direction: column;
+      padding: 1.6rem;
+      border: 1px solid rgba(26, 36, 70, 0.12);
+      border-radius: 20px;
+      background: rgba(250, 252, 255, 0.9);
+      box-shadow: 0 4px 20px rgba(20, 30, 65, 0.07);
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .app-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      border-radius: 20px 20px 0 0;
+      background: var(--card-accent, linear-gradient(90deg, #1a3f8a, #6440c8));
+    }
+
+    .app-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(20, 30, 65, 0.14);
+      border-color: rgba(26, 63, 138, 0.25);
+      text-decoration: none;
+    }
+
+    .app-card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+    }
+
+    .app-card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .app-card h3 {
+      margin: 0;
+      font-size: 1.1rem;
+      color: #101a35;
+    }
+
+    .app-card .app-subtitle {
+      margin: 0 0 0.75rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #52607a;
+    }
+
+    .app-card p {
+      margin: 0 0 1.2rem;
+      color: #52607a;
+      font-size: 0.9rem;
+      flex: 1;
+    }
+
+    .app-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-top: auto;
+    }
+
+    .app-status {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #2d7a4f;
+    }
+
+    .app-status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #2d7a4f;
+    }
+
+    .app-stat {
+      font-size: 0.8rem;
+      color: #52607a;
+    }
+
+    .app-arrow {
+      margin-left: auto;
+      font-size: 1.1rem;
+      color: #1a3f8a;
+      opacity: 0.6;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .app-card:hover .app-arrow {
+      opacity: 1;
+      transform: translateX(3px);
+    }
+
+    /* Transversal docs card */
+    .docs-card {
+      padding: 1.4rem;
+      border: 1px solid rgba(26, 36, 70, 0.12);
+      border-radius: 20px;
+      background: rgba(250, 252, 255, 0.9);
+      box-shadow: 0 4px 20px rgba(20, 30, 65, 0.07);
+    }
+
+    .docs-card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .docs-card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: rgba(26, 63, 138, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    .docs-card h3 {
+      margin: 0 0 0.15rem;
+      font-size: 1rem;
+      color: #101a35;
+    }
+
+    .docs-card p {
+      margin: 0;
+      font-size: 0.85rem;
+      color: #52607a;
+    }
+
+    .docs-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+    }
+
+    .docs-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.5rem 1rem;
+      border: 1px solid rgba(26, 63, 138, 0.2);
+      border-radius: 999px;
+      background: rgba(220, 229, 245, 0.5);
+      color: #1a3f8a;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .docs-link:hover {
+      background: rgba(26, 63, 138, 0.12);
+      border-color: rgba(26, 63, 138, 0.35);
+      text-decoration: none;
+    }
+
+    /* Activity log */
+    .activity-section h3 {
+      margin: 0 0 0.9rem;
+      font-size: 1rem;
+      color: #52607a;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+
+    .activity-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border: 1px solid rgba(26, 36, 70, 0.1);
+      border-radius: 16px;
+      overflow: hidden;
+      background: rgba(250, 252, 255, 0.85);
+    }
+
+    .activity-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.85rem 1.2rem;
+      border-bottom: 1px solid rgba(26, 36, 70, 0.08);
+      font-size: 0.88rem;
+    }
+
+    .activity-item:last-child {
+      border-bottom: 0;
+    }
+
+    .activity-time {
+      color: #52607a;
+      font-size: 0.8rem;
+      white-space: nowrap;
+      min-width: 38px;
+    }
+
+    .activity-app {
+      display: inline-flex;
+      padding: 0.2rem 0.55rem;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+    }
+
+    .activity-app.app-die { background: rgba(26, 63, 138, 0.12); color: #1a3f8a; }
+    .activity-app.app-agent { background: rgba(100, 64, 200, 0.12); color: #4a2598; }
+    .activity-app.app-sys { background: rgba(26, 36, 70, 0.08); color: #52607a; }
+
+    .activity-text { color: #1a2035; }
+
+    /* Onboarding prompt (for guest) */
+    .onboarding-prompt {
+      display: none;
+      padding: 1.4rem 1.6rem;
+      border: 1px dashed rgba(26, 63, 138, 0.3);
+      border-radius: 16px;
+      background: rgba(220, 229, 245, 0.35);
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .onboarding-prompt.visible {
+      display: flex;
+    }
+
+    .onboarding-prompt strong {
+      color: #1a3f8a;
+      font-size: 0.95rem;
+    }
+
+    .onboarding-prompt p {
+      margin: 0;
+      color: #52607a;
+      font-size: 0.88rem;
+    }
+
+    .onboarding-prompt a {
+      align-self: flex-start;
+      padding: 0.55rem 1.1rem;
+      border-radius: 999px;
+      background: #1a3f8a;
+      color: white;
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-decoration: none;
+      margin-top: 0.2rem;
+    }
+
+    .onboarding-prompt a:hover { opacity: 0.9; }
+
+    /* Card color variants */
+    .card-die { --card-accent: linear-gradient(90deg, #1a3f8a, #2a5fd6); }
+    .card-die .app-card-icon { background: rgba(26, 63, 138, 0.1); }
+
+    .card-agent { --card-accent: linear-gradient(90deg, #6440c8, #9650e8); }
+    .card-agent .app-card-icon { background: rgba(100, 64, 200, 0.1); }
+
+    .card-transversal { --card-accent: linear-gradient(90deg, #1a7a4f, #2ab068); }
+    .card-transversal .app-card-icon { background: rgba(26, 122, 79, 0.1); }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      .dashboard-topbar { padding: 0.85rem 1.1rem; }
+      .dashboard-main { padding: 1.1rem; }
+      .app-grid { grid-template-columns: 1fr; }
+      .session-bar { flex-direction: column; align-items: flex-start; }
+      .session-tokens { display: none; }
+    }
+  </style>
+</head>
+<body>
+<div class="dashboard-root">
+
+  <!-- Topbar -->
+  <header class="dashboard-topbar">
+    <div class="dashboard-brand">
+      <div class="dashboard-brand-logo" aria-hidden="true">CI</div>
+      <div class="dashboard-brand-text">
+        <strong>CINTEL</strong>
+        <span>Plataforma IA</span>
+      </div>
+    </div>
+    <nav style="display:flex;gap:0.75rem;align-items:center;">
+      <a href="index.html" style="font-size:0.85rem;color:#52607a;text-decoration:none;">Transversal docs</a>
+      <a href="onboarding.html" style="font-size:0.85rem;color:#52607a;text-decoration:none;">Onboarding</a>
+    </nav>
+  </header>
+
+  <!-- LOGIN SCREEN -->
+  <div class="login-screen" id="login-screen">
+    <div class="login-card">
+      <p class="eyebrow">Plataforma de IA</p>
+      <h1>Accede a tu espacio de trabajo</h1>
+      <p>Todas las soluciones CINTEL desde un único punto de acceso.</p>
+
+      <div class="form-group">
+        <label for="login-user">Usuario</label>
+        <input id="login-user" type="text" placeholder="nombre.apellido@empresa.co" autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label for="login-org">Organización</label>
+        <input id="login-org" type="text" placeholder="Nombre de tu organización" autocomplete="organization">
+      </div>
+      <div class="form-group">
+        <label for="login-role">Rol</label>
+        <select id="login-role">
+          <option value="org_admin">Administrador (org_admin)</option>
+          <option value="die_operator">Operador DIE (die_operator)</option>
+          <option value="die_auditor">Auditor DIE (die_auditor)</option>
+          <option value="agent_creator">Creativo Agent (agent_creator)</option>
+          <option value="agent_approver">Aprobador Agent (agent_approver)</option>
+          <option value="agent_viewer">Visor Agent (agent_viewer)</option>
+        </select>
+      </div>
+
+      <button class="login-btn" id="login-btn" type="button">Iniciar sesión</button>
+      <div class="login-error" id="login-error">Por favor, ingresa tu usuario y organización.</div>
+      <p class="login-note">¿Primera vez? Solicita acceso a tu administrador CINTEL.<br>
+        <a href="onboarding.html" style="color:#1a3f8a;">Ver documentación de onboarding →</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- DASHBOARD MAIN -->
+  <main class="dashboard-main" id="dashboard-main">
+
+    <!-- Session bar -->
+    <div class="session-bar" id="session-bar">
+      <div class="session-bar-left">
+        <div class="session-avatar" id="session-avatar">MG</div>
+        <div class="session-info">
+          <span class="session-name" id="session-name">María González</span>
+          <span class="session-meta" id="session-meta">CINTEL · org_admin</span>
+        </div>
+        <div class="session-tokens">
+          <div class="session-tokens-label">Consumo de tokens</div>
+          <div class="token-bar">
+            <div class="token-track"><div class="token-fill" id="token-fill" style="width:2.5%"></div></div>
+            <span class="token-text" id="token-text">127.430 / 5.000.000</span>
+          </div>
+        </div>
+      </div>
+      <div class="session-bar-actions">
+        <span class="session-time-badge" id="session-time-badge">7h 30m</span>
+        <button class="btn-logout" id="logout-btn" type="button">Cerrar sesión</button>
+      </div>
+    </div>
+
+    <!-- Onboarding prompt (first-time / incomplete) -->
+    <div class="onboarding-prompt" id="onboarding-prompt">
+      <strong>Completa el onboarding de tu organización</strong>
+      <p>Para activar todas las funcionalidades de la plataforma, completa el proceso de incorporación: contexto institucional, usuarios y configuración de soluciones.</p>
+      <a href="onboarding.html">Ver guía de onboarding →</a>
+    </div>
+
+    <!-- Welcome -->
+    <div class="dashboard-headline">
+      <h2 id="welcome-heading">Bienvenida, María</h2>
+      <p id="welcome-sub">CINTEL — Espacio de trabajo unificado</p>
+    </div>
+
+    <!-- App grid -->
+    <div class="app-grid">
+
+      <!-- DIE Card -->
+      <a class="app-card card-die" href="../RAG/index.html" id="card-die">
+        <div class="app-card-icon">📄</div>
+        <div class="app-card-header">
+          <div>
+            <p class="app-subtitle">Solución de documentos</p>
+            <h3>Document Intelligence Engine</h3>
+          </div>
+        </div>
+        <p>Extracción de campos estructurados desde documentos con validación cruzada automática. Multi-tenant, auditable y con gestión de alertas de discrepancia.</p>
+        <div class="app-card-footer">
+          <span class="app-status"><span class="app-status-dot"></span>Activo</span>
+          <span class="app-stat" id="die-stat">28 docs. procesados</span>
+          <span class="app-arrow">→</span>
+        </div>
+      </a>
+
+      <!-- Agent Card -->
+      <a class="app-card card-agent" href="../agent/index.html" id="card-agent">
+        <div class="app-card-icon">✨</div>
+        <div class="app-card-header">
+          <div>
+            <p class="app-subtitle">Generación de contenido</p>
+            <h3>Adaptador de Contenido Institucional</h3>
+          </div>
+        </div>
+        <p>Generación de campañas de marketing adaptadas por canal con identidad de marca persistente. Sistema multi-agente con ciclos de validación humana.</p>
+        <div class="app-card-footer">
+          <span class="app-status"><span class="app-status-dot"></span>Activo</span>
+          <span class="app-stat" id="agent-stat">12 campañas este mes</span>
+          <span class="app-arrow">→</span>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- Transversal docs -->
+    <div class="docs-card">
+      <div class="docs-card-header">
+        <div class="docs-card-icon">📐</div>
+        <div>
+          <h3>Arquitectura Transversal</h3>
+          <p>Documentación técnica del Core Transversal CINTEL — componentes compartidos entre soluciones</p>
+        </div>
+      </div>
+      <div class="docs-links">
+        <a class="docs-link" href="index.html">Inicio</a>
+        <a class="docs-link" href="funcionalidades.html">Funcionalidades</a>
+        <a class="docs-link" href="arquitectura.html">Arquitectura</a>
+        <a class="docs-link" href="cronograma.html">Cronograma</a>
+        <a class="docs-link" href="onboarding.html">Onboarding</a>
+        <a class="docs-link" href="mockup.html">Mockup</a>
+      </div>
+    </div>
+
+    <!-- Activity log -->
+    <div class="activity-section">
+      <h3>Actividad reciente</h3>
+      <div class="activity-list" id="activity-list">
+        <div class="activity-item">
+          <span class="activity-time">11:45</span>
+          <span class="activity-app app-die">DIE</span>
+          <span class="activity-text">Extracción aprobada — Contrato_2026_05.pdf</span>
+        </div>
+        <div class="activity-item">
+          <span class="activity-time">10:22</span>
+          <span class="activity-app app-agent">Agent</span>
+          <span class="activity-text">Campaña generada — LinkedIn, Mayo 2026</span>
+        </div>
+        <div class="activity-item">
+          <span class="activity-time">09:31</span>
+          <span class="activity-app app-sys">Sistema</span>
+          <span class="activity-text" id="activity-login-event">Sesión iniciada</span>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="assets/js/session.js?v=20260603"></script>
+<script>
+(function () {
+  "use strict";
+
+  var SESSION_DEMO_TOKENS_USED = 127430;
+  var SESSION_DEMO_TOKENS_TOTAL = 5000000;
+
+  function getInitials(name) {
+    if (!name) { return "??"; }
+    var parts = name.trim().split(/\s+/);
+    if (parts.length === 1) { return parts[0].slice(0, 2).toUpperCase(); }
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  }
+
+  function formatTime(h, m) {
+    return (h > 0 ? h + "h " : "") + (m > 0 ? m + "m" : (h === 0 ? "< 1m" : ""));
+  }
+
+  function showDashboard(session) {
+    document.getElementById("login-screen").style.display = "none";
+    document.getElementById("dashboard-main").classList.add("visible");
+
+    var name = session.userName || session.userId || "Usuario";
+    var org = session.orgName || session.tenantId || "Organización";
+    var role = session.role || "—";
+
+    // Avatar
+    document.getElementById("session-avatar").textContent = getInitials(name);
+
+    // Name / meta
+    document.getElementById("session-name").textContent = name;
+    document.getElementById("session-meta").textContent = org + " · " + role;
+
+    // Time remaining
+    var remaining = CintelSession.formatTimeRemaining();
+    document.getElementById("session-time-badge").textContent = remaining;
+
+    // Tokens (demo values)
+    var pct = (SESSION_DEMO_TOKENS_USED / SESSION_DEMO_TOKENS_TOTAL * 100).toFixed(1);
+    document.getElementById("token-fill").style.width = pct + "%";
+    document.getElementById("token-text").textContent =
+      SESSION_DEMO_TOKENS_USED.toLocaleString("es-CO") + " / " +
+      SESSION_DEMO_TOKENS_TOTAL.toLocaleString("es-CO");
+
+    // Welcome heading
+    var firstName = name.split(" ")[0];
+    document.getElementById("welcome-heading").textContent = "Bienvenid@, " + firstName;
+    document.getElementById("welcome-sub").textContent = org + " — Espacio de trabajo unificado";
+
+    // Activity login event
+    var loginTime = new Date(session.issuedAt);
+    document.getElementById("activity-login-event").textContent =
+      "Sesión iniciada — " + name;
+
+    // Onboarding prompt: show only for org_admin on first login (demo: show always for admin)
+    if (role === "org_admin") {
+      // In a real system this would check if onboarding is completed
+      // For demo, we don't show it by default to keep the dashboard clean
+    }
+
+    // Logout
+    document.getElementById("logout-btn").addEventListener("click", function () {
+      CintelSession.clear();
+      document.getElementById("dashboard-main").classList.remove("visible");
+      document.getElementById("login-screen").style.display = "";
+    });
+
+    // Refresh time badge every minute
+    setInterval(function () {
+      document.getElementById("session-time-badge").textContent = CintelSession.formatTimeRemaining();
+    }, 60000);
+  }
+
+  function init() {
+    var existing = CintelSession.get();
+    if (existing) {
+      showDashboard(existing);
+      return;
+    }
+
+    // Show login
+    document.getElementById("login-screen").style.display = "";
+
+    document.getElementById("login-btn").addEventListener("click", function () {
+      var user = document.getElementById("login-user").value.trim();
+      var org = document.getElementById("login-org").value.trim();
+      var role = document.getElementById("login-role").value;
+      var errorEl = document.getElementById("login-error");
+
+      if (!user || !org) {
+        errorEl.classList.add("visible");
+        return;
+      }
+      errorEl.classList.remove("visible");
+
+      var session = CintelSession.set({
+        userId: user.replace(/@.*/, "").replace(/\./g, "_"),
+        userName: user.replace(/@.*/, "").replace(/\./g, " ").replace(/\b\w/g, function(c){ return c.toUpperCase(); }),
+        tenantId: org.toLowerCase().replace(/\s+/g, "-"),
+        orgName: org,
+        role: role,
+        solutions: ["die", "agent"]
+      });
+
+      showDashboard(session);
+    });
+
+    document.getElementById("login-user").addEventListener("keydown", function (e) {
+      if (e.key === "Enter") { document.getElementById("login-btn").click(); }
+    });
+    document.getElementById("login-org").addEventListener("keydown", function (e) {
+      if (e.key === "Enter") { document.getElementById("login-btn").click(); }
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();
+</script>
+</body>
+</html>
