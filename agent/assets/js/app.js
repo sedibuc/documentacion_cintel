@@ -29,8 +29,10 @@
     "decisiones-modulos-gobernanza-operacion": { file: "content/decisiones-modulos-gobernanza-operacion.md", title: "Decisiones Técnicas — Módulos de gobernanza y operación" },
     "decisiones-modulos-seguridad-escalado": { file: "content/decisiones-modulos-seguridad-escalado.md", title: "Decisiones Técnicas — Módulos de seguridad y escalado" },
     // ── Análisis ──────────────────────────────────────────────────────────────
+    "diagnostico-diferencias-rg-vs-to-be-optimizado": { file: "content/diagnostico-diferencias-rg-vs-to-be-optimizado.md", title: "Análisis — Diagnóstico RG vs TO-BE optimizado" },
     "analisis-cambio-contexto-to-be": { file: "content/analisis-cambio-contexto-to-be.md", title: "Análisis — Comparativa validación vs TO-BE final" },
-    "conclusiones": { file: "content/conclusiones.md", title: "Conclusiones y recomendaciones" }
+    "conclusiones": { file: "content/conclusiones.md", title: "Conclusiones y recomendaciones" },
+    "presentacion": { file: "content/presentacion.md", title: "Presentación ejecutiva" }
   };
 
   const pageOrder = Object.keys(pages);
@@ -168,7 +170,7 @@
     if (!markdownLoader || typeof markdownLoader.parseMarkdown !== "function") {
       throw new Error("No se pudo inicializar el renderizador Markdown.");
     }
-    const response = await fetch(pageConfig.file);
+    const response = await fetch(pageConfig.file + "?v=" + Date.now(), { cache: "no-store" });
     if (!response.ok) {
       throw new Error(`No se pudo cargar ${pageConfig.file}`);
     }
@@ -179,6 +181,7 @@
     addCopyButtons(content);
     renderPageNavigation(content, pageKey);
     updateTocActiveState(toc);
+    document.dispatchEvent(new CustomEvent("site:content-loaded", { detail: { pageKey } }));
   }
 
   function buildSnippet(source, query) {

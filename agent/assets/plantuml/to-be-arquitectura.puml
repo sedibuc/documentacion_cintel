@@ -25,9 +25,16 @@ package "Capa de Experiencia" #f0f9f8 {
 }
 
 package "Orquestación Agéntica" #fff8ef {
-  component "Orquestador\nAgéntico\n(LangGraph)" as ORQUESTADOR
+  component "Orquestador\nAgéntico\n(ADK)" as ORQUESTADOR
   component "Agente\nEstratégico" as AGENTE_EST
-  component "Agente\nCreativo" as AGENTE_CREA
+  component "CreativeAgent\n(Orquestador)" as AGENTE_CREA
+  component "CriticAgent\n(Alineación institucional)" as CRITIC
+  package "Agentes de Canal (paralelo)" #ffe8cc {
+    component "LinkedInAgent" as LI_AGENT
+    component "InstagramAgent" as IG_AGENT
+    component "EmailAgent" as EMAIL_AGENT
+    component "WhatsAppAgent" as WA_AGENT
+  }
   component "Módulo de\nGobernanza y\nValidación Humana" as GOBERNANZA
 }
 
@@ -64,7 +71,16 @@ USUARIO --> UI : solicitud / conversación
 UI --> ORQUESTADOR : contexto + instrucción
 ORQUESTADOR --> AGENTE_EST : brief / objetivo
 ORQUESTADOR --> AGENTE_CREA : plan de comunicación
-ORQUESTADOR --> GOBERNANZA : pieza para revisión
+AGENTE_CREA --> LI_AGENT : brief (paralelo)
+AGENTE_CREA --> IG_AGENT : brief (paralelo)
+AGENTE_CREA --> EMAIL_AGENT : brief (paralelo)
+AGENTE_CREA --> WA_AGENT : brief (paralelo)
+LI_AGENT --> CRITIC : pieza LinkedIn
+IG_AGENT --> CRITIC : pieza Instagram
+EMAIL_AGENT --> CRITIC : pieza Email
+WA_AGENT --> CRITIC : pieza WhatsApp
+CRITIC --> GOBERNANZA : piezas con score de alineación
+ORQUESTADOR --> GOBERNANZA : pieza para revisión humana
 
 ' Recuperación de contexto
 AGENTE_EST --> RETRIEVAL : consulta contexto
@@ -80,7 +96,11 @@ SCRAPER --> BGS : alimenta perfil
 
 ' Capa de modelos
 AGENTE_EST --> LLM : razonamiento\nestratégico
-AGENTE_CREA --> LLM : generación / adaptación\nde texto y briefs
+AGENTE_CREA --> LLM : generación de brief
+LI_AGENT --> LLM : generación LinkedIn
+IG_AGENT --> LLM : generación Instagram
+EMAIL_AGENT --> LLM : generación Email
+WA_AGENT --> LLM : generación WhatsApp
 AGENTE_CREA --> IMG_GEN : adaptación imagen\n(activos o generación controlada)
 
 ' Gobernanza y salida

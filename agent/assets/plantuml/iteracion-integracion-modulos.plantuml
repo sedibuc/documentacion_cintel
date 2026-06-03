@@ -41,22 +41,22 @@ package "2.1 Onboarding" {
   [Contexto de campaña\n(empresa · sector · servicios)] as ctx
 }
 
-package "2.2 Agente Estratégico" {
+package "2.3 Agente Estratégico" {
   [Plan de campaña] as plan
 }
 
-package "2.3 Agente Creativo" {
+package "2.4 Agente Creativo" {
   [Brief de diseño] as brief
   [Piezas generadas] as piezas
 }
 
-package "2.4 Ajuste de resultados" #0f5a58 {
+package "2.5 Ajuste de resultados" #0f5a58 {
   [Instrucción del usuario] as instruccion
   [Motor de iteración] as motor
   [Nueva versión del resultado] as resultado
 }
 
-package "2.5 Histórico" {
+package "2.6 Histórico" {
   [Versiones anteriores] as historico
 }
 

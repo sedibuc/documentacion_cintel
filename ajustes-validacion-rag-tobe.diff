@@ -1,0 +1,181 @@
+--- Ajustes de validación integral — Micrositio RAG (sección To-Be)
+--- Fecha: 2026-06-02
+--- Aplicados directamente sobre los archivos del workspace
+
+=== A. TÍTULOS HTML — Rebranding de "Demostrador RAG" a "Document Intelligence Engine" ===
+
+Archivos modificados:
+  RAG/index.html
+  RAG/contexto.html
+  RAG/diagnostico.html
+  RAG/arquitectura.html
+  RAG/brechas.html
+  RAG/despliegue.html
+  RAG/costos.html
+  RAG/mockup.html
+  RAG/decisiones-modulos.html
+  RAG/cronograma-implementacion.html
+  RAG/preguntasexperto.html
+  RAG/no-es-rag.html
+  RAG/conclusiones.html
+  RAG/presentacion.html
+
+Cambio aplicado en cada uno (ejemplo para index.html):
+- <title>Demostrador RAG | Inicio</title>
++ <title>Document Intelligence Engine | Inicio</title>
+
+Páginas AS-IS reciben sufijo "(AS-IS)" para distinguirlas de TO-BE:
+  arquitectura.html: "Arquitectura vigente (AS-IS)"
+  despliegue.html:   "Configuración y despliegue (AS-IS)"
+  costos.html:       "Servicios y costos (AS-IS)"
+  mockup.html:       "Mockup / Prototipo (AS-IS)"
+
+=== B. VERSIONING DE ASSETS — Añadir ?v=20260602 a CSS y JS ===
+
+Los mismos 14 archivos listados arriba carecían del query string de versión
+en sus referencias a assets/css/styles.css, assets/js/markdown-loader.js,
+assets/js/app.js y assets/js/page-shell.js.
+
+Cambio aplicado:
+- <link rel="stylesheet" href="assets/css/styles.css">
++ <link rel="stylesheet" href="assets/css/styles.css?v=20260602">
+- <script src="assets/js/app.js"></script>
++ <script src="assets/js/app.js?v=20260602"></script>
+(ídem para markdown-loader.js y page-shell.js)
+
+Adicionalmente, presentacion.html tenía presentacion.js sin versionar:
+- <script src="assets/js/presentacion.js"></script>
++ <script src="assets/js/presentacion.js?v=20260602"></script>
+
+=== C. NAVEGACIÓN SIDEBAR — Añadir páginas faltantes ===
+
+Archivo: RAG/assets/partials/site-shell.html
+
+Las páginas "noesrag" (no-es-rag.html) y "presentacion" (presentacion.html)
+existían en el page order de app.js pero no tenían enlace en la barra lateral,
+por lo que eran inaccesibles por navegación directa.
+
+Cambio aplicado:
++ <a href="no-es-rag.html" data-nav="noesrag">Por qué no es un RAG</a>
++ <a href="presentacion.html" data-nav="presentacion">Presentación ejecutiva</a>
+
+Posición: dentro del bloque <details class="nav-section-collapsible" open>
+de TO-BE, entre "Preguntas para el experto en DIE" y "Conclusiones".
+
+=== D. CACHE DE SITE-SHELL — Versioning del partial ===
+
+Archivo: RAG/assets/js/page-shell.js
+
+El fetch del partial HTML no tenía query string, lo que podía servir
+una versión cacheada del nav sin los nuevos enlaces.
+
+- const response = await fetch("assets/partials/site-shell.html");
++ const response = await fetch("assets/partials/site-shell.html?v=20260602");
+
+=== E. CONTENIDO — Corrección de inconsistencia Critic-Evaluator ===
+
+Archivo: RAG/content/arquitectura-tobe.md
+
+El Critic-Evaluator Agent estaba marcado como "Opcional" en la tabla de
+componentes y en las descripciones de Vista 2 y Vista 4, en contradicción
+con la validación experta (conclusiones.md y decisiones-modulos.md) que lo
+declara "requerido en flujos de alta criticidad" (montos, fechas, partes
+en documentos notariales y pólizas HSE).
+
+Cambios aplicados:
+1. Tabla de componentes TO-BE:
+   - | Critic-Evaluator Agent | **IA / LLM — Opcional** | ...
+   + | Critic-Evaluator Agent | **IA / LLM — Requerido en flujos de alta criticidad** | ...
+     (descripción expandida: "en campos de alto riesgo (montos, fechas, partes);
+     condicional en flujos de menor criticidad")
+
+2. Vista 2 — descripción:
+   - "el Critic-Evaluator Agent como componente opcional de calidad"
+   + "el Critic-Evaluator Agent como componente requerido en flujos de alta criticidad"
+
+3. Vista 4 — header:
+   - "Critic-Evaluator Agent (opcional)"
+   + "Critic-Evaluator Agent (requerido en flujos de alta criticidad)"
+
+4. Vista 4 — párrafo descriptivo:
+   - "El Critic-Evaluator Agent actúa como capa de validación iterativa opcional
+     para casos de precisión crítica."
+   + "El Critic-Evaluator Agent es requerido en flujos de alta criticidad
+     (montos, fechas, partes en documentos notariales y pólizas) y actúa como
+     capa de validación iterativa; en flujos de menor criticidad puede activarse
+     condicionalmente."
+
+=== F. CONTENIDO — Corrección de "agente" por "sistema" ===
+
+Archivo: RAG/content/to-be-funcional.md — Flujo 2
+
+El sistema de procesamiento se denominaba erróneamente "el agente" en la
+descripción del Flujo 2, término inconsistente con el posicionamiento del
+producto como Document Intelligence Engine (no como agente conversacional).
+
+- "El agente procesa el documento y devuelve los campos definidos en el esquema."
++ "El sistema procesa el documento y devuelve los campos definidos en el esquema."
+
+=== G. CONTENIDO — Corrección de "dataset de entrenamiento" ===
+
+Archivo: RAG/content/to-be-funcional.md — Flujo 6
+
+La descripción de Flujo 6 usaba "dataset de entrenamiento", término
+inadecuado en un sistema LLM-first donde no hay entrenamiento de modelos:
+el proceso es de validación de calidad de extracción, no de entrenamiento.
+
+- "carga el dataset de entrenamiento, ejecuta el proceso"
++ "carga los documentos de validación representativos del tipo, ejecuta la extracción de prueba"
+
+=== H. CONTENIDO — Eliminación de párrafo introductorio duplicado al final ===
+
+Archivo: RAG/content/to-be-funcional.md — Final del documento
+
+Al final del documento había un párrafo introductorio desplazado de su
+contexto original (fruto de una versión anterior del documento), que además
+denominaba al sistema como "agente especializado", en contradicción con el
+posicionamiento del producto:
+
+ELIMINADO:
+  "Este documento describe el TO-BE funcional de la iniciativa luego del pivot
+  estratégico validado en las reuniones de alineación. El sistema ya no se
+  presenta como un RAG conversacional cuyo valor principal sea 'chatear con
+  documentos'. El producto se reorienta hacia un agente especializado de
+  procesamiento documental basado en LLM."
+
+El callout de enlace al experto que seguía a este párrafo se conservó.
+
+=== I. CONTENIDO — Actualización del mapa de módulos TO-BE ===
+
+Archivo: RAG/content/decisiones-modulos.md
+
+El "Mapa de módulos TO-BE" usaba nombres de componentes desactualizados
+(IngestionGateway, ClassificationService, ExtractionOrchestrator, etc.) que
+no correspondían a los nombres canónicos definidos en la arquitectura TO-BE.
+"ClassificationService" no existe en la arquitectura actual; la clasificación
+documental la hace el esquema configurado, no un servicio autónomo.
+
+Reemplazado por la nomenclatura de la arquitectura:
+  - IngestionGateway               → API Gateway + Document Service
+  - ClassificationService          → DocumentSchemaRegistry + Prompt Registry (registro de tipos)
+  - ExtractionOrchestrator         → Content Extraction Strategy + StructuredExtractor + LLM Gateway
+  - SchemaRegistry                 → fusionado en DocumentSchemaRegistry + Prompt Registry
+  - CrossValidationEngine          → CrossValidator + DiscrepancyAlertEngine
+  - AlertsAndWorkflow              → Alert Dashboard + Human Review
+  - TenantIsolationLayer           → MultiTenant Platform Core / Tenant Management + Auth/RBAC
+  - AuditAndObservability          → Audit Service + Observability Service
+
+=== PENDIENTES / NO MODIFICADOS ===
+
+- Diagramas PlantUML/PNG: Los archivos PNG y .plantuml de las vistas 1–8 y
+  del pipeline LLM no se regeneraron. Los textos descriptivos en arquitectura-tobe.md
+  están alineados con los diagramas existentes. Para actualizar los diagramas
+  físicamente (e.g., etiquetar Critic-Evaluator como "Required in critical flows"
+  en el PNG del mapa de componentes), se requiere rerenderizar los PlantUML.
+  
+- Páginas AS-IS (diagnostico.md, arquitectura.md, brechas.md, costos.md,
+  despliegue.md, mockup.md, contexto.md): No se modificó su contenido ya que
+  la tarea se enfoca en la sección TO-BE. Los títulos HTML sí se actualizaron.
+
+- app.js: No requiere cambios. El page order ya incluye noesrag y presentacion
+  en la secuencia correcta; la navegación anterior/siguiente funciona.

@@ -1,6 +1,6 @@
-# TO-BE  Adaptador de Contenido Institucional
+# TO-BE — Adaptador de Contenido Institucional
 
-> Visión funcional objetivo post-validación. Esta sección describe el **estado deseado del producto** según los hallazgos de las sesiones de validación con comunicadoras institucionales realizadas en marzo 2026. No describe el estado actual del demostrador.
+> Visión funcional objetivo post-validación. Esta sección describe el **estado deseado del producto** según los hallazgos de las sesiones de validación con comunicadoras institucionales (marzo 2026) y las respuestas del experto técnico (junio 2026). No describe el estado actual del demostrador.
 
 ---
 
@@ -8,7 +8,9 @@
 
 El **Adaptador de Contenido Institucional**, en su visión **TO-BE**, es un sistema agéntico especializado para comunicadores institucionales que necesitan producir y publicar contenido multi-canal de forma recurrente, manteniendo coherencia con la identidad gráfica de su organización, **sin tener que dar contexto desde cero en cada sesión**.
 
-El diferencial central frente a IAs generalistas (ChatGPT, Copilot, Claude) no es la calidad de la generación de texto que ya está resuelta en el mercado sino la **persistencia de marca y memoria organizacional acumulada**: el sistema ya sabe quién es la organización, cuál es su tono, cuáles son sus audiencias, cuál es su identidad visual y cuál es el historial de comunicaciones anteriores.
+El diferencial central frente a IAs generalistas (ChatGPT, Copilot, Claude) no es la calidad de la generación de texto —que ya está resuelta en el mercado— sino la **persistencia de marca y memoria organizacional acumulada**: el sistema ya sabe quién es la organización, cuál es su tono ponderado, cuáles palabras están prohibidas, cómo habla la marca, cuáles son sus audiencias y cuál es el historial de comunicaciones anteriores.
+
+> **Validación técnica — Junio 2026.** La arquitectura TO-BE opera sobre **ADK (Agent Development Kit)** como framework multi-agente. Utiliza agentes especializados por canal ejecutados en paralelo, patrón crítico-evaluador para alineación institucional, y **MLFlow** como herramienta de observabilidad y selección de modelos.
 
 Los hallazgos de validación identificaron el JTBD principal del segmento:
 
@@ -24,11 +26,11 @@ El objetivo del MVP no es garantizar automatización total, sino demostrar un fl
 
 En esta visión, el sistema se organiza en módulos funcionales claramente separados para distinguir:
 
-- el **perfil institucional persistente** (BrandGuidelinesStore),
-- la **planeación estratégica** con contexto institucional,
-- la **adaptación creativa** con identidad institucional aplicada,
-- el **ajuste del resultado** dentro del contexto acumulado,
-- y la **memoria organizacional** (histórico y aprendizajes).
+- el **perfil institucional persistente** (BrandGuidelinesStore) con los 5 atributos de alta señal para el modelo: tono ponderado, blacklist/whitelist, perspectiva narrativa, restricciones y misión/valores;
+- la **planeación estratégica** con contexto institucional (StrategicAgent + CriticAgent de alineación);
+- la **adaptación creativa** con agentes especializados por canal en ejecución paralela;
+- el **ajuste del resultado** dentro del contexto acumulado;
+- y la **memoria organizacional** (histórico y aprendizajes, consultable vía Text-SQL).
 
 > **Segmento primario:** Comunicación institucional pública  alcaldías intermedias, gobernaciones, universidades públicas, entidades regulatorias (CRC, ministerios, entes de control). El marketing digital comercial es un caso de uso posible, no el núcleo del producto.
 
@@ -47,7 +49,7 @@ El módulo de Onboarding establece el contexto institucional y personal que el s
 El onboarding se organiza en cuatro etapas principales:
 
 1. **Extracción automática desde la web de la empresa**  el sistema analiza el sitio e intenta precargar información relevante para revisión del usuario.
-2. **Enriquecimiento con manual de marca**  parámetros visuales oficiales (logos, colores, tipografías, reglas) que el sistema usará para generar piezas.
+2. **Configuración de atributos de alta señal + manual de marca**  captura de los 5 atributos prioritarios para el modelo (tono ponderado, blacklist/whitelist, perspectiva narrativa, restricciones, misión/valores) y parámetros visuales opcionales.
 3. **Carga de histórico de campañas**  contexto de ejecuciones anteriores que mejora la pertinencia del plan de comunicación.
 4. **Registro de la persona usuaria**  vinculación del colaborador a la empresa configurada.
 
@@ -212,8 +214,8 @@ El sistema detecta los valores de color definidos en el manual y los presenta co
 - Zona de seguridad del logo: 20 px mínimo
 - No deformar proporciones del logo
 - Contraste mínimo texto/fondo: 4.5:1
-- Instagram post: 10801080 px
-- Banner LinkedIn: 1200627 px
+- Instagram post: 1080×1080 px
+- Banner LinkedIn: 1200×627 px
 ```
 
 ---
@@ -247,7 +249,7 @@ El usuario puede revisar las filas detectadas, corregir columnas mal interpretad
 |---|---|---|---|
 | ANDICOM 2025 | LinkedIn + Email | "La IA aplicada ya está aquí" | 320 registros |
 | Estudio prospectiva 2024 | Email | "Descarga el informe..." | 140 descargas |
-| Webinar transformación digital | LinkedIn | "nete a la conversación..." | 85 asistentes |
+| Webinar transformación digital | LinkedIn | "Únete a la conversación..." | 85 asistentes |
 ```
 
 ---
@@ -321,7 +323,7 @@ Un usuario con rol de administrador puede actualizar la información institucion
 
 ---
 
-## 2.2 Agente Estratégico (Agente 1)
+## 2.3 Agente Estratégico (Agente 1)
 
 ### Descripción funcional
 
@@ -544,16 +546,19 @@ y audiencia reorientada a sector público.
 
 ---
 
-## 2.3 Agente Creativo (Agente 2)
+## 2.4 Agente Creativo — Sistema multi-agente (Agente 2)
 
 ### Descripción funcional
 
-El Agente Creativo es el módulo de producción del sistema. Toma como entrada el plan de campaña elaborado por el Agente Estratégico y lo convierte en materiales listos para publicar o producir.
+El Agente Creativo es un **sistema multi-agente** de adaptación de contenido institucional. Toma como entrada el plan de campaña del Agente Estratégico y lo convierte en piezas optimizadas para cada canal, usando agentes especializados que incorporan las mejores prácticas del destino desde el origen de la producción.
 
-Su trabajo se divide en dos fases distintas:
+> Validado: P-05 / P-06 — Junio 2026. *"El modelo base puede ser el mismo. Lo recomendado es tener agentes especializados por red social, cada uno con las mejores prácticas específicas del canal."*
 
-- **Fase 1  Brief de diseño:** el sistema genera un brief creativo específico que detalla qué debe producirse, para quién, en qué tono, con qué mensaje, en qué canal y con qué restricciones visuales.
-- **Fase 2  Generación de piezas:** a partir del brief, el sistema genera una o varias piezas adaptadas al canal seleccionado (copy, estructura visual, variantes).
+Su trabajo se organiza en tres fases:
+
+- **Fase 1 — Brief de diseño:** el orquestador (CreativeAgent) construye un brief creativo específico con tono, mensaje, CTA, canal y restricciones visuales, consultando el BrandGuidelinesStore.
+- **Fase 2 — Producción multicanal paralela:** el brief se despacha simultáneamente a los agentes especializados (LinkedInAgent, InstagramAgent, EmailAgent, WhatsAppAgent). Cada agente produce la pieza con las convenciones propias del destino.
+- **Fase 3 — Evaluación y entrega:** el CriticAgent evalúa alineación institucional por pieza; las aprobadas se presentan para revisión humana.
 
 La diferencia entre estrategia, brief y pieza es fundamental para entender el producto:
 
@@ -634,15 +639,13 @@ El sistema organiza todos los activos en una estructura jerárquica navegable qu
 
 **Ejemplo funcional:**
 
-```
-Campaña: Transformación Digital 2025
- Brief 1: LinkedIn institucional
-    Pieza 1: Post "Acompañamos al sector público"
-    Pieza 2: Artículo "5 claves para la TD en entidades"
- Brief 2: Instagram  captación de leads
-     Pieza 3: Post visual con CTA de descarga
-     Pieza 4: Historia animada con link a whitepaper
-```
+<div class="diagram-block">
+<p class="diagram-label">Estructura jerárquica: Campaña → Brief → Piezas</p>
+<img src="assets/img/diagramas/agente-creativo-estructura-campana-brief-piezas.png" alt="Estructura jerárquica Campaña — Brief — Piezas">
+<div class="diagram-links">
+<a href="assets/plantuml/agente-creativo-estructura-campana-brief-piezas.plantuml" download> Fuente PlantUML</a>
+</div>
+</div>
 
 Esta vista muestra claramente la trazabilidad completa desde el objetivo de la campaña hasta cada pieza publicable. Es navegable y expandible en la interfaz.
 
@@ -755,12 +758,12 @@ Link registrado: instagram.com/p/xyz123
   Interacciones   391
   Engagement     9,3%
 
-ltima actualización: hace 4 horas
+Última actualización: hace 4 horas
 ```
 
 ---
 
-## 2.4 Ajuste de resultados (Iteración controlada)
+## 2.5 Ajuste de resultados (Iteración controlada)
 
 ### Descripción funcional
 
@@ -773,8 +776,8 @@ Este módulo aplica sobre los tres tipos de salida del sistema:
 | Tipo de resultado | Módulo origen | Qué se ajusta |
 |---|---|---|
 | Plan de campaña | Agente Estratégico | Objetivo, audiencia, enfoque, tono general |
-| Brief de diseño | Agente Creativo (fase 1) | Tono, mensaje, CTA, restricciones |
-| Pieza generada | Agente Creativo (fase 2) | Extensión, lenguaje, llamado a la acción, estilo |
+| Brief de diseño | Agente Creativo — orquestador (fase 1) | Tono, mensaje, CTA, restricciones |
+| Pieza generada | Agente especializado por canal (fase 2) | Extensión, lenguaje, llamado a la acción, estilo nativo del canal |
 
 #### Qué problema resuelve
 
@@ -917,9 +920,9 @@ Estas sugerencias se muestran como chips seleccionables en la interfaz (ver mock
 
 | Módulo | Rol en el ajuste |
 |---|---|
-| **2.2 Agente Estratégico** | Origen del plan de campaña ajustable |
-| **2.3 Agente Creativo** | Origen del brief y las piezas ajustables |
-| **2.5 Histórico** | Permite consultar versiones anteriores de un resultado |
+| **2.3 Agente Estratégico** | Origen del plan de campaña ajustable |
+| **2.4 Agente Creativo** | Origen del brief y las piezas ajustables |
+| **2.6 Histórico** | Permite consultar versiones anteriores de un resultado |
 
 El módulo de iteración no reemplaza a ninguno de los módulos anteriores: actúa como una capa de refinamiento sobre sus salidas.
 
@@ -940,7 +943,7 @@ El módulo de iteración no reemplaza a ninguno de los módulos anteriores: act�
 >  **Mockups navegables**  Los prototipos de este módulo están centralizados en la **[sección 7. Mockup](mockup.html)**. Desde allí puede recorrer el flujo completo del sistema.
 ---
 
-## 2.5 Histórico
+## 2.6 Histórico
 
 ### Descripción funcional
 
@@ -959,9 +962,9 @@ Su función central no es solo archivar, sino permitir que el equipo **aprenda d
 
 | Módulo | Relación |
 |---|---|
-| 2.2 Agente Estratégico | Puede recibir un plan anterior como contexto inicial |
-| 2.3 Agente Creativo | Puede recuperar briefs y piezas para reutilizar o mejorar |
-| 2.4 Ajuste de resultados | Accede al histórico de versiones de un resultado |
+| 2.3 Agente Estratégico | Puede recibir un plan anterior como contexto inicial |
+| 2.4 Agente Creativo | Puede recuperar briefs y piezas para reutilizar o mejorar |
+| 2.5 Ajuste de resultados | Accede al histórico de versiones de un resultado |
 
 ---
 
@@ -981,15 +984,13 @@ Cada campaña muestra: nombre, fecha, canales involucrados y estado general.
 
 Cada campaña se organiza como una estructura expandible en tres niveles:
 
-```
-Campaña
- Brief 1
-    Pieza A (copy Instagram)
-    Pieza B (copy LinkedIn)
-    Pieza C (asunto email)
- Brief 2
-     Pieza D (banner web)
-```
+<div class="diagram-block">
+<p class="diagram-label">Visualización jerárquica — Campaña → Brief → Piezas</p>
+<img src="assets/img/diagramas/historico-estructura.png" alt="Estructura jerárquica del Histórico — Campaña → Brief → Piezas">
+<div class="diagram-links">
+<a href="assets/plantuml/historico-estructura.plantuml" download> Fuente PlantUML</a>
+</div>
+</div>
 
 Esta vista permite navegar el árbol completo de una campaña: desde el plan estratégico hasta cada pieza de contenido individual.
 
@@ -1075,7 +1076,7 @@ En el MVP, la visión TO-BE prioriza demostrar el diferencial central desde el p
 1. **[Onboarding institucional](to-be-onboarding.html)**  Creación del perfil institucional persistente. **La persistencia de marca debe ser el primer feature demostrado**, no la generación de contenido.
 2. **[Contexto organizacional (BrandGuidelinesStore)](to-be-contexto.html)**  El sistema demuestra que ya conoce la organización en sesiones posteriores sin re-configuración.
 3. **[Agente Estratégico](to-be-agente-estrategico.html)**  Propone plan de comunicación institucional usando el contexto acumulado.
-4. **[Agente Creativo](to-be-agente-creativo.html)**  Adapta piezas por canal con identidad institucional aplicada. Usa banco de activos licenciados como flujo principal.
+4. **[Agente Creativo](to-be-agente-creativo.html)** — Sistema multi-agente: CreativeAgent (orquestador) + agentes especializados por canal (LinkedIn, Instagram, Email, WhatsApp) en ejecución paralela. Cada agente produce piezas con las convenciones nativas del destino. Usa banco de activos licenciados como flujo principal.
 5. **[Ajuste de resultados](to-be-iteracion.html)**  Refinamiento dentro del contexto institucional acumulado.
 6. **[Histórico y memoria](to-be-historico.html)**  Recuperar y retomar comunicaciones anteriores para continuidad temática.
 

@@ -5,7 +5,7 @@
   }
 
   try {
-    const response = await fetch("assets/partials/site-shell.html");
+    const response = await fetch("assets/partials/site-shell.html?v=20260602");
     if (!response.ok) {
       throw new Error("No se pudo cargar el shell compartido.");
     }

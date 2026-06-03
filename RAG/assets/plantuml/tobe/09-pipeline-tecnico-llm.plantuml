@@ -1,0 +1,45 @@
+@startuml 09-pipeline-tecnico-llm
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 11
+skinparam activityBackgroundColor #D6EAF8
+skinparam activityBorderColor #2E86C1
+skinparam activityArrowColor #2E86C1
+skinparam activityDiamondBackgroundColor #AED6F1
+skinparam activityDiamondBorderColor #2E86C1
+skinparam titleFontSize 14
+skinparam titleFontStyle bold
+skinparam noteBackgroundColor #FEF9E7
+skinparam noteBorderColor #F39C12
+
+title Pipeline Técnico LLM — Document Intelligence Engine
+
+start
+:PDF / Imagen / DOCX / XLSX;
+:Document Intake;
+fork
+  :Extracción nativa\n(texto digital / DOCX / XLSX);
+fork again
+  :LLM/VLM multimodal\n//ruta principal — el LLM es el OCR//;
+fork again
+  :OCR fallback\n//solo escaneados/imágenes sin texto embebido//;
+end fork
+:Normalized Document Representation\n(contenido + método + hash + uri original);
+:Composición del prompt\n(esquema + guardrails explícitos + few-shots\n+ instrucciones Markdown para tablas e imágenes);
+:LLM Gateway\n(rate-limit por tenant · retries · fallbacks · cache · batch routing);
+:Inferencia LLM\n(Gemini · OpenAI GPT-4o · DeepSeek-OCR · Gemma4);
+:Parseo de salida estructurada\n(JSON schema / function calling\n+ evaluación de logprobs por campo);
+note right #FEF9E7
+  <b>Critic-Evaluator Agent</b> (opcional)
+  Validación iterativa cuando
+  precisión crítica lo requiere
+end note
+:Validación de completitud y confianza\n(campos LOW_CONFIDENCE marcados para revisión);
+if (¿Fuente de referencia disponible?) then (Sí)
+  :Comparación cruzada;
+else (No)
+endif
+:JSON / CSV estructurado;
+stop
+@enduml

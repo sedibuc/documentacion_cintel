@@ -1,0 +1,148 @@
+﻿Bloque 1 — Factibilidad general de la necesidad
+
+
+1. ¿Qué tan madura considera que es la tecnología disponible hoy para abordar extracción estructurada de documentos complejos como certificados notariales, contratos y pólizas? ¿Cuáles son las principales brechas o limitaciones que anticipa?
+
+
+R// La IA generativa es muy madura, siempre a resuelto capacidades de NLP entre esas OCR. No solo los modelos fundacionales si no VLM (vision language model) como paligemma o deepseek-OCR que permiten de forma precisa tareas de OCR que con otros modelos hay que entrenar con muchos datos. Las limitaciones pueden ser hardware con modelos con finetuning y latencia
+
+
+2. ¿Qué diferencia técnica relevante existe entre extracción estructurada con schema definido y generación de texto libre? ¿Afecta esa diferencia la viabilidad o el riesgo de implementación?
+
+
+R// A los LLMs o VLMs se le puede dar un esquema, osea que detecte lo que necesitamos y que tipos de datos y demás.
+
+
+3. ¿Considera razonable la hipótesis de priorizar procesamiento nativo o multimodal del documento frente a OCR como paso obligatorio para documentos digitales? ¿Bajo qué condiciones ese supuesto podría fallar?
+
+
+R// No entiendo bien la pregunta, los LLMs o VLMs se pueden comportar como OCRs.
+
+
+
+
+________________
+
+
+Bloque 2 — Enfoques técnicos a explorar
+
+
+4. ¿Qué enfoques técnicos considera razonable explorar para procesar documentos en formato PDF digital, PDF escaneado, imagen y documentos ofimáticos? ¿Cuáles priorizaría y por qué?
+
+
+R// Uso de LLMs multimodales; la evaluación de cuál usar puede realizarse con herramientas como MLFlow o Vertex AI Evaluation. Uso de few-shots (examples) en una primera medida, uso de outputs estructurados, uso de tools para validar información, o workflows (o agentes) de evaluador crítico para mejorar la precisión si es necesario.
+
+
+5. ¿Cuándo tiene sentido usar un LLM multimodal o documental frente a extraer primero el texto y luego procesarlo con un LLM de texto? ¿Qué criterios deberían guiar esa decisión en una exploración inicial?
+
+
+R// El LLM hace la extracción de texto, es perder el tiempo primero extraer y pues, más recursos y tiempo.
+
+
+6. ¿Qué papel debería tener OCR en una estrategia de extracción documental moderna? ¿Para qué tipos de documentos sería difícil evitarlo? ¿Cuándo sería un paso innecesario o contraproducente?
+
+
+R// Yo creo que hay confusión, un LLM o VLM hace las tareas de un OCR usando arquitecturas de deep learning más modernas y con capacidades de atención y precisión. En un OCR tradicional, hay que hacer fine-tuning por cada documento; esto, a nivel de escalabilidad del negocio, puede ser costoso. El uso de LLMs o VLMs puede tener muy buenos resultados solo con zero o few shots.
+
+
+26. (Decisión adoptada — formalizar criterio) El MVP adoptó extracción vía LLM (zero-shot / few-shot) y postergó NER supervisado para una fase post-producción condicionada a la disponibilidad de un corpus anotado. ¿Considera que ese orden de prioridad es razonable para un piloto inicial con documentos notariales y pólizas HSE? ¿Bajo qué condiciones —volumen de documentos, variabilidad de formatos, nivel de precisión requerido— recomendaría anticipar el NER al MVP en lugar de dejarlo como mejora posterior?
+
+
+R// Esta bien con LLMs
+
+
+________________
+
+
+Bloque 3 — Modelos o familias candidatas
+
+
+7. ¿Qué familias de modelos o proveedores considera razonable incluir en una exploración inicial, tanto opciones cloud certificadas como modelos que podrían ejecutarse localmente? No se busca una selección final, sino candidatos que orienten una evaluación posterior.
+R// Gemini, OpenAI, DeepseekOCR, Gemma4, PaliGemma, 
+8. ¿Hay modelos o categorías de modelos que, por razones técnicas o de madurez, no recomendaría explorar en esta fase inicial? ¿Por qué?
+R// Claude u otros modelos que no son fuerte en lo multimodal.
+9. ¿Qué aspectos considera más relevantes para comparar opciones preliminares: soporte de formatos, multimodalidad, salida estructurada, soberanía, costo, latencia u otros? ¿Cuáles son los criterios que no deberían obviarse en una primera evaluación?
+R// Precisión, tooling, multimodal, latencia, costo.
+________________
+Bloque 4 — Calidad, trazabilidad y control de errores
+10. ¿Qué criterios de calidad considera relevantes para evaluar preliminarmente la extracción estructurada? ¿Qué métricas deberían explorarse en una prueba posterior? No se busca establecer umbrales finales, sino identificar qué medir.
+R// 
+* Una matriz de confusión y las métricas de precisión, recall y F1-score son muy útiles.
+11. ¿Qué mecanismos técnicos podrían ayudar a garantizar que los valores extraídos provengan del documento fuente y no del conocimiento interno del modelo? ¿Qué técnicas considera prioritarias para explorar?
+R// 
+* Colocar GuardRails en el prompt (límites)
+* Técnicas de prompt engineering
+* Workflows o agentes para crítico-evaluador
+* Definir un output estructurado
+* Few shots
+12. ¿Qué lineamientos generales considera importantes para controlar la extracción estructurada y reducir las respuestas no sustentadas en el documento? ¿Zero-shot, few-shot u otro enfoque sería un punto de partida razonable para documentos como certificados notariales?
+R// 
+* Definir un output estructurado
+* Técnicas de prompt engineering
+* Workflows o agentes para crítico-evaluador
+* Definir un output estructurado
+* Few shots
+* Colocar GuardRails en el prompt (límites)
+13. ¿Cómo podría detectarse que una extracción fue incompleta o de baja calidad antes de confiar en el resultado? ¿Qué señales o indicadores deberían monitorearse?
+R// 
+* Antes de salir a prd: Validaciones y pruebas
+* Luego uso herramientas de monitoreo como MLflow, Ray y Grafana. Con ello revisar métricas y evaluar de forma humana y dar feedback.
+* En tiempo de ejecución el uso de output estructurado y validar campos obligatorios, habilitar el logprobs de los LLMs que dan info de probabilidad de certeza de los tokens si es bajo a un porcentaje se indica como a revisar
+________________
+
+
+Bloque 5 — Soberanía, privacidad y operación multi-tenant
+14. ¿Qué condiciones o garantías mínimas deberían revisarse antes de usar un proveedor LLM cloud para procesar documentos con datos personales o sensibles? ¿Qué aspectos contractuales o técnicos son críticos?
+R// 
+* Revisar privacidad de datos.
+* Tokens por minuto y Request por minuto.
+* Uso de Batch prediction.
+15. ¿Existen opciones de procesamiento local u on-premise que considera maduras para este caso de uso? ¿Bajo qué condiciones recomendaría explorarlas frente a opciones cloud certificadas?
+R//
+*  Gemma4, DeepseekOCR, VLMs son algunos modelos sin embargo hay que evaluar la infraestructura a usar para soportar atributos de calidad como tiempo y recursos. Tambien evaluar precision.
+16. ¿Qué riesgos o limitaciones anticiparía para una solución que debe operar con múltiples tenants con distintos niveles de sensibilidad documental y distintos requisitos de soberanía?
+R//
+* Limitaciones de tokens o request por minuto para ello el uso de LLM Gateways
+* Limitaciones de consumo o uso por cliente para ello el uso de LLM Gateways.
+________________
+
+
+Bloque 6 — Riesgos críticos de implementación
+¿Cuáles son los riesgos técnicos más importantes a anticipar?
+17. ¿Qué riesgos técnicos considera más críticos para este tipo de sistema? Puede incluir aspectos como: documentos escaneados de baja calidad, tablas complejas, sellos, firmas, documentos largos, variabilidad entre lotes o cualquier otro que considere relevante.
+R//  
+* La calidad de los documentos, o sea, documentos de mala calidad, puede tener problemas de precisión.
+* Interpretación de tablas: aquí, en los prompts, debe incluir prácticas como extraer la información en Markdown u otros formatos fáciles de entender y procesar.
+* Imágenes, también en los prompts prácticas como que te describan la imagen puede ser una solución si las imágenes son importantes
+* Extracción de headers o footers o de muchas hojas, la precisión puede que baje.
+18. ¿Qué limitaciones técnicas conocidas de los modelos LLM actuales podrían ser problemáticas para la extracción estructurada de documentos del sector notarial y constructor colombiano?
+R// Alucinaciones
+19. ¿Qué factores de costo, latencia o escalabilidad considera que deberían tenerse en cuenta desde el diseño, incluso antes de una prueba exploratoria?
+R// Precisión y latencia
+________________
+Bloque 7 — Evaluación exploratoria posterior#
+¿Qué pruebas mínimas deberían hacerse antes de tomar decisiones de implementación?
+20. ¿Qué experimentos mínimos recomendaría realizar con documentos reales antes de orientar la selección de un modelo o estrategia de extracción? ¿Cuántos documentos y de qué tipos serían representativos para una primera evaluación?
+R// Pruebas de precisión con 100 documentos de diferente tipo escaneados, creados con PDF, y documentos de los cuales se trataran en PRD. Evaluar con varios modelos a ciegas y revisión por humanos.
+21. ¿Qué criterios utilizaría para decidir si un enfoque vale la pena continuar explorando? ¿Qué señales indicarían que un candidato debe descartarse temprano?
+R// Metricas de precisión y recall no esperadas.
+22. ¿Qué aspectos del diseño actual considera que requieren validación con documentos reales antes de poder afirmar que el enfoque es viable?
+R// La clasificación, OCR y extracción de entidades debe evaluarse.
+________________
+Bloque 8 — Recomendaciones y advertencias finales#
+Espacio para alertas tempranas, supuestos débiles y recomendaciones generales.
+23. ¿Qué supuestos del diseño actual le parecen más débiles o arriesgados desde la perspectiva técnica? ¿Cuáles requieren validación urgente?
+R// 
+* Escalabilidad mediante tokens o requests por minuto. 
+* Evaluar el uso de batch inference.
+* Uso de herramientas más adecuadas para el monitoring y experimentación de LLMs como MLFlow
+* Uso de LLM gateway para fallbacks, retries, balanceo de carga, cache, entre otros.
+24. ¿Hay aspectos de la necesidad o del diseño que, en su experiencia, suelen subestimarse en proyectos de extracción documental con LLM?
+R// Escalabilidad mediante tokens o requests por minuto. 
+25. ¿Qué recomendaría priorizar en un análisis exploratorio de 4–6 semanas para avanzar con confianza razonable hacia una prueba de concepto formal?
+R// 
+* Precisión de los LLMs
+* Latencia
+* Costo
+* Uso de batch
+* Uso de LLM gateway

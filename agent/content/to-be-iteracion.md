@@ -1,10 +1,10 @@
-# TO-BE  Módulo 2.4: Ajuste de resultados (Iteración controlada)
+# TO-BE — Módulo 2.5: Ajuste de resultados (Iteración controlada)
 
 > Módulo de refinamiento iterativo. Permite ajustar cualquier resultado generado mediante instrucciones en lenguaje natural.
 
 ---
 
-## 2.4 Ajuste de resultados (Iteración controlada)
+## 2.5 Ajuste de resultados (Iteración controlada)
 
 ### Descripción funcional
 
@@ -161,9 +161,9 @@ Estas sugerencias se muestran como chips seleccionables en la interfaz (ver mock
 
 | Módulo | Rol en el ajuste |
 |---|---|
-| **2.2 Agente Estratégico** | Origen del plan de campaña ajustable |
-| **2.3 Agente Creativo** | Origen del brief y las piezas ajustables |
-| **2.5 Histórico** | Permite consultar versiones anteriores de un resultado |
+| **2.3 Agente Estratégico** | Origen del plan de campaña ajustable |
+| **2.4 Agente Creativo** | Origen del brief y las piezas ajustables |
+| **2.6 Histórico** | Permite consultar versiones anteriores de un resultado |
 
 El módulo de iteración no reemplaza a ninguno de los módulos anteriores: actúa como una capa de refinamiento sobre sus salidas.
 

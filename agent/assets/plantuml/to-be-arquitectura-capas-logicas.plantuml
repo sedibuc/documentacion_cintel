@@ -1,0 +1,56 @@
+@startuml to-be-arquitectura-capas-logicas
+!theme plain
+skinparam backgroundColor #1a202c
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontColor #d4dae6
+skinparam defaultFontSize 11
+skinparam packageBackgroundColor #1e2533
+skinparam packageBorderColor #4db8b5
+skinparam packageFontColor #4db8b5
+skinparam componentBackgroundColor #252d3d
+skinparam componentBorderColor #4db8b5
+skinparam componentFontColor #d4dae6
+skinparam titleFontColor #f0ece3
+skinparam titleFontSize 14
+skinparam noteBackgroundColor #0c3030
+skinparam noteBorderColor #4db8b5
+skinparam noteFontColor #9ba5b4
+
+title Vista Lógica de Alto Nivel — Adaptador de Contenido Institucional
+
+package "Experiencia" {
+  [Web / Chat guiado · Onboarding · Preview · Histórico] as CAPA1
+}
+
+package "Orquestación" {
+  [StrategicAgent · CriticAgent · CreativeAgent · Flujo de aprobación] as CAPA2
+}
+
+package "Contexto" {
+  [ContextRetrievalService · Filtros por tenant · Restricciones] as CAPA3
+}
+
+package "Datos" {
+  [OrganizationalContextStore · BrandGuidelinesStore · CampaignHistoryStore] as CAPA4
+}
+
+package "IA" {
+  [ADK framework · LLM provider abstraction · Multimodal] as CAPA5
+}
+
+package "Canales (paralelo)" {
+  [LinkedInAgent  ||  InstagramAgent  ||  WhatsAppAgent  ||  EmailAgent] as CAPA6
+}
+
+package "Infraestructura" {
+  [TenantIsolationLayer · ObservabilityService (MLFlow)] as CAPA7
+}
+
+CAPA1 --> CAPA2
+CAPA2 --> CAPA3
+CAPA2 --> CAPA5
+CAPA2 --> CAPA6
+CAPA3 --> CAPA4
+CAPA6 --> CAPA7
+CAPA5 --> CAPA7
+@enduml

@@ -6,7 +6,7 @@
 <span class="badge">Sector piloto: construcción</span>
 <span class="badge">Salida: JSON · CSV</span>
 <span class="badge">REST · FTP · Lotes</span>
-<span class="badge">Motor de extracción: LLM (zero-shot / few-shot)</span>
+<span class="badge">Motor de extracción: LLM (few-shot + guardrails + logprobs)</span>
 <span class="badge badge-note">NER supervisado: evaluación post-producción</span>
 </div>
 
@@ -42,42 +42,31 @@ El sistema resuelve ese problema convirtiendo documentos tipados en **datos estr
 ### Qué procesamiento realiza
 
 1. **MultiTenant Auth**: el API Gateway valida el token JWT, extrae el `tenant_id` y aplica RBAC antes de cualquier operación.
-2. **Content Extraction Strategy**: selección de la ruta de extracción más adecuada según el tipo de archivo y las capacidades disponibles: (a) extracción nativa para documentos digitales con texto embebido (PDF/DOCX/XLSX/CSV), (b) LLM multimodal/documental si el modelo lo soporta y es compatible con soberanía de datos, (c) OCR fallback solo para documentos escaneados, imágenes o archivos sin texto embebido. El método usado queda registrado en la `DocumentContentExtraction` y vinculado a la `NormalizedDocumentRepresentation` que alimenta al StructuredExtractor.
-3. **StructuredExtractor (LLM)**: el modelo de lenguaje recibe la representación normalizada del documento (no necesariamente texto OCR), el esquema del tipo documental (campos, tipos de dato, descripciones semánticas) y el prompt versionado. Extrae los valores de cada campo sin corpus anotado (zero-shot) o con ejemplos representativos mínimos (few-shot). Salida: JSON estructurado con confianza por campo.
-4. **Mapeo al esquema**: los valores extraídos se alinean con los campos del `DocumentSchemaRegistry`; campos sin valor detectado se marcan explícitamente como no extraídos.
+2. **Content Extraction Strategy**: selección de la ruta de extracción más adecuada según el tipo de archivo y las capacidades disponibles: (a) extracción nativa para documentos digitales con texto embebido (PDF/DOCX/XLSX/CSV), (b) LLM/VLM multimodal como ruta principal —el modelo hace directamente las tareas del OCR—, (c) OCR como fallback condicionado solo para documentos escaneados sin texto embebido. El método usado queda registrado en la `DocumentContentExtraction` y vinculado a la `NormalizedDocumentRepresentation`.
+
+   > **Validación experta (2026-06-02 — Bloque 1-2):** El experto confirma que los LLMs/VLMs realizan las tareas del OCR directamente mediante arquitecturas de deep learning con capacidad de atención, sin necesidad de fine-tuning por tipo documental. Para **tablas complejas**, el prompt debe instruir al modelo a extraer el contenido en formato Markdown. Para **imágenes relevantes**, el prompt debe solicitar una descripción explícita. Headers, footers y documentos de muchas páginas pueden degradar precisión y requieren consideración especial en el diseño del prompt.
+3. **StructuredExtractor (LLM)**: el modelo de lenguaje recibe la representación normalizada del documento, el esquema del tipo documental (campos, tipos de dato, descripciones semánticas), el prompt versionado con **guardrails explícitos** (límites para prevenir alucinaciones), **ejemplos few-shot** representativos del tipo documental, e instrucciones de formato (Markdown para tablas, descripción para imágenes). La llamada al LLM pasa por el **LLM Gateway** que controla rate-limiting por tenant, reintentos automáticos, fallbacks de modelo y cache. Salida: JSON estructurado con confianza por campo y `logprobs` por campo.
+
+   > **Validación experta (2026-06-02 — Bloque 3-4):** Los modelos recomendados para el piloto son: Gemini, OpenAI (GPT-4o), DeepSeek-OCR, Gemma4 y PaliGemma. Claude y modelos débiles en multimodal **no se recomiendan**. Los criterios de evaluación son: precisión (matriz de confusión, F1-score, recall), tooling disponible, capacidad multimodal, latencia y costo.
+4. **Mapeo al esquema**: los valores extraídos se alinean con los campos del `DocumentSchemaRegistry`; campos sin valor detectado se marcan explícitamente como no extraídos. Campos con `logprob` por debajo del umbral configurado se marcan como `LOW_CONFIDENCE` para revisión humana.
 5. **Validation Engine**: validación determinística de tipo de dato, formato, campos obligatorios y rangos esperados.
 6. **CrossValidator**: comparación campo a campo contra la fuente de referencia (CSV o Excel) proporcionada. Clasifica por campo: `MATCH`, `MISMATCH`, `PENDIENTE`.
 7. **DiscrepancyAlertEngine**: genera alertas de discrepancia para cada `MISMATCH` detectado. Clasifica la severidad: `BLOCKING` (impide aprobar el documento), `WARNING` (requiere revisión), `INFO` (informativo).
 8. **Alert Dashboard / Human Review**: el operador o auditor ve los documentos con alertas, puede corregir valores, aprobar con observación o rechazar el documento.
 9. **Consolidación por lote**: agrupación de ejecuciones bajo un ID único de lote con métricas de resumen.
-10. **Audit Service**: persiste trazabilidad inmutable de cada operación (tenant, documento, modelo, prompt versión, tokens, latencia, actor, decisión).
+10. **Audit Service**: persiste trazabilidad inmutable de cada operación (tenant, documento, modelo, prompt versión, tokens, latencia, `logprobs_min`, `low_confidence_fields`, actor, decisión).
+
+> **Validación experta de métricas de observabilidad (2026-06-02 — Bloque 4-8):** El stack de monitoreo recomendado por el experto es **MLflow** (experimentación, A/B testing de modelos y prompts, seguimiento de ejecuciones) + **Grafana** (dashboards operativos y alertas) + **Ray** (monitoreo LLM en escala). En tiempo de ejecución, los `logprobs` del modelo son la señal de confianza por campo: si el valor es inferior al umbral configurado, el campo se marca para revisión humana. El experto recomienda evaluación humana periódica con feedback loop.
 
 ### Pipeline técnico LLM
 
-```
-PDF / Imagen / DOCX / XLSX
-    ↓
-Document Intake
-    ↓
-Content Extraction Strategy
-    ├─ Extracción nativa (texto digital / DOCX / XLSX)
-    ├─ LLM multimodal/documental (si modelo y soberanía lo permiten)
-    └─ OCR fallback (solo escaneados/imágenes/sin texto embebido)
-    ↓
-Normalized Document Representation  (contenido + método + hash + uri original)
-    ↓
-Composición del prompt  (esquema del tipo + instrucciones + representación normalizada)
-    ↓
-Inferencia LLM  (extracción zero-shot / few-shot)
-    ↓
-Parseo de salida estructurada  (JSON schema / function calling)
-    ↓
-Validación de completitud
-    ↓
-Comparación cruzada (opcional, si hay fuente de referencia)
-    ↓
-JSON / CSV estructurado
-```
+<div class="diagram-block">
+<p class="diagram-label">Pipeline Técnico LLM — Document Intelligence Engine</p>
+<img src="assets/img/diagramas/tobe/09-pipeline-tecnico-llm.png" alt="Pipeline Técnico LLM — Document Intelligence Engine">
+<div class="diagram-links">
+<a href="assets/plantuml/tobe/09-pipeline-tecnico-llm.plantuml" download> Fuente PlantUML</a>
+</div>
+</div>
 
 > **Sobre NER supervisado:** La modalidad de extracción basada en modelos NER entrenados con corpus anotado (NER supervisado) **no es parte del alcance del MVP**. Se evaluará como evolución planificada una vez el piloto con LLM esté en producción y se disponga de datos empíricos sobre los tipos documentales donde el LLM podría presentar limitaciones de precisión o costo a escala.
 
@@ -286,7 +275,7 @@ El administrador registra la empresa, configura su perfil, establece la conexió
 
 ### Flujo 2 — Extracción estructurada de documentos
 
-El operador selecciona el tipo documental, elige el origen (carga manual o FTP), configura el formato de salida y ejecuta la extracción. El agente procesa el documento y devuelve los campos definidos en el esquema.
+El operador selecciona el tipo documental, elige el origen (carga manual o FTP), configura el formato de salida y ejecuta la extracción. El sistema procesa el documento y devuelve los campos definidos en el esquema.
 
 ![Flujo de extracción estructurada de documentos](assets/img/diagramas/tobefuncional/flujo-extraccion.png)
 
@@ -320,7 +309,7 @@ El operador accede al historial, selecciona un lote y descarga los resultados co
 
 ### Flujo 6 — Administración de tipo documental
 
-El equipo administrador crea un nuevo tipo documental, define los campos, carga el dataset de entrenamiento, ejecuta el proceso y promueve el tipo entre estados hasta PRODUCCIÓN.
+El equipo administrador crea un nuevo tipo documental, define los campos, carga los documentos de validación representativos del tipo, ejecuta la extracción de prueba y promueve el tipo entre estados hasta PRODUCCIÓN.
 
 ![Flujo de administración de tipo documental](assets/img/diagramas/tobefuncional/flujo-admin-tipos.png)
 
@@ -382,8 +371,6 @@ Cubre 13 pantallas: dashboard, onboarding, administración de tipos documentales
 - Las integraciones con notificaciones automáticas (correo, webhook) se marcan como **evolución futura, no MVP**.
 - La integración con ecosistemas corporativos (Copilot Studio, Vertex AI Agents) se marca como **evolución planificada**, no capacidad del MVP.
 
-
-Este documento describe el TO-BE funcional de la iniciativa luego del pivot estratégico validado en las reuniones de alineación. El sistema ya **no se presenta como un RAG conversacional** cuyo valor principal sea "chatear con documentos". El producto se reorienta hacia un **agente especializado de procesamiento documental basado en LLM**.
 
 <div class="callout">
 <strong>Consulta al experto en arquitectura LLM</strong><br>

@@ -1,4 +1,4 @@
-# TO-BE  Módulo 2.3: Agente Estratégico
+# TO-BE — Módulo 2.3: Agente Estratégico
 
 > Módulo de planeación de comunicación institucional. Interpreta objetivos institucionales, audiencias, restricciones y canales para proponer el plan de comunicación, usando el perfil institucional persistente del BrandGuidelinesStore.
 
@@ -228,4 +228,15 @@ y audiencia reorientada a sector público.
 
 ---
 
+## Principios de diseño del agente — validados por experto técnico
+
+> Validado: P-06 — Junio 2026.
+
+| Principio | Descripción |
+|---|---|
+| **1–3 objetivos por agente** | El StrategicAgent tiene un único objetivo cohesionado: construir el plan de comunicación. Instrucciones cortas, rol claro. |
+| **Tools explícitas** | Las herramientas del agente están definidas: consulta de BrandGuidelinesStore, consulta de CampaignHistoryStore, Text-to-SQL sobre datos estructurados. |
+| **Skills ADK** | El agente se equipa con ADK Skills para mejorar su capacidad de planificación, razonamiento y actuación. |
+| **Separación confirmada** | La separación entre Agente Estratégico y Agente Creativo está validada. Resolver todo en una sola inferencia monolítica reduce control, trazabilidad y calidad. |
+| **Agente crítico** | Se recomienda agregar un agente de alineación institucional que evalúe el plan estratégico antes de pasarlo al Agente Creativo. |
 

@@ -27,7 +27,7 @@ title Flujo 2 — Extracción estructurada de documentos
 
 start
 :Operador selecciona tipo documental\n(solo tipos BETA o PRODUCCIÓN);
-:Sistema carga el esquema de campos\ndefinidos para ese tipo;
+:Sistema carga el esquema vigente\ny el prompt base del tipo;
 :Operador selecciona formato de salida\n(JSON o CSV);
 :Operador elige origen del documento;
 
@@ -39,16 +39,26 @@ else (FTP)
 endif
 
 :Operador inicia el procesamiento;
-:Agente preprocesa el documento\n(normalización, detección de idioma);
-:Agente aplica modelo de extracción\nsegún modalidad del tipo documental;
+:Sistema normaliza el documento\ny determina la ruta de extracción;
 note right
-  Tipo entrenado: alta precisión, estable.
-  Tipo LLM: rápido, mayor variabilidad.
+  LLM/VLM es la ruta principal.
+  OCR solo aplica como fallback
+  para documentos sin texto embebido.
 end note
+
+if (¿Documento con texto/estructura digital?) then (Sí)
+  :Extrae contenido por ruta nativa;
+else (No)
+  if (¿Modelo soporta entrada multimodal?) then (Sí)
+    :Envía documento a extracción\nLLM/VLM multimodal;
+  else (No)
+    :Activa OCR fallback\ncon trazabilidad del método;
+  endif
+endif
 
 if (¿Documento legible?) then (Sí)
   :Extrae campos estructurados\nconforme al esquema definido;
-  :Valida completitud\n(campos esperados vs. extraídos);
+  :Valida completitud y confianza\n(campos esperados vs. extraídos);
   if (¿Todos los campos encontrados?) then (Sí)
     :Genera resultado completo (JSON / CSV);
   else (Parcial)

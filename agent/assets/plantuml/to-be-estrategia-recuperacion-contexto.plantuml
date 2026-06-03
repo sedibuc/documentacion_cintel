@@ -1,0 +1,49 @@
+@startuml to-be-estrategia-recuperacion-contexto
+!theme plain
+skinparam backgroundColor #1a202c
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontColor #d4dae6
+skinparam defaultFontSize 11
+skinparam activityBackgroundColor #1e2533
+skinparam activityBorderColor #4db8b5
+skinparam activityFontColor #d4dae6
+skinparam arrowColor #4db8b5
+skinparam ArrowFontColor #9ba5b4
+skinparam activityDiamondBackgroundColor #252d3d
+skinparam activityDiamondBorderColor #4db8b5
+skinparam activityDiamondFontColor #d4dae6
+skinparam titleFontColor #f0ece3
+skinparam titleFontSize 14
+skinparam noteBackgroundColor #0c3030
+skinparam noteBorderColor #4db8b5
+skinparam noteFontColor #9ba5b4
+skinparam startColor #4db8b5
+skinparam endColor #4db8b5
+
+title Estrategia de Recuperación de Contexto (Validado P-02 · Junio 2026)
+
+start
+if (¿Contexto estructurado en BD relacional?) then (Sí)
+  :Herramientas del agente\n/ Text-SQL;
+  note right #0c3030
+    **REGLA 1** — Datos estructurados
+    → herramientas del agente / Text-SQL
+  end note
+else (No)
+  if (¿Información no estructurada\n(documentos, manuales extensos)?) then (Sí)
+    :RAG / Vector DB;
+    note right #0c3030
+      **REGLA 2** — Documentos no estructurados
+      → RAG / vector DB
+    end note
+  else (No aplica en V1)
+    :Modelar relacionalmente\nantes de activar vector DB;
+    note right #0c3030
+      **REGLA 3** — No activar vector DB por defecto
+      en V1 si el contexto crítico está
+      modelado relacionalmente
+    end note
+  endif
+endif
+stop
+@enduml

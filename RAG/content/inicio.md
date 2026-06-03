@@ -71,7 +71,6 @@ El sistema opera bajo un modelo de múltiples clientes (**tenants**) administrad
 - [TO-BE funcional](tobefuncional.html) — Especificación completa del Document Intelligence Engine, componentes, pipeline y restricciones de alcance.
 - [Arquitectura TO-BE](arquitecturatobe.html) — 8 vistas arquitectónicas del Document Intelligence Engine MultiTenant.
 - [Preguntas para el experto](preguntasexperto.html) — Cuestionario preliminar para validación especializada en arquitectura DIE MultiTenant.
-- [Por qué no es un RAG](no-es-rag.html) — Argumentación técnica de por qué el sistema es un motor de extracción estructurada, no un RAG ni un sistema de Q&A.
 - [Diagnóstico técnico](diagnostico.html) — Análisis del demostrador RAG existente que origina este reposicionamiento.
 - [Arquitectura vigente](arquitectura.html) — Componentes y flujos del demostrador RAG actual (AS-IS).
 - [Brechas y oportunidades](brechas.html) — Brechas entre el demostrador actual y el Document Intelligence Engine.

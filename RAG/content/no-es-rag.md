@@ -40,33 +40,13 @@ El término fue formalizado en el artículo *"Retrieval-Augmented Generation for
 
 ### Flujo de ejecución típico de un RAG
 
-```
-[INGESTA / OFFLINE]
-Documentos del corpus
-       ↓
-  Chunking (fragmentación)
-       ↓
-  Embeddings (vectorización semántica)
-       ↓
-  Almacenamiento en Vector DB
-       ↓
-[INDEX CONSTRUIDO]
-
-[INFERENCIA / ONLINE]
-Query del usuario (lenguaje natural)
-       ↓
-  Embedding de la query
-       ↓
-  Búsqueda semántica en Vector DB
-  → recupera top-k chunks relevantes
-       ↓
-  Construcción del prompt aumentado:
-  [SISTEMA] + [CONTEXTO: chunk1, chunk2...] + [PREGUNTA]
-       ↓
-  LLM genera respuesta en lenguaje natural
-       ↓
-Respuesta al usuario (texto generado)
-```
+<div class="diagram-block">
+<p class="diagram-label">Flujo de Ejecución Típico de un RAG — Ingesta e Inferencia</p>
+<img src="assets/img/diagramas/flujo-rag-tipico.png" alt="Flujo de Ejecución Típico de un RAG">
+<div class="diagram-links">
+<a href="assets/plantuml/flujo-rag-tipico.plantuml" download> Fuente PlantUML</a>
+</div>
+</div>
 
 ### Casos de uso típicos de RAG
 

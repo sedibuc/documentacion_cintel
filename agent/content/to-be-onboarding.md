@@ -1,4 +1,4 @@
-# TO-BE  Módulo 2.1: Onboarding institucional
+# TO-BE — Módulo 2.1: Onboarding institucional
 
 > Módulo de creación del perfil institucional persistente. Su propósito no es configurar una sesión: es crear el **contexto organizacional acumulado** que el sistema usará en todas las interacciones posteriores, sin que el comunicador vuelva a re-explicar quién es la institución.
 
@@ -97,15 +97,77 @@ Esta inferencia es aproximada. El usuario revisa y puede corregir o completar la
 
 ---
 
-### Etapa 2  Manual de marca
+### Etapa 2  Manual de marca y atributos de alta señal para el modelo
+
+> **Validado por experto técnico — P-03 — Junio 2026.** Esta etapa captura los 5 atributos de marca con mayor impacto en la calidad de salida del modelo. Son prioritarios para V1.
 
 #### Descripción
 
-Con la información estructural validada, el usuario puede cargar el manual de marca de la empresa en formato PDF. El sistema analiza el documento e intenta extraer los parámetros visuales oficiales. Al igual que con el scraping, la extracción es asistida: el usuario revisa y aprueba cada elemento antes de guardarlo.
+Con la información estructural validada, el usuario configura dos conjuntos de datos diferenciados:
 
-Para el MVP, esta lectura documental se realiza con LLM multimodal como flujo principal y con validación humana de campos críticos. OCR no forma parte del flujo objetivo de V1.
+1. **Atributos de alta señal para el modelo** (5 campos prioritarios que condicionan la inferencia).
+2. **Parámetros visuales de marca** (logos, colores, tipografías — diferibles pero recomendados).
 
-Los parámetros extraídos del manual no se almacenan solo como referencia documental. Funcionan como **configuración activa** que el Agente Creativo usa al generar piezas: colores aplicados a fondos y textos, logos correctos según el formato, tipografías, zonas de seguridad, contrastes permitidos.
+Para la lectura de manuales en formato PDF, el sistema usa LLM multimodal como flujo principal con validación humana de campos críticos. OCR no forma parte del flujo objetivo de V1.
+
+---
+
+#### Atributo 1 — Tono ponderado
+
+El sistema solicita definir **múltiples tonos** con un peso numérico en escala 0–10, en lugar de una etiqueta plana como "profesional". La ponderación le indica al modelo cuánto énfasis dar a cada tono según el tipo de campaña.
+
+**Ejemplo de configuración:**
+
+```
+Tono 1: Profesional experto en tecnología con capacidad de explicar a gerentes  →  8/10
+Tono 2: Cercano y accesible sin informalidad                                    →  6/10
+Tono 3: Urgente para comunicados de convocatoria                                →  7/10 (solo para eventos)
+```
+
+#### Atributo 2 — Blacklist / Whitelist de palabras
+
+Los LLMs tienden a usar palabras genéricas de manera recurrente ("dominar", "revolucionario", "transforma", "poderoso", "sin precedentes"). El sistema permite definir:
+
+- **Blacklist:** palabras prohibidas en cualquier pieza de la organización.
+- **Whitelist:** palabras preferidas o representativas de la marca.
+
+**Ejemplo:**
+
+```
+Blacklist: dominar, revolucionario, transforma, disruptivo, potenciador
+Whitelist: acompañamos, evidencia, metodología, implementación, sector público, largo plazo
+```
+
+#### Atributo 3 — Perspectiva narrativa
+
+Define cómo habla la marca: en primera persona del plural ("nosotros") o en segunda persona ("tú", "usted").
+
+**Opciones:**
+- Primera persona plural: *"En CINTEL acompañamos..."*
+- Segunda persona formal: *"Descubra cómo su organización puede..."*
+- Segunda persona cercana: *"Descubrí cómo avanzar en tu entidad..."*
+
+#### Atributo 4 — Restricciones de marca
+
+Lo que no puede hacerse ni decirse. Incluye restricciones regulatorias, restricciones sobre imágenes IA, mensajes prohibidos y flujos de aprobación obligatorios.
+
+**Ejemplo:**
+```
+- No usar imágenes generadas por IA (restricción regulatoria CRC)
+- No comparar directamente con competidores
+- No usar lenguaje coloquial o humor en comunicados institucionales
+- Toda pieza para canales externos requiere aprobación del Director de Comunicaciones
+```
+
+#### Atributo 5 — Objetivos, misión y valores
+
+Aportan señal fuerte para redactar campañas alineadas institucionalmente. Si bien el sistema puede intentar extraerlos del manual de marca o del sitio web, el usuario debe revisar y confirmar su redacción exacta.
+
+---
+
+#### Parámetros visuales (diferibles a V2)
+
+Después de configurar los 5 atributos de alta señal, el usuario puede cargar el manual de marca en PDF y configurar parámetros visuales:
 
 #### Logos
 
@@ -145,6 +207,25 @@ El sistema detecta los valores de color definidos en el manual y los presenta co
 ```markdown
 ## Configuración de marca (validada por el usuario)
 
+### Atributos de alta señal
+
+**Tonos ponderados:**
+- Profesional experto (explicar a gerentes): 8/10
+- Cercano sin informalidad: 6/10
+
+**Blacklist:** dominar, revolucionario, transforma, disruptivo
+**Whitelist:** acompañamos, evidencia, metodología, largo plazo
+
+**Perspectiva narrativa:** Primera persona plural ("En CINTEL acompañamos...")
+
+**Restricciones:**
+- No usar imágenes IA (restricción regulatoria)
+- Aprobación obligatoria del Director de Comunicaciones para canales externos
+
+**Misión:** Conectar la innovación tecnológica con las necesidades reales del sector productivo.
+
+### Parámetros visuales
+
 **Logos registrados:**
 - Logo principal: cintel-logo-color.svg  uso general
 - Logo blanco: cintel-logo-blanco.svg  fondos oscuros
@@ -164,8 +245,8 @@ El sistema detecta los valores de color definidos en el manual y los presenta co
 - Zona de seguridad del logo: 20 px mínimo
 - No deformar proporciones del logo
 - Contraste mínimo texto/fondo: 4.5:1
-- Instagram post: 10801080 px
-- Banner LinkedIn: 1200627 px
+- Instagram post: 1080×1080 px
+- Banner LinkedIn: 1200×627 px
 ```
 
 ---
@@ -199,7 +280,7 @@ El usuario puede revisar las filas detectadas, corregir columnas mal interpretad
 |---|---|---|---|
 | ANDICOM 2025 | LinkedIn + Email | "La IA aplicada ya está aquí" | 320 registros |
 | Estudio prospectiva 2024 | Email | "Descarga el informe..." | 140 descargas |
-| Webinar transformación digital | LinkedIn | "nete a la conversación..." | 85 asistentes |
+| Webinar transformación digital | LinkedIn | "Únete a la conversación..." | 85 asistentes |
 ```
 
 ---

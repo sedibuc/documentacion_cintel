@@ -132,15 +132,13 @@ Campos relevantes confirmados en `domain/state.py`:
 
 ### 4.3 Flujo de streaming (SSE)
 
-```
-POST /api/stream
-   → Flask crea hilo separado
-   → agent.chat_with_memory()
-   → LangGraph invoca nodos
-   → on_token() → SseSink → ChunkingMiddleware → ObserveMiddleware
-   → Queue → Response(stream_with_context)
-   → Cliente recibe eventos SSE: delta / event / done / error
-```
+<div class="diagram-block">
+<p class="diagram-label">Flujo de Streaming SSE — POST /api/stream</p>
+<img src="assets/img/diagramas/flujo-sse.png" alt="Flujo de Streaming SSE">
+<div class="diagram-links">
+<a href="assets/plantuml/flujo-sse.plantuml" download> Fuente PlantUML</a>
+</div>
+</div>
 
 ### 4.4 Flujo de autenticación
 

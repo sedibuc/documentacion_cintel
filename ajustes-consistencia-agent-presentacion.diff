@@ -1,0 +1,35 @@
+﻿diff --git a/agent/assets/js/presentacion.js b/agent/assets/js/presentacion.js
+index d0389b9..8dff942 100644
+--- a/agent/assets/js/presentacion.js
++++ b/agent/assets/js/presentacion.js
+@@ -68,7 +68,7 @@
+             },
+             {
+               id: "agent-asis-arq-3",
+-              label: "Consistencia documental del material actual",
++              label: "Consistencia documental del demostrador analizado",
+               status: "alert",
+               children: [
+                 { id: "agent-asis-arq-3a", label: "Consistencia entre mensajes, titulos y evidencia", status: "alert" },
+@@ -193,7 +193,7 @@
+     "agent-asis-f2": "El flujo conversacional del grafo funciona como columna vertebral del agente vigente. Aun asi, el comportamiento depende de decisiones operativas que requieren mayor gobierno para escalar.",
+     "agent-asis-f3": "La generacion de campana usa contexto y apoyos de scraping, pero con variabilidad en calidad y control. Se recomienda reforzar trazabilidad de insumos y criterios de salida.",
+     "agent-asis-f4": "Existen formateadores y canales, pero la cobertura por canal no esta totalmente estandarizada. Esto introduce diferencias de calidad y tiempos entre escenarios.",
+-    "agent-asis-f5": "La persistencia conversacional actual es parcial y no esta documentada de forma integral dentro de la presentacion revisada.",
++    "agent-asis-f5": "La persistencia conversacional del demostrador es parcial y no esta documentada de forma integral en el material tecnico revisado.",
+     "agent-asis-f6": "La integracion de Instagram y OCR aparece como capacidad parcial y condicionada. Debe madurarse para operar de manera predecible y segura.",
+     "agent-asis-f7": "La revision del demostrador evidencia que el flujo inicial de captura de contexto no se presenta consolidado de extremo a extremo en el estado actual.",
+     "agent-asis-f8": "La validaci├│n humana sigue siendo alta en la salida final. El reto es balancear control editorial con eficiencia operacional.",
+@@ -211,9 +211,9 @@
+     "agent-asis-arq-2b": "El flujo SSE/streaming aporta respuesta progresiva, pero exige control operacional y monitoreo fino.",
+     "agent-asis-arq-2c": "Los flujos de scraping, enriquecimiento e Instagram muestran valor, con variabilidad de confiabilidad segun fuente y contexto.",
+     "agent-asis-arq-2d": "La persistencia conversacional soporta continuidad basica y muestra espacios de documentacion incompleta sobre su operacion actual.",
+-    "agent-asis-arq-3a": "Se observan diferencias internas entre mensajes, titulos y evidencias mostradas en la presentacion actual.",
+-    "agent-asis-arq-3b": "La redaccion de hallazgos no siempre mantiene el mismo nivel de detalle entre secciones, lo que afecta la coherencia interna.",
+-    "agent-asis-arq-3c": "Se identifican elementos presentes y ausentes dentro del material, especialmente en justificaciones y cierre de algunos apartados.",
++    "agent-asis-arq-3a": "En la documentacion del demostrador analizado se observan diferencias internas entre mensajes, titulos y evidencias del material tecnico revisado.",
++    "agent-asis-arq-3b": "En el material base del demostrador, la redaccion de hallazgos no siempre mantiene el mismo nivel de detalle entre secciones.",
++    "agent-asis-arq-3c": "En la documentacion base del demostrador se identifican elementos presentes y ausentes, especialmente en justificaciones y cierre de algunos apartados.",
+     "agent-tobe-f1a": "Objetivos funcionales y cobertura arquitectonica del TO-BE aterrizan alcance real para entrega ejecutable y evaluable.",
+     "agent-tobe-f1b": "Onboarding institucional estructurado formaliza captura de contexto, lineamientos y restricciones desde el inicio.",
+     "agent-tobe-f1c": "Contexto organizacional persistente habilita continuidad entre sesiones y consistencia de salida.",

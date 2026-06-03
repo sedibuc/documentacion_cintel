@@ -1,6 +1,6 @@
-# TO-BE  Módulo 2.4: Agente Creativo
+# TO-BE — Módulo 2.4: Agente Creativo (sistema multi-agente)
 
-> Módulo de adaptación de contenido institucional. Transforma el plan estratégico en piezas adaptadas a la identidad de la institución y al canal específico, usando el perfil institucional persistente y el banco de activos licenciados.
+> Módulo de adaptación de contenido institucional. Implementado como **sistema multi-agente**: un orquestador (CreativeAgent) genera el brief y delega la producción a agentes especializados por canal — LinkedInAgent, InstagramAgent, EmailAgent, WhatsAppAgent — ejecutándose en paralelo. Cada agente incorpora las mejores prácticas del destino desde el origen de la pieza.
 
 > **Restricción crítica:** La generación de imágenes por IA **no debe ser el flujo principal** para el segmento de comunicación institucional pública. Entidades como CRC (Comisión de Regulación de Comunicaciones) tienen restricciones regulatorias explícitas sobre imágenes generadas por IA. El flujo principal debe basarse en el **banco de activos institucionales licenciados** cargados durante el onboarding.
 
@@ -10,17 +10,20 @@
 
 ### Descripción funcional
 
-El Agente Creativo es el módulo de **adaptación** del sistema, no de generación desde cero. Toma como entrada el plan de comunicación elaborado por el Agente Estratégico y adapta el contenido a la identidad institucional de la organización y al canal específico, usando el perfil institucional persistente del BrandGuidelinesStore.
+El Agente Creativo es un **sistema multi-agente** de adaptación de contenido institucional. No genera desde cero: toma el plan de comunicación del Agente Estratégico y lo transforma en piezas optimizadas para cada canal de destino, aplicando las mejores prácticas específicas de cada plataforma desde el origen de la producción.
 
 El hallazgo de validación es claro: el cuello de botella no es crear el texto, sino **pasar del texto a la pieza visual lista para publicar con la identidad institucional**. Este es el trabajo que más tiempo consume y el que menos herramientas resuelven de forma integrada.
 
 > *"Lo que más le toma a uno tiempo es más que crear el contenido de la pieza... es más pasarlo al diseño... sobre todo en un tema de seguir la línea gráfica estipulada ya por la organización que tenemos que sí o sí llevar esa misma línea gráfica."*
 >  Natalia Rozo Veloza, I4DIGITAL / CENIT
 
-Su trabajo se divide en dos fases distintas:
+> **Validado por experto técnico (P-05 / P-06 — Junio 2026):** *"El modelo base puede ser el mismo. Lo recomendado es tener agentes especializados por red social, cada uno con las mejores prácticas específicas del canal."* La especialización por canal no es una optimización diferible: es la decisión de arquitectura que garantiza que cada pieza nazca ya con las características del destino (longitud, estructura, hashtags, formato visual, tono) sin necesidad de post-procesar una salida genérica.
 
-- **Fase 1  Brief de diseño institucional:** el sistema genera un brief creativo específico que detalla qué debe producirse, para quién, en qué tono, con qué mensaje, en qué canal y con qué lineamientos visuales institucionales.
-- **Fase 2  Adaptación de piezas:** a partir del brief y del banco de activos institucionales, el sistema adapta una o varias piezas al canal seleccionado (copy, estructura visual, variantes).
+El módulo se organiza en tres fases y opera con cuatro agentes de canal especializados:
+
+- **Fase 1 — Brief de diseño institucional:** el orquestador (CreativeAgent) construye un brief creativo específico consultando el BrandGuidelinesStore, con tono, mensaje, CTA, canal y restricciones visuales.
+- **Fase 2 — Producción multicanal paralela:** el brief se despacha simultáneamente a los agentes de canal. Cada agente produce la pieza con las convenciones propias del destino.
+- **Fase 3 — Evaluación y entrega:** el CriticAgent evalúa alineación institucional por pieza; las aprobadas se presentan al comunicador para revisión humana.
 
 La diferencia entre estrategia, brief y pieza es fundamental para entender el producto:
 
@@ -35,7 +38,34 @@ Un brief puede generar múltiples piezas. Una campaña puede generar múltiples 
 
 ---
 
-### Fase 1  Brief de diseño
+### Arquitectura multi-agente del módulo creativo
+
+> Validado: P-05 / P-06 — Junio 2026.
+
+El módulo no es un agente monolítico que genera todas las piezas con el mismo prompt. Es un sistema de agentes con roles diferenciados:
+
+<div class="diagram-block">
+<p class="diagram-label">Arquitectura multi-agente — CreativeAgent como orquestador</p>
+<img src="assets/img/diagramas/agente-creativo-multiagente.png" alt="Arquitectura multi-agente del Agente Creativo">
+<div class="diagram-links">
+<a href="assets/plantuml/agente-creativo-multiagente.plantuml" download> Fuente PlantUML</a>
+</div>
+</div>
+
+| Agente | Rol | Conocimiento especializado incorporado |
+|---|---|---|
+| **CreativeAgent** (orquestador) | Construye el brief, coordina agentes de canal, consolida resultados | Estructura del brief, reglas de marca, validación humana |
+| **LinkedInAgent** | Produce piezas para LinkedIn | Longitud óptima 150–300 palabras, hook-cuerpo-CTA, hashtags profesionales, artículo vs. post |
+| **InstagramAgent** | Produce piezas para Instagram | Visual-first, caption breve, hashtags de engagement, stories vs. reels, ratio 1:1 o 4:5 |
+| **EmailAgent** | Produce piezas para email | Asunto + preheader + cuerpo + CTA, evitar spam triggers, plantillas aprobadas |
+| **WhatsAppAgent** | Produce piezas para WhatsApp | Brevedad máxima, tono conversacional, plantillas aprobadas HSM, límite de caracteres |
+| **CriticAgent** | Evalúa alineación institucional de cada pieza | BrandGuidelinesStore, tono, blacklist/whitelist, restricciones de marca |
+
+Los agentes de canal se ejecutan en **paralelo** para minimizar la latencia total. Cada agente incorpora el conocimiento del canal en su rol — no como configuración externa — lo que mejora la calidad y reduce la necesidad de instruccionarlo en cada solicitud. Un **CriticAgent** evalúa alineación institucional antes de presentar las piezas al comunicador.
+
+---
+
+### Fase 1 — Brief de diseño
 
 A partir de la campaña seleccionada, el sistema construye un brief creativo que sirve como instrucción precisa para la producción de piezas.
 
@@ -75,22 +105,27 @@ Observaciones:    Evitar lenguaje exclusivamente técnico. Incluir dato estadís
 
 ---
 
-### Fase 2  Generación de piezas
+### Fase 2 — Producción multicanal paralela (agentes especializados)
 
-A partir del brief, el sistema genera las piezas adaptadas al canal. Cada pieza es una unidad de contenido lista para revisar, exportar o publicar.
+A partir del brief aprobado, el CreativeAgent lo despacha simultáneamente a todos los agentes de canal activos. Cada agente produce la pieza desde el origen con las características específicas del destino: no es un post genérico reformateado, sino una pieza concebida para ese canal.
 
-**Ejemplos de piezas por canal:**
+**Diferencia clave respecto a un agente único:**
 
-| Canal | Tipo de pieza |
+| Enfoque | Resultado |
 |---|---|
-| LinkedIn | Post institucional, artículo, carrusel |
-| Instagram | Post visual, historia, carrusel de slides |
-| Email | Mailing con asunto, cuerpo y CTA |
-| Landing page | Copy de sección, headline, cuerpo, CTA |
-| Banner digital | Texto + descripción de composición visual |
-| Evento/Webinar | Pieza de convocatoria, follow-up post-evento |
+| **Agente único** (genérico) | Genera texto base → se adapta en post-procesamiento → piezas homogéneas que no explotan las características del canal |
+| **Multi-agente especializado** | Cada agente genera la pieza con las convenciones del destino desde el origen → piezas optimizadas nativamente para cada canal |
 
-Un brief puede generar múltiples variantes de una misma pieza (por ejemplo, versión corta y larga de un post de LinkedIn).
+**Salidas por agente especializado:**
+
+| Agente | Tipo de piezas que produce |
+|---|---|
+| **LinkedInAgent** | Post institucional (150–300 palabras), artículo técnico, carrusel con slides |
+| **InstagramAgent** | Post visual con caption breve, historia, carrusel de slides, descripción de composición visual |
+| **EmailAgent** | Mailing completo: asunto, preheader, cuerpo estructurado, CTA |
+| **WhatsAppAgent** | Mensaje breve conversacional, plantilla aprobada HSM |
+
+Cada agente puede generar múltiples variantes (por ejemplo, versión corta y larga del post de LinkedIn). Los artefactos pesados (imágenes, videos) se almacenan con **ADK Artifacts** para ser reutilizables.
 
 
 ---
@@ -101,15 +136,13 @@ El sistema organiza todos los activos en una estructura jerárquica navegable qu
 
 **Ejemplo funcional:**
 
-```
-Campaña: Transformación Digital 2025
- Brief 1: LinkedIn institucional
-    Pieza 1: Post "Acompañamos al sector público"
-    Pieza 2: Artículo "5 claves para la TD en entidades"
- Brief 2: Instagram  captación de leads
-     Pieza 3: Post visual con CTA de descarga
-     Pieza 4: Historia animada con link a whitepaper
-```
+<div class="diagram-block">
+<p class="diagram-label">Estructura jerárquica: Campaña → Brief → Piezas</p>
+<img src="assets/img/diagramas/agente-creativo-estructura-campana-brief-piezas.png" alt="Estructura jerárquica Campaña — Brief — Piezas">
+<div class="diagram-links">
+<a href="assets/plantuml/agente-creativo-estructura-campana-brief-piezas.plantuml" download> Fuente PlantUML</a>
+</div>
+</div>
 
 Esta vista muestra claramente la trazabilidad completa desde el objetivo de la campaña hasta cada pieza publicable. Es navegable y expandible en la interfaz.
 
@@ -157,7 +190,10 @@ En estos casos, el flujo es el siguiente:
 
 ### Diagramas del módulo
 
-![Flujo general  Agente Creativo: fases y conexiones](assets/img/diagramas/agente-creativo-fases.png)
+![Arquitectura multi-agente — CreativeAgent como orquestador](assets/img/diagramas/agente-creativo-multiagente.png)
+<a href="assets/plantuml/agente-creativo-multiagente.plantuml" download class="diagram-download"> Descargar fuente (.plantuml)</a>
+
+![Flujo general  Agente Creativo: fases y producción paralela por canal](assets/img/diagramas/agente-creativo-fases.png)
 <a href="assets/plantuml/agente-creativo-fases.plantuml" download class="diagram-download"> Descargar fuente (.plantuml)</a>
 
 ![Relación jerárquica campaña  brief  piezas](assets/img/diagramas/agente-creativo-estructura-campana-brief-piezas.png)
@@ -224,9 +260,48 @@ Link registrado: instagram.com/p/xyz123
   Interacciones   391
   Engagement     9,3%
 
-ltima actualización: hace 4 horas
+Última actualización: hace 4 horas
 ```
 
 ---
 
+## Principios de diseño del sistema multi-agente — validados por experto técnico
+
+> Validado: P-04 / P-05 / P-06 — Junio 2026.
+
+### Generación de imagen con IA — patrón crítico-evaluador
+
+Para organizaciones que permiten imágenes generadas por IA (sin restricciones regulatorias como las de CRC), se adopta el **patrón crítico-evaluador**:
+
+1. Un agente generador produce la imagen usando un prompt técnico detallado, few-shots de diseños previos y lineamientos tipográficos de la marca.
+2. Un agente evaluador (con rol de *Art Director*) examina si la imagen cumple con los lineamientos institucionales y devuelve feedback.
+3. Se itera hasta alcanzar el score mínimo definido para la organización.
+
+La persona del agente generador sigue el perfil de *UI/UX Social Media Art Director*, con instrucciones que incluyen canal destino, estilo visual, principios de diseño (jerarquía, psicología del color, composición) y prompts técnicos detallados.
+
+**El flujo principal sigue basándose en el banco de activos institucionales licenciados para entidades con restricciones regulatorias.**
+
+### Especialización por canal — decisión de arquitectura, no optimización
+
+La especialización por canal es la decisión central del módulo. Cada agente incorpora el conocimiento del canal en su rol (no como configuración externa), lo que garantiza que cada pieza nazca ya adaptada al destino:
+
+| Agente | Instrucciones especializadas | Tools |
+|---|---|---|
+| **LinkedInAgent** | Mejores prácticas LinkedIn: longitud, formato, hashtags, CTA profesional | Ver historial, crear artefactos, consultar marca |
+| **InstagramAgent** | Mejores prácticas Instagram: visual-first, historias, reels, engagement | Ver historial, crear artefactos visuales |
+| **WhatsAppAgent** | Mejores prácticas WhatsApp: brevedad, tono conversacional, CTA directo | Plantillas aprobadas |
+| **EmailAgent** | Mejores prácticas email: asunto, preheader, estructura, tasa de apertura | Plantillas aprobadas, métricas históricas |
+
+- Los agentes de canal se ejecutan en **paralelo** para minimizar latencia.
+- Cada agente de canal va acompañado del **CriticAgent** que evalúa la alineación institucional antes de presentar la pieza al comunicador.
+- Los artefactos pesados (imágenes, videos) se almacenan usando **ADK Artifacts** para ser reutilizables entre agentes.
+
+### Reglas de diseño del agente
+
+| Principio | Descripción |
+|---|---|
+| **1–3 objetivos por agente** | El CreativeAgent tiene objetivo único: transformar el brief en piezas alineadas con la marca. Agentes de canal tienen un objetivo: producir piezas óptimas para esa red. |
+| **Tools explícitas** | BrandGuidelinesStore (tono, blacklist/whitelist, restricciones), banco de activos, historial de piezas aprobadas. |
+| **Skills ADK** | ADK Skills para mejorar plan, razonamiento y actuación del agente. |
+| **Artefactos** | ADK Artifacts para gestión de activos visuales/multimedia entre agentes. |
 

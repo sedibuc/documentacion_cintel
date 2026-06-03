@@ -35,15 +35,22 @@ Esta página detalla los módulos responsables de control humano, entrega operat
 | Propósito | Medir y auditar ejecución técnica y funcional de extremo a extremo. |
 | Entradas | Eventos de agentes, decisiones humanas, métricas de canal y costos de IA. |
 | Salidas | Tableros operativos, trazas por campaña, alertas y reportes de auditoría. |
-| Set mínimo MVP | Latencia, errores, costo por sesión, estado de aprobación y trazabilidad por campaña. |
+| Set mínimo MVP — Base | Tokens de input/output, tokens de *thinking*, latencia por solicitud, estimación de costos, uso de recursos (RAM, CPU, red). |
+| Set mínimo MVP — Extracción | Entidades detectadas vs. esperadas; `logit_probs` de entidades críticas (para flujos OCR/NER). |
+| Set mínimo MVP — Crítico-evaluador | Score de imagen/estrategia/post por iteración; número de feedbacks generados por ciclo; **número de iteraciones del ciclo** (variable de control de costo). |
+| Set mínimo MVP — Operación | Estado de aprobación, trazabilidad por campaña, errores por canal. |
+| Stack de herramientas recomendado | **MLflow** para experimentos, A/B testing y monitoreo en tiempo real. **Grafana** para dashboards operativos y alertas. **Ray** para observabilidad distribuida en inferencia a escala. |
 | Riesgos técnicos | Cobertura parcial de eventos y baja calidad de diagnóstico. |
 | Controles | Contrato de eventos, correlación por campaign_id y monitoreo de SLO críticos. |
+| Validado por experto | ✅ P-07 / lineamiento transversal #8-9 — Junio 2026 |
 
 ## 3. Decisiones de diseño vigentes
 
 - HumanValidationModule es obligatorio en MVP como control principal de riesgo institucional.
 - Export/PublishingAdapter mantiene enfoque offline-first en V1 para reducir riesgo operativo.
-- ObservabilityService se instrumenta desde MVP para soportar trazabilidad y mejora continua.
+- ObservabilityService se instrumenta desde MVP con métricas validadas por el experto técnico (tokens, latencia, costos, scores del patrón crítico-evaluador). Stack recomendado: **MLflow + Grafana + Ray**. (✅ P-07 + lineamiento transversal #8-9)
+- El número de iteraciones del ciclo crítico-evaluador es una **variable de control de costo** que debe monitorearse con MLflow y ajustarse por configuración.
+- La selección del proveedor LLM se realiza mediante experimentos en MLflow o Vertex AI Evaluation, no con una matriz estática. Candidatos validados: Gemini, OpenAI (GPT-4o), Gemma4. **No recomendado: Claude** (multimodal débil). La selección se basa en evidencia experimental para las tareas concretas del sistema. (✅ P-09)
 
 ## 4. Contratos técnicos y eventos
 

@@ -1,0 +1,615 @@
+Revisión Avance-20260602_150249-Grabación de la reunión
+2 de junio de 2026, 8:02p.m.
+49m 13s
+
+Miguel Angel Cubides González inició la transcripción
+
+Miguel Angel Cubides González   0:03
+Talla.
+Entonces, como has notado, estamos hablando de 2 proyectos diferentes, uno de ellos fue el que nació como un rack, que ahorita estamos viendo que es un documento de Intelligence Engine. Este de no sé si el DAI sí es el concepto correcto. Sí, lo he visto en muchas partes, pero no sé si se lee DAI.
+O DIY porque el DAI me suena como a muy como a muerte.
+
+juan   0:36
+Yeah.
+
+Miguel Angel Cubides González   0:37
+Pero se hizo el DIE en muchas partesel.es esto nació como un RAC y se transformó en un en un DAI y el otro es el agente de marketing.
+
+juan   0:41
+Okay.
+
+Miguel Angel Cubides González   0:52
+Este del RAC, nosotros el año pasado estuvimos trabajando en un prototipo que es literalmente un RAC, te cargue los documentos y pueda hacer consultas sobre esos documentos. Eso es un demostrador que pues inicialmente tocaba hacer una evaluación.
+¿De qué tal estaría para poder salir a producción? En esa evaluación, pues nos dimos cuenta que había muchos como faltantes, muchos temas a tener en cuenta, , pero eso digamos que ya se surtió en la reunión de mañana, no se va a comentar, pero sí es algo que está en el contexto del proyecto. Había una primera fase que era evaluar los los.
+Prototipos para saber qué se necesitaba para poder poner en producción.
+
+juan   1:36
+Mhm.
+
+Miguel Angel Cubides González   1:37
+Después de eso se hacían como todas las reuniones, entrevistas, como toda la evaluación del mercado de qué era lo que se necesitaba actualmente respecto a este tipo de soluciones. Entonces nos centramos no solamente en la parte del RAI. Esa evaluación de mercado se se orientó a qué necesidades tienen respecto a los documentos.
+Y ahí fue cuando se empezó como a ir por una línea diferente de lo que es el radio, porque las preguntas fueron orientadas a necesidades sobre documentos y la necesidad más puntual que ahorita le urge a ciertas compañías, particularmente a las de estas de.
+Constructoras era el hecho de que ellos tienen que evaluar los certificados de libertad y tradición de los de los de las propiedades para ver si se puede comprar, si no se puede comprar y pues ya temas internos. entonces tienen.
+Como esos formatos, es un formato que puede variar mucho entre un documento y otro, entre sí en muchísimos formatos diferentes y tienen una persona que está revisando esa documentación manualmente y lo que hace es que va y cruza contra una base de datos que tienen, que digamos es un Excel. Cruzan la información, miran si sí es correcta o si no es correcta y pues ahí continuo.
+Entonces, ese paso inicial es el que les gustaría poder tener automatizado.
+
+juan   3:00
+Yes.
+
+Miguel Angel Cubides González   3:06
+Eso, pues desde el criterio técnico, en su momento se les comentó que eso no estaba alineado con un rack, sino que era más como un procesamiento diferente porque era una abstracción de entidades a partir de los documentos. Entonces, pues nos decantamos por esa parte, sabiendo que pues lo el objetivo finalmente es sacar algo al mercado que realmente utilicen los los ciudadanos.
+Entonces, bueno, pues nos fuimos por ahí. El tema es sobre este, creo que pues tuviste un tiempo bastante extenso, porque este sí fue el primero que te pasé para poderlo revisar. El otro sí, el tiempo fue mucho más denso, entonces hay te va a dar un contexto mucho más grande.
+
+juan   3:34
+What time?
+
+Miguel Angel Cubides González   3:50
+Este, pues básicamente eso fue lo que sucedió y esa es la necesidad que queremos cumplir. ¿Ahora qué pasa? Ahí viene la siguiente, que es una decisión que se tomaría y es cómo se va a entregar la solución. Hay una opción que es poner la solución llave en mano, entregársela al cliente.
+Y que el cliente la instale en sus servidores, que la deje on premise y que lo pueda tener integrado hacia sus servicios. Hay otra opción que es hacerlo como un software as a service, de manera que nosotros expongamos la el servicio y los usuarios lo puedan consumir. Si lo hacemos como un software as a service, evidentemente lo tenemos que hacer.
+
+juan   4:10
+Hola.
+
+Miguel Angel Cubides González   4:30
+Orientado a un multitenant, porque el objetivo sería poder abarcar a diferentes compañías que puedan llegar al a utilizar el sistema. Si lo hacemos como un producto para desplegar en los clientes, pues ya cambia completamente el enfoque, porque pues primero no tenemos que.
+Manejar no solo la seguridad, sino que la seguridad la va a manejar el cliente y segundo, pues ya no sería multitenant porque es exclusivo para el cliente.
+En su momento se habló acerca de que pues sí sería multitenant, porque el objetivo sí es como hacer una solución transversal y que si alguno de los clientes en algún momento necesita hacer alguna particularidad, entonces ahí sí se hace una solución personalizada para ellos, pero que esté el software de manera genérica.
+El que pueden utilizar todos los que tengan ese tipo de necesidades. Entonces, si nos decantamos por la parte de multitenal para despegarlo en los servidores propios, eso como desde la línea de software. Ahora, desde la línea de acá de la necesidad de inteligencia artificial, pues ahí ya empezamos como a.
+Especificar un poquito cuáles serán como los servicios que se van a utilizar. Entonces, dentro de esos servicios lo que vimos es que acá tenemos un proceso en el que es necesario hacer la lectura de los documentos, poder abstraer de esos documentos de las entidades. Entonces esa fue la conversación que tuvimos la vez pasada. Nosotros lo estábamos viendo como.
+Para poder utilizar Enel, de manera que pudiéramos hacer la extracción de entidades haciendo un proceso de aprendizaje de máquina, evaluándolo con diferentes formatos. Pero pues la sugerencia que nos hiciste fue no lo hagamos, por lo menos en la primera versión, eso no es necesario, después lo podemos evaluar más adelante, pero pues para primera versión ahorita con lo que tenemos de LLM.
+Es bastante sólida la el tipo de respuesta y pues sería mucho más sencillo para sacar un MVP rápidamente. Entonces utilizar directamente el LM en ese servicio. Entonces nos decantamos por esa solución, de manera que vamos a hacer que ese proceso inicial de cargue el documento.
+Que el sistema lo lea. Eso hace a través del LMY SLLM nos estaría reportando en la estructura tipo Jason de las entidades que nosotros le solicitamos extraer. De ahí tendríamos que hacer un proceso de extracción de la información y una verificación de esa.
+Extracción realizada porque pues justamente como estamos utilizando el LM, hay como cierto grado de incertidumbre que tenemos que mitigar con este segundo proceso. Entonces el objetivo sería tener como ese primer esa primera lógica de extracción y una segunda lógica de verificación. Te quería hacer una pregunta respecto a eso y es si.
+¿Consideras que ahí cabría ser un agente?
+
+juan   7:29
+No es necesario.
+
+Miguel Angel Cubides González   7:31
+Okay, perfecto, entonces si estamos alineados, solamente no quería.
+
+juan   7:33
+Se puede hacer, se puede, o sea, lo que yo recomendé y todo es se puede evaluar métricas y se puede evaluar algunas cosas que dan los LLM y con eso pues ya decidir si está, si está bien o no.
+
+Miguel Angel Cubides González   7:40
+Mhm.
+Sí.
+sí que ese sería el proceso de verificación de lo de cómo resultó Entonces sí no nos iríamos sin nada gente o sea es que como es un proyecto independiente no me gustaría meter nada gentico en este proyecto porque si no se nos puede como complejizar en
+
+juan   7:55
+Good.
+
+Miguel Angel Cubides González   8:06
+En cuanto a la concepción técnica de la solución, entonces haríamos esos 2 procesos. Una vez que tenemos ya los datos extraídos, ahí ya se va un proceso tradicional de programación heurística, en donde simplemente vamos a hacer una comparación con los datos que nos pasen en un Excel. Comparamos datos a datos y damos unos reportes de que es igual y que no es igual.
+
+juan   8:10
+Mhm.
+
+Miguel Angel Cubides González   8:29
+Entonces de ahí para adelante ya es una solución tradicional. Vale, entonces en este, en esta solución lo único que tendríamos de inteligencia artificial sería ese componente que hace la extracción de entidades a partir del documento que se le carga. Acá estamos hablando de cargar n documentos, pueden ser 1000, pueden ser 1500 y ahí eso.
+
+juan   8:33
+Ajá.
+
+Miguel Angel Cubides González   8:50
+Tenemos una carga sobre el LLM que tenemos que poder saber qué de qué manera nos va a responder y qué tan costoso podría llegar a ser. Y ese es uno de los puntos a tener en cuenta y es cómo se evalúan los costos de este tipo de soluciones.
+Ahí se sacaría como un promedio de cuántos de consumo por documento o cómo funcionaría este tema.
+
+juan   9:20
+No hay lo que hay que hacer es definitivamente en esto hay que sacar es métricas, o sea, hay que hacer unas pruebas de concepto y se usa herramientas como el ML Flow para para registrar métricas y con esto pues hacer hacer un estimado.
+
+Miguel Angel Cubides González   9:30
+Mhm.
+
+juan   9:40
+O sea, ninguna plataforma te dice como que te vale tanto, porque pues eso depende del el tamaño del documento y uno diría, pues el mismo documento, pero es que si lo escanearon una vez así y lo escanearon así y así los toques cambia. O sea, eso es. Entonces lo único es hacer unas pruebas de concepto.
+
+Miguel Angel Cubides González   9:40
+Sí.
+Sí, tal cual.
+Mhm.
+Mhm, sí.
+
+juan   9:59
+Entrar métricas y con eso hacer un estimado de.
+
+Miguel Angel Cubides González   10:03
+Listo, ahora esto esta es la versión preliminar, una versión en la que en la que simplemente vamos a dar un brochazo inicial de esa es la solución que se se propone y puede llegar a costar aproximadamente tanto.
+Dicho eso, podría haber alguna evaluación o sí o sí necesitamos hacer ese esa prueba de concepto.
+
+juan   10:28
+No hay que hacerla, o sea, aunque sea para saber cuántos token tiene un archivo esos, ¿no? O sea, porque es que yo no sabría cuántos token, porque los tokenizadores son diferentes dependiendo del modelo. Entonces es muy, no hay, no hay forma de decir, esto tiene tantos tokens. Entonces sí o sí hay que dar la prueba para uno mirar cuáles son los token de entrada, los de salida y con eso.
+
+Miguel Angel Cubides González   10:30
+Okay.
+Sí.
+
+juan   10:52
+Mínimo hacer un estimado, pero digo que esa prueba, si es así de básica, solo un documento, pues eso demora 1 hora y ya se sabe un estimado ahí bajo, sí, a nivel de que a mire este, pero con este archivo, con este modelo de entrada de token y demás, y por 1000000 de token vale tanto, entonces pues valdría.
+
+Miguel Angel Cubides González   11:04
+Mhm.
+
+juan   11:13
+Tanto por este documento, así que multiplíquelo por 1000 documentos y pues ya no.
+
+Miguel Angel Cubides González   11:19
+Sí, pero ahí tenemos un tema y es que esto no es un documento estándar, sino que hay variedades, así como puede llegar un documento de una página, puede llegar un documento con 1000 páginas, entonces si toca.
+
+juan   11:29
+Exacto, entonces por eso te digo, la prueba más baja es eso, tomar uno, un documento que sea el más común, ¿no? Pero si ya son varios, pues tú te tocas la prueba con esto más larga para decir, mire este y este y haciendo con varios a ver cuál es el estimado, ¿no?
+
+Miguel Angel Cubides González   11:34
+Sí, no es que no.
+And.
+Sí.
+Sí, o K, entonces eso yo lo generaría, pues mañana lo comentaría como una de los riesgos a los que estamos expuestos en este momento, y es el cómo se podría hacer la evaluación de eso sin tener una prueba de concepto. Ahora podríamos hacer la prueba de concepto, pero eso viene en la tercera fase, que es ya la de la de.
+O sea, una vez que nos den el OK, ahí sí pasamos a hacer una prueba de concepto para verificar que esto realmente funciona. Entonces sí, simplemente lo pondría como un riesgo.
+eso respecto a esa parte del costo y si es que este es muy básico ahora mañana vamos a hablar con Juan Guillermo y con Juan Juan Sebastian Perdón Juan Sebastian es el que te comentó que es el que tiene la la visión estratégica él ya tiene información acerca de
+cómo lo lo está proyectando él a mí me pasaron la documentación Pero todavía no he podido revisarla me la pasaron creo que fue ayer Entonces no he tenido tiempo de evaluarla probablemente él ya tiene una postura respecto a la parte de evaluación de costos Y pues simplemente ahí yo no entrarían en discusión con él porque pues ya la evaluó
+Sino de lo contrario, entonces pues ahí sí lo advertiría y diría, pues tengamos el presente aquí que para poder tener esa evaluación del costo, sí tocaría hacer una prueba de concepto y ya eso. Digamos que es este proyecto, que este proyecto es como el más sencillo de los 2. Ahora pasamos al otro que es mucho más complejo.
+Y ese es el que te entendí ayer en los audios, que aquí incluso puede haber más agentes de los que se están previendo. Entonces esta solución, el objetivo de esta solución es hacer un agente de marketing. Esa gente de marketing está en 2 niveles, el primer nivel, que es el de.
+Voy a tener que volver acá.
+
+juan   13:43
+Te puedo dar un resumen, pues a ver si lo entendí porque yo lo leí.
+
+Miguel Angel Cubides González   13:47
+Dale o K.
+
+juan   13:48
+O sea, es un sistema de, pues se espera que es un sistema multiagentes de marketing, en el cual los primeros pasos es que pues el sistema vea como la web de la empresa para poder tomar como datos, datos en cuanto a.
+A su tono, asus colores, a toda su parte, este cómo se dice eso, como la parte de marca.
+
+Miguel Angel Cubides González   14:19
+Is Valve, mhm, sí.
+
+juan   14:20
+Exacto, de marca del de la empresa, y además el usuario también pueda colocar un archivo o PDF, un archivo en el cual como quede todos esos datos de la marca, y ya con eso, pues el sistema multi agentes pues pueda ayudar al usuario.
+A poder crear campañas de marketing. Entonces hay un agente que es capaz de poder este diseñar la campaña, no, entonces diseña la campaña y posiblemente otro agente que haga la parte como.
+La parte este de imágenes, más que todo ahorita imágenes, pues imagino sí, pero la parte este gráfica de la campaña, entonces estos agentes pues se van a encargar al final de darle al usuario pues todos los datos necesarios tanto.
+Este, tanto documentos como demás artefactos para poder producir campañas en las diferentes este redes sociales y todo esto, pues en este sistema pues va a tener memoria para ir guardando es tanto esos todo ese el perfil del usuario.
+Lo que hablábamos de la marca, todo esto y pues los resultados de las campañas para que el usuario, pues cuando quiera crear una nueva campaña, pues pueda el sistema multi agentes tener esto de información para estar más alineado a lo que ya se hizo y asus colores y todo esto para que pues generen nuevas campañas a partir de lo de lo anterior, más o menos como resumen, eso lo que ve.
+
+Miguel Angel Cubides González   16:04
+¿Así es, tuviste en la el prototipo?
+
+juan   16:10
+No.
+
+Miguel Angel Cubides González   16:11
+Okay en cada uno de los proyectos y un prototipo integrado entonces pues este aquí estamos mostrando como sería el login se ingresa y hay un proceso onboarding que es la primera parte que tú estabas comentando en donde se le dice cuál es la empresa Cuál es la documentación que existe qué campañas previas existen todo esto se le carga aquí en el proceso de onboarding
+
+juan   16:22
+Y.
+
+Miguel Angel Cubides González   16:32
+Y el objetivo es que aquí, una vez que finalice el onboarding, él efectivamente va a cargar la cómo se llama la identidad de marca. El documento es el pdfy finalmente va a tener como que el sistema le va a decir a bueno, listo, entonces su color primario es este, su fuente es esta.
+Su logo es este en caso de que haya una presentación que sea a oscuras va a ir este logo en caso de que sea de esas dimensiones va a ir este otro logo. Sí, ese tipo de cosas lo debe mostrar con un formulario y eso lo debe abstraer a partir de ese documento PDF. Eso en caso de que le carguen en PDF si el la empresa es una empresa pequeña que no tiene una identidad de marca.
+
+juan   17:04
+Mhm.
+
+Miguel Angel Cubides González   17:13
+Pues simplemente se le pasa a ese formulario en el que el usuario va a poder poner los datos básicos. Ese es mi color, esa es mi fuente y cosas de esas. Entonces ese es el proceso de longboard y después hablamos acerca de los agentes. Los agentes que existen efectivamente estaban previstos 2, un agente estratégico y un agente de creativo.
+
+juan   17:18
+Let's.
+
+Miguel Angel Cubides González   17:32
+La gente estratégico es el que genera ese marco de campaña en donde le decimos, bueno, vamos a trabajar sobre un proyecto específico y él dice, listo, que entonces de este de esto que usted me está contando, lo que vamos a hacer es que vamos a hacer primero unas piezas publicitarias que van a ir por Instagram, otras que van a ir por correo electrónico.
+Se van a enviar cada 3 meses, se lo hace de esa manera. Todo eso lo hace el agente estratégico y después tenemos un agente creativo que ya es bueno, listo. Habíamos dicho que vamos a hacer, por ejemplo, 3 piezas publicitarias en Instagram. Entonces vamos a hacer la primera de esas piezas y esa gente creativo lo que hace es que genera esa pieza, esa pieza en particular con el estilo que va a ir, que como es por Instagram, entonces va a ir en vertical. bueno.
+Ya era la lo que tenemos que hacer específicamente y todo eso debe ser a través de una conversación que tenga el usuario con el sistema como tipo chat, en donde el usuario le va como más bien el sistema le va como guiando con preguntas para que el usuario le dé la información completa para que el sistema pueda tomar la decisión y generar las campañas.
+¿Qué pasa? Aquí no estamos garantizando. De hecho, ese fue uno de los de los temas que hablamos bastante profundamente con ellos, y es que nosotros no vamos a hacer la integración desde nuestro sistema hacia Instagram o desde nuestro sistema hacia Facebook para la versión inicial.
+Porque en realidad sí podemos jalar la información de allá, que sea como un input para que la gente tome decisión, pero no le podríamos decir, bueno, listo, ya está esto y automáticamente usted vaya y mándelo, sino que eso debe ser una labor procedimental de algún usuario que tome la vocería y que tenga la responsabilidad.
+Porque si no le cargamos la responsabilidad al sistema y pues esto es inteligencia artificial, que así como puede salir algo bien, puede salir algo que no cumpla con las expectativas. Entonces lo que tenemos es un proceso de ajuste sobre esos resultados para este ajuste sobre los resultados. Entonces se le va a presentar al usuario esa ese cómo es que se llama esa pieza publicitaria generada.
+Y el usuario puede hacer modificaciones sobre eso. Entonces vamos a tener una primera versión versión alfa que simplemente bueno, escríbale qué es lo que le quiere cambiar y que la gente lo cambie. El objetivo a largo plazo es poder que incluso le pueda decir, bueno, usted tiene un perro a la izquierda, quiero que me lo ponga a la derecha. Sí, pero pues yo sí les dije.
+
+juan   19:49
+S.
+
+Miguel Angel Cubides González   19:59
+Eso ya es un proyecto grande y es demasiado arriesgado porque pues ahorita la inteligencia artificial le podría incluso generar una imagen completamente nueva que no tenga nada que ver con la anterior. Entonces prefiero no generar una cosa expectativa porque pues ahí sí tenemos que trabajarlo mucho más. Entonces en principio solamente como que hable comentarios básicos.
+Pero de todas maneras, si es necesario, descárguese la imagen y haga la modificación manualmente en la imagen y pública. Entonces ese es ese proceso de ajustes y tenemos un una parte de históricos en donde podemos hacer revisión de qué es lo que ha sucedido, cuántas campañas hemos tenido. Y bueno, ya esto digamos que es un reporte, realmente es un dashboard con un reporte.
+Que eso no tiene inteligencia artificial. Entonces, inteligencia artificial, aquí vamos a tener el proceso para poder leer la información del documento, que era lo que te comentaba en su momento, que para mí era uno cero y como dice no, hagámoslo con LLM. Entonces también se ya se se tomó la idea de que esto sea por LLM en la parte estratégica, pues es un agente.
+Que genera ese marco de campaña, el agente creativo, que es el agente específico que genera la empresa publicitaria. Entonces, esos 3 de inteligencia artificial de la parte de ajuste, la parte histórica, poco, poca inteligencia artificial va a tener, es más como muy básico. Entonces, pues simplemente aquí estoy poniendo como esos esos módulos que vamos a tener.
+y les poniendo la arquitectura esta arquitectura pues ya tiene la información acerca de qué es lo que vamos a tener Entonces vamos a tener un chat este chat va a tener un frontend Bueno ya le pongo como más especificación de qué es lo que se está decidiendo para poder tener cada uno de ellos En cuanto a la parte de los agentes Entonces vamos a tener el agente estratégico con el agente creativo Esto va a estar orquestado
+
+juan   21:43
+A.
+
+Miguel Angel Cubides González   21:48
+De manera que el sistema puede tomar la decisión de si va por 1 o por otro a partir de que sea lo que está haciendo el usuario. Vamos a tener un proceso de aprobación y la aprobación si va con el LM directamente. Los otros van con Langraph y con Python, pues el Python si es como la base.
+Aquí, pues el contexto va a tener también un proceso de multitenant, porque lo mismo que estábamos hablando, esto va a ser un software as a service, entonces se va a desplegar de manera que cada uno de los de las empresas clientes puedan generar su propio onboard onboard onboarding. De hecho, aquí tenemos los niveles de onboarding que no había aquí en este mockup.
+Pero bueno, que es que cuando nosotros nos vamos a registrar, nos podemos registrar como empresa o nos podemos registrar como persona. O sea, si la empresa ya está registrada, regístrese como persona y asustes a la empresa. Si no, entonces pues regístrese directamente con la empresa, pero entonces es el que es esa parte multi internet.
+Persistencia. Nosotros vamos a tener persistencia de datos de base de datos relacional. En este caso, pues no habría necesidad de tener ninguna base de datos vectorial. De hecho, en el otro tampoco tenemos base de datos vectorial porque pues se salió completamente del perdón de lo que era un rack. Entonces los 2 van a tener solamente persistencia relacional.
+
+juan   22:52
+No.
+A.
+
+Miguel Angel Cubides González   23:10
+La parte de inteligencia artificial vamos a tener la abstracción entre el proveedor LLM con soporte multimodal para poder sacar la información de ese PDF o incluso poder leer las otras campañas, los históricos de campañas que existan para que nos sirvan como intro los canales. Vamos a tener unos formateos de canal porque.
+Ahí podemos generar la pieza de manera estándar y que después pase a través de un formateador de canal, de manera que esa pieza, si nosotros le decimos la quiero para Instagram, se la genera en Instagram con la estructura visual de Instagram. Pero lo mismo le podemos decir generar la genera para X, entonces va y se la genera solo con texto por poner un ejemplo.
+Entonces eso va a ser a través de un formateo, entonces es como el otro módulo que tendríamos.
+
+juan   23:56
+Mhm.
+
+Miguel Angel Cubides González   23:57
+Y.
+Módulos, bueno, estos módulos, pues básicamente es como una visión más alto nivel de lo que estábamos hablando, pero lo puse porque aquí hay unos temas que quedan pendientes, que es cómo vamos a manejar el tema de la seguridad. Esto para el MVP, yo no me esforzaría en darle tanto tanto nivel de detalle en esta parte de la.
+De la seguridad, sino que podemos salir con una versión básica que tenga una autenticación de autorización estándar, pero todavía no le vamos a meter mayor cantidad de registro de auditorías y demás, sino que eso ya iría para una versión vía profesional. Entonces, pues por eso es que lo estoy poniendo acá el roadmap de implementación.
+Pues vamos a un primer sprint que va a ser la parte básica. Después nos vamos con el MVP. Esta parte básica es como lo que necesitamos para poder empezar la implementación. Entonces aquí vamos a hablar acerca de cómo va a estar la estructura de arquitectura de desarrollo. Después ya nos vamos con el MVP, que es la implementación como tal y después más adelante vamos a tener las versión 2 y versión 3 que va con la parte de automatización y métricas.
+avanzadas esto Pues aquí cabe muy bien lo que tú comentabas Y es que empecemos a generar como el análisis de qué es lo que está sucediendo porque con ese análisis después podemos hacer una evolución mirar a ver si los prompts se pueden optimizar de alguna manera o mirar a ver qué podemos hacer para mejorar el sistema de rendimiento o en costos en lo que sea Pero entonces es si necesitamos ponerlo en producción para poder empezar
+Empezar a generar esas métricas y poderlas analizar más adelante. Entonces eso ya vendría en la versión 2 y tenemos también la parte del escalamiento multicliente, de manera que en cualquier momento si un usuario nos pide lo mismo que en el otro, nos pide que hagamos una personalización, la podamos hacer y se la podamos instalar al cliente. Bueno, los criterios de aceptación, pues simplemente entonces es lo que.
+Lo estándar. Entonces, básicamente eso es lo que se estaría presentando mañana. Yo quiero darle como un poquito más de forma. De hecho, estaba creando esos mapas mentales para porque pues el público objetivo no es un público técnico. Entonces, si les muestro los diagramas de arquitectura son un ladrillo para ellos. Entonces, por eso estoy pensando en ponerlo como un mapa mental que me permita como navegar y comentando.
+
+juan   26:06
+Sí.
+No.
+
+Miguel Angel Cubides González   26:16
+Igual ellos ya tienen un contexto básico, entonces podríamos avanzar sobre esto. Preguntas que muy probablemente van a hacer y es bueno, ¿cómo hacemos para hacer la estimación nuevamente, la estimación de costos de esto? Y pues la respuesta va a ser la misma, para hacer necesitaremos hacer pruebas de concepto para poder hacer unos análisis de.
+De carga y mirar a ver cuánto cuántos toques nos están consumiendo para poder tener como ese esa estandarización. Sin embargo, la parte de costos es una parte de visión estratégica. O sea, Juan Sebastian no está trabajando. Por eso digo, muy probablemente no va a entrar ni siquiera en discusión.
+Lo único sería si nosotros generamos alguna advertencia de que tengamos cuidado con esta parte, porque puede que nos cambie del cielo a la tierra el costo. Ahí sí generamos la advertencia, pero de resto no, yo creo que me iría con la visión de él. Voy a revisar ahorita la documentación, la voy a alinear, pues voy a alinear la presentación con esa presentación de él.
+Pues pensaba documentación de y ya con eso nos iríamos. No sé si tienes algún comentario, duda, sugerencia que vamos a tener en cuenta para la presentación de mañana.
+
+juan   27:28
+No por los tiempos, pues no, pero sí sería bueno que revisara lo que escribí, porque yo pensaría de que.
+
+Miguel Angel Cubides González   27:37
+sí, se me se me pasó el techo.
+
+juan   27:38
+De que De que sí podrían haber cambios que puedan mejorar la arquitectura y entonces eso impacta pues la arquitectura, pero pues ya para mañana y si quiere aprenderlo así, pues ya no hay el tiempo. Pero ejemplo, yo no usaría lanching.
+O ve el Lancraft, yo usaría IDK, ejemplo, temas de framework, mucho más producto, mucho más producto, mucho ruso producto escalable. y.
+
+Miguel Angel Cubides González   28:02
+¿Sabes cuál es el tema?
+Y.
+Eso lo podemos comentar mañana. Si quieres, mañana abrimos la conversación para hablar de eso, sino que en realidad el Lángraph es algo que en el origen propuso Juan Sebastian. Entonces ahí podríamos entrar en una discusión de porque sí, porque no, y puede que se nos extienda demasiado la.
+
+juan   28:07
+Pues.
+
+Miguel Angel Cubides González   28:27
+La presentación, o sea.
+
+juan   28:27
+Sí, por eso no, por eso yo solamente coloco mis comentarios y ustedes son los que toman las decisiones, pero no digo de que digamos en los comentarios que coloqué, pues este ahí está como esas cosas. Lo mismo que 2 agentes para mí es mucha responsabilidad para 2 agentes y entonces pueden que no sea.
+
+Miguel Angel Cubides González   28:30
+Sí.
+
+juan   28:46
+Para mí son más agentes, como te decía, en vez de tener una gente que haga todo de Instagram y demás, es más tener agentes dedicados a cada uno, porque cada uno tiene su forma diferente, crear imagen de restricción de la red, de buenas prácticas y todo eso que solo tener una gente que haga todo. Eso sería mucho.
+
+Miguel Angel Cubides González   28:51
+Mhm.
+Yes.
+A.
+Okay.
+
+juan   29:05
+Te ver mejor y lo otro es que sí o sí en una primera nunca te va a salir una imagen. Vos sabes, o sea, uno llega y yo publico cosas en redes y uno coco una imagen y uno itera, itera, itera, hasta que dice que la imagen va bien, pero en un en un primero que le haga una imagen como dices tú y que eso se publique, eso va a salir horrible.
+
+Miguel Angel Cubides González   29:12
+Mhm.
+
+juan   29:25
+Entonces se utiliza patrones de agentes en el cual haya uno que cree y el otro que evalúe, y estos patrones, o sea que son 2 agentes, mejor dicho, que están a está uno evaluando y evaluando a partir de unas rúbricas y demás. Y así de esa forma es como verdaderamente uno actúa, porque uno dice, no, esta imagen está mal, mejórale esto y entonces él vuelve otra y genera la imagen, genera la imagen. Entonces ahí mira que.
+costo se vuelve también algo retador porque ya no es solamente gener el imagen una sola vez sino que la va a estar generando diferentes peces hasta que uno le diga un una un Ford por decirlo así de 4 veces cinco veces que la mejor y la y la publique no
+
+Miguel Angel Cubides González   29:59
+Mhm.
+Sí.
+Sí.
+
+juan   30:25
+Construcción.
+
+Miguel Angel Cubides González   30:27
+Sí, pero a ver, si dijiste varias cosas. La primera respecto al multiagente, yo no te lo he, fue amable. Yo respecto a tener varios agentes que tenían responsabilidad particular, yo no te lo he entendido así. Yo lo entendí fue, pero que era como que digamos no en la vertical de generar la pieza publicitaria, por ejemplo.
+Sino que era más como en la horizontal, que esa pieza publicitaria pudiera tener varios agentes uno después de otro. Así era como yo lo había entendido y por eso no la no la traje a colación, pero esa parte de que sea uno para Instagram y otro para X, otro para Facebook demás.
+Yo lo había visto, era, pero a nivel de ese de ese otro puntual, no me acuerdo cuál era el que se llamaba, pero ese Transformer, ese que toma el link y genera la salida.
+No se llama eso, no me acuerdo.
+
+juan   31:33
+Sí, este.
+Por eso es un sistema multi agentes, porque es que solo uno cuando le a un agente le das mucha responsabilidad y eso es lo que yo construyo los sistemas de agentes tienen tendencia a no a no hacerlo bien, porque imagínate que tú tienes en un solo agente y le dices, créeme para Instagram, créeme. Entonces él se embolatar, mejor dicho.
+
+Miguel Angel Cubides González   31:36
+Smoke, I'm afraid.
+Sí.
+Sí, especialización.
+
+juan   31:56
+Y para Instagram te lo hace como para X y te lo hace para LinkedIn y te lo hace así todo raro y cada uno tiene sus prácticas, no tiene que tiene que ser conciso. La imagen tiene que tener de pronto algún tamaño específico, mejor tal cosa, entonces es mejor que cada agente y uno lo que puede hacer es ejecutar de forma paralela estos agentes para que se construya de forma paralela.
+
+Miguel Angel Cubides González   31:59
+Mhm.
+Sí.
+Snow.
+Up.
+
+juan   32:17
+y no secuencial ejemplo primero haga este y este y este Pero además para mejorar precisión como te digo típico patrón crítico evaluador es es es muy bueno para poder mejorar eso lo mismo para para la parte estratégica Sí yo pensaría que también ahí podrían ser solo un solo agente sino también varios y como te digo con el ADK es
+
+Miguel Angel Cubides González   32:18
+Even.
+Sí.
+Sí.
+
+juan   32:42
+Muy bueno porque con el IDK este puedes, esto puede generar imágenes, videos. Entonces con el IDK usas cosas como artifact para guardarlos y no ir en la memoria ni en la sesión, que eso lo vuelve mucho más grande y todo eso, sino que eso va a ir igual también tienes integración, ejemplo, ejemplo con Memory Bank.
+En el cual es una base de datos propia para guardar temas de agentes, porque no es lo mismo guardar una base de datos, nada de datos. Tú guardas preferencias, ejemplo, pero el contexto y demás, la sesión en Memory Bank, ejemplo, lo que hace él es que automáticamente toma la sesión.
+Y extrae lo más importante. O sea, él no hay guarda todo, literalmente la conversación o todo, sino lo más relevante. Y uno configura eso. Y también eso funciona como un rack. Cuando él necesite en una nueva sesión del usuario, necesite algo, él va y extrae lo que necesita para en ese momento la sesión.
+
+Miguel Angel Cubides González   33:27
+Me gusta.
+Mhm.
+
+juan   33:42
+Y cada vez que el usuario pregunte o algo va y extrae lo que necesite, literalmente. O sea, no es como guardar todo el contexto y después cargar todo, porque eso genera mucho más contexto y sesión, y eso también va a cuestionar más tokens en los agentes. Entonces, por eso me gusta mucho el ADK, porque tiene estos servicios.
+
+Miguel Angel Cubides González   33:42
+Mhm.
+Two.
+Susan.
+No.
+
+juan   34:01
+¿Que te permiten optimizar mejor todo, no?
+
+Miguel Angel Cubides González   34:04
+Sí, okay, déjame porque sí, sí, yo creo que sí lo voy a integrar entonces en la presentación. El tema es que lo voy a integrar en la presentación, pero no lo voy a integrar en la documentación, o sea, la documentación la integró en una semana más de trabajo, pero para la presentación de mañana sí lo voy a integrar porque sí me parece completamente válido lo que estás comentando.
+Tanto por la parte de especializar los agentes como por la parte de tener ese agente verificador que permita tener un resultado más óptimo y lo de la base de datos que me comentas, voy a revisarla porque no la conozco y también, o sea, tiene todo el sentido del mundo.
+
+juan   34:26
+Sex.
+
+Miguel Angel Cubides González   34:44
+Porque me comentas, entonces sí lo voy a agregar. También me preocupa si pueda extender mucho la reunión de mañana, pero sí es correcto, válido y necesario comentarlo. Entonces sí lo voy a agregar.
+
+juan   34:52
+Sí.
+Dale de una, sí puedes ver eso. Y bueno, yo respondo algunas cosas que tienen ahí dudas. Ejemplo, yo ahí tengo ahí. Siento que ustedes tienen como dudas o más que todo de pronto un como un mal concepto de que, o sea, la gente casi.
+O sea, la gente lo único que depende del modelo, pero el modelo no es lo más importante para no es lo más importante para la gente, porque la gente tiene diferentes técnicas y cosas para mejorar su salida y herramientas, pues para mejorar su salida. O sea, él no depende solo del modelo, sino también de ustedes, pues tienen que definir las herramientas, no que usa, que va a usar.
+Este Definir muy bien sus instrucciones y como digo, el a DK usa algo que se llama react, que es reasoning and acting, en el cual ayuda a que la gente él razone y él entre como en un bucle para mejorar su salida. O sea, necesariamente no es como entrada y respuesta, no, él entra y empieza a generar un bucle él internamente hasta mejorar lo que él está.
+
+Miguel Angel Cubides González   35:55
+Mhm.
+
+juan   36:00
+¿Quiere responder? Entonces eso lo hace el ADK solo. Sí, y creo que el Langraph también lo hace, hay que habilitar y demás, pero el ADK viene por desde que se creó, viene con eso. Entonces eso ayuda mucho, sin que el modelo pues no sea lo más importante, si que si no su razonamiento no y sus herramientas.
+
+Miguel Angel Cubides González   36:11
+Okay.
+No.
+
+juan   36:20
+Entonces son cosas que uno tiene en cuenta en estos en estos sistemas agénticos.
+
+Miguel Angel Cubides González   36:25
+In list.
+
+juan   36:26
+Igual también no sé, por ahí me preguntan herramientas para observabilidad y demás, pues ahí les también les recomendé algunas que no sé si eso irá, pues en una primera versión de la.
+
+Miguel Angel Cubides González   36:33
+Mhm.
+Es que justamente sí, por eso tampoco entré en detalle de eso, porque si no para el MVP no lo veo. De pronto, para la primera versión después del MVP, ahí sí lo vería con la observabilidad. Si me parece importante para tener más control sobre cómo se está comportando ya a nivel de sistema de información.
+
+juan   36:54
+Yo lo Yo lo que hago es que sí o sí lo implemento en un primer alcance, más que todo por los costos, porque uno puede registrar ahí el número de tokens. Sí, más que todo eso, el número de tokens, pues y otras métricas, pero para que desde el principio uno sepa de que mira, ese está.
+En esta interacción que se hizo, se se hizo tanto, se demoró tanto, no latencia, costo, algunas cosas de métricas básicas que en verdad no. Entonces es complejo implementarlo, pero que me da desde el principio visibilidad en eso, ya después se puede madurar y más métricas y más observabilidad, pero eso ayuda mucho al principio para poder hacer estimaciones.
+
+Miguel Angel Cubides González   37:14
+Yeah.
+Okay.
+
+juan   37:37
+¿Porque si no estás como ciego, o sea, el MVP funciona, pero uy, por qué se está demorando? ¿Dónde se está demorando? Uy, mira que nos costó este nos costó en este MVP nos costó 3000 USD. ¿Uy juemadre, qué pasó? ¿Por qué sí, entonces esas cositas básicas es buena para uno poder tener esas métricas básicas, no?
+
+Miguel Angel Cubides González   37:42
+Sí, o porque no es cosa tanto.
+Mhm.
+Vale, vale, vale.
+Sí.
+
+juan   37:59
+Mhm.
+
+Miguel Angel Cubides González   38:00
+sí, estoy pensando es por mis tiempo.
+
+juan   38:01
+Eso de resto ahí, pues el en el documento y pues ya bienvenido cualquier otra cosa.
+
+Miguel Angel Cubides González   38:07
+Okey, dice, voy a tengo harto que hacer. Entonces voy a empezar a integrar eso porque también me toca revisar la documentación de Juan Juan Sebastian. Entonces voy a revisar todo, voy a integrarlo. Sí, voy a integrar lo que estábamos comentando. Sí, me parece muy importante.
+
+juan   38:19
+Vale.
+
+Miguel Angel Cubides González   38:26
+Lo de las métricas también que si toca integrarlo todo, pero no sé cómo voy a manejar la presentación para que sea dinámica. Este tema del mapa mental, pues sí me parece que podría funcionar, pero puede que yo me embolate porque yo no pienso en mapa mental. Yo pienso, pero en arquitectura de software.
+Entonces no lo tengo claro, no sé si lo va a manejar así o no, entonces voy a mirar cómo lo.
+
+juan   38:51
+¿Pues a mí me ellos, pero ellos ya conocen no el proyecto o no?
+
+Miguel Angel Cubides González   38:56
+Sí, ellos ya tienen todo el contexto del proyecto.
+
+juan   38:57
+Oh.
+Sí, pues yo lo veo claro, pues si yo que lo leí apenas estos días y ya para mí parece claro, pues yo no, si para que está bien.
+
+Miguel Angel Cubides González   39:08
+Pero.
+Pero, o sea, te refieres a hablar sobre la arquitectura para la documentación de arquitectura.
+
+juan   39:16
+¿Pues todo el proyecto, tú mañana qué vas a presentar?
+
+Miguel Angel Cubides González   39:21
+Básicamente sería enfocarme en la parte de arquitectura, la tecnología y cómo está definida la tecnología, pero para la necesidad funcional. Entonces toca presentar la el alcance funcional acotado para no generar una falsa expectativa. Entonces me toca decir.
+¿Qué es específicamente lo que nos estamos comprometiendo y cuál sería la arquitectura que estaría respondiendo a eso? La arquitectura a alto nivel, porque no son técnicos, no es para entrar en detalle de técnico de cómo está la arquitectura, pero si necesito como dar ese lineamiento, por ejemplo, de que esto debe ser multitena.
+Hm, Eso es un criterio que toca explicar y toca decir que eso.
+
+juan   40:01
+Hay una pregunta que me que que hacías ahí en agentes de que qué pasaría si el si son múltiples pues clientes y se ensucie el contexto y demás. Lo que te lo que respondí muy fácil y tienes de despreocuparte de eso es que el a DK precisamente cada vez que uno lo que hace en el a DK es que cada vez que el usuario interactúa.
+Él crea una nueva sesión, en la sesión él guarda el contexto y demás, y eso solo vive en la sesión y en la memoria del de del pues del servidor. Sí, entonces cuando una vez termine esa vaina desaparece y cada vez que un usuario y así tengas 1000 usuarios ingresa, cada uno se crea una sesión, o sea, nunca se revuelve.
+
+Miguel Angel Cubides González   40:29
+Sí.
+
+juan   40:44
+Eso es el framework maneja eso. O sea, no hay que preocuparse por eso. Lo que hay que hacer es al final o el automáticamente uno con callbacks. este El decide cuándo guardar lo que te digo, cuándo guarda lo importante memory bank. Entonces él va y va guardando en la sesión lo que él ve importante.
+
+Miguel Angel Cubides González   40:44
+Yeah.
+Mhm.
+
+juan   41:04
+Y cuando el usuario termine la sesión, se borra toda la sesión y ya quedó guardado memory bank, lo que para él fue más relevante de la sesión, pero uno lo guarda ahí lógico con el ID del usuario y ahí di tal cosa para que cuando el usuario mismo ingrese, pues se le cargue solo eso a su sesión, pero ninguna sesión se comparte, o sea, ingresa 1000 usuarios y cada 1000 tiene su sesión, 1000000 de usuarios y cada uno tiene su sesión y nunca se ha revuelto, así que no hay ese.
+
+Miguel Angel Cubides González   41:12
+Mhm.
+Mhm.
+Sí.
+So.
+
+juan   41:29
+Problema de que se vaya a ensuciar que una uno con otro no, eso no, eso no pasa. Gracias al framework no pasa.
+
+Miguel Angel Cubides González   41:35
+Okay.
+Porque sí me pasó, pero yo sé quién fue con la implementación que de pronto por desconocimiento lo hice mal con Langraph en el la gente que está ahorita para demostración. Ahí sí me pasó que tuve que manejar yo la sesión porque el objetivo era que uno pudiera conversar hasta cierto punto.
+Cerrar, cerrar sesión y después volver a retomar desde ese punto. Entonces sí me tocaba persistir esa sesión y lo que hacía era que persistía el contexto de sesión. Entonces me pasaba que el agente olvidaba en qué pasó iba. Entonces como que sí me pasaba muchas veces que no se iba en la pregunta 5 y resultaba haciéndome la pregunta 2, una cosa así.
+Pero no era como muy heurístico, no era como que siempre me pasara que vuelva la flota 2, sino que él tomaba decisiones con base en eso y pues nunca entendí que era lo que me estaba sucediendo ahí. Pero pero entonces con este que comentas sí podría estarse manejando de manera como tradicional, pues nativa.
+Ya más por lo que dices que hay una base de datos especializada.
+
+juan   42:42
+O sea, uno crea la sesión, no, o sea, uno le dice cree la sesión, no, o sea, pues él la crea. O sea, cuando tú arrancas el ADK, o sea, de ejemplo, esto lo expones el agente los pones como un API, entonces lo que hace es que en el front pues se loguea el usuario y entra y en ese momento que el que va y llama el agente.
+
+Miguel Angel Cubides González   42:48
+Mhm.
+
+juan   43:02
+El te pide, deme un número de sesión. Sí, entonces tú generas un número aleatorio de sesión, sí, y un número único de sesión, y le envías además el ID del usuario. Entonces ya con eso él crea una sesión, por eso se llama sesión, como cuando entras a una página, pues y haces.
+
+Miguel Angel Cubides González   43:07
+Okay.
+
+juan   43:21
+Que era una sesión asociada a ese usuario y como digo, lo puedes asociar a que él vaya guardando datos en una base de datos o en Memory Bank para que va a guardar los datos. Pero una vez el usuario ya termine, hágalo, gaudie más esa sesión muere, sí, y entonces, pero se guarda en base de datos lo que.
+
+Miguel Angel Cubides González   43:21
+Mhm.
+Mhm.
+Ajá.
+Mhm.
+Mhm.
+
+juan   43:42
+Lo que se vea relevante y así él, si vuelve, ingresa, se crea una nueva sesión. Lo que digo es que la pregunta era, y qué pasa si ingresa otro usuario u otro usuario, no, eso no se va a revolver. Sí, ahí no va a pasar nada, si ni se va a cochinar como ella por ahí, ni se va a ensuciar con el otro, no, él no se va a ensuciar con ninguna otra sesión. Pues no, eso no pasa nada.
+
+Miguel Angel Cubides González   43:47
+Mhm.
+Sizzic, sizzic.
+Sí.
+Mhm.
+
+juan   44:05
+Sí, eso es lo que pasa y los modelos son tontos. O sea, los modelos cuando usan un agente son tontos en el sentido en que el modelo sí, el agente le pasa al modelo, le pregunta al modelo y le pasa la información necesaria al modelo para que responda. O sea, el modelo, como te digo, es simplemente un tonto que la gente le dice.
+Hágame esto con este contexto y respóndame, pero el modelo no guarda nada, él no guarda ningún contexto nada. El modelo es un tonto en el framework. Sí, simplemente el agente es el que verdaderamente es el que sabe, sí, y usa el modelo y le envía lo que él necesite para que el modelo le responda y él ya lleva a cabo su tarea.
+Pero el modelo es un tonto en ese en el sentido del sistema de agéntico, sí.
+
+Miguel Angel Cubides González   44:50
+Yeah, okay.
+Alisting.
+Listo, listo, tú vas, voy a integrarlo.
+
+juan   44:55
+Pero está chévere el proyecto.
+Pero sí se le puede explicar, mañana se le se le les explica ahí en alto nivel, como dicen.
+
+Miguel Angel Cubides González   44:59
+Sí.
+Sí, sí, no es que el proyecto en realidad es una tal cual es un proyecto, es un proyecto que nace de hacer la evaluación de una necesidad existente, pero sí me parece, y es visión personal que nos tomó demasiado tiempo.
+y ya ahorita hay muchos productos que hacen Esto entonces pues queda como una experiencia de de Por qué nos demoramos seis meses solamente haciendo el análisis preliminar cuando en realidad pues o sea con un análisis de 15 días ya nos damos cuenta y empecemos a implementar y ganémosle a los otros que están haciendo el desarrollo
+Porque ya ahorita sí empezamos desarrollo a partir de este punto ya estamos tardes.
+
+juan   45:50
+Sí, no, ahorita y ahorita con la IA es muy difícil, ahora muy bien, ahora todo se replica muy fácil y se y sí, es verdad, eso no es muy tenaz ahorita con la IA es.
+
+Miguel Angel Cubides González   45:51
+Esa es como mi visión personal.
+Mm.
+Sí.
+Soon.
+
+juan   46:07
+O sea, hay que hacerlo rápido, hacer rápido, porque si no se lo come el mercado o alguien más lo ve y lo hace rápido y chao sale.
+
+Miguel Angel Cubides González   46:11
+Sí.
+Sí, tal cual, tal cual y no hay que sacar un producto perfecto. Saquemos una primera versión, pero pues no nos demoremos 6 meses analizando cuál va a ser esa primera versión.
+
+juan   46:24
+Sí.
+Ejemplo, yo ese ejemplo de bueno, este de marketing, yo lo haría mucho más acotado para una primera versión y eso saldría en menos de un mes. Sí, o sea, digo, simplemente como que suba el archivo, el PDF de su de su.
+
+Miguel Angel Cubides González   46:35
+Hmm.
+
+juan   46:45
+De su marca, sí, y después una gente que haga, como dices tú, la campaña y cuál es la red social más usada ahora para mi Instagram y genero y una gente que haga solo de Instagram y ya. Y eso yo creo que en un mes se puede sí, sin hacer tanta tanta cosa.
+
+Miguel Angel Cubides González   46:46
+¿Y te ayudaste?
+Mhm.
+Yeah.
+Yeah.
+Es que he hecho.
+De hecho, el demostrador es eso. En el demostrador ni siquiera cargamos la identidad visual, sino que le decimos, vaya, busquen la página web y dígame la página web, qué entidad visual tiene. Porque pues, o sea, si la página web es la empresa, es porque esa es la identidad visual, entonces traigase los colores, las fuentes, la el logo traigas solo todo de la.
+Página web y después genere la campaña y la campaña que está generando es la mezcla de las 2:00 campañas que ponen acá, que es la compañía estratégica y la pieza publicitaria. Entonces ahí esa gente está haciendo las 2:00 cosas integradas, o sea, habríamos podido sacar ese mercado.
+
+juan   47:25
+No.
+
+Miguel Angel Cubides González   47:42
+Mientras vamos haciendo el otro, pero pues las hizo fue diferente.
+
+juan   47:44
+Claro.
+****.
+
+Miguel Angel Cubides González   47:50
+Ni modo, también mandar capital, pero entonces para los otros, o sea, para el segundo semestre, digámoslo así.
+El objetivo sería seguir sacando esos demostradores que ahí yo leo mucho más. Es más alineado a lo que me gusta a mí, que es como esa parte de implementación, de esa parte de software, esa parte de investiguemos ya con inteligencia artificial. No hagamos el proyecto, no comentemos un proyecto para que en algún momento funcione, sino que vayamos generando productos que son productos demostradores que podemos como.
+evaluar si funciona o no funciona entonces pues aquí no sé yo todavía no he hablado con Natalia para ver si si el equipo va a continuar de esta manera o cómo lo vamos a trabajar pero sí sé que para el segundo semestre Natalia va a estar orientada a ese otro producto esa parte no
+
+juan   48:37
+Sí.
+
+Miguel Angel Cubides González   48:41
+No con nosotros no tiene continuidad, eso ya lo entregamos para que ellos lo manejen y miren arcan a cero.
+
+juan   48:48
+O K, dale, listo, listo estamos, entonces.
+
+Miguel Angel Cubides González   48:51
+Sí, pues muchísimas gracias por todo. Voy a integrar lo que me comentas, pues lo que me comentaste ayer y lo que me comentas ahorita para bañarse la presentación integral.
+
+juan   49:06
+Dale, listo, listo, excelente. Bueno, estamos, chao.
+
+Miguel Angel Cubides González   49:08
+Vale, OK, gracias.
+Hello!
+
+Miguel Angel Cubides González detuvo la transcripción

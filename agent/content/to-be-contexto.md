@@ -2,6 +2,8 @@
 
 > Esta sección describe el módulo diferenciador central del **Adaptador de Contenido Institucional**: el **BrandGuidelinesStore** o repositorio de contexto organizacional persistente. Es el componente que distingue el producto de cualquier IA generalista disponible en el mercado.
 
+> **Validado por experto técnico — P-03 — Junio 2026.** Los atributos de alta señal para el modelo están identificados y priorizados.
+
 ---
 
 ## 1. Descripción general
@@ -26,19 +28,24 @@ Ninguna herramienta del mercado colombiano resuelve ambos cuellos de botella de 
 
 ## 2. Contenido del perfil institucional persistente
 
-El BrandGuidelinesStore acumula el siguiente conjunto de datos por institución:
+> Validado: P-03 — Junio 2026.
 
-| Categoría | Datos persistidos |
-|---|---|
-| **Identidad institucional** | Nombre, descripción, sector, misión, propuesta de valor |
-| **Tono y voz** | Estilo de comunicación, nivel de formalidad, restricciones de lenguaje |
-| **Audiencias** | Públicos objetivo por canal, segmentos internos y externos |
-| **Canales activos** | Instagram, WhatsApp, email, web, intranet, boletines |
-| **Identidad visual** | Logos, paleta de colores, tipografías, plantillas aprobadas |
-| **Activos licenciados** | Banco de imágenes propias con derechos de uso |
-| **Restricciones** | Imágenes IA, restricciones regulatorias, flujos de aprobación |
-| **Historial de comunicaciones** | Briefs anteriores, piezas generadas, campañas anteriores |
-| **Aprendizajes** | Qué funcionó, qué no, feedback del equipo, métricas básicas |
+El BrandGuidelinesStore acumula el siguiente conjunto de datos por institución. Los atributos marcados con ⭐ son de **alta señal para el modelo** y tienen prioridad en el MVP.
+
+| Categoría | Datos persistidos | Prioridad para el modelo |
+|---|---|---|
+| **Tono ponderado** | Múltiples tonos con peso numérico (escala 0–10) por tipo de campaña. Ej: *"profesional experto (8/10), cercano sin informalidad (5/10)"*. No se acepta etiqueta plana como "profesional". | ⭐ Alta señal — V1 |
+| **Blacklist / Whitelist de palabras** | Lista de palabras prohibidas (blacklist: ej. "dominar", "revolucionario", "transforma") + palabras preferidas de la marca (whitelist). Los LLMs tienden a usar estas palabras genéricas sin restricción. | ⭐ Alta señal — V1 |
+| **Perspectiva narrativa** | Primera o segunda persona. Define cómo habla la marca: "nosotros acompañamos..." vs. "descubrá cómo...". | ⭐ Alta señal — V1 |
+| **Restricciones de marca** | Lo que no puede hacerse ni decirse: restricciones regulatorias, restricciones de imagen IA, mensajes prohibidos, flujos de aprobación obligatorios. | ⭐ Alta señal — V1 |
+| **Objetivos, misión y valores** | Propósito institucional, declaración de misión y valores corporativos. Aportan señal fuerte para redactar campañas alineadas institucionalmente. | ⭐ Alta señal — V1 |
+| **Identidad institucional** | Nombre, descripción, sector, propuesta de valor | Alta — V1 |
+| **Audiencias** | Públicos objetivo por canal, segmentos internos y externos | Alta — V1 |
+| **Canales activos** | Instagram, WhatsApp, email, web, intranet, boletines | Alta — V1 |
+| **Identidad visual** | Logos, paleta de colores, tipografías, plantillas aprobadas | Media — diferible a V2 |
+| **Activos licenciados** | Banco de imágenes propias con derechos de uso | Media — diferible a V2 |
+| **Histórico de comunicaciones** | Briefs anteriores, piezas generadas, campañas anteriores | Alta — V1 |
+| **Aprendizajes** | Qué funcionó, qué no, feedback del equipo, métricas básicas | Media — V1 básico |
 
 ### Módulos del sistema
 

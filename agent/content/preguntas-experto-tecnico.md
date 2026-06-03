@@ -3,6 +3,8 @@
 > Esta página valida decisiones iniciales de la arquitectura TO-BE optimizada. No abre la arquitectura desde cero.
 >
 > Enfoque de consulta: confirmar decisiones ya propuestas, definir umbrales medibles y cerrar riesgos clave en máximo 20 horas.
+>
+> **Estado:** Respuestas del experto técnico incorporadas — junio 2026.
 
 ---
 
@@ -46,6 +48,9 @@ Sí/No con condiciones explícitas de calidad mínima, tipos documentales cubier
 **Criterio de validación:**
 Si la respuesta es afirmativa, el diseño base de BrandGuidelinesStore se congela con pipeline LLM multimodal + validación humana, sin incorporar OCR en V1.
 
+> **✅ Respuesta del experto:**
+> Confirmado. El LLM puede actuar como OCR y, más allá de reproducir el documento, lo interpreta y entrega información enriquecida. La calidad es alta y la densidad de información también. Se formaliza esta decisión: **BrandGuidelinesStore usa pipeline LLM multimodal + validación humana en MVP**. OCR no se incorpora en V1.
+
 ---
 
 ### P-01. Cobertura de LLM multimodal en manuales de marca
@@ -64,6 +69,9 @@ Tabla por tipo de documento, calidad esperada, riesgo y recomendación operativa
 
 **Criterio de validación:**
 La cobertura objetivo para operación estable de V1 debe ser >=80% en los documentos típicos del segmento.
+
+> **✅ Respuesta del experto:**
+> La capacidad de interpretación y OCR de los LLMs es alta. Extrae información de tablas con bastante precisión y texto de imágenes también con precisión. Con documentos borrosos, tachados o con artefactos de escaneo, el LLM puede extraer igualmente gracias a su capacidad de comprensión del contexto del lenguaje. **La cobertura ≥80% es alcanzable para documentos institucionales estándar del segmento.**
 
 ---
 
@@ -84,6 +92,11 @@ Riesgos, ajustes recomendados y condición para activar vector DB desde V1.
 **Criterio de validación:**
 Si >70% del contexto crítico queda modelado estructuradamente, se mantiene prioridad estructurada.
 
+> **✅ Respuesta del experto:**
+> Si la información está almacenada de forma estructurada, **no es necesario un RAG**. Con tools (herramientas) entregadas al agente que le permitan ir a la base de datos a traer información —ya sea con queries predefinidos o con Text-to-SQL— es suficiente, y la información retornada es completa y confiable. Si la información no está estructurada sino documentada, entonces sí aplica RAG.
+>
+> **Decisión ajustada:** La estrategia híbrida se mantiene, pero se simplifica: datos estructurados → herramientas/Text-SQL; documentos no estructurados → RAG. No se activa vector DB por defecto en V1 si el contexto crítico está modelado relacionalmente.
+
 ---
 
 ### P-03. Representacion minima de marca util para el modelo
@@ -102,6 +115,16 @@ Lista de atributos de alta señal para el modelo + atributos secundarios o difer
 
 **Criterio de validación:**
 La salida debe permitir priorizar un conjunto pequeño de variables que mejore consistencia, tono y restricciones sin sobrecargar el contexto de inferencia.
+
+> **✅ Respuesta del experto — Atributos de alta señal para el modelo:**
+>
+> 1. **Tono ponderado (no plano):** Definir múltiples tonos con peso numérico (escala 0–10), según la campaña. Ejemplo: *"profesional experto en agentes con capacidad de explicar a gerentes (8/10), divertido sin pasarse de confianza (5/10)"*. No basta con una etiqueta como "profesional".
+> 2. **Blacklist / Whitelist de palabras:** Los LLMs tienden a usar palabras recurrentes como "dominar", "revolucionario", "transforma". Definir una lista de palabras prohibidas (blacklist) y palabras preferidas de la marca (whitelist).
+> 3. **Perspectiva narrativa:** Primera o segunda persona. Define cómo habla la marca.
+> 4. **Restricciones de marca:** Lo que no puede hacerse ni decirse.
+> 5. **Objetivos, misión y valores de la empresa:** Aportan señal fuerte para redactar campañas alineadas institucionalmente.
+>
+> Estos cinco atributos son prioritarios para V1. Atributos más detallados (paleta, tipografías, activos visuales) son valiosos pero diferibles al flujo creativo.
 
 ---
 
@@ -122,6 +145,17 @@ Evaluacion de viabilidad, riesgos tecnicos y tecnicas recomendadas de control (p
 **Criterio de validación:**
 Si el experto identifica alta variabilidad o bajo control sobre identidad visual, la generacion de imagen no debe tratarse como capacidad central del MVP.
 
+> **✅ Respuesta del experto:**
+> Los modelos generativos de imagen pueden alinearse a un diseño preliminar pasándoles ejemplos como *few-shots* de otros diseños, así como lineamientos de tipografía y demás. Es viable.
+>
+> **Mecanismo recomendado: patrón crítico-evaluador.** Un agente genera la imagen y otro evalúa si sigue los lineamientos o no. El agente generador puede operar con una persona tipo *UI/UX Social Media Art Director* con instrucciones que incluyan:
+> - Canal destino y relación de aspecto (1:1, 9:16, 16:9)
+> - Estilo visual: neumorfismo, glassmorfismo, minimalismo, 3D abstracto o fotorrealismo
+> - Principios de jerarquía visual, psicología del color y composición
+> - Prompts técnicos detallados con sujeto, iluminación, lente, texturas y palabras clave de calidad (`4k`, `cinematic`, `hyper-detailed`)
+>
+> **Decisión:** La generación de imagen por IA se puede incorporar como capacidad controlada en el flujo creativo usando el patrón crítico-evaluador. No es el flujo principal para instituciones con restricciones regulatorias (ej. CRC), pero sí es viable para organizaciones sin esas restricciones.
+
 ---
 
 ### P-05. Adaptacion de salidas por canal con modelos
@@ -140,6 +174,17 @@ Tabla o lista por canal con nivel de dificultad, riesgos de calidad y recomendac
 
 **Criterio de validación:**
 La respuesta debe permitir decidir si la adaptacion multicanal puede construirse sobre un nucleo comun de inferencia o si requiere tratamiento diferenciado desde el MVP.
+
+> **✅ Respuesta del experto:**
+> El modelo base puede ser el mismo. Lo recomendado es tener **agentes especializados por red social**, cada uno con las mejores prácticas específicas del canal (longitud, formato, tono, hashtags, call-to-action).
+>
+> Adicionalmente:
+> - Darle **skills** a los agentes ([ADK Skills](https://adk.dev/skills/)) para mejorar su plan, razonamiento y actuación.
+> - Usar **artifacts** ([ADK Artifacts](https://adk.dev/artifacts/)) para almacenar imágenes y videos pesados en storage accesible por otros agentes.
+> - Aplicar un **patrón de ejecución paralela** de agentes por canal para minimizar latencia.
+> - Incorporar **agentes críticos** que den feedback de alineación institucional —uno por canal o uno general experto en la marca.
+>
+> Ejemplo: un agente de Twitter con instrucciones de mejores prácticas para esa red + tools para ver ejemplos e historial + creación de artefactos visuales; y un agente equivalente para LinkedIn. Ambos ejecutándose en paralelo.
 
 ---
 
@@ -160,6 +205,14 @@ Comparativa entre pipeline por etapas vs inferencia unica, con riesgos y condici
 **Criterio de validación:**
 Si el experto considera que separar tareas mejora control y reduce errores de instruccion, se mantiene el enfoque modular para V1.
 
+> **✅ Respuesta del experto:**
+> De acuerdo con la separación. La mejor práctica es **definir el rol por agente con entre uno y tres objetivos cohesionados**. Si las instrucciones son muy largas o el agente tiene demasiadas tools, puede decrementar su exactitud, alucinará más o incrementará la latencia de las respuestas.
+>
+> Recomendaciones adicionales:
+> - Incorporar **más agentes** para mejorar precisión y cobertura (ej. agentes críticos por canal, agente de alineación de marca).
+> - Definir explícitamente las **herramientas (tools)** que corresponden a cada agente.
+> - Darle **skills** a los agentes para mejorar su plan, razonamiento y actuación.
+
 ---
 
 ### P-07. Evaluacion y observabilidad de calidad del modelo
@@ -178,6 +231,27 @@ Lista priorizada de metricas o señales de evaluacion: adherencia a instruccione
 
 **Criterio de validación:**
 La salida debe permitir definir un set minimo de evaluacion continua del modelo para piloto controlado.
+
+> **✅ Respuesta del experto — Métricas priorizadas:**
+>
+> **Métricas base (todos los flujos):**
+> - Tokens usados (input y output)
+> - Tokens de *thinking* (modelos con razonamiento explícito)
+> - Latencia por solicitud
+> - Uso de recursos (RAM, procesador, red)
+> - Estimación de costos a partir de tokens
+>
+> **Para flujos de extracción (LLM como OCR/NER):**
+> - Entidades detectadas vs. entidades que debería detectar
+> - `logit_probs` (probabilidades de tokens) de entidades detectadas
+>
+> **Para flujos con patrón crítico-evaluador:**
+> - Número de feedbacks generados por iteración
+> - Score de imagen generada según lineamientos institucionales por iteración
+> - Score de estrategias generadas
+> - Score de posts generados
+>
+> **Herramienta recomendada:** MLFlow para experimentos, A/B testing y monitoreo/observabilidad en tiempo real.
 
 ---
 
@@ -198,6 +272,16 @@ Lista de riesgos y salvaguardas tecnicas relacionadas con uso de modelos, memori
 **Criterio de validación:**
 La respuesta debe permitir definir controles minimos para usar modelos con informacion institucional sensible sin riesgo alto de mezcla o exposicion entre tenants.
 
+> **✅ Respuesta del experto:**
+> El uso de un framework adecuado como **ADK** (Agent Development Kit) genera para cada usuario una sesión con contexto y estado nuevos. Es única y no se comparte con ningún otro usuario.
+>
+> Controles mínimos recomendados:
+> - **Memory bank por usuario:** memoria a largo plazo exclusiva del tenant, con callbacks para recuperar sesiones anteriores del mismo usuario.
+> - **Memory bank compartido controlado:** datos compartidos entre usuarios que enriquecen la aplicación en general, sin exponer contexto sensible entre organizaciones.
+> - **Sin riesgo de contaminación** si se usa el framework correctamente: el aislamiento de sesión es estructural en ADK.
+>
+> **Decisión:** Se adopta ADK como framework de referencia. El aislamiento multi-tenant es estructural a nivel de sesión. Los memory banks se configuran por tenant_id con callbacks explícitos.
+
 ---
 
 ### P-09. Criterios para proveedor LLM
@@ -216,6 +300,31 @@ Matriz con pesos (100%) y candidatos prioritarios.
 
 **Criterio de validación:**
 La matriz debe ser utilizable por comité técnico para decisión de MVP.
+
+> **✅ Respuesta del experto:**
+> Evaluar mediante **experimentos con MLflow** o con **Vertex AI Evaluation**. Se deben hacer experimentos con múltiples combinaciones de prompts, hiperparámetros y modelos, evaluando resultados por cada tarea específica del sistema (lectura de marca, generación estratégica, producción creativa).
+>
+> No se recomienda una matriz de pesos estática: la selección de proveedor debe surgir de la evidencia experimental para las tareas concretas del sistema y el español institucional colombiano.
+>
+> **Modelos candidatos para evaluación (validados por experto):**
+> - **Gemini (Google):** Alto rendimiento en español, multimodal nativo, buena integración con ADK.
+> - **OpenAI GPT-4o:** Multimodal, structured output maduro, amplio ecosistema de tooling.
+> - **Gemma 4:** Open source, opción local/on-premise para soberanía total de datos, multimodal.
+> - **PaliGemma:** VLM especializado en visión-lenguaje; relevante para lectura de manuales de marca con contenido visual denso.
+>
+> **No recomendado:** Claude y otros modelos sin fortaleza en tareas multimodales. Confirmado por el experto: no son recomendados para flujos con procesamiento visual de documentos de marca o generación de imagen.
+>
+> **Criterios de evaluación (orden de prioridad según experto):**
+>
+> | Criterio | Peso | Nota |
+> |---|---|---|
+> | Calidad de salida en la tarea específica (español institucional colombiano) | Alto | Criterio #1 del experto |
+> | Latencia por solicitud | Alto | Criterio #2 del experto |
+> | Costo por token (input + output + thinking) | Alto | Criterio #3 del experto |
+> | Capacidad multimodal (lectura de manuales de marca PDF/imágenes) | Alto | Requisito para BrandGuidelinesStore |
+> | Structured output / JSON mode nativo | Alto | Requerido para salidas accionables de agentes |
+> | Tooling disponible (MLflow, gateway, ADK) | Medio | Integración operativa |
+> | Soberanía de datos / DPA disponible | Medio-Alto | Crítico para tenants con información institucional sensible |
 
 ---
 

@@ -1,8 +1,8 @@
-# Arquitectura TO-BE  Document Intelligence Engine MultiTenant
+﻿# Arquitectura TO-BE — Document Intelligence Engine MultiTenant
 
 <div class="badge-row">
 <span class="badge">Producto: Document Intelligence Engine</span>
-<span class="badge">Arquitectura: MultiTenant  Esencial MVP</span>
+<span class="badge">Arquitectura: MultiTenant — Esencial MVP</span>
 <span class="badge badge-note">NER supervisado: evaluación post-producción</span>
 <span class="badge">8 vistas de arquitectura</span>
 <span class="badge">PlantUML + PNG</span>
@@ -11,6 +11,8 @@
 > **Reposicionamiento de producto (2026-05):** El sistema es un **Document Intelligence Engine MultiTenant**: extrae campos estructurados desde documentos tipados, valida los resultados contra fuentes de referencia, genera alertas de discrepancia clasificadas por severidad y opera bajo un modelo multi-cliente (MultiTenant) controlado por CINTEL. Sin chat. Sin vectores. Sin RAG conversacional. NER supervisado es evaluación post-producción.
 
 > **Enfoque LLM-first en extracción de contenido (2026-05):** La arquitectura no asume OCR como mecanismo principal. Para preservar la integridad de la información, el sistema prioriza el procesamiento directo del documento digital, la extracción nativa de texto/estructura o el análisis documental/multimodal con LLM cuando esté disponible y sea compatible con las restricciones de soberanía. OCR se conserva únicamente como mecanismo auxiliar para documentos escaneados, imágenes o archivos sin texto embebido, acompañado de controles de calidad y trazabilidad sobre el documento original.
+
+> **Validación experta (2026-06-02 — Bloque 1–8):** El experto confirma que los LLMs/VLMs modernos tienen alta capacidad de lectura documental —comparable o superior a OCR tradicional— y pueden interpretar y dar más información que la contenida literalmente en el documento. Confirma que el enfoque LLM-first es correcto y que el OCR tradicional requiere fine-tuning por tipo documental, lo que es costoso a escala. Los modelos recomendados para explorar son: Gemini, OpenAI (GPT-4o), DeepSeek-OCR, Gemma4 y PaliGemma. Claude y modelos débiles en multimodal no se recomiendan para esta fase. El riesgo más subestimado es la escalabilidad por tokens/requests por minuto en entornos multi-tenant; el **LLM Gateway** es la pieza crítica para mitigarlo. La evaluación debe usar MLflow + Ray + Grafana. Los `logprobs` del modelo son señal de confianza en tiempo de ejecución. Las alucinaciones son la principal limitación técnica a controlar con guardrails, few-shots y outputs estructurados.
 
 ---
 
@@ -22,31 +24,33 @@ La arquitectura TO-BE distingue con precisión qué capacidades resuelve la IA y
 
 | Capacidad | Tipo | Implementación sugerida | MVP |
 |---|---|---|---|
-| **MultiTenant Platform Core** | Tradicional | Backend + PostgreSQL RLS + `tenant_id` |  Esencial |
-| Usuarios y roles (RBAC) | Tradicional | JWT + RBAC por tenant |  MVP |
-| Gestión documental | Tradicional | API + DB + Object Storage |  MVP |
-| Procesamiento por lotes | Tradicional | API + Worker (Celery) + Redis |  MVP |
-| DocumentSchemaRegistry | Tradicional | API + DB + JSON Schema |  MVP |
-| Prompt Registry (versionado) | IA / LLM | DB relacional + versionado |  MVP |
-| Extracción nativa PDF/DOCX/XLSX | Procesamiento | Parsers PDF, python-docx, openpyxl |  MVP |
-| LLM multimodal/documental | IA / LLM | Modelo con soporte de archivo/imagen |  MVP condicionado |
-| OCR fallback | Procesamiento | Tesseract / API OCR (solo escaneados) |  MVP condicionado |
-| Control de integridad de contenido | Tradicional | Heurísticas, hash, calidad |  MVP |
-| **Content Extraction Strategy** | Procesamiento  Híbrido | Selección entre nativa/LLM multimodal/OCR |  MVP |
-| **StructuredExtractor (LLM)** | **IA / LLM** | LLM + prompt + schema + parser |  MVP |
-| **CrossValidator** | Tradicional | Motor determinístico vs. CSV/Excel |  MVP |
-| **DiscrepancyAlertEngine** | Tradicional | Motor de reglas + clasificación |  MVP |
-| **Alert Dashboard / Human Review** | Tradicional | UI + workflow + DB |  MVP |
-| API REST documentada | Tradicional | FastAPI + OpenAPI |  MVP |
-| Audit Service (inmutable) | Tradicional | AuditLog en DB |  MVP |
-| Observabilidad básica | Tradicional | Logs + métricas |  MVP |
-| Chat / Q&A sobre documentos | --- | --- |  Fuera de alcance |
+| **MultiTenant Platform Core** | Tradicional | Backend + PostgreSQL RLS + `tenant_id` | ✅ Esencial |
+| Usuarios y roles (RBAC) | Tradicional | JWT + RBAC por tenant | ✅ MVP |
+| Gestión documental | Tradicional | API + DB + Object Storage | ✅ MVP |
+| Procesamiento por lotes | Tradicional | API + Worker (Celery) + Redis | ✅ MVP |
+| DocumentSchemaRegistry | Tradicional | API + DB + JSON Schema | ✅ MVP |
+| Prompt Registry (versionado) | IA / LLM | DB relacional + versionado | ✅ MVP |
+| Extracción nativa PDF/DOCX/XLSX | Procesamiento | Parsers PDF, python-docx, openpyxl | ✅ MVP |
+| LLM multimodal/documental | IA / LLM | Modelo con soporte de archivo/imagen | ✅ MVP condicionado |
+| OCR fallback | Procesamiento | Tesseract / API OCR (solo escaneados) | ✅ MVP condicionado |
+| Control de integridad de contenido | Tradicional | Heurísticas, hash, calidad | ✅ MVP |
+| **Content Extraction Strategy** | Procesamiento / Híbrido | Selección entre nativa/LLM multimodal/OCR | ✅ MVP |
+| **LLM Gateway** | **Infraestructura LLM** | Rate-limit por tenant, retries, fallbacks, cache, batch routing | ✅ **MVP — Crítico** |
+| **StructuredExtractor (LLM)** | **IA / LLM** | LLM + prompt + few-shots + guardrails + schema + parser | ✅ MVP |
+| Batch Inference | Procesamiento | Procesamiento asíncrono de lotes vía colas + LLM Gateway | ✅ MVP |
+| **CrossValidator** | Tradicional | Motor determinístico vs. CSV/Excel | ✅ MVP |
+| **DiscrepancyAlertEngine** | Tradicional | Motor de reglas + clasificación | ✅ MVP |
+| **Alert Dashboard / Human Review** | Tradicional | UI + workflow + DB | ✅ MVP |
+| API REST documentada | Tradicional | FastAPI + OpenAPI | ✅ MVP |
+| Audit Service (inmutable) | Tradicional | AuditLog en DB | ✅ MVP |
+| Observabilidad básica | Tradicional | Logs + métricas | ✅ MVP |
+| Chat / Q&A sobre documentos | --- | --- | ❌ Fuera de alcance |
 | NER supervisado | Futuro | Spike post-producción | ⏸ Post-producción |
-| Fine-tuning LLMs | Futuro | --- |  Fuera de alcance |
+| Fine-tuning LLMs | Futuro | --- | ❌ Fuera de alcance |
 
 ---
 
-## Componentes TO-BE  Document Intelligence Engine
+## Componentes TO-BE — Document Intelligence Engine
 
 | Componente | Tipo | Tecnología sugerida | Responsabilidad principal |
 |---|---|---|---|
@@ -59,11 +63,13 @@ La arquitectura TO-BE distingue con precisión qué capacidades resuelve la IA y
 | Batch Service | Tradicional | Backend + Celery + Redis | Procesamiento asíncrono por lote |
 | **DocumentSchemaRegistry** | Tradicional | Backend + DB | Tipos documentales, campos, versiones |
 | Prompt Registry | IA / LLM | DB relacional + versionado | Prompts versionados por tipo documental |
-| **Content Extraction Strategy Service** | Procesamiento  Híbrido | Python + parsers + OCR + LLM multimodal | Selección de ruta: nativa / LLM multimodal / OCR fallback |
-| OCR Engine | Procesamiento (Fallback) | Tesseract / API OCR | Solo documentos escaneados o sin texto embebido |
-| **StructuredExtractor** | **IA / LLM** | Python nativo | Extracción de campos via LLM |
-| LLM Orchestrator | **IA / LLM** | Python nativo | Contexto, invocación LLM, reintentos |
-| Structured Output Parser | **IA / LLM** | Pydantic / JSON mode | Parseo y tipado de respuesta LLM |
+| **Content Extraction Strategy Service** | Procesamiento / Híbrido | Python + parsers + OCR + LLM multimodal | Selección de ruta: nativa / LLM multimodal / OCR fallback |
+| OCR Engine | Procesamiento (Fallback condicionado) | Tesseract / API OCR | Solo documentos escaneados sin texto embebido — No es paso por defecto |
+| **StructuredExtractor** | **IA / LLM** | Python nativo | Extracción de campos via LLM con few-shots y guardrails |
+| **LLM Gateway** | **Infraestructura LLM** | LiteLLM / Kong AI Gateway / custom | Rate-limit por tenant, retries, fallbacks, load balancing, cache, batch routing |
+| LLM Orchestrator | **IA / LLM** | Python nativo | Contexto, invocación LLM via Gateway, reintentos |
+| Structured Output Parser | **IA / LLM** | Pydantic / JSON mode | Parseo y tipado de respuesta LLM; evaluación de logprobs |
+| Critic-Evaluator Agent | **IA / LLM — Requerido en flujos de alta criticidad** | Python nativo | Agente evaluador-crítico para validación iterativa de calidad en campos de alto riesgo (montos, fechas, partes); condicional en flujos de menor criticidad |
 | Validation Engine | Híbrido | Motor de reglas determinístico | Validación tipo/formato/obligatorios |
 | **CrossValidator** | Tradicional | Motor determinístico | Comparación vs. CSV/Excel de referencia |
 | **DiscrepancyAlertEngine** | Tradicional | Motor de reglas | Alertas BLOCKING/WARNING/INFO |
@@ -72,16 +78,16 @@ La arquitectura TO-BE distingue con precisión qué capacidades resuelve la IA y
 | Observability Service | Tradicional | Logs + Prometheus | Tokens, latencia, cobertura |
 | PostgreSQL | Tradicional | PostgreSQL 15+ (RLS) | Persistencia con aislamiento por tenant |
 | Object Storage | Tradicional | Filesystem / MinIO | Documentos y CSVs de referencia |
-| LLM Provider | **IA / LLM** | OpenAI / Groq / Ollama | Motor de inferencia configurable |
+| LLM Provider | **IA / LLM** | OpenAI (GPT-4o) / Gemini / DeepSeek-OCR / Gemma4 / PaliGemma | Motor de inferencia configurable por tenant — **Evitar Claude** (débil en multimodal) |
 
 ---
 
-## Vista 1  Arquitectura de negocio: capacidades del DIE
+## Vista 1 — Arquitectura de negocio: capacidades del DIE
 
 Muestra todas las capacidades del Document Intelligence Engine MultiTenant clasificadas por tipo: Tradicional (esencial MVP), IA/LLM, Procesamiento documental y Fuera de alcance.
 
 <div class="diagram-block">
-<p class="diagram-label">Vista 1  Capacidades del Document Intelligence Engine MultiTenant</p>
+<p class="diagram-label">Vista 1 — Capacidades del Document Intelligence Engine MultiTenant</p>
 <img src="assets/img/diagramas/document-intelligence/01-vista-negocio-capacidades.png" alt="Vista 1: Capacidades del Document Intelligence Engine MultiTenant">
 <div class="diagram-links">
 <a href="assets/plantuml/document-intelligence/01-vista-negocio-capacidades.plantuml" download> Fuente PlantUML</a>
@@ -92,12 +98,12 @@ El diagrama destaca los componentes esenciales MVP (MultiTenant Platform Core, S
 
 ---
 
-## Vista 2  Mapa de componentes TO-BE
+## Vista 2 — Mapa de componentes TO-BE
 
-Muestra los componentes técnicos del Document Intelligence Engine y sus relaciones. Distingue componentes IA de componentes tradicionales y marca Chat/RAG como fuera de alcance.
+Muestra los componentes técnicos del Document Intelligence Engine y sus relaciones. Distingue componentes IA de componentes tradicionales, incluye el **LLM Gateway** como pieza de infraestructura crítica, el **Critic-Evaluator Agent** como componente requerido en flujos de alta criticidad, y marca Chat/RAG como fuera de alcance.
 
 <div class="diagram-block">
-<p class="diagram-label">Vista 2  Mapa de componentes  Document Intelligence Engine</p>
+<p class="diagram-label">Vista 2 — Mapa de componentes — Document Intelligence Engine</p>
 <img src="assets/img/diagramas/document-intelligence/02-mapa-componentes-tobe.png" alt="Vista 2: Mapa de componentes Document Intelligence Engine">
 <div class="diagram-links">
 <a href="assets/plantuml/document-intelligence/02-mapa-componentes-tobe.plantuml" download> Fuente PlantUML</a>
@@ -108,44 +114,44 @@ Los componentes centrales son: **Tenant Management** (MultiTenant), **Structured
 
 ---
 
-## Vista 3  Flujo completo de procesamiento de documentos
+## Vista 3 — Flujo completo de procesamiento de documentos
 
 Muestra el flujo de extremo a extremo en 4 carriles: Cliente/Operador, API/Backend (Tradicional), Capa IA/LLM, Validación y Alertas (Tradicional).
 
 <div class="diagram-block">
-<p class="diagram-label">Vista 3  Flujo de procesamiento de documentos  DIE MultiTenant</p>
+<p class="diagram-label">Vista 3 — Flujo de procesamiento de documentos — DIE MultiTenant</p>
 <img src="assets/img/diagramas/document-intelligence/03-flujo-procesamiento-documentos.png" alt="Vista 3: Flujo de procesamiento Document Intelligence Engine">
 <div class="diagram-links">
 <a href="assets/plantuml/document-intelligence/03-flujo-procesamiento-documentos.plantuml" download> Fuente PlantUML</a>
 </div>
 </div>
 
-El flujo incluye: validación MultiTenant (JWT + RBAC), **Content Extraction Strategy** (extracción nativa  LLM multimodal  OCR fallback), Normalized Document Representation, extracción LLM, validación determinística, CrossValidator vs. CSV/Excel de referencia, generación de alertas de discrepancia y revisión humana desde el Alert Dashboard. No hay paso de chat, retrieval ni Q&A en ningún punto del flujo.
+El flujo incluye: validación MultiTenant (JWT + RBAC), **Content Extraction Strategy** (extracción nativa / LLM multimodal / OCR fallback), Normalized Document Representation, extracción LLM, validación determinística, CrossValidator vs. CSV/Excel de referencia, generación de alertas de discrepancia y revisión humana desde el Alert Dashboard. No hay paso de chat, retrieval ni Q&A en ningún punto del flujo.
 
 ---
 
-## Vista 4  Flujo detallado de extracción LLM
+## Vista 4 — Flujo detallado de extracción LLM
 
-Detalla la secuencia completa del StructuredExtractor: desde el texto OCR hasta el JSON estructurado auditado. Muestra el rol del Prompt Registry, LLM Orchestrator, LLM Provider, Structured Output Parser y Audit Service.
+Detalla la secuencia completa del StructuredExtractor: desde la representación normalizada hasta el JSON estructurado auditado. Muestra el rol del Prompt Registry (con few-shots y guardrails), LLM Orchestrator, **LLM Gateway** (rate-limit, retries, fallbacks), LLM Provider, Structured Output Parser (con evaluación de `logprobs`), Critic-Evaluator Agent (requerido en flujos de alta criticidad) y Audit Service.
 
 <div class="diagram-block">
-<p class="diagram-label">Vista 4  Flujo de extracción estructurada con LLM</p>
-<img src="assets/img/diagramas/document-intelligence/04-flujo-extraccion-llm.png" alt="Vista 4: Flujo de extracción LLM  StructuredExtractor">
+<p class="diagram-label">Vista 4 — Flujo de extracción estructurada con LLM</p>
+<img src="assets/img/diagramas/document-intelligence/04-flujo-extraccion-llm.png" alt="Vista 4: Flujo de extracción LLM — StructuredExtractor">
 <div class="diagram-links">
 <a href="assets/plantuml/document-intelligence/04-flujo-extraccion-llm.plantuml" download> Fuente PlantUML</a>
 </div>
 </div>
 
-La secuencia registra `metodo_extraccion`, `tokens_entrada`, `tokens_salida`, `latencia_ms`, `modelo_usado`, `prompt_version` y `tenant_id` en cada ejecución. El StructuredExtractor recibe la `representacion_normalizada` (no necesariamente texto OCR), preservando la integridad del documento original. La nota final del diagrama confirma: sin interacción conversacional, sin chat, sin RAG en ningún paso.
+La secuencia registra `metodo_extraccion`, `tokens_entrada`, `tokens_salida`, `latencia_ms`, `modelo_usado`, `prompt_version`, `logprobs_min`, `low_confidence_fields` y `tenant_id` en cada ejecución. El StructuredExtractor recibe la `representacion_normalizada`, preservando la integridad del documento original. La evaluación de `logprobs` permite detectar campos de baja confianza en tiempo de ejecución. El Critic-Evaluator Agent es requerido en flujos de alta criticidad (montos, fechas, partes en documentos notariales y pólizas) y actúa como capa de validación iterativa; en flujos de menor criticidad puede activarse condicionalmente. La nota final del diagrama confirma: sin interacción conversacional, sin chat, sin RAG en ningún paso.
 
 ---
 
-## Vista 5  Modelo de datos conceptual
+## Vista 5 — Modelo de datos conceptual
 
 Muestra todas las entidades del DIE: `Tenant`, `TenantUser`, `DocumentType`, `FieldSchema`, `PromptVersion`, `Document`, `Batch`, `ExtractionRun`, `ExtractedField`, `ReferenceDataset`, `CrossValidationRun`, `CrossValidationResult`, `DiscrepancyAlert` y `AuditLog`.
 
 <div class="diagram-block">
-<p class="diagram-label">Vista 5  Modelo de datos conceptual  Document Intelligence Engine</p>
+<p class="diagram-label">Vista 5 — Modelo de datos conceptual — Document Intelligence Engine</p>
 <img src="assets/img/diagramas/document-intelligence/05-vista-datos-conceptual.png" alt="Vista 5: Modelo de datos conceptual DIE">
 <div class="diagram-links">
 <a href="assets/plantuml/document-intelligence/05-vista-datos-conceptual.plantuml" download> Fuente PlantUML</a>
@@ -156,12 +162,12 @@ Las entidades clave nuevas respecto a versiones anteriores son: `DocumentContent
 
 ---
 
-## Vista 6  Seguridad y aislamiento MultiTenant
+## Vista 6 — Seguridad y aislamiento MultiTenant
 
 Muestra la arquitectura de seguridad del DIE: cómo CINTEL administra la plataforma, cómo los tenants están aislados entre sí y cómo el LLM Provider se usa sin retención de datos del cliente.
 
 <div class="diagram-block">
-<p class="diagram-label">Vista 6  Seguridad y aislamiento MultiTenant  DIE</p>
+<p class="diagram-label">Vista 6 — Seguridad y aislamiento MultiTenant — DIE</p>
 <img src="assets/img/diagramas/document-intelligence/06-vista-seguridad-multitenant.png" alt="Vista 6: Seguridad y aislamiento MultiTenant DIE">
 <div class="diagram-links">
 <a href="assets/plantuml/document-intelligence/06-vista-seguridad-multitenant.plantuml" download> Fuente PlantUML</a>
@@ -172,28 +178,28 @@ El diagrama muestra tres tenants simultáneos: CINTEL (admin de plataforma), Ten
 
 ---
 
-## Vista 7  Arquitectura de despliegue MVP
+## Vista 7 — Arquitectura de despliegue MVP
 
-Muestra los nodos de despliegue del MVP: API Gateway, DIE Backend (FastAPI), Worker LLM (Celery + Redis), PostgreSQL con RLS, Object Storage y LLM Provider externo o on-premise.
+Muestra los nodos de despliegue del MVP: API Gateway, DIE Backend (FastAPI), Worker LLM (Celery + Redis con batch inference), **LLM Gateway** (rate-limit, retries, fallbacks, cache), PostgreSQL con RLS, Object Storage y LLM Provider (OpenAI/Gemini/DeepSeek-OCR/Gemma4). La observabilidad usa MLflow + Grafana + Ray.
 
 <div class="diagram-block">
-<p class="diagram-label">Vista 7  Arquitectura de despliegue MVP  DIE MultiTenant</p>
+<p class="diagram-label">Vista 7 — Arquitectura de despliegue MVP — DIE MultiTenant</p>
 <img src="assets/img/diagramas/document-intelligence/07-vista-despliegue-mvp.png" alt="Vista 7: Despliegue MVP Document Intelligence Engine">
 <div class="diagram-links">
 <a href="assets/plantuml/document-intelligence/07-vista-despliegue-mvp.plantuml" download> Fuente PlantUML</a>
 </div>
 </div>
 
-El diagrama incluye la zona Fuera de despliegue MVP con: Vector DB (no se usa  no RAG), Chat Service / Embedding Service (no se usa) y NER Service (post-MVP). El LLM Provider soporta OpenAI API, Groq API u Ollama on-premise para soberanía total.
+El diagrama incluye la zona Fuera de despliegue MVP con: Vector DB (no se usa — no RAG), Chat Service / Embedding Service (no se usa) y NER Service (post-MVP). El LLM Gateway actúa como capa de control entre el Worker LLM y los proveedores. Los proveedores recomendados son: OpenAI (GPT-4o), Google Gemini, DeepSeek-OCR (on-premise), Gemma4 y PaliGemma. Claude no se recomienda por debilidad en multimodal.
 
 ---
 
-## Vista 8  Roadmap arquitectónico por fases
+## Vista 8 — Roadmap arquitectónico por fases
 
 Muestra la evolución del DIE en 5 fases: DIE MVP, Hardening + Conectores Cloud, Conectores ERP y Escalabilidad, Evaluación NER (condicional) y Escala Sectorial.
 
 <div class="diagram-block">
-<p class="diagram-label">Vista 8  Roadmap arquitectónico  Document Intelligence Engine</p>
+<p class="diagram-label">Vista 8 — Roadmap arquitectónico — Document Intelligence Engine</p>
 <img src="assets/img/diagramas/document-intelligence/08-roadmap-arquitectonico.png" alt="Vista 8: Roadmap arquitectónico DIE">
 <div class="diagram-links">
 <a href="assets/plantuml/document-intelligence/08-roadmap-arquitectonico.plantuml" download> Fuente PlantUML</a>
@@ -202,19 +208,23 @@ Muestra la evolución del DIE en 5 fases: DIE MVP, Hardening + Conectores Cloud,
 
 | Fase | Contenido | NER | Chat/RAG |
 |---|---|---|---|
-| **Fase 1**  DIE MVP | MultiTenant, DocSchema, StructuredExtractor, CrossValidator, DiscrepancyAlertEngine, Alert Dashboard, API REST |  Fuera de alcance |  Fuera de alcance |
-| **Fase 2**  Hardening + Cloud | Quality scores LLM, Google Workspace, M365, Webhooks |  Fuera de alcance |  Fuera de alcance |
-| **Fase 3**  ERP + Escala | SAP/Sinco, K8s, facturación automática |  Fuera de alcance |  Fuera de alcance |
-| **Fase 4**  Evaluación NER | Solo si 4 criterios se cumplen en producción | ️ Solo si evidencia lo justifica |  Fuera de alcance |
-| **Fase 5**  Escala sectorial | Legal, seguros, logística, salud, marketplace | Depende de Fase 4 |  Fuera de alcance |
+| **Fase 1** — DIE MVP | MultiTenant, DocSchema, StructuredExtractor, CrossValidator, DiscrepancyAlertEngine, Alert Dashboard, API REST | ❌ Fuera de alcance | ❌ Fuera de alcance |
+| **Fase 2** — Hardening + Cloud | Quality scores LLM, Google Workspace, M365, Webhooks | ❌ Fuera de alcance | ❌ Fuera de alcance |
+| **Fase 3** — ERP + Escala | SAP/Sinco, K8s, facturación automática | ❌ Fuera de alcance | ❌ Fuera de alcance |
+| **Fase 4** — Evaluación NER | Solo si 4 criterios se cumplen en producción | ⚠️ Solo si evidencia lo justifica | ❌ Fuera de alcance |
+| **Fase 5** — Escala sectorial | Legal, seguros, logística, salud, marketplace | Depende de Fase 4 | ❌ Fuera de alcance |
 
 ---
 
 ## Supuestos y límites del MVP
 
 - El MultiTenant Platform Core es esencial desde el día 1: no se puede diferir sin riesgo arquitectónico.
-- La **Content Extraction Strategy** selecciona la ruta óptima por documento: extracción nativa para digitales, LLM multimodal si el modelo lo soporta, OCR fallback solo para escaneados. OCR nunca es el paso por defecto.
-- El LLM Provider es configurable; GPT-4o mini es el baseline recomendado para el piloto.
+- La **Content Extraction Strategy** selecciona la ruta óptima por documento: extracción nativa para digitales, LLM/VLM multimodal como ruta principal (el LLM hace las tareas del OCR), OCR como fallback solo para escaneados sin texto. OCR nunca es el paso por defecto.
+- El **LLM Gateway** es obligatorio desde el MVP para multi-tenant: gestiona rate-limiting por tenant, retries, fallbacks, load balancing y cache. Es el principal mitigador del riesgo de escalabilidad por tokens/requests por minuto.
+- El LLM Provider es configurable; el piloto debe evaluarse con Gemini, OpenAI (GPT-4o), DeepSeek-OCR, Gemma4 y PaliGemma usando MLflow.
+- Los prompts incluyen **guardrails explícitos**, **ejemplos few-shot** y formatos estructurados (Markdown para tablas, descripciones para imágenes).
+- Los `logprobs` del modelo se habilitan para detectar campos de baja confianza en tiempo de ejecución.
+- El **Batch Inference** vía cola Celery + LLM Gateway reduce costo y latencia en procesamiento de lotes.
 - El procesamiento asíncrono por lote usa Redis + Celery worker en contenedor Docker.
 - El almacenamiento de documentos usa Object Storage con prefijo `tenant_id/` desde el MVP.
 - PostgreSQL con Row-Level Security (RLS) proporciona aislamiento de datos entre tenants en el MVP.
@@ -229,17 +239,21 @@ Muestra la evolución del DIE en 5 fases: DIE MVP, Hardening + Conectores Cloud,
 | Riesgo / Decisión | Estado | Mitigación / Nota |
 |---|---|---|
 | MultiTenant sin esquema RLS correcto | Riesgo crítico | Revisar RLS en todas las queries antes de producción |
+| **Escalabilidad por tokens/requests por minuto** | **Riesgo crítico (experto)** | **LLM Gateway obligatorio desde MVP: rate-limit por tenant, retries, fallbacks, cache** |
 | Variabilidad del LLM entre versiones de modelo | Abierta | Persistir versión del modelo en cada `ExtractionRun`; validar periódicamente |
-| Costo por token a escala | A evaluar | Medir en Fase 1; definir umbral; Ollama como alternativa on-premise |
-| Alucinación en campos críticos | Control activo | `null` obligatorio si no se encuentra el campo; CrossValidator detecta divergencias |
+| Costo por token a escala | A evaluar | Medir en piloto con MLflow; usar batch inference; Gemma4/DeepSeek-OCR on-premise como alternativa |
+| **Alucinación en campos críticos** | **Control activo** | **Guardrails en prompts + few-shots + output estructurado + `null` obligatorio si no se encuentra campo; `logprobs` como señal de confianza en runtime** |
+| Tablas complejas | Mitigado (experto) | Incluir en el prompt instrucción de extraer tablas en Markdown |
+| Imágenes relevantes en documentos | Mitigado (experto) | Incluir en el prompt instrucción de describir imágenes explícitamente |
+| Headers/footers y documentos largos | A vigilar | Precisión puede degradarse; diseñar prompts con instrucciones de contexto |
 | CrossValidator con demasiados falsos positivos MISMATCH | A calibrar | Implementar normalización configurable por campo (fecha, mayúsculas, espacios) |
 | Severidad de alertas mal configurada | A calibrar | CINTEL define defaults; tenant puede ajustar por campo en su `DocumentSchemaRegistry` |
-| LLM Provider para on-premise | Decisión pendiente | Ollama con modelos abiertos (Mistral, LLaMA 3) como opción validada |
+| Selección de modelo LLM sin evaluación empírica | Decisión pendiente | Evaluar Gemini, OpenAI, DeepSeek-OCR, Gemma4 con 100 documentos reales, prueba ciega y revisión humana |
 | NER post-producción | Condicional | Solo evaluar si LLM presenta brechas concretas que prompting no resuelve |
 
 ---
 
-## Elementos fuera de alcance  Fase 1 MVP
+## Elementos fuera de alcance — Fase 1 MVP
 
 - **Chat / RAG conversacional**: el sistema no tiene chat, no tiene retrieval semántico y no tiene base vectorial.
 - **Q&A libre sobre documentos**: la salida del sistema es siempre JSON/CSV estructurado.
@@ -255,7 +269,7 @@ Muestra la evolución del DIE en 5 fases: DIE MVP, Hardening + Conectores Cloud,
 
 ---
 
-## Análisis técnico TO-BE  Validación de cumplimiento funcional
+## Análisis técnico TO-BE — Validación de cumplimiento funcional
 
 Esta sección consolida las decisiones arquitectónicas resueltas durante el diseño del DIE MultiTenant. Documenta explícitamente por qué las preguntas de arquitectura tradicional ya no requieren validación con el experto en modelos y cómo la arquitectura propuesta cumple cada requisito funcional.
 
@@ -271,7 +285,7 @@ Agregar Q&A documental en el MVP sería un anti-patrón de producto: duplicaría
 
 ---
 
-### 2. MultiTenant desde el MVP  fundamentos de la decisión
+### 2. MultiTenant desde el MVP — fundamentos de la decisión
 
 **Decisión tomada:** El aislamiento MultiTenant (`tenant_id`, RBAC, RLS) es parte del MVP desde el día 1. No puede diferirse.
 
@@ -280,6 +294,8 @@ Retroadaptar aislamiento de datos en un sistema single-tenant implica migración
 Para el MVP con volumen controlado (<20 tenants, <50K documentos/tenant/mes), PostgreSQL con Row-Level Security (RLS) y `tenant_id` en todas las queries es el mecanismo estándar. Base de datos por tenant se reserva para planes Enterprise con SLA diferenciado o requerimientos regulatorios específicos.
 
 La cola de tareas Celery usa fair-queuing por `tenant_id` en el MVP. Colas por prioridad de plan (ENTERPRISE, PRO, BÁSICO) se activan a partir de Fase 2 con >10 tenants simultáneos.
+
+> **Validación experta (2026-06-01 — P-08):** El experto confirma que un framework de sesiones adecuado genera para cada usuario una sesión con contexto y estado nuevos, única e irrepetible, sin compartirse con ningún otro usuario. Es posible crear memory banks de largo plazo por usuario y definir callbacks para recuperar sesiones anteriores sin contaminar otros tenants. El patrón del DIE —`tenant_id` + RLS en toda capa de datos + sesiones aisladas— es equivalente a las garantías de aislamiento que el experto considera correctas. El riesgo de contaminación de contexto entre tenants queda controlado con esta arquitectura.
 
 ---
 
@@ -323,17 +339,33 @@ La severidad de alertas (BLOCKING/WARNING/INFO) es configurable por el tenant a 
 
 **Decisión tomada:** Métricas mínimas del MVP: `tokens_entrada`, `tokens_salida`, `latencia_ms`, tasa de fallos de parseo JSON por tipo documental, campos no extraídos por tipo documental, tasa de reintentos. Lo demás se agrega en Fase 2.
 
+> **Validación experta (2026-06-01 — P-07):** El experto prioriza el siguiente conjunto de métricas de observabilidad para V1:
+>
+> **Métricas básicas por ejecución:**
+> - `tokens_entrada` y `tokens_salida` (y `tokens_thinking` si el modelo lo expone)
+> - `latencia_ms` de extremo a extremo
+> - Uso de recursos: RAM, CPU, red
+> - Estimación de costo por documento calculada desde tokens
+>
+> **Métricas de calidad de extracción (LLM como extractor):**
+> - Entidades detectadas / entidades esperadas por tipo documental
+> - `logit_prob` (probabilidades de token) de entidades detectadas como señal de confianza
+>
+> **Herramienta recomendada:** MLFlow para experimentos, A/B testing entre modelos/prompts y monitoreo en tiempo real de todas las métricas anteriores. Vertex AI Evaluation como alternativa cloud-native si el despliegue es en GCP.
+>
+> Estas métricas amplían el set de Fase 1 y permiten detectar deriva de calidad, sobrecosto y degradación antes de que sean perceptibles por el operador.
+
 El Worker LLM (Celery) se despliega como contenedor persistente (Docker). Las funciones serverless (Lambda 15min, Cloud Run 60min) son demasiado restrictivas para documentos complejos o modelos on-premise lentos. La escalabilidad horizontal se logra con réplicas de contenedor. Kubernetes se evalúa en Fase 3.
 
 ---
 
-### 8. Content Extraction Strategy  decisiones ya resueltas
+### 8. Content Extraction Strategy — decisiones ya resueltas
 
 **Decisión tomada:** La estrategia de extracción es una decisión por tipo documental y por capacidades del tenant, con los siguientes defaults:
 
 | Condición | Estrategia |
 |---|---|
-| Documento digital con texto embebido (PDF/DOCX) | `NATIVE_TEXT`  extracción nativa siempre primero |
+| Documento digital con texto embebido (PDF/DOCX) | `NATIVE_TEXT` — extracción nativa siempre primero |
 | MIME type de imagen (JPEG/PNG/TIFF) | `OCR_FALLBACK` |
 | PDF sin texto embebido detectable | `OCR_FALLBACK` |
 | PDF con texto < umbral de cobertura configurable | `OCR_FALLBACK` |
@@ -341,7 +373,9 @@ El Worker LLM (Celery) se despliega como contenedor persistente (Docker). Las fu
 
 **Motor OCR:** Tesseract como default para MVP (open-source, sin egreso de datos). Motores comerciales (Google Document AI, AWS Textract) se evalúan en Fase 2 si la precisión de Tesseract es insuficiente para el tipo documental del piloto.
 
-**Quality score:** `quality_score = ratio de caracteres reconocibles / total`. Umbral mínimo: 0.75 configurable por tipo documental. Si `method = OCR_FALLBACK AND quality_score < umbral`  alerta WARNING automática de revisión requerida.
+> **Validación experta (2026-06-01 — P-00/P-01):** El experto confirma que el LLM puede cumplir el rol de OCR con alta calidad y además aportar interpretación semántica del contenido más allá de la transcripción literal. La precisión en tablas e imágenes es alta; en documentos con defectos de escaneo, el contexto lingüístico del modelo compensa las limitaciones ópticas. La estrategia de priorizar extracción nativa y LLM multimodal —con OCR solo como fallback condicionado— queda validada técnicamente.
+
+**Quality score:** `quality_score = ratio de caracteres reconocibles / total`. Umbral mínimo: 0.75 configurable por tipo documental. Si `method = OCR_FALLBACK AND quality_score < umbral` → alerta WARNING automática de revisión requerida.
 
 **LLM multimodal en nube:** solo con consentimiento explícito del tenant y DPA vigente (los documentos originales salen de la infraestructura del tenant). Sin DPA, solo `NATIVE_TEXT` o `OCR_FALLBACK` con Tesseract on-premise.
 

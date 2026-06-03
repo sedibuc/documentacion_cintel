@@ -1,14 +1,31 @@
 @startuml
 @startgantt
 Project starts 2026-07-01
-[ Sprint 0 - Plataforma base ] starts 2026-07-01 and lasts 14 days
-[ Sprint 1 - Multi-tenant ] starts 2026-07-15 and lasts 14 days
-[ Sprint 2 - Extraccion LLM ] starts 2026-07-29 and lasts 14 days
-[ Sprint 3 - Validacion cruzada ] starts 2026-08-12 and lasts 14 days
-[ Sprint 4 - Discrepancias ] starts 2026-08-26 and lasts 14 days
-[ Sprint 5 - Integraciones ] starts 2026-09-09 and lasts 14 days
-[ Sprint 6 - Auditoria y metricas ] starts 2026-09-23 and lasts 14 days
-[ Sprint 7 - Hardening ] starts 2026-10-07 and lasts 14 days
-[ Sprint 8 - Piloto ] starts 2026-10-21 and lasts 14 days
+
+-- Sprint 0 (2026-07-01 a 2026-07-14) --
+[S0 - Ambientes, CI/CD, seguridad, entorno LLM, contrato API IA] starts 2026-07-01 and lasts 14 days
+
+-- Sprint 1 (2026-07-15 a 2026-07-28) --
+[S1 - Multi-tenant, RBAC, onboarding] starts 2026-07-15 and lasts 14 days
+[S1 - Prototipo extraccion LLM, prompts v1, esquema JSON/CSV] starts 2026-07-15 and lasts 14 days
+
+-- Sprint 2 (2026-07-29 a 2026-08-11) --
+[S2 - Pipeline ingesta, APIs REST, modelo datos] starts 2026-07-29 and lasts 14 days
+[S2 - Extraccion estructurada por tipo, JSON/CSV validado] starts 2026-07-29 and lasts 14 days
+
+-- Sprint 3 (2026-08-12 a 2026-08-25) --
+[S3 - ValidationEngine, DiscrepancyAlert, tablero alertas] starts 2026-08-12 and lasts 14 days
+[S3 - CrossValidator, estados MATCH/MISMATCH, API IA v1] starts 2026-08-12 and lasts 14 days
+
+-- Sprint 4 (2026-08-26 a 2026-09-08) --
+[S4 - UI revision humana, batch, historial, descarga] starts 2026-08-26 and lasts 14 days
+[S4 - Refinamiento prompts, optimizacion latencia/costo LLM] starts 2026-08-26 and lasts 14 days
+
+-- Sprint 5 (2026-09-09 a 2026-09-22) --
+[S5 - Audit Service, trazas, metricas operativas, REST finales] starts 2026-09-09 and lasts 14 days
+[S5 - Metricas calidad LLM, afinacion prompts, aislamiento tenants] starts 2026-09-09 and lasts 14 days
+
+-- Sprint 6 (2026-09-23 a 2026-10-06) --
+[S6 - E2E, carga, seguridad, ajustes rendimiento, UAT, piloto] starts 2026-09-23 and lasts 14 days
 @endgantt
 @enduml

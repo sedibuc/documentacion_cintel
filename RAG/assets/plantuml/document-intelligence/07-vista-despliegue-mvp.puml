@@ -35,7 +35,10 @@ node "Infraestructura CINTEL\n(on-premise o cloud certificado)" as INFRA {
   note right of BE : Stateless · Containerizado (Docker)\nHorizontalmente escalable
 
   node "Worker LLM\n(Celery + Redis)" as WORKER #A9DFBF
-  note right of WORKER : Procesamiento asincrono\nColas por prioridad y tenant
+  note right of WORKER : Procesamiento asincrono\nColas por prioridad y tenant\nBatch inference disponible
+
+  node "LLM Gateway" as LLMGW #FAD7A0
+  note right of LLMGW : Rate-limit por tenant\nRetries / fallbacks de modelo\nBalanceo de carga\nCache de respuestas\nBatch inference routing
 
   database "PostgreSQL\n(datos + alertas + audit)" as PG #AED6F1
   note right of PG : Row-Level Security por tenant_id\nBackup diario requerido
@@ -45,13 +48,18 @@ node "Infraestructura CINTEL\n(on-premise o cloud certificado)" as INFRA {
 
   node "Redis\n(cache + broker)" as REDIS #AED6F1
 
-  node "Observability\n(Prometheus + Grafana)" as PROM #D5D8DC
-}
+  node "Observability Stack" as OBSnode #D5D8DC {
+    rectangle "MLflow\n(experimentacion y A/B testing)" #C8E6C9
+    rectangle "Grafana\n(dashboards y alertas)"
+    rectangle "Ray\n(monitoreo LLM)"
+  }
+  note right of OBSnode : Stack recomendado por experto:\nMLflow para experimentacion de modelos/prompts\nGrafana para metricas operativas\nRay para monitoreo LLM en escala
 
 cloud "LLM Provider Certificado\n(SaaS o self-hosted)" as LLMP #E9F7EF {
-  node "OpenAI API" as OPENAI #A9DFBF
-  node "Groq API" as GROQ #A9DFBF
-  node "Ollama\n(on-premise opcional)" as OLLAMA #A9DFBF
+  node "OpenAI API (GPT-4o)" as OPENAI #A9DFBF
+  node "Google Gemini API" as GEMINI #A9DFBF
+  node "DeepSeek-OCR / Gemma4 / PaliGemma\n(on-premise opcional)" as LOCAL #C8F7C5
+  note bottom of LOCAL : Modelos on-premise recomendados\npor experto para soberania total\nEvitar: Claude (debil en multimodal)
 }
 
 actor "Operador / Usuario\n(navegador)" as USER
@@ -61,13 +69,15 @@ USER --> GW : HTTPS 443
 SYSINT --> GW : HTTPS 443 (REST)
 GW --> BE : HTTP interno
 BE --> WORKER : Celery tasks (doc/batch processing)
-WORKER --> LLMP : HTTPS (llamadas LLM)
+WORKER --> LLMGW : HTTPS (llamadas LLM via gateway)
+LLMGW --> LLMP : HTTPS (enrutamiento controlado)
 WORKER --> PG : persist resultados
 BE --> PG : datos + alertas
 BE --> OBS : files (docs, CSVs)
 BE --> REDIS : cache + session
 WORKER --> REDIS : cola de tareas
-BE --> PROM : metrics
+BE --> OBSnode : metrics
+WORKER --> OBSnode : LLM metrics (tokens, latencia, logprobs)
 
 note bottom of LLMP #A9DFBF : Sin retencion de datos del cliente\nContrato DPA requerido para cloud\nOllama para soberania total
 
@@ -81,6 +91,8 @@ legend right
   | Color | Tipo |
   |<#AED6F1> | Tradicional / Backend |
   |<#A9DFBF> | IA / LLM |
+  |<#C8F7C5> | IA / LLM On-premise (recomendado experto) |
+  |<#FAD7A0> | LLM Gateway (infraestructura critica) |
   |<#D5D8DC> | Observabilidad |
   |<#FADBD8> | Fuera de alcance MVP |
 endlegend

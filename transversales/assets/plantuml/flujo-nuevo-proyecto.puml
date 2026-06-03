@@ -1,0 +1,77 @@
+@startuml flujo-nuevo-proyecto
+!theme plain
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 11
+
+skinparam activity {
+  BackgroundColor #dce5f5
+  BorderColor #1a3f8a
+  FontColor #1a2035
+  DiamondBackgroundColor #fff8e1
+  DiamondBorderColor #e6a800
+}
+
+skinparam arrow {
+  Color #1a3f8a
+}
+
+start
+
+:Definir nombre y tipo de proyecto
+(extracción / generación / agente);
+
+:Ejecutar **cintel-scaffold**
+con parámetros del proyecto;
+
+fork
+  :Generar estructura
+  de carpetas base;
+fork again
+  :Generar archivos de
+  configuración (pyproject.toml,
+  .env.template, docker-compose.yml);
+fork again
+  :Generar micrositio de
+  documentación con shell
+  y secciones predeterminadas;
+end fork
+
+:Instalar dependencias del **cintel-core**
+(security, tenancy, llm, observability);
+
+:Configurar variables de entorno
+para desarrollo local;
+
+:Levantar infraestructura base con
+**docker-compose up**
+(API, PostgreSQL, Redis);
+
+:Ejecutar migraciones base del Core
+(**alembic upgrade head**);
+
+:Verificar endpoints base:
+/health · /auth/token · /tenants · /llm/complete;
+
+if (¿Todos los endpoints responden 200?) then (sí)
+  :Crear primer tenant de prueba
+  usando el **Onboarding Orchestrator**;
+  :Configurar roles y usuarios iniciales;
+  :Registrar primeros prompts en el
+  **Prompt Registry**;
+  :Verificar métricas en Grafana;
+  :Implementar lógica de dominio
+  específica del proyecto;
+  :Escribir tests de integración
+  sobre el Core;
+  stop
+else (no)
+  :Revisar logs estructurados
+  en el **Log Aggregator**;
+  :Corregir configuración faltante;
+  :Reintentar verificación;
+  stop
+endif
+
+@enduml

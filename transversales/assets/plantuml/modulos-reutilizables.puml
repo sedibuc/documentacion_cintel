@@ -1,0 +1,120 @@
+@startuml modulos-reutilizables
+!theme plain
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 11
+skinparam ArrowColor #1a3f8a
+
+skinparam package {
+  BackgroundColor #f0f4ff
+  BorderColor #1a3f8a
+  FontColor #0d2558
+  FontStyle bold
+}
+
+skinparam class {
+  BackgroundColor #dce5f5
+  BorderColor #1a3f8a
+  FontColor #1a2035
+  HeaderBackgroundColor #c0cfea
+}
+
+package "cintel-core" {
+
+  package "security" {
+    class AuthNService {
+      +validate_jwt(token: str): Claims
+      +refresh_token(refresh: str): Token
+    }
+    class RBACEngine {
+      +check_permission(user, resource, action): bool
+      +get_roles(tenant_id, user_id): List[Role]
+    }
+    class SecurityMiddleware {
+      +validate_input(data: Any): Any
+      +add_security_headers(response): Response
+    }
+  }
+
+  package "tenancy" {
+    class TenantRegistry {
+      +create_tenant(data): Tenant
+      +get_tenant(tenant_id): Tenant
+      +update_config(tenant_id, config): void
+    }
+    class TenantIsolationLayer {
+      +inject_tenant_id(ctx): Context
+      +apply_rls_filter(query, tenant_id): Query
+    }
+    class UserManager {
+      +create_user(tenant_id, data): User
+      +assign_role(user_id, role): void
+      +deactivate_user(user_id): void
+    }
+    class OnboardingOrchestrator {
+      +start_onboarding(tenant_data): Session
+      +validate_step(session_id, step): Result
+      +complete_onboarding(session_id): Tenant
+    }
+  }
+
+  package "llm" {
+    class LLMGateway {
+      +complete(prompt, tenant_id, options): Response
+      +batch_complete(prompts, tenant_id): List[Response]
+    }
+    class RateLimiter {
+      +check_quota(tenant_id, tokens): bool
+      +consume(tenant_id, tokens): void
+      +get_usage(tenant_id): Usage
+    }
+    class PromptRegistry {
+      +get_prompt(key, version): Prompt
+      +register_prompt(key, content, version): void
+      +list_versions(key): List[str]
+    }
+    class CostController {
+      +get_budget(tenant_id): Budget
+      +set_budget(tenant_id, amount): void
+      +check_alert_threshold(tenant_id): AlertLevel
+    }
+  }
+
+  package "observability" {
+    class AuditService {
+      +record(tenant_id, user_id, op, input, result): void
+      +query(tenant_id, filters): List[AuditEntry]
+    }
+    class MetricsCollector {
+      +emit(metric_name, value, labels): void
+      +get_dashboard_url(): str
+    }
+  }
+
+  package "config" {
+    class ConfigManager {
+      +get(key: str): str
+      +require(key: str): str
+      +get_for_tenant(tenant_id, key): str
+    }
+  }
+
+}
+
+TenantIsolationLayer ..|> TenantRegistry : uses
+LLMGateway ..|> RateLimiter : uses
+LLMGateway ..|> PromptRegistry : uses
+LLMGateway ..|> CostController : uses
+LLMGateway ..|> AuditService : uses
+AuthNService ..|> RBACEngine : uses
+RBACEngine ..|> TenantIsolationLayer : uses
+
+note bottom of LLMGateway
+  Único punto de acceso
+  a todos los proveedores LLM.
+  No acceder directamente
+  a OpenAI / Google / etc.
+end note
+
+@enduml

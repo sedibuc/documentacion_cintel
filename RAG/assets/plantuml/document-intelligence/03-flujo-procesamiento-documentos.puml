@@ -48,6 +48,7 @@ endif
 :Normalized Document Representation\n(contenido + metodo_extraccion + hash + original_uri);
 :DocumentSchemaRegistry\nretorna schema vigente del tipo;
 :Prompt Registry retorna\nprompt versionado activo;
+note right #C8F7C5 : Prompt incluye guardrails explicitos,\nejemplos few-shot y formato Markdown\npara tablas e imagenes
 
 |#E9F7EF|Capa IA / LLM|
 note right #A9DFBF : <<IA / LLM>>\nLLM-first · Sin NER en MVP
@@ -56,10 +57,14 @@ note right #A9DFBF : <<IA / LLM>>\nLLM-first · Sin NER en MVP
 :Structured Output Parser\ngenera JSON con campos extraidos;
 
 if (Salida valida?) then (No)
-  :Reintento con prompt ajustado\n(hasta 3 veces);
+  :Reintento con prompt ajustado\n(hasta 3 veces via LLM Gateway);
   if (Reintento OK?) then (No)
-    :Marca extraccion FALLIDA;
-    stop
+    if (¿Activar Critic-Evaluator?) then (Si)
+      :Agente evaluador-critico\nanota fallas y reformula extraccion;
+    else (No)
+      :Marca extraccion FALLIDA;
+      stop
+    endif
   else (Si)
   endif
 else (Si)
@@ -77,7 +82,7 @@ note right #AED6F1 : <<Tradicional>>\nCrossValidator Fase 1
 
 |API / Backend (Tradicional)|
 :Persiste resultado estructurado\ny alertas en PostgreSQL;
-:Audit Service registra traza\n(tenant, doc, metodo_extraccion, prompt_v, modelo, tokens, latencia);
+:Audit Service registra traza\n(tenant, doc, metodo_extraccion, prompt_v, modelo, tokens, latencia, logprobs_min);
 
 |Cliente / Operador|
 :Ve resultado en Alert Dashboard;

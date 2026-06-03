@@ -20,7 +20,9 @@ participant "DocumentSchemaRegistry\n<<Tradicional>>" as SR #AED6F1
 participant "Prompt Registry\n<<Tradicional>>" as PR #AED6F1
 participant "StructuredExtractor\n<<IA/LLM - Central>>" as SE #A9DFBF
 participant "LLM Orchestrator\n<<IA/LLM>>" as LO #A9DFBF
+participant "LLM Gateway\n<<Infraestructura LLM>>" as LGWMT #FAD7A0
 participant "LLM Provider\n<<IA/LLM>>" as LLM #A9DFBF
+participant "Critic-Evaluator Agent\n<<IA/LLM - Opcional>>" as CEA #C8F7C5
 participant "Structured Output Parser\n<<IA/LLM>>" as OP #A9DFBF
 participant "Validation Engine\n<<Hibrido>>" as VE #D5F5E3
 participant "Audit Service\n<<Tradicional>>" as AS #AED6F1
@@ -33,50 +35,66 @@ activate SR
 SR --> SE : schema = { campos: [...], reglas: [...], version: "v3" }
 deactivate SR
 
-SE -> PR : obtenerPrompt(tipo_documental, estrategia="zero-shot")
+SE -> PR : obtenerPrompt(tipo_documental, estrategia="few-shot")
 activate PR
-PR --> SE : prompt_template (version: "pt-ctl-v2.1")
+PR --> SE : prompt_template (version: "pt-ctl-v2.1") + few-shot examples + guardrails
 deactivate PR
 
-SE -> LO : construirContexto(representacion_normalizada, schema, prompt_template, metodo_extraccion)
+SE -> LO : construirContexto(representacion_normalizada, schema, prompt_template, few_shots, guardrails, metodo_extraccion)
 activate LO
 LO -> LO : tokenCount(contexto)
-note right #FEF9E7 : Verifica que el contexto\nno exceda ventana del modelo
+note right #FEF9E7 : Verifica que el contexto\nno exceda ventana del modelo\nGuardrails limitan alucinaciones
 
-LO -> LLM : callLLM(model="gpt-4o", messages=[...], response_format=JSON)
+LO -> LGWMT : llamadaControlada(model="gemini/gpt-4o/deepseek-ocr", messages=[...], response_format=JSON)
+activate LGWMT
+note right #FAD7A0 : Rate-limit por tenant\nRetry automatico / fallback de modelo\nCache de respuestas repetidas\nBatch inference disponible
+LGWMT -> LLM : callLLM(messages=[...], response_format=JSON, logprobs=true)
 activate LLM
-note right #A9DFBF : Structured outputs o function calling\nforzar JSON Schema
-LLM --> LO : completion (JSON crudo + uso de tokens)
+note right #A9DFBF : Structured outputs o function calling\nforzar JSON Schema\ Modelos recomendados:\nGemini, OpenAI, DeepSeek-OCR, Gemma4, PaliGemma\nNO recomendado: Claude (debil en multimodal)
+LLM --> LGWMT : completion (JSON crudo + tokens + logprobs por token)
 deactivate LLM
+LGWMT --> LO : completion + logprobs
+deactivate LGWMT
 
 LO -> OP : parsear(completion, schema_esperado)
 activate OP
 OP -> OP : validarEstructura(JSON, schema_esperado)
+OP -> OP : evaluarLogprobs(logprobs) \nnote right #FEF9E7 : Campos con logprob bajo umbral\nse marcan como LOW_CONFIDENCE\npara revision humana
 
 alt JSON valido y completo
-  OP --> LO : { campos: { nombre: "...", fecha: "...", ... }, confianza: {...}, extracion_parcial: false }
+  OP --> LO : { campos: { nombre: "...", fecha: "...", ... }, confianza: {...}, low_confidence_fields: [...], extracion_parcial: false }
 else JSON invalido o truncado
   OP --> LO : { error: "parse_error", raw: "..." }
-  LO -> LLM : reintento con instruccion corregida (intento 2/3)
-  LLM --> LO : completion corregida
+  LO -> LGWMT : reintento con instruccion corregida (intento 2/3)
+  LGWMT -> LLM : callLLM (reintento)
+  LLM --> LGWMT : completion corregida
+  LGWMT --> LO : completion corregida
   LO -> OP : parsear(completion2, schema_esperado)
-  OP --> LO : { campos: {...}, confianza: {...}, extracion_parcial: false }
+  OP --> LO : { campos: {...}, confianza: {...}, low_confidence_fields: [...], extracion_parcial: false }
 end
 
-LO --> SE : resultadoExtraccion (campos_extraidos, tokens_usados, modelo_usado, prompt_version)
+LO --> SE : resultadoExtraccion (campos_extraidos, tokens_usados, modelo_usado, prompt_version, low_confidence_fields)
 deactivate LO
+
+opt Precision critica requiere validacion adicional
+  SE -> CEA : evaluarCalidad(campos_extraidos, representacion_normalizada)
+  activate CEA
+  note right #C8F7C5 : Agente critico-evaluador\nverifica coherencia del resultado\ncon el documento fuente
+  CEA --> SE : { aprobado: true/false, correcciones: [...] }
+  deactivate CEA
+end
 
 SE -> VE : validar(campos_extraidos, schema.reglas, tenant_id)
 activate VE
 VE --> SE : validacionResult = { VALIDO, faltantes: [], invalidos: [] }
 deactivate VE
 
-SE -> AS : registrarTrazaExtraccion(tenant_id, doc_id, metodo_extraccion, modelo, prompt_v, tokens_entrada, tokens_salida, latencia_ms, resultado)
+SE -> AS : registrarTrazaExtraccion(tenant_id, doc_id, metodo_extraccion, modelo, prompt_v, tokens_entrada, tokens_salida, latencia_ms, logprobs_min, low_confidence_fields, resultado)
 activate AS
 AS --> SE : traza_id registrada
 deactivate AS
 
-SE --> BS : { campos_extraidos, validacion, confianza_por_campo, traza_id, estado: "EXTRAIDO" }
+SE --> BS : { campos_extraidos, validacion, confianza_por_campo, low_confidence_fields, traza_id, estado: "EXTRAIDO" }
 deactivate SE
 
 note over BS, AS #E8F8E0 : Datos estructurados disponibles para CrossValidator y DiscrepancyAlertEngine\nsin ninguna interaccion conversacional / chat / RAG

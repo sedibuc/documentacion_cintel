@@ -95,28 +95,13 @@ Define los contratos de inversión de dependencias como `Protocol` de Python:
 
 ## 2. Relaciones entre Componentes
 
-```
-app.py
- ├── configure_tooling(Tooling(...))    → infrastructure/facade.py · _TOOLING
- ├── app.extensions["agent"] = CampaignAgent()
- └── register_blueprints(app)           → routes/__init__.py
-
-routes/stream.py
- └── agent.chat_with_memory()
-      └── domain/agent_base.py (AgentBase)
-           ├── LangGraph StateGraph.invoke() / stream()
-           │    └── domain/campaign_agent.py (nodos)
-           │         ├── ToolsFacade (infrastructure/facade.py)
-           │         │    └── _TOOLING (Tooling)
-           │         │         ├── llm     → LegacyLLMAdapter   → LLMWrapper → LLMFactory → OpenAI/Gemini
-           │         │         ├── scraper → RequestsScraper    → Requests/BS4/(Selenium opcional)
-           │         │         ├── campaign→ LegacyCampaignAdapter → CampaignHistoryParser / DB
-           │         │         ├── image   → LegacyImageGenAdapter → DALL-E 3 / gpt-image-1
-           │         │         ├── email   → LegacyEmailAdapter → EmailHandler → MS Graph API
-           │         │         └── social  → IGFilterCampaigns  → IGApiClient → Meta Graph API
-           │         └── AgentNodes (clasificadores)
-           └── StreamSink → SseSink → Queue → SSE Response
-```
+<div class="diagram-block">
+<p class="diagram-label">Relaciones entre Componentes — Agente de Contenido Institucional</p>
+<img src="assets/img/diagramas/arquitectura-relaciones-componentes.png" alt="Relaciones entre Componentes — Agente de Contenido Institucional">
+<div class="diagram-links">
+<a href="assets/plantuml/arquitectura-relaciones-componentes.plantuml" download> Fuente PlantUML</a>
+</div>
+</div>
 
 ---
 

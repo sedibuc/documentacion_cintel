@@ -1,4 +1,5 @@
 (function (global) {
+  const contentVersion = "20260602";
   const pages = {
     inicio: { file: "content/inicio.md", title: "Inicio" },
     contexto: { file: "content/contexto.md", title: "Contexto del proyecto" },
@@ -10,11 +11,10 @@
     mockup: { file: "content/mockup.md", title: "Mockup / Prototipo" },
     tobefuncional: { file: "content/to-be-funcional.md", title: "TO-BE funcional — Document Intelligence Engine MultiTenant" },
     arquitecturatobe: { file: "content/arquitectura-tobe.md", title: "Arquitectura TO-BE — Document Intelligence Engine MultiTenant", href: "arquitectura-tobe.html" },
-    servicioscostostobe: { file: "content/servicios-costos-tobe.md", title: "Servicios y costos TO-BE — Proyección de segunda entrega", href: "servicios-costos-tobe.html" },
+    servicioscostostobe: { file: "content/servicios-costos-tobe.md", title: "Servicios y costos TO-BE — Document Intelligence Engine MultiTenant", href: "servicios-costos-tobe.html" },
     decisionesmodulos: { file: "content/decisiones-modulos.md", title: "Decisiones de diseño por módulos", href: "decisiones-modulos.html" },
     cronograma: { file: "content/cronograma-implementacion.md", title: "Cronograma de implementación", href: "cronograma-implementacion.html" },
     preguntasexperto: { file: "content/preguntas-experto.md", title: "Cuestionario preliminar para experto en modelos — Document Intelligence Engine MultiTenant" },
-    noesrag: { file: "content/no-es-rag.md", title: "Por qué esta solución no es un RAG ni un sistema de Q&A" },
     conclusiones: { file: "content/conclusiones.md", title: "Conclusiones y recomendaciones" }
   };
 
@@ -164,7 +164,7 @@
     if (!markdownLoader || typeof markdownLoader.parseMarkdown !== "function") {
       throw new Error("No se pudo inicializar el renderizador Markdown.");
     }
-    const response = await fetch(pageConfig.file);
+    const response = await fetch(`${pageConfig.file}?v=${contentVersion}`);
     if (!response.ok) {
       throw new Error(`No se pudo cargar ${pageConfig.file}`);
     }
@@ -175,6 +175,7 @@
     addCopyButtons(content);
     renderPageNavigation(content, pageKey);
     updateTocActiveState(toc);
+    document.dispatchEvent(new CustomEvent("site:content-loaded", { detail: { pageKey } }));
   }
 
   function buildSnippet(source, query) {
@@ -199,7 +200,7 @@
 
     const entries = await Promise.all(
       Object.entries(pages).map(async ([key, config]) => {
-        const response = await fetch(config.file);
+        const response = await fetch(`${config.file}?v=${contentVersion}`);
         const text = await response.text();
         return { key, title: config.title, file: getPageFile(key), text };
       })

@@ -12,15 +12,15 @@
 
 | Sprint | Fechas tentativas | Objetivo principal | Entregables clave |
 |---|---|---|---|
-| Sprint 0 | 2026-07-01 a 2026-07-14 | Preparación técnica y base de datos | Modelo de datos, tenant_id transversal, ambientes base, backlog refinado |
+| Sprint 0 | 2026-07-01 a 2026-07-14 | Preparación técnica y base de datos | Modelo de datos, tenant_id transversal, ambientes base, **LLM Gateway configurado**, backlog refinado |
 | Sprint 1 | 2026-07-15 a 2026-07-28 | Fundaciones de contexto institucional | OrganizationalContextStore, OnboardingService base, autenticación mínima |
-| Sprint 2 | 2026-07-29 a 2026-08-11 | Núcleo de marca y completitud | BrandGuidelinesStore, lectura de marca con LLM multimodal, CompletenessScorer |
-| Sprint 3 | 2026-08-12 a 2026-08-25 | Agente Estratégico | Flujo conversacional estratégico, brief institucional inicial |
-| Sprint 4 | 2026-08-26 a 2026-09-08 | Agente Creativo y formatos | CreativeAgent, ChannelFormatters (email/Instagram/WhatsApp/web) |
+| Sprint 2 | 2026-07-29 a 2026-08-11 | Núcleo de marca y completitud | BrandGuidelinesStore, lectura de marca con LLM/VLM multimodal (sin OCR), CompletenessScorer |
+| Sprint 3 | 2026-08-12 a 2026-08-25 | Agente Estratégico | Flujo conversacional estratégico, brief institucional con salida estructurada (schema JSON), guardrails y few-shots |
+| Sprint 4 | 2026-08-26 a 2026-09-08 | Agente Creativo y canales especializados | CreativeAgent, LinkedInAgent, InstagramAgent, EmailAgent, WhatsAppAgent (paralelo), CriticAgent |
 | Sprint 5 | 2026-09-09 a 2026-09-22 | Gobernanza y validación humana | HumanValidationModule, reglas de aprobación/rechazo, trazabilidad funcional |
 | Sprint 6 | 2026-09-23 a 2026-10-06 | Histórico y recuperación de contexto | CampaignHistoryStore, ContextRetrievalService, reutilización de campañas |
-| Sprint 7 | 2026-10-07 a 2026-10-20 | Entrega operativa MVP | Export/PublishingAdapter (exportación asistida), hardening técnico |
-| Sprint 8 | 2026-10-21 a 2026-11-03 | Estabilización y salida a piloto | ObservabilityService, pruebas E2E, checklist de seguridad, preparación piloto |
+| Sprint 7 | 2026-10-07 a 2026-10-20 | Entrega operativa MVP | Export/PublishingAdapter (exportación asistida), **BatchInferenceQueue** para variantes masivas, hardening técnico |
+| Sprint 8 | 2026-10-21 a 2026-11-03 | Estabilización y salida a piloto | **ObservabilityService (MLflow + Grafana + Ray)**, pruebas E2E, checklist de seguridad, preparación piloto |
 
 ## 3. Diagrama de Gantt
 
@@ -51,14 +51,18 @@
 |---|---|---|
 | Insumos de marca incompletos | Alto | Checklist de entrada y gate de calidad en Sprint 1 |
 | Retrasos en seguridad multi-organización | Alto | Hardening técnico y checklist de seguridad desde Sprint 0 |
-| Variabilidad en calidad de salidas IA | Medio | Validación humana obligatoria y métricas por canal |
+| Variabilidad en calidad de salidas IA | Medio | Salidas estructuradas obligatorias + patrón crítico-evaluador + validación humana obligatoria |
+| Escalabilidad por tokens/requests por minuto (multi-tenant) | Alto | **LLM Gateway desde Sprint 0** (rate-limit, retries, fallbacks, caché) — no diferible |
 | Deriva de alcance del MVP | Medio | Control de cambios quincenal y priorización estricta de backlog |
+| Alucinaciones en salidas de agentes | Medio | Guardrails + few-shots por canal + salidas estructuradas + patrón crítico-evaluador |
 
 ## 7. Dependencias críticas
 
-- Disponibilidad de insumos de marca por cliente para validar lectura con LLM.
+- Disponibilidad de insumos de marca por cliente para validar lectura con LLM/VLM multimodal.
+- **LLM Gateway** configurado y operativo en Sprint 0 antes de cualquier integración de agentes (bloqueante).
 - Definición temprana de checklist de seguridad multi-organización.
 - Aprobación de canales MVP para exportación asistida.
+- Experimentos MLflow con datos reales del cliente piloto antes de seleccionar proveedor LLM definitivo.
 
 ---
 

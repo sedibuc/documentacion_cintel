@@ -1,18 +1,46 @@
 @startuml
-title Flujo tecnico: Agentes y canales
+title Sistema multi-agente creativo — Flujo técnico de orquestación
 
 actor Comunicador
-participant StrategicAgent
-participant CreativeAgent
-participant ChannelFormatters
-participant HumanValidationModule
+participant "StrategicAgent" as SA
+participant "CreativeAgent\n(Orquestador)" as CA
+participant "CriticAgent" as CRIT
+participant "LinkedInAgent" as LI
+participant "InstagramAgent" as IG
+participant "EmailAgent" as EM
+participant "WhatsAppAgent" as WA
+participant "HumanValidation" as HV
 
-Comunicador -> StrategicAgent: objetivo y restricciones
-StrategicAgent --> Comunicador: plan estrategico estructurado
-Comunicador -> CreativeAgent: generar brief y piezas
-CreativeAgent -> ChannelFormatters: adaptar por canal
-ChannelFormatters --> CreativeAgent: piezas normalizadas
-CreativeAgent -> HumanValidationModule: enviar para revision
-HumanValidationModule --> Comunicador: aprobado/rechazado
+Comunicador -> SA: objetivo y restricciones
+SA --> Comunicador: plan estratégico estructurado
+Comunicador -> CA: generar brief y piezas
+CA -> CA: consulta BrandGuidelinesStore\n(tono, blacklist/whitelist, restricciones)
+CA --> Comunicador: brief por canal (revisable y editable)
+Comunicador -> CA: brief aprobado
+
+par Ejecución paralela de agentes de canal
+  CA -> LI: brief (canal LinkedIn)
+  LI --> CA: pieza LinkedIn
+and
+  CA -> IG: brief (canal Instagram)
+  IG --> CA: pieza Instagram
+and
+  CA -> EM: brief (canal Email)
+  EM --> CA: pieza Email
+and
+  CA -> WA: brief (canal WhatsApp)
+  WA --> CA: pieza WhatsApp
+end
+
+CA -> CRIT: piezas para evaluación institucional
+CRIT --> CA: scores de alineación por pieza
+note right of CRIT
+  Verifica tono, blacklist/whitelist,
+  restricciones de marca.
+  Si score < umbral → re-genera.
+end note
+
+CA -> HV: piezas aprobadas para revisión humana
+HV --> Comunicador: aprobado / con comentarios
 
 @enduml

@@ -1,0 +1,102 @@
+@startuml separacion-core-proyectos
+!theme plain
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 11
+
+skinparam rectangle {
+  BackgroundColor #f8faff
+  BorderColor #1a3f8a
+  FontColor #1a2035
+}
+
+skinparam package {
+  BackgroundColor #f0f4ff
+  BorderColor #1a3f8a
+  FontColor #0d2558
+  FontStyle bold
+}
+
+skinparam note {
+  BackgroundColor #fff8e1
+  BorderColor #e6a800
+}
+
+package "Core Transversal CINTEL\n(compartido por todos los proyectos)" #e0e8f5 {
+
+  rectangle "AuthN + RBAC" as auth #c0cfea
+  rectangle "Tenant Registry + Isolation" as tenant #c0cfea
+  rectangle "LLM Gateway + Rate Limiter" as llm #c0cfea
+  rectangle "Prompt Registry" as prompts #c0cfea
+  rectangle "Audit Service" as audit #c0cfea
+  rectangle "Metrics + Observabilidad" as obs #c0cfea
+  rectangle "Config Manager + CI/CD base" as infra #c0cfea
+  rectangle "Onboarding Orchestrator" as onboarding #c0cfea
+
+}
+
+package "Proyecto DIE\n(Document Intelligence Engine)" #e8f5e9 {
+
+  rectangle "StructuredExtractor\n(LLM + VLM + OCR)" as extractor #b2dfdb
+  rectangle "DocumentSchemaRegistry\n(esquemas por tenant)" as schema #b2dfdb
+  rectangle "ValidationLayer +\nDiscrepancyAlertEngine" as validation #b2dfdb
+  rectangle "Alert Dashboard\n(revisión humana)" as alertdash #b2dfdb
+  rectangle "BatchProcessor\n(Celery + Redis)" as batch #b2dfdb
+
+}
+
+package "Proyecto Agent\n(Adaptador de Contenido Institucional)" #fff3e0 {
+
+  rectangle "ADK Framework\n(multi-agent orchestration)" as adk #ffe0b2
+  rectangle "StrategicAgent +\nCriticAgent + CreativeAgent" as agents #ffe0b2
+  rectangle "BrandGuidelinesStore +\nOrganizationalContextStore" as brand #ffe0b2
+  rectangle "ChannelAdapters\n(LinkedIn, Instagram, Email, WA)" as channels #ffe0b2
+  rectangle "CampaignHistoryStore +\nHumanValidationModule" as campaign #ffe0b2
+
+}
+
+package "Proyecto Futuro N\n(nueva solución de IA)" #f3e5f5 {
+  rectangle "Funcionalidades\nespecíficas del proyecto" as future #e1bee7
+}
+
+' Relaciones: proyectos extienden el Core
+auth <-- extractor : usa
+tenant <-- extractor : usa
+llm <-- extractor : usa
+audit <-- extractor : registra
+prompts <-- extractor : usa
+
+auth <-- adk : usa
+tenant <-- adk : usa
+llm <-- agents : usa
+audit <-- agents : registra
+prompts <-- agents : usa
+obs <-- agents : emite métricas
+
+auth <-- future : usa
+tenant <-- future : usa
+llm <-- future : usa
+audit <-- future : registra
+
+note right of extractor
+  DIE extiende el Core con
+  lógica de extracción estructurada
+  y validación de documentos.
+  No reimplementa auth ni LLM Gateway.
+end note
+
+note right of adk
+  Agent extiende el Core con
+  orquestación multi-agente y
+  gestión de contexto de marca.
+  Comparte auth, LLM Gateway y audit.
+end note
+
+note bottom of future
+  Cualquier nuevo proyecto hereda
+  el Core y agrega solo su lógica
+  de dominio específica.
+end note
+
+@enduml

@@ -1,0 +1,51 @@
+<div class="site-shell">
+  <aside class="sidebar">
+    <div class="brand-block">
+      <p class="eyebrow">Micrositio documental</p>
+      <h1>Arquitectura Transversal</h1>
+      <p class="brand-copy">Scaffolding y proyecto base para soluciones de IA — aplicable a Document Intelligence Engine y Adaptador de Contenido Institucional.</p>
+    </div>
+
+    <label class="search-box" for="site-search">
+      <span>Buscar en el sitio</span>
+      <input id="site-search" type="search" placeholder="Funcionalidades, módulos, decisiones..." autocomplete="off">
+    </label>
+    <div id="search-results" class="search-results" hidden></div>
+
+    <nav class="main-nav" aria-label="Secciones principales">
+      <a href="../index.html" data-nav="portal">Portal de micrositios</a>
+      <a href="index.html" data-nav="inicio">Inicio</a>
+      <a href="funcionalidades.html" data-nav="funcionalidades">1. Funcionalidades transversales</a>
+      <a href="arquitectura.html" data-nav="arquitectura">2. Arquitectura transversal</a>
+      <a href="cronograma.html" data-nav="cronograma">3. Cronograma de implementación</a>
+    </nav>
+
+    <div class="sidebar-note">
+      <strong>Core Transversal CINTEL</strong>
+      <p>Proyecto base desde el cual iniciar implementaciones de IA estructurada: multi-tenant, LLM Gateway, observabilidad, seguridad y CI/CD como cimientos reutilizables.</p>
+    </div>
+  </aside>
+
+  <div class="page-column">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Decisiones arquitectónicas compartidas</p>
+        <h2 id="page-title">Cargando sección...</h2>
+      </div>
+    </header>
+
+    <div id="runtime-warning" class="runtime-warning" hidden></div>
+
+    <main class="content-layout">
+      <article id="content" class="content-panel" aria-live="polite"></article>
+      <aside class="toc-panel">
+        <div class="toc-card">
+          <p class="eyebrow">Navegación interna</p>
+          <nav id="toc" aria-label="Tabla de contenido"></nav>
+        </div>
+      </aside>
+    </main>
+  </div>
+</div>
+
+<button id="back-to-top" class="back-to-top" type="button" aria-label="Volver arriba">↑</button>

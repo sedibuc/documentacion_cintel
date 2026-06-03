@@ -85,9 +85,13 @@ El diferencial no es la generación de texto —que ya está resuelta por el mer
 
 El sistema está **funcionalmente completo** para el flujo principal:
 
-```
-Usuario → Chat IA → Campaña Markdown → Plan de Ejecución → Imágenes → Email
-```
+<div class="diagram-block">
+<p class="diagram-label">Estado del Sistema — Flujo Principal (Marzo 2026)</p>
+<img src="assets/img/diagramas/inicio-flujo-sistema.png" alt="Estado del Sistema — Flujo Principal">
+<div class="diagram-links">
+<a href="assets/plantuml/inicio-flujo-sistema.plantuml" download> Fuente PlantUML</a>
+</div>
+</div>
 
 Los puntos críticos identificados antes de escalar a producción son:
 

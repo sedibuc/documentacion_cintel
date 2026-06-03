@@ -1,0 +1,43 @@
+@startuml flujo-rag-tipico
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 11
+skinparam activityBackgroundColor #D5F5E3
+skinparam activityBorderColor #1E8449
+skinparam activityArrowColor #1E8449
+skinparam activityDiamondBackgroundColor #A9DFBF
+skinparam activityDiamondBorderColor #1E8449
+skinparam titleFontSize 14
+skinparam titleFontStyle bold
+skinparam noteBackgroundColor #FEF9E7
+skinparam noteBorderColor #F39C12
+skinparam partitionBackgroundColor #F4FEFF
+skinparam partitionBorderColor #3498DB
+skinparam partitionFontColor #1A5276
+skinparam partitionFontSize 12
+skinparam partitionFontStyle bold
+
+title Flujo de Ejecución Típico de un RAG
+
+partition "INGESTA / OFFLINE" {
+  start
+  :Documentos del corpus;
+  :Chunking (fragmentación);
+  :Embeddings (vectorización semántica);
+  :Almacenamiento en Vector DB;
+  note right #D5F5E3
+    **Index construido**
+  end note
+}
+
+partition "INFERENCIA / ONLINE" {
+  :Query del usuario (lenguaje natural);
+  :Embedding de la query;
+  :Búsqueda semántica en Vector DB\n→ recupera top-k chunks relevantes;
+  :Construcción del prompt aumentado\n[SISTEMA] + [CONTEXTO: chunk1, chunk2...] + [PREGUNTA];
+  :LLM genera respuesta en lenguaje natural;
+  :Respuesta al usuario (texto generado);
+  stop
+}
+@enduml

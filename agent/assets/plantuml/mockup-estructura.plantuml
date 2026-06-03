@@ -1,0 +1,46 @@
+@startwbs
+<style>
+wbsDiagram {
+  BackgroundColor #1a202c
+  FontColor #d4dae6
+  FontName "Segoe UI"
+  FontSize 11
+  LineColor #4db8b5
+  RoundCorner 8
+  node {
+    BackgroundColor #1e2533
+    LineColor #4db8b5
+    FontColor #d4dae6
+  }
+  arrow {
+    LineColor #4db8b5
+  }
+  :depth(1) {
+    BackgroundColor #252d3d
+    FontColor #4db8b5
+    FontStyle bold
+  }
+  :depth(2) {
+    BackgroundColor #1e2533
+    FontColor #e8f4f3
+  }
+  :depth(3) {
+    BackgroundColor #161b27
+    FontColor #9ba5b4
+  }
+}
+</style>
+
+title Estructura del Prototipo — assets/mockups/
+
+* assets/mockups/
+** app/ (3 pantallas)
+*** login.html\n← Punto de entrada único
+*** home.html\n← Hub de navegación principal
+*** registro-usuario.html\n← Registro de nuevos usuarios
+** onboarding/\n← 9 pantallas del flujo de alta de empresa
+** agente-estrategico/\n← 4 pantallas del IDE estratégico
+** agente-creativo/\n← 5 pantallas del módulo creativo
+** iteracion/\n← 5 pantallas del módulo de ajuste
+** historico/\n← 4 pantallas del módulo de histórico
+@endwbs

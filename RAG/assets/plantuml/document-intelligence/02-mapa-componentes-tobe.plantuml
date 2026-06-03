@@ -39,6 +39,17 @@ package "Extraccion Estructurada IA" as IA #E9F7EF {
   [LLM Orchestrator] <<IA/LLM>> #A9DFBF
   [Prompt Registry] <<Tradicional+IA>> #A9DFBF
   [Structured Output Parser] <<IA/LLM>> #A9DFBF
+  [Critic-Evaluator Agent] <<IA/LLM - Opcional>> #C8F7C5
+  note bottom of [Critic-Evaluator Agent] #C8F7C5
+    Valida calidad de extraccion\nSolo cuando precision requiere\nmejora iterativa
+  end note
+}
+
+package "LLM Gateway" as LLMGW #FDF2E9 {
+  [LLM Gateway] <<Infraestructura LLM>> #FAD7A0
+  note bottom of [LLM Gateway] #FDF2E9
+    Rate-limit por tenant\nRetries / fallbacks\nBalanceo de carga\nCache de respuestas\nBatch inference
+  end note
 }
 
 package "Validacion y Alertas" as VAL #E8F4FD {
@@ -59,7 +70,11 @@ package "Persistencia" as PERS #EBF5FB {
 }
 
 package "LLM Provider\n(local/cloud certificado)" as LLM #E9F7EF {
-  [OpenAI / Groq / Ollama] <<IA/LLM>> #A9DFBF
+  [OpenAI / Gemini] <<IA/LLM Cloud>> #A9DFBF
+  [DeepSeek-OCR / Gemma4 / PaliGemma] <<IA/LLM On-premise>> #C8F7C5
+  note bottom of [DeepSeek-OCR / Gemma4 / PaliGemma] #C8F7C5
+    Modelos recomendados por experto\nEvitar: Claude (debil en multimodal)
+  end note
 }
 
 package "Fuera de Alcance MVP" as FORA #F4F6F7 {
@@ -74,8 +89,8 @@ SI --> [API Gateway] : REST API
 [API Gateway] --> [Document Service]
 [API Gateway] --> [Batch Service]
 [Document Service] --> [Content Extraction Strategy Service]
-[Content Extraction Strategy Service] ..> [OCR Engine] : fallback (escaneados/imagenes)
-[Content Extraction Strategy Service] ..> [LLM Orchestrator] : LLM multimodal/documental
+[Content Extraction Strategy Service] ..> [OCR Engine] : fallback (escaneados/imagenes sin texto)
+[Content Extraction Strategy Service] ..> [LLM Orchestrator] : LLM multimodal — ruta principal
 [Content Extraction Strategy Service] --> DB
 [Document Service] --> FS
 [Batch Service] --> [StructuredExtractor] : invoca extraccion con representacion normalizada
@@ -83,8 +98,11 @@ SI --> [API Gateway] : REST API
 [StructuredExtractor] --> [LLM Orchestrator]
 [StructuredExtractor] --> [DocumentSchemaRegistry] : obtiene schema
 [LLM Orchestrator] --> [Prompt Registry]
-[LLM Orchestrator] --> [OpenAI / Groq / Ollama]
+[LLM Orchestrator] --> [LLM Gateway] : todas las llamadas al modelo pasan por gateway
+[LLM Gateway] --> [OpenAI / Gemini]
+[LLM Gateway] --> [DeepSeek-OCR / Gemma4 / PaliGemma]
 [LLM Orchestrator] --> [Structured Output Parser]
+[LLM Orchestrator] ..> [Critic-Evaluator Agent] : opcional — si precision lo requiere
 [Structured Output Parser] --> [Validation Engine]
 [Validation Engine] --> [CrossValidator]
 [CrossValidator] --> [DiscrepancyAlertEngine]
@@ -98,9 +116,11 @@ legend right
   | Color | Tipo |
   |<#AED6F1> | Tradicional |
   |<#A9DFBF> | IA / LLM |
+  |<#C8F7C5> | IA / LLM On-premise (Recomendados experto) |
   |<#D5F5E3> | Hibrido |
   |<#D5E8D4> | Content Extraction Strategy (Hibrido) |
-  |<#FEF9E7> | OCR Engine (Fallback) |
+  |<#FEF9E7> | OCR Engine (Fallback condicionado) |
+  |<#FAD7A0> | LLM Gateway (Infraestructura critica) |
   |<#FADBD8> | Fuera de alcance MVP |
   |<#D5D8DC> | Futuro |
 endlegend

@@ -1,0 +1,169 @@
+﻿P-00. Formalización de lectura de marca con LLM (sin OCR)
+Decisión propuesta para formalizar: La lectura de manuales de la marca institucional en MVP se realiza como vía principal con un LLM multimodal. OCR no forma parte del flujo objetivo de V1.
+Flujo al que aplica: Aplica al flujo de onboarding o actualización de contexto institucional, cuando un usuario administrador carga manuales de marca, guías visuales o documentos de lineamientos para que el sistema los convierta en reglas reutilizables por los agentes. La pregunta busca confirmar si ese flujo puede operar con la lectura multimodal directa del documento, sin recurrir a OCR como paso estándar de V1.
+Pregunta al experto: ¿Se formaliza esta decisión como lineamiento técnico vigente para MVP, con revisión humana de los campos críticos extraídos?
+Respuesta esperada: Sí/No con condiciones explícitas de calidad mínima, tipos documentales cubiertos y excepciones permitidas.
+Criterio de validación: Si la respuesta es afirmativa, el diseño base de BrandGuidelinesStore se congela con pipeline LLM multimodal + validación humana, sin incorporar OCR en V1.
+
+
+R// Está bien con un LLM, es posible usarlo como OCR y no solo darnos lo que dice el documento, sino interpretar y darnos más información. La calidad es alta y la presión de la información también.
+________________
+P-01. Cobertura de LLM multimodal en manuales de marca
+Decisión inicial propuesta: Usar LLM multimodal directo para PDF/DOCX/imágenes de marca en el flujo principal.
+Flujo al que aplica: Aplica al mismo flujo de carga y lectura de documentos de marca, pero ya no desde la decisión conceptual sino desde su cobertura real en operación. El usuario sube PDFs, DOCX o imágenes institucionales y el sistema debe extraer tono, restricciones, activos y lineamientos aun cuando el documento tenga tablas, anexos, capturas o páginas parcialmente escaneadas.
+Pregunta al experto: ¿Qué cobertura real de calidad se espera para documentos institucionales complejos (tablas, anexos, versiones escaneadas parciales)?
+Respuesta esperada: Tabla por tipo de documento, calidad esperada, riesgo y recomendación operativa.
+Criterio de validación: La cobertura objetivo para operación estable de V1 debe ser >=80% en los documentos típicos del segmento.
+R//
+La interpretación de los LLMs y su capacidad de OCR son altas. Extraer info de tablas lo hace con bastante precisión, extraer texto de imágenes también lo hace con precisión. Con documentos borrosos, tachados o algún detalle al escanear, el LLM puede extraer bien igual gracias a su capacidad de contexto del lenguaje.
+________________
+
+
+P-02. Estrategia híbrida de recuperación de contexto
+Decisión inicial propuesta: Usar recuperación híbrida gradual: base estructurada para contexto crítico y capa documental/vectorial para anexos extensos.
+Flujo al que aplica: Aplica al flujo en el que un usuario quiere generar una campaña nueva o reutilizar campañas anteriores, y el sistema debe recuperar contexto útil de dos fuentes: datos estructurados persistidos y documentos históricos extensos, como briefs, aprobaciones, piezas previas o anexos largos. La pregunta busca validar si ese flujo debe resolverse con una estrategia híbrida o si conviene partir desde V1 con un enfoque más simple y único.
+Pregunta al experto: ¿La estrategia híbrida propuesta es adecuada para MVP multicliente con memoria organizacional y restricciones institucionales?
+Respuesta esperada: Riesgos, ajustes recomendados y condición para activar vector DB desde V1.
+Criterio de validación: Si >70% del contexto crítico queda modelado estructuradamente, se mantiene prioridad estructurada.
+
+
+R//  Si la info la almacenan de forma estructurada, no es necesario un RAG; con tools al agente que le permitan ir a la BD a traer la info, ya sea con queries predefinidos o Texto-SQL, estaría bien y la info retornada es completa y fiable. Si la info no está estructurada, sino documentada, el RAG funciona.
+
+
+________________
+
+
+P-03. Representacion minima de marca util para el modelo
+Decisión inicial propuesta: Extraer y persistir un conjunto acotado de atributos de marca que realmente mejore el comportamiento del modelo en generación de campañas.
+Flujo al que aplica: Aplica al flujo donde un usuario carga manuales de marca y luego espera que el modelo genere campañas alineadas con identidad, tono y restricciones institucionales. La pregunta no busca definir todo el modelo de datos del producto, sino identificar qué atributos realmente condicionan la inferencia y mejoran la calidad de salida del modelo.
+Pregunta al experto: ¿Qué atributos de marca o contexto institucional suelen aportar más señal útil al modelo en generación controlada y cuáles aportan poco valor práctico en una primera versión?
+Respuesta esperada: Lista de atributos de alta señal para el modelo + atributos secundarios o diferibles, con justificación.
+Criterio de validación: La salida debe permitir priorizar un conjunto pequeño de variables que mejore consistencia, tono y restricciones sin sobrecargar el contexto de inferencia.
+R//
+* Definir no solo un tono, sino varios y dependiendo de la campaña. Y puede tener varios tonos la campaña y definirlos muy bien, no solo “profesional”, así que darle un peso entre 10, por ejemplo: profesional experto en agents con capacidad de explicar a gerentes sobre estos temas (8/10), divertido pero sin pasarse de confianza (5/10)…
+* Crear una lista de palabras prohibidas: los LLMs generan siempre palabras comunes como “dominar”, “revolucionario”, “transforma”. También colocar las palabras posibles de usar según la empresa. O sea tener un blacklist, whitelist de palabras
+* Definir perspectivas narrativas o sea hablar en primera o segunda persona
+* Definir restricciones de marca.
+* Objetivos, misión, valores de la empresa ayudan mucho al LLM a redactar campañas alineadas.
+________________
+
+
+P-04. Uso de modelos generativos de imagen bajo restricciones de marca
+Decisión inicial propuesta: Tratar la generación de imagen con IA como una capacidad opcional y controlada, evaluando si los modelos actuales permiten respetar los lineamientos institucionales con suficiente consistencia.
+Flujo al que aplica: Aplica al flujo de producción de piezas visuales cuando, además del texto, se evalúa si un modelo generativo puede proponer o producir imágenes alineadas con los lineamientos institucionales. El foco aquí es estrictamente técnico: qué tan controlable es hoy la generación o la adaptación de imagen respecto al estilo, la consistencia de marca, las restricciones visuales y la variabilidad no deseada.
+Pregunta al experto: ¿Qué tan viable es usar modelos generativos de imagen o edición asistida para producir piezas institucionales con restricciones de marca estrictas, y qué mecanismos de control recomendaría explorar?
+Respuesta esperada: Evaluacion de viabilidad, riesgos tecnicos y tecnicas recomendadas de control (prompting, reference images, adapters, human review).
+Criterio de validación: Si el experto identifica alta variabilidad o bajo control sobre identidad visual, la generacion de imagen no debe tratarse como capacidad central del MVP.
+
+
+R//
+
+
+Modelos de IA generativos de imágenes pueden alinearse a un diseño preliminar pasándole ejemplos como few-shots de otros diseños, también lineamientos de tipos de letra y todo ello. 
+
+
+También es posible aplicar el patrón de crítico-evaluador para que un agente genere la imagen y otro critique si sigue los lineamientos o no.
+
+Las instrucciones al agente pueden ser algo como:
+
+Persona: UI/UX Social Media Art Director
+Propósito y Metas:
+* Actuar como un 'Art Director de Redes Sociales UI/UX' de élite para ayudar a los usuarios a crear activos visuales de alta calidad.
+* Aplicar principios de diseño profesional (usabilidad, jerarquía visual, psicología del color) para maximizar el compromiso en plataformas como Instagram, LinkedIn, TikTok y Twitter.
+* Traducir los conceptos de usuario en prompts técnicos detallados para generar imágenes con una estética de producto digital de alta gama.
+Comportamientos y Reglas:
+1) Análisis Inicial:
+- Identificar siempre el canal o red social de destino para determinar la relación de aspecto (1:1, 9:16, 16:9).
+- Definir el estilo visual preferido: Neumorfismo, Glassmorfismo, Minimalismo Clean, 3D Abstracto o Fotorrealismo Profesional.
+- Inicia la conversación saludando al usuario de manera profesional y preguntando específicamente por el objetivo del contenido y la red social de destino.
+2) Aplicación de Principios de Diseño:
+- Jerarquía Visual: Establecer un punto focal claro mediante el contraste y el tamaño.
+- Psicología del color: seleccionar paletas basadas en la emoción deseada (p. ej., azul para confianza, colores vibrantes para energía).
+- Minimalismo y Accesibilidad: Eliminar ruido visual innecesario y asegurar legibilidad y contraste.
+- Composición: Aplicar la regla de los tercios, proporción áurea o simetría dinámica.
+3) Ingeniería de Prompts:
+- Generar prompts técnicos detallados listos para copiar y pegar.
+- Incluir detalles sobre el sujeto, estilo visual exacto, iluminación (ej. soft studio light), entorno, lente de cámara (ej. 85mm), texturas y palabras clave de alta calidad ('4k', 'cinematic', 'hyper-detailed').
+- Evitar la generación de texto complejo o composiciones genéricas de stock.
+4) Tono y Estética:
+- Mantener un tono profesional, experto y creativo.
+- Explicar brevemente la lógica de diseño detrás de cada propuesta para educar al usuario.
+- Seguir una estética moderna y premium similar a marcas líderes en diseño digital.
+Formato de salida:
+- Al recibir una idea simple, devuelve únicamente el prompt detallado optimizado para IA generativa.
+- Asegúrate de que el prompt refleje la estética de producto digital de alta gama discutida.
+
+
+________________
+
+
+P-05. Adaptacion de salidas por canal con modelos
+Decisión inicial propuesta: Usar el sistema para generar variantes de contenido por canal a partir de un mismo contexto institucional y una misma intención de campaña.
+Flujo al que aplica: Aplica al flujo en el que, a partir de una estrategia o brief, el sistema debe producir piezas distintas para email, Instagram, WhatsApp o web/intranet. La pregunta busca entender si esa adaptación puede resolverse con un solo modelo y buen prompting, o si conviene usar especialización por tipo de salida, plantillas o validaciones distintas según canal.
+Pregunta al experto: ¿Qué tan realista es esperar que un mismo modelo genere salidas consistentes y de calidad para varios canales, y en qué casos recomendaría separar prompts, validadores o incluso familias de modelos por tipo de pieza?
+Respuesta esperada: Tabla o lista por canal con nivel de dificultad, riesgos de calidad y recomendacion tecnica de especializacion.
+Criterio de validación: La respuesta debe permitir decidir si la adaptacion multicanal puede construirse sobre un nucleo comun de inferencia o si requiere tratamiento diferenciado desde el MVP.
+
+
+R// 
+El modelo puede ser el mismo, lo veo más que existan agentes especializados por social network, con las mejores prácticas de cada red. 
+Otra cosa más indispensable es darle skills a los agentes para mejorar su plan, reasoning y acting. (https://adk.dev/skills/)
+También el uso de artifacts para almacenar videos o imágenes pesadas en storages que puedan ser usados por otros agentes. (https://adk.dev/artifacts/)
+Ejemplo: un agente de Twitter con instrucciones de mejores prácticas para esta red, además de tools para ver ejemplos, historial y creación de artefactos visuales, así como un agente para linkedin. Se puede usar un patrón de ejecución paralela de agentes para minimizar la latencia. Además, agentes críticos que den feedback para cada red o uno general el experto teórico y de alineación con la empresa.
+________________
+P-06. Separacion entre agente estrategico y agente creativo
+Decisión inicial propuesta: Mantener una separacion entre una etapa de generacion estrategica y una etapa de generacion creativa, en lugar de resolver todo con una sola inferencia monolitica.
+Flujo al que aplica: Aplica al flujo donde primero se produce un encuadre estrategico de campaña y luego se generan piezas concretas. La pregunta busca saber si, desde el punto de vista de modelos, conviene separar esas tareas para reducir confusiones de instruccion, mejorar control y permitir evaluacion intermedia, o si un solo paso de inferencia podria ser suficiente.
+Pregunta al experto: ¿La separacion entre etapa estrategica y etapa creativa suele mejorar calidad, control y trazabilidad del resultado frente a una sola inferencia end-to-end? ¿En que condiciones no valdria la pena?
+Respuesta esperada: Comparativa entre pipeline por etapas vs inferencia unica, con riesgos y condiciones de uso.
+Criterio de validación: Si el experto considera que separar tareas mejora control y reduce errores de instruccion, se mantiene el enfoque modular para V1.
+
+
+R// De acuerdo con la separación, la mejor práctica es definir el rol por agentes y que cada uno tenga entre uno y tres objetivos cohesionados. Además, si las instrucciones son muy ,largas y hay muchas tools, el agente puede decrementar su exactitud y empezar a alucinar o incrementar la latencia de las respuestas.
+Además, creo que faltan más agentes para que el sistema mejore su precisión y sus resultados, y para que lleve a cabo todo lo necesario. Además, definir las herramientas (tools) que debe contar cada agente. Otra cosa que se puede tener es darle skills a los agentes para mejorar su plan, reasoning y acting
+________________
+P-07. Evaluacion y observabilidad de calidad del modelo
+Decisión inicial propuesta: Instrumentar en V1 un conjunto mínimo de señales para medir calidad, costo y estabilidad del comportamiento del modelo.
+Flujo al que aplica: Aplica al seguimiento de todos los pasos donde interviene inferencia: lectura de marca, recuperacion de contexto, generacion estrategica y produccion de piezas. La pregunta busca definir que debe observarse para saber si el modelo esta fallando por costo, latencia, deriva de calidad, baja adherencia a marca o uso deficiente del contexto.
+Pregunta al experto: ¿Qué metricas o señales considera criticas para evaluar la calidad del modelo en V1 y detectar fallas relevantes sin depender solo de juicio subjetivo humano?
+Respuesta esperada: Lista priorizada de metricas o señales de evaluacion: adherencia a instrucciones, consistencia de tono, grounding, latencia, costo, tasa de retrabajo u otras.
+Criterio de validación: La salida debe permitir definir un set minimo de evaluacion continua del modelo para piloto controlado.
+R// 
+Métricas básicas:
+* Token usados (input y output)
+* Tokens de thinking
+* Latencia
+* Uso de recursos (ram, procesador, red)
+* Con los token estimar costos
+Uso de LLMs como OCRs o NER:
+* Entidades detectadas / entidades que debería detectar 
+* logitprob (probabilidades de tokens) de entidades detectadas
+Usando patrones como critico-evaluador:
+* Número de Feebacks generados por iteración
+* Score de la imagen generada según los lineamientos e instrucciones de cada iteración.
+* Score de estrategias generadas.
+* Score de posts generados
+Uso de herramientas como MLFlow ayudan hacer experimentos, A/B testing y monitoreo/observabilidad en tiempo de real
+________________
+
+
+P-08. Privacidad y aislamiento en flujos soportados por modelos
+Decisión inicial propuesta: Operar modelos o proveedores de IA sobre informacion de multiples organizaciones sin contaminar contexto, caches, prompts ni trazas entre tenants.
+Flujo al que aplica: Aplica a todos los flujos donde el sistema envia contexto institucional a modelos para leer documentos, recuperar historico o generar piezas. La pregunta no se centra en RBAC o arquitectura general, sino en los riesgos propios del uso de modelos: mezcla accidental de contexto, retencion en logs, entrenamiento no deseado, fugas via prompts o caches compartidos.
+Pregunta al experto: ¿Qué riesgos especificos de privacidad o contaminacion de contexto deben vigilarse cuando un mismo sistema de modelos atiende multiples organizaciones, y que salvaguardas considera minimas?
+Respuesta esperada: Lista de riesgos y salvaguardas tecnicas relacionadas con uso de modelos, memoria, logs, caches, fine-tuning y politicas del proveedor.
+Criterio de validación: La respuesta debe permitir definir controles minimos para usar modelos con informacion institucional sensible sin riesgo alto de mezcla o exposicion entre tenants.
+R//
+El uso de un framework adecuado, como ADK, genera para cada usuario una sesión con contexto y estado nuevos. Es única, o sea, no se comparte con ningún otro usuario. Se puede crear un memory bank (memoria a largo plazo) solo para este usuario y definir callbacks para recuperar las sesiones anteriores de este usuario.
+Se puede crear memory banks con datos compartidos de los usuarios que enriquezca la app en general.
+Así que no hay problema de “contaminación” de contexto
+________________
+P-09. Criterios para proveedor LLM
+Decisión inicial propuesta: Seleccionar proveedor con matriz ponderada, no por preferencia única.
+Flujo al que aplica: Aplica a varios flujos donde interviene IA, especialmente lectura de contexto institucional, generación estratégica y producción creativa. La pregunta busca definir con qué criterios debe elegirse el proveedor o la familia de modelos que soportará esos flujos, considerando el español institucional colombiano, costo, latencia, seguridad, calidad de salida y facilidad de operación.
+Pregunta al experto: ¿Qué criterios y pesos recomienda para español institucional colombiano?
+Respuesta esperada: Matriz con pesos (100%) y candidatos prioritarios.
+Criterio de validación: La matriz debe ser utilizable por comité técnico para decisión de MVP.
+R//
+Evaluar mediante experimentos con MLFlow o con Vertex AI Evaluation.
+Se deben hacer experimentos con múltiples prompts, hiperparámetros, modelos, y evaluar resultados por cada tarea a realizarse.

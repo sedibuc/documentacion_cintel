@@ -1,0 +1,82 @@
+@startuml agente-creativo-multiagente
+skinparam backgroundColor #1a202c
+skinparam defaultFontColor #d4dae6
+skinparam defaultFontName "Segoe UI"
+skinparam componentBackgroundColor #1e2533
+skinparam componentBorderColor #4db8b5
+skinparam componentFontColor #e8f4f3
+skinparam interfaceBackgroundColor #252d3d
+skinparam interfaceBorderColor #4db8b5
+skinparam arrowColor #4db8b5
+skinparam noteBackgroundColor #252d3d
+skinparam noteBorderColor #4db8b5
+skinparam noteFontColor #9ba5b4
+skinparam packageBackgroundColor #161b27
+skinparam packageBorderColor #4db8b5
+skinparam packageFontColor #d4dae6
+
+title Agente Creativo — Arquitectura multi-agente (orquestador + canales especializados)
+
+package "Contexto institucional" {
+  [BrandGuidelinesStore\n(tono, blacklist/whitelist,\nrestricciones, misión/valores)] as BGS
+  [Banco de activos\nlicenciados] as ASSETS
+}
+
+package "Entrada" {
+  [StrategicAgent\n(plan de campaña)] as SA
+}
+
+package "CreativeAgent\n(Orquestador)" {
+  [Brief creativo\npor canal] as BRIEF
+  note right of BRIEF
+    Nombre, objetivo, audiencia,
+    mensaje, tono, canal, CTA,
+    tipo de pieza, restricciones
+  end note
+}
+
+package "Agentes de canal especializados\n(ejecución paralela)" {
+  [LinkedInAgent\nLongitud 150-300 palabras\nhook-cuerpo-CTA\nhashtagsprofesionales] as LI
+  [InstagramAgent\nVisual-first\ncaption breve\nstories/reels/carrusel] as IG
+  [EmailAgent\nAsunto+preheader\ncuerpo+CTA\nevitar spam triggers] as EM
+  [WhatsAppAgent\nBrevedad máxima\ntono conversacional\nplantillas HSM] as WA
+}
+
+package "Evaluación institucional" {
+  [CriticAgent\n(score de alineación\npor pieza)] as CRITIC
+  note right of CRITIC
+    Verifica tono, blacklist/whitelist,
+    restricciones de marca.
+    Devuelve feedback accionable.
+  end note
+}
+
+package "Revisión y entrega" {
+  [HumanValidationModule\n(aprobación obligatoria)] as HVM
+  [Piezas listas para\npublicar / exportar] as OUTPUT
+}
+
+SA --> BRIEF : plan de campaña
+BGS --> BRIEF : perfil de marca
+ASSETS --> BRIEF : activos disponibles
+
+BRIEF --> LI : brief LinkedIn
+BRIEF --> IG : brief Instagram
+BRIEF --> EM : brief Email
+BRIEF --> WA : brief WhatsApp
+
+LI --> CRITIC : pieza LinkedIn
+IG --> CRITIC : pieza Instagram
+EM --> CRITIC : pieza Email
+WA --> CRITIC : pieza WhatsApp
+
+CRITIC --> HVM : piezas evaluadas\n(con score)
+HVM --> OUTPUT : piezas aprobadas
+
+note bottom of OUTPUT
+  Cada pieza registra: canal, agente
+  productor, score de alineación y
+  trazabilidad al brief de origen.
+end note
+
+@enduml

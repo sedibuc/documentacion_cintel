@@ -4,12 +4,12 @@
 La arquitectura basada en agentes es adecuada para el caso de uso institucional siempre que se mantengan controles de contexto, validación humana y trazabilidad de decisiones.
 
 ## Hallazgos principales
-- La separación entre Agente Estratégico y Agente Creativo mejora especialización funcional.
+- La separación entre Agente Estratégico y Agente Creativo mejora especialización funcional; la arquitectura multi-agente interna del módulo creativo (orquestador + agentes especializados por canal) mejora adicionalmente la calidad de las piezas al generar desde el origen con las convenciones nativas del destino.
 - El valor del sistema depende de la calidad del onboarding y del histórico institucional.
 - La operación requiere disciplina en observabilidad, seguridad y control de iteraciones.
 
 ## Recomendaciones prioritarias
-1. Consolidar contratos entre módulos para reducir ambiguedad en integración.
+1. Consolidar contratos entre módulos para reducir ambigüedad en integración.
 2. Mantener controles de aprobación humana en puntos críticos del flujo.
 3. Formalizar métricas de calidad de salida por canal y por campaña.
 4. Implementar gobernanza de prompts y versionado de contexto institucional.

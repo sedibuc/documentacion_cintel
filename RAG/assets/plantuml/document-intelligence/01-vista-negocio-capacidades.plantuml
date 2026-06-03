@@ -22,7 +22,11 @@ rectangle "<b>DOCUMENT INTELLIGENCE ENGINE — CAPACIDADES ESENCIALES MVP</b>" a
 
   rectangle "StructuredExtractor\n<i><<IA / LLM — Central>></i>\n· Extraccion de campos\n· Salida JSON estructurada\n· Confianza por campo\n· Trazabilidad LLM" as SE #A9DFBF
 
-  rectangle "LLM Orchestrator\n<i><<IA / LLM>></i>\n· Seleccion de modelo\n· Prompt Registry\n· Reintentos controlados\n· Registro de tokens/costos" as LO #A9DFBF
+  rectangle "LLM Orchestrator\n<i><<IA / LLM>></i>\n· Selección de modelo\n· Prompt Registry (few-shots + guardrails)\n· Reintentos controlados\n· Registro de tokens/costos\n· Evaluación de logprobs por campo" as LO #A9DFBF
+
+  rectangle "LLM Gateway\n<i><<Infraestructura LLM — Critico MVP>></i>\n· Rate-limit por tenant (TPM/RPM)\n· Retries / fallbacks de modelo\n· Balanceo de carga\n· Cache de respuestas\n· Batch inference routing" as LGW #FAD7A0
+
+  rectangle "Critic-Evaluator Agent\n<i><<IA / LLM — Opcional>></i>\n· Validacion iterativa de calidad\n· Activa solo cuando precision\n  critica lo requiere" as CEA #C8F7C5
 
   rectangle "CrossValidator\n<i><<Tradicional — Nucleo>></i>\n· Comparacion vs. CSV/Excel\n· Deteccion de diferencias\n· Clasificacion de discrepancias" as CV #AED6F1
 
@@ -32,7 +36,7 @@ rectangle "<b>DOCUMENT INTELLIGENCE ENGINE — CAPACIDADES ESENCIALES MVP</b>" a
 
   rectangle "API REST documentada\n<i><<Tradicional — Canal principal>></i>\n· POST /documents · /batches\n· POST /extract · /validate\n· GET /alerts · /extraction-runs" as API #AED6F1
 
-  rectangle "Audit and Observability\n<i><<Tradicional>></i>\n· Trazabilidad por tenant/documento\n· Metricas de latencia y tokens\n· Auditoria funcional inmutable" as AO #AED6F1
+  rectangle "Audit and Observability\n<i><<Tradicional>></i>\n· Trazabilidad por tenant/documento\n· Metricas de latencia, tokens y logprobs\n· Auditoria funcional inmutable\n· Stack: MLflow + Grafana + Ray" as AO #AED6F1
 
   rectangle "Soberania de Datos\n<i><<Requisito Transversal>></i>\n· On-premise o cloud certificado\n· Infraestructura controlada\n· Sin dependencia de nube abierta" as SD #FEF9E7
 }
@@ -50,7 +54,9 @@ legend right
   | Color | Tipo |
   |<#AED6F1> | Tradicional (MVP esencial) |
   |<#A9DFBF> | IA / LLM (MVP) |
+  |<#C8F7C5> | IA / LLM Opcional (calidad iterativa) |
   |<#D5E8D4> | Content Extraction Strategy (Hibrido) |
+  |<#FAD7A0> | LLM Gateway (Infraestructura critica) |
   |<#FEF9E7> | Requisito transversal |
   |<#FADBD8> | Fuera del alcance — No implementar |
   |<#D5D8DC> | Futuro condicional / Post-MVP |

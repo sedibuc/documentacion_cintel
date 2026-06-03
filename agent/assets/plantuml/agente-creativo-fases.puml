@@ -12,7 +12,7 @@ skinparam noteFontColor #9ba5b4
 skinparam partitionBackgroundColor #161b27
 skinparam partitionBorderColor #4db8b5
 
-title Agente Creativo — Flujo general de módulo
+title Agente Creativo — Sistema multi-agente (orquestador + canales especializados)
 
 |Agente Estratégico|
 start
@@ -24,11 +24,16 @@ note right
 end note
 :Envía plan al Agente Creativo;
 
-|Agente Creativo|
+|CreativeAgent (Orquestador)|
 :** FASE 1 — BRIEF DE DISEÑO **;
 :Recibe el plan estratégico;
-:Identifica canal y formato objetivo;
-:Construye brief creativo;
+:Consulta BrandGuidelinesStore;
+note right
+  Tono ponderado,
+  blacklist/whitelist,
+  restricciones de marca
+end note
+:Construye brief creativo por canal;
 note right
   Nombre, objetivo, audiencia,
   mensaje, tono, canal, CTA,
@@ -42,19 +47,70 @@ else (No — solicita revisión)
   :Brief actualizado;
 endif
 
-:** FASE 2 — GENERACIÓN DE PIEZAS **;
-:Procesa brief aprobado;
-:Genera piezas según canal;
+:** FASE 2 — PRODUCCIÓN MULTICANAL (paralela) **;
+fork
+  |LinkedInAgent|
+  :Recibe brief;
+  :Aplica mejores prácticas LinkedIn;
+  note right
+    Longitud óptima 150–300 palabras,
+    hashtags profesionales,
+    estructura hook-cuerpo-CTA
+  end note
+  :Genera pieza LinkedIn;
+fork again
+  |InstagramAgent|
+  :Recibe brief;
+  :Aplica mejores prácticas Instagram;
+  note right
+    Visual-first, caption breve,
+    hashtags engagement,
+    stories / reels
+  end note
+  :Genera pieza Instagram;
+fork again
+  |EmailAgent|
+  :Recibe brief;
+  :Aplica mejores prácticas Email;
+  note right
+    Asunto + preheader + cuerpo + CTA,
+    evitar spam triggers,
+    plantillas aprobadas
+  end note
+  :Genera pieza Email;
+fork again
+  |WhatsAppAgent|
+  :Recibe brief;
+  :Aplica mejores prácticas WhatsApp;
+  note right
+    Brevedad máxima,
+    tono conversacional,
+    plantillas aprobadas HSM
+  end note
+  :Genera pieza WhatsApp;
+end fork
+
+|CreativeAgent (Orquestador)|
+:** FASE 3 — EVALUACIÓN Y ENTREGA **;
+:CriticAgent evalúa alineación institucional;
 note right
-  Post, carrusel, banner,
-  mailing, copy landing, etc.
+  Verifica tono, blacklist/whitelist,
+  restricciones de marca. Asigna
+  score de alineación por pieza.
 end note
-:Presenta piezas al usuario;
+if (¿Todas las piezas superan umbral?) then (Sí)
+  :Consolida piezas aprobadas;
+else (Alguna pieza requiere ajuste)
+  :Feedback al agente de canal correspondiente;
+  :Re-generación dirigida;
+  :Consolida piezas re-generadas;
+endif
+:Presenta piezas al usuario para revisión humana;
 if (¿Pieza aprobada?) then (Sí)
   :Pieza lista para publicar / exportar;
 else (Ajustar)
   :Usuario da instrucción de ajuste;
-  :Agente genera versión revisada;
+  :Agente de canal genera versión revisada;
 endif
 
 |Canal de publicación|

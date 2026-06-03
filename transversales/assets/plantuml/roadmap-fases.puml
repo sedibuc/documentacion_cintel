@@ -1,0 +1,32 @@
+@startuml
+@startgantt
+Project starts 2026-07-01
+
+-- Sprint 0 — Seguridad, configuracion e infraestructura base (2 semanas) --
+[S0 - Config Manager + Secret Manager] starts 2026-07-01 and lasts 5 days
+[S0 - AuthN Service JWT + RBAC Engine] starts 2026-07-01 and lasts 7 days
+[S0 - Security Middleware (CORS/CSP/HSTS)] starts 2026-07-07 and lasts 4 days
+[S0 - Docker Compose base (API + PostgreSQL + Redis)] starts 2026-07-01 and lasts 7 days
+[S0 - CI/CD pipeline base] starts 2026-07-08 and lasts 6 days
+
+-- Sprint 1 — Multi-tenancy y gestion de usuarios (2 semanas) --
+[S1 - Tenant Registry + Isolation Layer RLS] starts 2026-07-15 and lasts 7 days
+[S1 - User Manager + roles base] starts 2026-07-15 and lasts 7 days
+[S1 - Onboarding Orchestrator] starts 2026-07-22 and lasts 5 days
+[S1 - Tests de aislamiento multi-tenant] starts 2026-07-22 and lasts 7 days
+
+-- Sprint 2 — LLM Gateway y Prompt Registry (2 semanas) --
+[S2 - LLM Router + Retry/Fallback Manager] starts 2026-07-29 and lasts 7 days
+[S2 - Rate Limiter por Tenant (Redis)] starts 2026-07-29 and lasts 5 days
+[S2 - Response Cache + Cost Controller] starts 2026-08-03 and lasts 5 days
+[S2 - Prompt Registry versionado] starts 2026-08-05 and lasts 7 days
+
+-- Sprint 3 — Observabilidad, auditoria y scaffolding (2 semanas) --
+[S3 - Audit Service inmutable] starts 2026-08-12 and lasts 7 days
+[S3 - Metrics Collector + Grafana base] starts 2026-08-12 and lasts 7 days
+[S3 - Helm Charts base + health checks] starts 2026-08-17 and lasts 5 days
+[S3 - CLI cintel-scaffold + guia inicio rapido] starts 2026-08-17 and lasts 5 days
+[S3 - Validacion y checklist OWASP Top 10] starts 2026-08-20 and lasts 5 days
+
+@endgantt
+@enduml

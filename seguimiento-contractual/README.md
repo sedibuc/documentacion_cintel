@@ -7,12 +7,20 @@ Micrositio estatico para seguimiento del cumplimiento contractual de los proyect
 - index.html
 - alineacion-contractual.html
 - segunda-fase.html
+- cumplimiento-tobe-segunda-entrega.html
 - matriz-entregables.html
 - faltantes.html
 - seguimiento-rag.html
 - seguimiento-agent.html
 - riesgos.html
 - recomendaciones.html
+
+## Documentos de soporte (raiz del proyecto)
+
+- Especificacion-PoC-RAG.md
+- Especificacion-PoC-Agent.md
+- Inventario-Consolidado-Segunda-Fase.md
+- Acta-Validacion-Segunda-Fase.md
 
 ## Objetivo del micrositio
 

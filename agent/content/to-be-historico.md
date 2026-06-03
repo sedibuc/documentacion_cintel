@@ -1,4 +1,4 @@
-# TO-BE  Módulo 2.6: Histórico y memoria organizacional
+# TO-BE — Módulo 2.6: Histórico y memoria organizacional
 
 > Módulo de memoria institucional acumulada. Permite navegar, consultar y retomar comunicaciones anteriores para continuidad temática, aprendizaje y reutilización.
 
@@ -30,9 +30,9 @@ Este cluster de dolor fue identificado en la validación con alta relevancia cru
 
 | Módulo | Relación |
 |---|---|
-| 2.2 Agente Estratégico | Puede recibir un plan anterior como contexto inicial |
-| 2.3 Agente Creativo | Puede recuperar briefs y piezas para reutilizar o mejorar |
-| 2.4 Ajuste de resultados | Accede al histórico de versiones de un resultado |
+| 2.3 Agente Estratégico | Puede recibir un plan anterior como contexto inicial |
+| 2.4 Agente Creativo | Puede recuperar briefs y piezas para reutilizar o mejorar |
+| 2.5 Ajuste de resultados | Accede al histórico de versiones de un resultado |
 
 ---
 
@@ -52,15 +52,13 @@ Cada campaña muestra: nombre, fecha, canales involucrados y estado general.
 
 Cada campaña se organiza como una estructura expandible en tres niveles:
 
-```
-Campaña
- Brief 1
-    Pieza A (copy Instagram)
-    Pieza B (copy LinkedIn)
-    Pieza C (asunto email)
- Brief 2
-     Pieza D (banner web)
-```
+<div class="diagram-block">
+<p class="diagram-label">Visualización jerárquica — Campaña → Brief → Piezas</p>
+<img src="assets/img/diagramas/historico-estructura.png" alt="Estructura jerárquica del Histórico — Campaña → Brief → Piezas">
+<div class="diagram-links">
+<a href="assets/plantuml/historico-estructura.plantuml" download> Fuente PlantUML</a>
+</div>
+</div>
 
 Esta vista permite navegar el árbol completo de una campaña: desde el plan estratégico hasta cada pieza de contenido individual.
 

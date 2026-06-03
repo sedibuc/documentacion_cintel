@@ -1,0 +1,106 @@
+﻿diff --git a/RAG/assets/js/app.js b/RAG/assets/js/app.js
+index adcfe4b..ec3492b 100644
+--- a/RAG/assets/js/app.js
++++ b/RAG/assets/js/app.js
+@@ -15,7 +15,8 @@
+     cronograma: { file: "content/cronograma-implementacion.md", title: "Cronograma de implementaci├│n", href: "cronograma-implementacion.html" },
+     preguntasexperto: { file: "content/preguntas-experto.md", title: "Cuestionario preliminar para experto en modelos ÔÇö Document Intelligence Engine MultiTenant" },
+     noesrag: { file: "content/no-es-rag.md", title: "Por qu├® esta soluci├│n no es un RAG ni un sistema de Q&A" },
+-    conclusiones: { file: "content/conclusiones.md", title: "Conclusiones y recomendaciones" }
++    conclusiones: { file: "content/conclusiones.md", title: "Conclusiones y recomendaciones" },
++    presentacion: { file: "content/presentacion.md", title: "Presentaci├│n ejecutiva" }
+   };
+ 
+   const pageOrder = Object.keys(pages);
+@@ -175,6 +176,7 @@
+     addCopyButtons(content);
+     renderPageNavigation(content, pageKey);
+     updateTocActiveState(toc);
++    document.dispatchEvent(new CustomEvent("site:content-loaded", { detail: { pageKey } }));
+   }
+ 
+   function buildSnippet(source, query) {
+diff --git a/agent/assets/js/app.js b/agent/assets/js/app.js
+index 7e79790..19a73e1 100644
+--- a/agent/assets/js/app.js
++++ b/agent/assets/js/app.js
+@@ -30,7 +30,8 @@
+     "decisiones-modulos-seguridad-escalado": { file: "content/decisiones-modulos-seguridad-escalado.md", title: "Decisiones T├®cnicas ÔÇö M├│dulos de seguridad y escalado" },
+     // ÔöÇÔöÇ An├ílisis ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇ
+     "analisis-cambio-contexto-to-be": { file: "content/analisis-cambio-contexto-to-be.md", title: "An├ílisis ÔÇö Comparativa validaci├│n vs TO-BE final" },
+-    "conclusiones": { file: "content/conclusiones.md", title: "Conclusiones y recomendaciones" }
++    "conclusiones": { file: "content/conclusiones.md", title: "Conclusiones y recomendaciones" },
++    "presentacion": { file: "content/presentacion.md", title: "Presentaci├│n ejecutiva" }
+   };
+ 
+   const pageOrder = Object.keys(pages);
+@@ -179,6 +180,7 @@
+     addCopyButtons(content);
+     renderPageNavigation(content, pageKey);
+     updateTocActiveState(toc);
++    document.dispatchEvent(new CustomEvent("site:content-loaded", { detail: { pageKey } }));
+   }
+ 
+   function buildSnippet(source, query) {
+diff --git a/agent/assets/js/presentacion.js b/agent/assets/js/presentacion.js
+index 98363ce..8dff942 100644
+--- a/agent/assets/js/presentacion.js
++++ b/agent/assets/js/presentacion.js
+@@ -37,16 +37,7 @@
+             { id: "agent-asis-nf-4", label: "Variables de entorno extensas y sensibles", status: "improve" },
+             { id: "agent-asis-nf-5", label: "Gobernanza de prompts y versionado no institucionalizado", status: "alert" },
+             { id: "agent-asis-nf-6", label: "Riesgos de costo por consumo IA y canales", status: "improve" },
+-            {
+-              id: "agent-asis-nf-7",
+-              label: "Incertidumbres arquitectonicas abiertas",
+-              status: "alert",
+-              children: [
+-                { id: "agent-asis-nf-7a", label: "Coexistencia de scraper activo y scraper legado sin limite operativo resuelto", status: "alert" },
+-                { id: "agent-asis-nf-7b", label: "Instancia unica del agente sin mecanismo de aislamiento multi-tenant documentado", status: "alert" },
+-                { id: "agent-asis-nf-7c", label: "XFilterCampaigns disponible en codigo pero fuera del wiring activo sin alcance documentado", status: "improve" }
+-              ]
+-            }
++            { id: "agent-asis-nf-7", label: "Incertidumbres arquitectonicas abiertas", status: "alert" }
+           ]
+         },
+         {
+@@ -211,11 +202,8 @@
+     "agent-asis-nf-3": "Escalabilidad depende de decisiones de infraestructura aun en consolidacion; hoy hay capacidad de piloto mas que de escala amplia.",
+     "agent-asis-nf-4": "La cantidad de variables sensibles y configuraciones incrementa riesgo operativo sin una gobernanza estricta.",
+     "agent-asis-nf-5": "Gobernanza de prompts y versionado no esta institucionalizada; esto afecta reproducibilidad y control de calidad.",
+-    "agent-asis-nf-6": "El inventario identifica vectores de costo espec├¡ficos: MAX_DYNAMIC_QUESTIONS ampl├¡a el n├║mero de llamadas al LLM; el volumen de campa├▒as hist├│ricas infla prompts sin control de RAG; la generaci├│n de im├ígenes con DALL-E 3 o gpt-image-1 es el componente de costo m├ís alto por sesi├│n; e integraciones con Meta Graph API y Microsoft Graph API a├▒aden llamadas externas por sesi├│n.",
+-    "agent-asis-nf-7": "El diagn├│stico identifica tres incertidumbres arquitect├│nicas espec├¡ficas en el demostrador analizado, relacionadas con componentes presentes en el c├│digo pero con l├¡mites operativos o de wiring no resueltos.",
+-    "agent-asis-nf-7a": "El diagn├│stico confirma que scrapper_site.py (scraper legado) y RequestsScraper (scraper activo) coexisten en el repositorio. El material t├®cnico no resuelve el l├¡mite operativo entre ambos ni define cu├índo o si el legado puede activarse.",
+-    "agent-asis-nf-7b": "El diagn├│stico registra como riesgo R3 que el agente opera como instancia ├║nica en app.extensions['agent'] sin mecanismo de aislamiento multi-tenant documentado en el material analizado.",
+-    "agent-asis-nf-7c": "La arquitectura vigente describe XFilterCampaigns (x_tool.py) como c├│digo disponible para X/Twitter que no forma parte del wiring activo del agente. El material base no documenta su alcance ni condiciones de activaci├│n.",
++    "agent-asis-nf-6": "Los costos de consumo IA y canales se reconocen como riesgo no funcional que debe monitorearse continuamente.",
++    "agent-asis-nf-7": "Persisten incertidumbres arquitectonicas sobre limites de m├│dulos, integraciones y responsabilidades.",
+     "agent-asis-arq-1a": "La separacion en domain, application, infrastructure y puertos es una base arquitectonica clara del estado actual.",
+     "agent-asis-arq-1b": "Streaming y observabilidad base estan implementados, aunque requieren mayor madurez para operaci├│n sostenida.",
+     "agent-asis-arq-1c": "Las relaciones entre componentes estan documentadas y permiten identificar acoples y puntos de mejora.",
+@@ -223,9 +211,9 @@
+     "agent-asis-arq-2b": "El flujo SSE/streaming aporta respuesta progresiva, pero exige control operacional y monitoreo fino.",
+     "agent-asis-arq-2c": "Los flujos de scraping, enriquecimiento e Instagram muestran valor, con variabilidad de confiabilidad segun fuente y contexto.",
+     "agent-asis-arq-2d": "La persistencia conversacional soporta continuidad basica y muestra espacios de documentacion incompleta sobre su operacion actual.",
+-    "agent-asis-arq-3a": "El diagn├│stico corrigi├│ la descripci├│n del grafo respecto de documentaci├│n previa: generate_execution_plan, generate_image_prompts, generate_images y send_email aparec├¡an como nodos LangGraph independientes cuando el c├│digo evidencia que son pasos internos de generate_campaign.",
+-    "agent-asis-arq-3b": "El diagn├│stico corrigi├│ defaults de configuraci├│n no reflejados en documentaci├│n previa: ASR_MODEL ten├¡a default gpt-4o-mini-tts (que no es un modelo ASR v├ílido) y LLM_INVOKE_RETRIES era 0 en runtime, no 3 como se documentaba.",
+-    "agent-asis-arq-3c": "La documentaci├│n previa no distingu├¡a componentes activos de legados: Scrapper legado y RequestsScraper activo coexist├¡an sin diferenciaci├│n, y dos fachadas ToolsFacade (legacy y activa) conviv├¡an sin distinci├│n expl├¡cita. El diagn├│stico tambi├®n explicita JWT_SECRET con valor por defecto inseguro como riesgo no documentado previamente.",
++    "agent-asis-arq-3a": "En la documentacion del demostrador analizado se observan diferencias internas entre mensajes, titulos y evidencias del material tecnico revisado.",
++    "agent-asis-arq-3b": "En el material base del demostrador, la redaccion de hallazgos no siempre mantiene el mismo nivel de detalle entre secciones.",
++    "agent-asis-arq-3c": "En la documentacion base del demostrador se identifican elementos presentes y ausentes, especialmente en justificaciones y cierre de algunos apartados.",
+     "agent-tobe-f1a": "Objetivos funcionales y cobertura arquitectonica del TO-BE aterrizan alcance real para entrega ejecutable y evaluable.",
+     "agent-tobe-f1b": "Onboarding institucional estructurado formaliza captura de contexto, lineamientos y restricciones desde el inicio.",
+     "agent-tobe-f1c": "Contexto organizacional persistente habilita continuidad entre sesiones y consistencia de salida.",
+@@ -245,10 +233,10 @@
+     "agent-tobe-nf-4": "Checklist t├®cnico de salida a piloto establece condiciones minimas verificables para habilitar despliegue.",
+     "agent-tobe-nf-5": "Riesgos por sprint y mitigaciones conectan ejecucion t├®cnica con control de cronograma y alcance.",
+     "agent-tobe-nf-6": "Controles avanzados de seguridad y escalado se programan en versi├│n posterior para no sobrecargar v1.",
+-    "agent-tobe-nf-7": "La gobernanza de decisi├│n frente a hallazgos del TO-BE define cuatro prioridades: consolidar contratos entre m├│dulos para reducir ambig├╝edad de integraci├│n; mantener aprobaci├│n humana en puntos cr├¡ticos del flujo; formalizar m├®tricas de calidad de salida por canal y por campa├▒a; e implementar gobernanza de prompts y versionado de contexto institucional.",
++    "agent-tobe-nf-7": "La gobernanza de decision frente a hallazgos asegura coherencia entre validaci├│n y evoluci├│n final.",
+     "agent-tobe-arq-1a": "El mapa de m├│dulos tecnicos define cobertura completa del sistema objetivo y sus dominios.",
+     "agent-tobe-arq-1b": "Interfaces de integracion entre dominios reducen acoplamiento y facilitan evoluci├│n incremental.",
+-    "agent-tobe-arq-1c": "Los criterios de aceptaci├│n de arquitectura se establecen como decisi├│n inicial propuesta con punto de validaci├│n experta explicitado para cada frente t├®cnico. Las capacidades m├¡nimas del MVP definen 10 condiciones verificables: creaci├│n de tenant, onboarding institucional, lineamientos de marca, CompletenessScorer, hist├│rico b├ísico, plan estrat├®gico, adaptaci├│n por canal, validaci├│n humana, exportaci├│n asistida y trazabilidad.",
++    "agent-tobe-arq-1c": "Criterios de aceptacion arquitectonica formalizan cuando una decision se considera cerrada.",
+     "agent-tobe-arq-2a": "Supuestos y cronograma por sprint habilitan planeacion realista para implementaci├│n controlada.",
+     "agent-tobe-arq-2b": "Gantt, hitos y dependencias criticas permiten seguimiento ejecutivo y deteccion temprana de bloqueos.",
+     "agent-tobe-arq-2c": "Riesgos de ejecucion y mitigaci├│n alinean gestion t├®cnica con compromisos contractuales.",

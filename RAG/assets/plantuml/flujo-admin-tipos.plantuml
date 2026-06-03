@@ -27,16 +27,8 @@ title Flujo 6 — Administración de tipo documental
 
 start
 :Administrador crea nuevo tipo documental\n(nombre, descripción, sector);
-:Define campos a extraer\n(nombre, tipo de dato, requerido / opcional);
-:Elige modalidad de extracción;
-
-if (¿Modalidad?) then (Entrenado)
-  :Requiere dataset de documentos reales;\n:Alta precisión, mayor costo de construcción;
-else (Basado en LLM)
-  :Configuración rápida sin dataset;\n:Menor precisión, mayor variabilidad;
-endif
-
-:Define esquema de salida\n(JSON, CSV o ambos);
+:Define campos a extraer\n(nombre, tipo de dato, descripción semántica, requerido / opcional);
+:Define esquema de salida\n(JSON, CSV o ambos) y reglas de validación;
 :Estado inicial: EN DESARROLLO\n(no visible para empresas);
 note right
   EN DESARROLLO:
@@ -44,12 +36,17 @@ note right
   No disponible para empresas.
 end note
 
-:Equipo carga documentos de entrenamiento\n(múltiples ejemplos reales);
-:Sistema infiere estructura\ny valida consistencia del dataset;
+note right
+  MVP LLM-first:
+  no requiere dataset anotado
+  ni entrenamiento NER.
+end note
+
+:Equipo carga documentos de validación\nrepresentativos del tipo;
 
 repeat
-  :Ejecuta proceso de extracción\nsobre el dataset de prueba;
-  :Equipo revisa resultados\ny corrige esquema o campos;
+  :Ejecuta extracción LLM de prueba\ncon esquema + prompt base;
+  :Equipo revisa completitud, confianza\ny corrige esquema o prompt;
 repeat while (¿Precisión aceptable?) is (No)
 ->Sí;
 
@@ -64,8 +61,8 @@ end note
 :Empresas piloto usan el tipo\ny reportan errores o ajustes;
 
 repeat
-  :Equipo ajusta modelo\ny valida con nuevos documentos;
-repeat while (¿Estable y confiable?) is (No)
+  :Equipo ajusta esquema, prompt o umbrales\ny revalida con nuevos documentos;
+repeat while (¿Listo para PRODUCCIÓN?) is (No)
 ->Sí;
 
 :Equipo promueve tipo a PRODUCCIÓN;

@@ -1,0 +1,50 @@
+@startuml to-be-flujo-funcional-e2e
+!theme plain
+skinparam backgroundColor #1a202c
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontColor #d4dae6
+skinparam defaultFontSize 11
+skinparam activityBackgroundColor #1e2533
+skinparam activityBorderColor #4db8b5
+skinparam activityFontColor #d4dae6
+skinparam arrowColor #4db8b5
+skinparam ArrowFontColor #9ba5b4
+skinparam titleFontColor #f0ece3
+skinparam titleFontSize 14
+skinparam noteBackgroundColor #0c3030
+skinparam noteBorderColor #4db8b5
+skinparam noteFontColor #9ba5b4
+skinparam startColor #4db8b5
+skinparam endColor #4db8b5
+
+title Flujo Funcional Extremo a Extremo — Adaptador de Contenido Institucional
+
+start
+:1. ONBOARDING por organización\nURL + documentos + validación de usuario\n→ OrganizationalContextStore / BrandGuidelinesStore;
+:2. INICIO OPERATIVO\nCarga automática de contexto del tenant;
+:3. PLANEACIÓN\nStrategicAgent propone objetivo,\naudiencia, mensajes y canales;
+note right #0c3030
+  CriticAgent evalúa
+  alineación institucional
+end note
+
+fork
+  :LinkedInAgent\ngenera pieza;
+fork again
+  :InstagramAgent\ngenera pieza;
+fork again
+  :EmailAgent\ngenera pieza;
+fork again
+  :WhatsAppAgent\ngenera pieza;
+end fork
+note right #0c3030
+  4. PRODUCCIÓN
+  CreativeAgent (orquestador)
+  despacha en paralelo
+end note
+
+:5. GOBERNANZA\nHumanValidationModule aprueba/rechaza\ny registra trazabilidad;
+:6. ENTREGA\nExport/PublishingAdapter\nexporta asistida en V1;
+:7. MEMORIA\nCampaignHistoryStore registra\nresultados y feedback;
+stop
+@enduml

@@ -1,0 +1,96 @@
+@startuml arquitectura-transversal
+!theme plain
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 12
+skinparam ArrowColor #1a3f8a
+skinparam componentStyle rectangle
+
+skinparam package {
+  BackgroundColor #f0f4ff
+  BorderColor #1a3f8a
+  FontColor #0d2558
+  FontStyle bold
+}
+
+skinparam component {
+  BackgroundColor #dce5f5
+  BorderColor #1a3f8a
+  FontColor #1a2035
+}
+
+package "Capa 1 — Presentación / UI Base" #e8eef8 {
+  [API Gateway]
+  [Shell Genérico de Micrositio]
+  [Plantillas de Interfaz]
+}
+
+package "Capa 2 — Seguridad Transversal" #e0e8f5 {
+  [AuthN Service (JWT)]
+  [RBAC Engine]
+  [Security Middleware]
+  [Secret Manager]
+}
+
+package "Capa 3 — Multi-Tenant Core" #d8e2f2 {
+  [Tenant Registry]
+  [Tenant Isolation Layer]
+  [Onboarding Orchestrator]
+  [User Manager]
+}
+
+package "Capa 4 — LLM Gateway y Gestión de IA" #cfd9ef {
+  [LLM Router]
+  [Rate Limiter por Tenant]
+  [Retry & Fallback Manager]
+  [Response Cache]
+  [Prompt Registry]
+  [Cost Controller]
+}
+
+package "Capa 5 — Observabilidad y Auditoría" #c7d0ec {
+  [Audit Service]
+  [Metrics Collector]
+  [MLFlow Integration]
+  [Grafana Dashboards]
+  [Log Aggregator]
+}
+
+package "Capa 6 — Infraestructura y DevOps" #bec8e9 {
+  [CI/CD Pipeline Template]
+  [Docker Compose Base]
+  [Kubernetes Helm Charts]
+  [Config Manager]
+  [Migration Manager]
+}
+
+' Flujo principal
+[API Gateway] --> [AuthN Service (JWT)]
+[AuthN Service (JWT)] --> [RBAC Engine]
+[RBAC Engine] --> [Tenant Isolation Layer]
+[Tenant Isolation Layer] --> [LLM Router]
+[Tenant Isolation Layer] --> [Audit Service]
+[LLM Router] --> [Prompt Registry]
+[LLM Router] --> [Response Cache]
+[LLM Router] --> [Retry & Fallback Manager]
+[LLM Router] --> [Rate Limiter por Tenant]
+[Rate Limiter por Tenant] --> [Cost Controller]
+[Audit Service] --> [Metrics Collector]
+[Metrics Collector] --> [MLFlow Integration]
+[Metrics Collector] --> [Grafana Dashboards]
+[Metrics Collector] --> [Log Aggregator]
+
+note right of [Tenant Isolation Layer]
+  tenant_id obligatorio
+  en toda operación
+  PostgreSQL RLS
+end note
+
+note right of [LLM Router]
+  OpenAI · Google Generative AI
+  DeepSeek · Gemma
+  Fallback automático
+end note
+
+@enduml

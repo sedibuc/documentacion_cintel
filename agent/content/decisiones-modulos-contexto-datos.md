@@ -27,8 +27,10 @@ Esta página detalla los módulos que sostienen el perfil institucional persiste
 | Salidas | Perfil de marca normalizado para CreativeAgent y ChannelFormatters. |
 | Lectura documental | LLM multimodal como camino principal para extraer estructura semántica del manual. |
 | Política OCR | Fuera de alcance en flujo objetivo del MVP para lectura de marca. |
+| Calidad de extracción | Alta: tablas, anexos e imágenes se procesan con precisión gracias al contexto lingüístico del LLM. Documentos borrosos o con artefactos de escaneo son tolerados. |
 | Riesgos técnicos | Ambigüedad de nomenclatura entre store y service, calidad heterogénea de PDFs. |
 | Controles | Taxonomía canónica, validación humana de campos críticos y versionado de activos. |
+| Validado por experto | ✅ P-00 / P-01 — Junio 2026 |
 
 ### 2.3 OnboardingService
 
@@ -70,9 +72,29 @@ Esta página detalla los módulos que sostienen el perfil institucional persiste
 | Propósito | Construir el contexto final para inferencia combinando datos estructurados e históricos. |
 | Entradas | Perfil institucional, histórico, restricciones por canal y objetivo de campaña. |
 | Salidas | Context package trazable para StrategicAgent y CreativeAgent. |
-| Estrategia MVP | Prioridad estructurada con recuperación documental solo para anexos extensos. |
+| Estrategia MVP | Datos estructurados → herramientas/Text-to-SQL; documentos no estructurados → RAG. Vector DB no se activa por defecto si el contexto crítico está modelado relacionalmente. |
 | Riesgos técnicos | Contexto insuficiente o sobrecargado para prompts de agentes. |
 | Controles | Políticas de selección por relevancia, límites de tokens y trazabilidad de fuentes. |
+| Validado por experto | ✅ P-02 — Junio 2026 |
+
+## 2.7 Atributos de marca prioritarios para inferencia
+
+> Validado por experto técnico (P-03) — Junio 2026.
+
+Los siguientes atributos aportan alta señal al modelo y deben priorizarse en el perfil de marca de V1:
+
+| Atributo | Descripción | Prioridad |
+|---|---|---|
+| **Tono ponderado** | Múltiples tonos con peso numérico (escala 0–10). Ejemplo: `"profesional experto (8/10), cercano sin exceso de confianza (5/10)"`. No basta una etiqueta plana como "profesional". | Alta |
+| **Blacklist de palabras** | Palabras prohibidas que el LLM tiende a usar de forma genérica: "dominar", "revolucionario", "transforma", "innovador". | Alta |
+| **Whitelist de palabras** | Palabras y expresiones propias de la marca o preferidas por la organización. | Alta |
+| **Perspectiva narrativa** | Primera persona ("nosotros hacemos") o segunda persona ("tú puedes"). Define la voz de la marca. | Alta |
+| **Restricciones de marca** | Lo que no puede decirse ni hacerse: temas vetados, formatos no permitidos, afirmaciones no autorizadas. | Alta |
+| **Objetivos, misión y valores** | Contexto institucional que orienta la redacción hacia campañas alineadas con la identidad. | Alta |
+
+Atributos diferibles (valiosos pero no críticos en V1): paleta de colores, tipografías específicas, activos visuales detallados. Estos se resuelven en el flujo del Agente Creativo.
+
+---
 
 ## 3. Contratos técnicos obligatorios
 

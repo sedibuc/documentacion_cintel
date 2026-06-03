@@ -2,17 +2,32 @@
 !theme plain
 skinparam backgroundColor white
 skinparam shadowing false
+skinparam rectangle {
+  BackgroundColor #f0f4ff
+  BorderColor #4466aa
+  FontSize 11
+}
+skinparam note {
+  BackgroundColor #fffbe6
+  BorderColor #ccaa00
+}
 left to right direction
 
-rectangle "Sprint 0\nPlataforma base\nSeguridad + backlog" as s0
-rectangle "Sprint 1\nMulti-tenant\nRBAC + onboarding" as s1
-rectangle "Sprint 2\nExtraccion LLM\nPipeline + JSON" as s2
-rectangle "Sprint 3\nValidacion\nCrossValidator" as s3
-rectangle "Sprint 4\nDiscrepancias\nAlertas + revision" as s4
-rectangle "Sprint 5\nIntegraciones\nREST + lotes" as s5
-rectangle "Sprint 6\nObservabilidad\nAuditoria + metricas" as s6
-rectangle "Sprint 7\nHardening\nE2E + seguridad" as s7
-rectangle "Sprint 8\nPiloto\nUAT + salida" as s8
+rectangle "Sprint 0\n2026-07-01 a 07-14\nAmbientes, CI/CD, seguridad\nEntorno LLM, modelo base\nContrato API interna IA" as s0
+
+rectangle "Sprint 1\n2026-07-15 a 07-28\nMulti-tenant, RBAC, onboarding\nProototipo LLM, prompts v1\nEsquema JSON/CSV inicial" as s1
+
+rectangle "Sprint 2\n2026-07-29 a 08-11\nPipeline ingesta, APIs REST\nExtraccion estructurada\nJSON/CSV validado" as s2
+
+rectangle "Sprint 3\n2026-08-12 a 08-25\nValidationEngine, DiscrepancyAlert\nCrossValidator, MATCH/MISMATCH\nAPI IA v1 expuesta" as s3
+
+note bottom of s3 : Hito 2: modulo IA\nconsumible por sistema\ntradicional
+
+rectangle "Sprint 4\n2026-08-26 a 09-08\nUI revision, batch, historial\nRefinamiento prompts\nOptimizacion LLM" as s4
+
+rectangle "Sprint 5\n2026-09-09 a 09-22\nAudit Service, trazas\nMetricas operativas, REST\nCalidad LLM, aislamiento" as s5
+
+rectangle "Sprint 6\n2026-09-23 a 10-06\nE2E, carga, seguridad\nUAT tenant piloto\nSalida controlada" as s6
 
 s0 --> s1
 s1 --> s2
@@ -20,6 +35,4 @@ s2 --> s3
 s3 --> s4
 s4 --> s5
 s5 --> s6
-s6 --> s7
-s7 --> s8
 @enduml

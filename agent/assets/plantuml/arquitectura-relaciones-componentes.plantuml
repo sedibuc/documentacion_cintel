@@ -1,0 +1,66 @@
+@startuml arquitectura-relaciones-componentes
+!theme plain
+skinparam backgroundColor #1a202c
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontColor #d4dae6
+skinparam defaultFontSize 11
+skinparam componentBackgroundColor #1e2533
+skinparam componentBorderColor #4db8b5
+skinparam componentFontColor #e8f4f3
+skinparam arrowColor #4db8b5
+skinparam ArrowFontColor #9ba5b4
+skinparam ArrowFontSize 10
+skinparam titleFontColor #f0ece3
+skinparam titleFontSize 14
+skinparam packageBackgroundColor #161b27
+skinparam packageBorderColor #2d3748
+skinparam packageFontColor #4db8b5
+skinparam noteBackgroundColor #0c3030
+skinparam noteBorderColor #4db8b5
+skinparam noteFontColor #9ba5b4
+
+title Relaciones entre Componentes — Agente de Contenido Institucional
+
+[app.py] as APP
+
+package "Infraestructura" {
+  [infrastructure/facade.py (_TOOLING)] as FACADE
+  [llm → LegacyLLMAdapter → OpenAI/Gemini] as LLM
+  [scraper → RequestsScraper] as SCRAPER
+  [campaign → CampaignHistoryParser] as CAMP
+  [image → DALL-E 3 / gpt-image-1] as IMG
+  [email → EmailHandler → MS Graph API] as EMAIL
+  [social → IGApiClient → Meta Graph API] as SOCIAL
+}
+
+package "Rutas" {
+  [routes/__init__.py] as ROUTES
+  [routes/stream.py] as STREAM
+}
+
+package "Dominio" {
+  [domain/agent_base.py (AgentBase)] as AGENT_BASE
+  [LangGraph StateGraph] as LANGGRAPH
+  [domain/campaign_agent.py (nodos)] as CAMPAIGN_AGENT
+  [AgentNodes (clasificadores)] as AGENT_NODES
+}
+
+package "Streaming" {
+  [StreamSink → SseSink → Queue → SSE Response] as SSE
+}
+
+APP --> FACADE : configure_tooling()
+APP --> ROUTES : register_blueprints()
+STREAM --> AGENT_BASE : chat_with_memory()
+AGENT_BASE --> LANGGRAPH : invoke() / stream()
+LANGGRAPH --> CAMPAIGN_AGENT : nodos
+CAMPAIGN_AGENT --> FACADE : ToolsFacade
+FACADE --> LLM
+FACADE --> SCRAPER
+FACADE --> CAMP
+FACADE --> IMG
+FACADE --> EMAIL
+FACADE --> SOCIAL
+CAMPAIGN_AGENT --> AGENT_NODES
+AGENT_BASE --> SSE : on_token()
+@enduml

@@ -27,18 +27,26 @@ Documentar características técnicas por módulo y su relación con el MVP y el
 | ContextRetrievalService | Contexto y datos | MVP con evolución |
 | StrategicAgent | Agentes y canales | MVP |
 | CreativeAgent | Agentes y canales | MVP |
-| ChannelFormatters | Agentes y canales | MVP |
+| Agentes de canal (LinkedIn / Instagram / Email / WhatsApp) | Agentes y canales | MVP |
+| CriticAgent | Agentes y canales | MVP |
+| ImageCriticAgent | Agentes y canales | V1 (organizaciones sin restricciones regulatorias) |
 | HumanValidationModule | Gobernanza y operación | MVP |
 | Export/PublishingAdapter | Gobernanza y operación | V1-V2 |
-| ObservabilityService | Gobernanza y operación | MVP |
+| ObservabilityService (MLflow + Grafana + Ray) | Gobernanza y operación | MVP |
+| **LLM Gateway** | **Seguridad y escalado** | **MVP — Requerido** |
+| **BatchInferenceQueue** | Seguridad y escalado | V1 (activar según demanda) |
 | TenantIsolationLayer | Seguridad y escalado | Sprint 0-MVP |
 
 ## 4. Decisiones transversales vigentes
 
-- La lectura de manuales de marca usa LLM multimodal como camino principal en V1.
-- OCR no forma parte del flujo objetivo de lectura de marca en MVP.
+- La lectura de manuales de marca usa LLM/VLM multimodal como camino principal en V1. OCR no forma parte del flujo objetivo de lectura de marca en MVP. (✅ P-00/P-01)
+- **Salidas estructuradas obligatorias**: todos los agentes del sistema deben definir un schema explícito en el prompt. Ninguna salida de agente que alimenta otro paso es texto libre. (✅ Lineamiento transversal #2)
+- **GuardRails explícitos**: blacklist/whitelist, tono ponderado, perspectiva narrativa y restricciones de marca son parte del diseño del prompt, no ajuste posterior. (✅ Lineamiento transversal #5)
+- **Few-shots por tarea y canal**: corpus de ejemplos representativos mantenido como primera medida de mejora de calidad. (✅ Lineamiento transversal #4)
+- **LLM Gateway requerido desde MVP**: toda llamada al proveedor LLM pasa por el gateway (rate-limit, retries, fallbacks, caché, batch routing). Ningún agente llama directamente al proveedor. (✅ Lineamiento transversal #10)
 - La publicación se mantiene offline-first en V1 con exportación asistida.
 - La validación humana sigue siendo obligatoria antes de salida final.
+- Stack de observabilidad: **MLflow + Grafana + Ray**. (✅ Lineamiento transversal #8-9)
 
 ## 5. Definición arquitectónica transversal
 

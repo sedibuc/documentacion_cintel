@@ -35,18 +35,13 @@ Si prefiere ingresar directamente a un módulo sin pasar por el login:
 
 El prototipo está construido como un conjunto de pantallas HTML estáticas organizadas en:
 
-```
-assets/mockups/
-  app/
-    login.html              ← Punto de entrada único
-    home.html               ← Hub de navegación principal
-    registro-usuario.html   ← Registro de nuevos usuarios
-  onboarding/               ← 9 pantallas del flujo de alta de empresa
-  agente-estrategico/       ← 4 pantallas del IDE estratégico
-  agente-creativo/          ← 5 pantallas del módulo creativo
-  iteracion/                ← 5 pantallas del módulo de ajuste
-  historico/                ← 4 pantallas del módulo de histórico
-```
+<div class="diagram-block">
+<p class="diagram-label">Estructura del Prototipo — assets/mockups/</p>
+<img src="assets/img/diagramas/mockup-estructura.png" alt="Estructura del Prototipo — árbol de pantallas">
+<div class="diagram-links">
+<a href="assets/plantuml/mockup-estructura.plantuml" download> Fuente PlantUML</a>
+</div>
+</div>
 
 **Total:** 30 pantallas navegables.
 
