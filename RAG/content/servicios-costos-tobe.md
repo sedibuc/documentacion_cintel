@@ -29,34 +29,40 @@
 | Variable de costo | Valor base (corte actual) | Valor validado por experto | Observación |
 |---|---|---|---|
 | Modelo principal de extracción | GPT-4o (baseline) | Evaluar con MLflow: Gemini, OpenAI, DeepSeek-OCR, Gemma4 — **No Claude** | La selección final requiere experimentos con 100 documentos reales |
-| Tokens promedio por documento | [Pendiente — medir en piloto] | Registrar `tokens_entrada`, `tokens_salida`, `logprobs_min` por ejecución | Estimar costo unitario desde tokens acumulados |
+| Tokens promedio por documento | A medir en piloto | Registrar `tokens_entrada`, `tokens_salida`, `logprobs_min` por ejecución | El costo unitario se estima desde tokens acumulados; el valor exacto depende del tipo y tamaño de los documentos reales de producción |
 | Reintentos por validación de salida | Máximo 3 reintentos (diseño base) | Monitorear tasa de reintentos con MLflow; el LLM Gateway gestiona retries automáticamente | Ajustar para balance costo/calidad según datos del piloto |
 
 ### 2.2 Validación cruzada y alertas
 
-| Variable de costo | Valor base (corte actual) | Valor validado por experto | Observación |
-|---|---|---|---|
-| Reglas activas por tipo documental | [Pendiente] | [Pendiente] | Afecta costo de cómputo y latencia |
-| Volumen de comparaciones por lote | [Pendiente] | [Pendiente] | Depende de número de registros de referencia |
-| Tasa de generación de alertas | [Pendiente] | [Pendiente] | Impacta operación de revisión humana |
+> Los valores base y validados por experto de este bloque se cuantificarán una vez que se formalice la taxonomía documental del cliente (número y tipo de reglas por documento) y se ejecute el piloto con documentos reales de producción.
+
+| Variable de costo | Observación |
+|---|---|
+| Reglas activas por tipo documental | Afecta costo de cómputo y latencia; su número depende de la taxonomía documental que se defina con el cliente en sesión de cierre técnico |
+| Volumen de comparaciones por lote | Depende del número de registros de referencia activos; varía por tenant y tipo de proceso |
+| Tasa de generación de alertas | Impacta la carga de revisión humana; se medirá durante el piloto para calibrar umbrales de activación |
 
 ### 2.3 Servicios opcionales (OCR/visión)
 
-| Variable de costo | Valor base (corte actual) | Valor validado por experto | Observación |
-|---|---|---|---|
-| Activación de OCR fallback | Condicional | [Pendiente] | Solo para documentos sin texto embebido |
-| Volumen de procesamiento multimodal | [Pendiente] | [Pendiente] | Afecta costo unitario por documento |
-| Límite de casos OCR por lote | [Pendiente] | [Pendiente] | Variable de control de costo |
+> La validación experta de los parámetros de este bloque queda condicionada al piloto con documentos reales, donde se medirá la proporción efectiva de documentos que activan el fallback OCR. Hasta entonces no es posible comprometer valores concretos sin riesgo de subestimar o sobreestimar el costo.
+
+| Variable de costo | Estado / Valor base | Observación |
+|---|---|---|
+| Activación de OCR fallback | Condicional | Solo para documentos sin texto embebido; política LLM-first validada en TO-BE funcional |
+| Volumen de procesamiento multimodal | A medir en piloto | Afecta el costo unitario por documento; depende de la proporción real de documentos escaneados o sin texto embebido |
+| Límite de casos OCR por lote | A calibrar en piloto | Variable de control de costo; se definirá en función de la tasa de fallback observada y el presupuesto operativo |
 
 ---
 
 ## 3. Infraestructura de soporte TO-BE
 
+> Los componentes sin validación experta (—) serán revisados en la sesión de cierre técnico. Su configuración definitiva depende de decisiones de arquitectura de despliegue (cloud vs. on-premise, proveedor de almacenamiento) que se tomarán con base en los requisitos de soberanía de datos de cada tenant.
+
 | Infraestructura | Tipo | Impacto de costo | Valor base | Validado experto |
 |---|---|---|---|---|
-| Core multi-tenant de aplicación | Infraestructura | Medio-Alto | Runtime contenedorizado | [Pendiente] |
-| Base de datos operativa y auditoría | Infraestructura | Medio | PostgreSQL con trazabilidad | [Pendiente] |
-| Almacenamiento de documentos y resultados | Infraestructura | Medio | [Pendiente] | [Pendiente] |
+| Core multi-tenant de aplicación | Infraestructura | Medio-Alto | Runtime contenedorizado | — |
+| Base de datos operativa y auditoría | Infraestructura | Medio | PostgreSQL con trazabilidad | — |
+| Almacenamiento de documentos y resultados | Infraestructura | Medio | Por definir según decisiones de despliegue (S3 / GCS / local por tenant) | — |
 | **LLM Gateway** | **Infraestructura LLM** | **Medio** | LiteLLM / Kong AI Gateway / custom | ✅ **Requerido por experto** |
 | Observabilidad y monitoreo de flujo | Infraestructura | Medio | **MLflow + Grafana + Ray** (recomendado por experto) | ✅ Validado |
 
@@ -64,24 +70,28 @@
 
 ## 4. Estimación de costo por lote/sesión TO-BE (estructura)
 
-| Componente | Tendencia de costo esperada | Métrica base actual | Métrica validada |
-|---|---|---|---|
-| Extracción LLM por documento | Medio-Alto | [Pendiente] | [Pendiente] |
-| Validación cruzada y reglas | Medio | [Pendiente] | [Pendiente] |
-| Alertamiento y gestión de discrepancias | Medio | [Pendiente] | [Pendiente] |
-| OCR fallback (si aplica) | Variable | [Pendiente] | [Pendiente] |
-| Persistencia y auditoría | Medio | [Pendiente] | [Pendiente] |
+> Las métricas exactas de costo por componente se determinarán durante el piloto, una vez se cuente con datos reales de procesamiento: tokens promedio por tipo documental, latencia de extracción, tasa de fallback OCR y volumen de validaciones cruzadas. Esta tabla establece las tendencias cualitativas como insumo para el diseño de experimentos del piloto y la definición de umbrales de presupuesto operativo.
+
+| Componente | Tendencia de costo esperada |
+|---|---|
+| Extracción LLM por documento | Medio-Alto |
+| Validación cruzada y reglas | Medio |
+| Alertamiento y gestión de discrepancias | Medio |
+| OCR fallback (si aplica) | Variable |
+| Persistencia y auditoría | Medio |
 
 ---
 
 ## 5. Variables de control de costos (a formalizar)
 
-| Variable | Efecto esperado | Valor inicial | Valor objetivo validado |
-|---|---|---|---|
-| Máximo de documentos por lote | Controla consumo de inferencia | [Pendiente] | [Pendiente] |
-| Máximo de reintentos LLM | Limita costo por caso | [Pendiente] | [Pendiente] |
-| Umbral de activación OCR fallback | Evita costo multimodal innecesario | Condicional | [Pendiente] |
-| Frecuencia de validación cruzada | Balancea costo y control de calidad | [Pendiente] | [Pendiente] |
+> Los valores concretos de estas variables se calibrarán durante la ejecución del piloto. Su configuración depende de métricas operativas aún no disponibles: throughput real de documentos, tasa de reintentos del LLM, proporción de fallbacks OCR y latencia de validaciones cruzadas. El LLM Gateway permite ajustar estas variables en tiempo de ejecución sin redespliegue, lo que facilita la calibración iterativa.
+
+| Variable | Efecto esperado |
+|---|---|
+| Máximo de documentos por lote | Controla el consumo de inferencia y la latencia de respuesta por sesión |
+| Máximo de reintentos LLM | Limita el costo por documento en casos de baja confianza de extracción |
+| Umbral de activación OCR fallback | Evita costo multimodal innecesario; se activa solo cuando el documento carece de texto embebido |
+| Frecuencia de validación cruzada | Balancea costo computacional y nivel de control de calidad por lote |
 
 ---
 

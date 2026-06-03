@@ -18,7 +18,7 @@ for fname in puml_files:
     stem = fname[:-5]
     src  = os.path.join(PUML_DIR, fname)
     result = subprocess.run(
-        ["plantuml", "-tpng", "-o", OUT_DIR, src],
+        ["plantuml", "-charset", "UTF-8", "-tpng", "-o", OUT_DIR, src],
         capture_output=True, text=True
     )
     png = os.path.join(OUT_DIR, stem + ".png")

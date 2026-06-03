@@ -18,16 +18,13 @@ CA -> CA: consulta BrandGuidelinesStore\n(tono, blacklist/whitelist, restriccion
 CA --> Comunicador: brief por canal (revisable y editable)
 Comunicador -> CA: brief aprobado
 
-par Ejecución paralela de agentes de canal
+group par : Ejecución paralela de agentes de canal
   CA -> LI: brief (canal LinkedIn)
   LI --> CA: pieza LinkedIn
-and
   CA -> IG: brief (canal Instagram)
   IG --> CA: pieza Instagram
-and
   CA -> EM: brief (canal Email)
   EM --> CA: pieza Email
-and
   CA -> WA: brief (canal WhatsApp)
   WA --> CA: pieza WhatsApp
 end
