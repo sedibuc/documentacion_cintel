@@ -11,21 +11,7 @@
 - La condición habilitadora de todo el plan es acordar el **contrato de API interna del módulo IA** (endpoints, esquemas, códigos de error) en Sprint 0; es bloqueante para el Sprint 1.
 - **Reducción de plazo estimada: 4 semanas** frente al plan secuencial original (18 semanas → 14 semanas; cierre estimado **6 de octubre de 2026**).
 
-## 2. Equipo por sprint
-
-| Sprint | Objetivo | Equipo requerido |
-|---|---|---|
-| Sprint 0 | Preparación de plataforma y entorno IA | Tech Lead, DevOps, PO/SM, Ing. IA, Prompt Engineer, Especialista en Seguridad |
-| Sprint 1 | Fundaciones multi-tenant + prototipo LLM | Tech Lead, Backend Senior, Backend Mid, Ing. IA, Prompt Engineer |
-| Sprint 2 | Ingesta, APIs REST y extracción estructurada | Tech Lead, Backend Senior, Backend Mid, Frontend, Ing. IA, Prompt Engineer, Ing. Datos |
-| Sprint 3 | Validación cruzada y módulo IA expuesto como API interna | Tech Lead, Backend Senior, Backend Mid, Frontend, Ing. IA, Ing. Datos, QA |
-| Sprint 4 | Revisión humana, procesamiento batch y refinamiento LLM | Tech Lead, Backend Senior, Backend Mid, Frontend, QA, Ing. IA, Prompt Engineer, Ing. Datos |
-| Sprint 5 | Convergencia: auditoría, observabilidad y calidad LLM | Tech Lead, Backend Senior, DevOps, Frontend, QA, Ing. IA, Ing. Datos, Especialista en Seguridad |
-| Sprint 6 | Hardening técnico, UAT y piloto controlado | Todo el equipo (11 personas) |
-
-> **Equipo total recomendado:** Tech Lead · PO/SM · Backend Senior · Backend Mid · Frontend · DevOps · Especialista en Seguridad · QA · Ing. IA · Prompt Engineer · Ing. Datos = **11 personas**.
-
-## 3. Cronograma por sprint
+## 2. Cronograma por sprint
 
 | Sprint | Fechas | Actividades clave | Entregables |
 |---|---|---|---|
@@ -37,19 +23,19 @@
 | Sprint 5 | 2026-09-09 a 2026-09-22 | Audit Service inmutable, trazas, métricas operativas, servicios REST finales; métricas de calidad LLM, afinación de prompts, validación de aislamiento de contexto entre tenants | Sistema integrado E2E, observabilidad activa, calidad LLM medida |
 | Sprint 6 | 2026-09-23 a 2026-10-06 | Pruebas E2E, carga inicial, checklist de seguridad multi-tenant, ajustes de rendimiento; UAT con tenant piloto, validación de extracción con datos reales, ajustes finales de prompts, remediación y plan de salida controlada | Sistema productivo listo para piloto |
 
-## 4. Diagrama de Gantt
+## 3. Diagrama de Gantt
 
 ![Diagrama de Gantt del cronograma de implementación RAG](assets/img/diagramas/cronograma-gantt-rag.png)
 
 <a href="assets/plantuml/cronograma-gantt-rag.plantuml" download class="diagram-download">⬇ Descargar fuente (.plantuml)</a>
 
-## 5. Sprints y alcance por iteración
+## 4. Sprints y alcance por iteración
 
 ![Presentación gráfica de sprints y alcance por sprint RAG](assets/img/diagramas/cronograma-sprints-alcance-rag.png)
 
 <a href="assets/plantuml/cronograma-sprints-alcance-rag.plantuml" download class="diagram-download">⬇ Descargar fuente (.plantuml)</a>
 
-## 6. Hitos de control
+## 5. Hitos de control
 
 - Hito 0 (fin Sprint 0): contrato de API interna del módulo IA acordado, ambientes operativos.
 - Hito 1 (fin Sprint 2): extracción LLM operativa con esquema del piloto; pipeline de ingesta y fundaciones multi-tenant listos.
@@ -57,7 +43,7 @@
 - Hito 3 (fin Sprint 5): trazabilidad auditada, métricas operativas activas y sistema integrado de extremo a extremo.
 - Hito 4 (fin Sprint 6): piloto controlado completado y listo para transición operativa.
 
-## 7. Riesgos y mitigación
+## 6. Riesgos y mitigación
 
 ![Riesgos y mitigación del plan de implementación RAG](assets/img/diagramas/cronograma-riesgos-mitigacion-rag.png)
 
@@ -73,7 +59,7 @@
 | Deriva de alcance durante piloto | Medio | Comité de cambios quincenal y backlog cerrado por hitos |
 | Desincronización entre actividades de software e IA | Medio | Sincronización semanal de equipo; contrato de API como interfaz estable |
 
-## 8. Dependencias críticas
+## 7. Dependencias críticas
 
 - Contrato de API interna del módulo IA acordado en Sprint 0 (bloqueante).
 - Esquemas documentales del piloto aprobados en Sprint 0–1.
