@@ -1,0 +1,15 @@
+@startuml poc-die-cronograma
+@startgantt
+Project starts 2026-06-09
+[ PRE-00 Reunion contexto Galias ] starts 2026-06-11 and lasts 0 days
+[ PRE-01+02 LLM Key + Ambiente ] starts 2026-06-09 and lasts 0 days
+[ PRE-03+04+05 Corpus + Schema + Autorizacion ] starts 2026-06-13 and lasts 0 days
+[ PRE-06 Template en modulo admin ] starts 2026-06-17 and lasts 0 days
+[ Sprint 1 - Setup + Extractor LLM DOC_CTL ] starts 2026-06-09 and lasts 5 days
+[ H1 Extractor CTL operativo ] starts 2026-06-13 and lasts 0 days
+[ Sprint 2 - Modulo admin + CrossValidator + Alertas ] starts 2026-06-16 and lasts 5 days
+[ H2 CrossValidator + metricas calidad ] starts 2026-06-20 and lasts 0 days
+[ Sprint 3 - Integracion E2E + Documentacion + Entrega ] starts 2026-06-23 and lasts 6 days
+[ H3 Entrega formal PoC Las Galias ] starts 2026-06-30 and lasts 0 days
+@endgantt
+@enduml

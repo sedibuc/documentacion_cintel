@@ -1,0 +1,60 @@
+@startuml poc-die-evolucion
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 11
+skinparam shadowing false
+skinparam titleFontSize 14
+skinparam titleFontStyle bold
+
+title Evolución PoC mono-tenant → DIE MultiTenant\n(Las Galias PoC como base técnica del TO-BE)
+
+package "PoC · Las Galias (Jun 2026)" #EFF6FF {
+  component "REST API\n(FastAPI + API Key)" as api_poc #DBEAFE
+  component "StructuredExtractor\n(LLM + Pydantic)" as ext_poc #A7C7F0
+  component "LiteLLM Client\n(proveedor único)" as llm_poc #DBEAFE
+  component "Schema JSON\n(archivos en disco)" as schema_poc #DBEAFE
+  component "CrossValidator\n(pandas)" as cv_poc #A7C7F0
+  component "DiscrepancyAlertEngine" as dae_poc #A7C7F0
+  component "PostgreSQL\ntenant_id = 'las-galias'\n(fijo en PoC)" as db_poc #BFDBFE
+  component "AuditLog JSONL\n(local)" as audit_poc #DBEAFE
+}
+
+package "DIE MultiTenant TO-BE" #F0F4FF {
+  component "API Gateway\n(JWT + RBAC por tenant)" as api_tobe #A7C7F0
+  component "StructuredExtractor\n(mismo código)\n[sin cambios]" as ext_tobe #60A5FA
+  component "LLM Gateway\n(rate-limit, fallback,\nload-balance, cache)" as llm_tobe #A7C7F0
+  component "DocumentSchemaRegistry\n(API + BD versionada)" as schema_tobe #A7C7F0
+  component "CrossValidator\n(mismo código)\n[sin cambios]" as cv_tobe #60A5FA
+  component "DiscrepancyAlertEngine\n(mismo código)\n[sin cambios]" as dae_tobe #60A5FA
+  component "PostgreSQL\n+ RLS multi-tenant\ntenant_id dinámico" as db_tobe #3B82F6
+  component "Audit Service\n(BD inmutable + API)" as audit_tobe #A7C7F0
+  component "Tenant Management\nService" as tenant_tobe #A7C7F0
+  component "Alert Dashboard\n(UI de revisión humana)" as ui_tobe #A7C7F0
+  component "Celery + Redis\n(batch asíncrono)" as batch_tobe #A7C7F0
+}
+
+api_poc .right.> api_tobe : reemplazar\nmiddleware de auth
+ext_poc .right.> ext_tobe : sin cambios\n(misma interfaz)
+llm_poc .right.> llm_tobe : encapsular en\nLLMGateway service
+schema_poc .right.> schema_tobe : migrar JSON\na BD con API
+cv_poc .right.> cv_tobe : sin cambios\n(misma interfaz)
+dae_poc .right.> dae_tobe : sin cambios\n(misma interfaz)
+db_poc .right.> db_tobe : activar RLS;\npasar tenant_id dinámico
+audit_poc .right.> audit_tobe : migrar JSONL\na AuditService
+
+note bottom of ext_tobe
+  Los componentes core de IA
+  (StructuredExtractor, CrossValidator,
+  DiscrepancyAlertEngine) se reutilizan
+  SIN modificar su interfaz
+end note
+
+note bottom of db_tobe
+  tenant_id ya está en todos
+  los modelos de la PoC.
+  Solo se activa RLS y se
+  añade TenantManagementService
+end note
+
+@enduml

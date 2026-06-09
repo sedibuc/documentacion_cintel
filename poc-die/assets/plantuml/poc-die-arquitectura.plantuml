@@ -1,0 +1,87 @@
+@startuml poc-die-arquitectura
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 11
+skinparam shadowing false
+skinparam titleFontSize 14
+skinparam titleFontStyle bold
+skinparam noteBackgroundColor #EFF6FF
+skinparam noteBorderColor #1A4480
+skinparam componentBackgroundColor #DBEAFE
+skinparam componentBorderColor #1A4480
+skinparam packageBackgroundColor #F0F4FF
+skinparam packageBorderColor #1A4480
+skinparam arrowColor #1A4480
+
+title Arquitectura PoC DIE — Las Galias\n(Mono-tenant · Diseñada para escalar a MultiTenant)
+
+package "Cliente / Operador" #EFF6FF {
+  [PDF/DOCX\nDocuments] as docs #DBEAFE
+  [Reference CSV\n(PRE-06)] as refcsv #DBEAFE
+}
+
+package "PoC API (FastAPI)" #F0F4FF {
+  [REST API\n/documents\n/extractions\n/batches\n/alerts] as api #DBEAFE
+  [API Key Auth\n(→ JWT+RBAC en TO-BE)] as auth #FEF9E7
+}
+
+package "Extracción (Core)" #F0F4FF {
+  [Content Extraction\nService\n(PDF base64 → LLM)] as ces #DBEAFE
+  [StructuredExtractor\n(LLM + Pydantic +\nguardrails + few-shots)] as extractor #A7C7F0
+  [LLM Client\n(LiteLLM wrapper)\n→ LLM Gateway en TO-BE] as llm #A7C7F0
+  [Schema Loader\n(JSON en disco)\n→ SchemaRegistry en TO-BE] as schema #DBEAFE
+  [Prompt Loader\n(archivos .txt)\n→ PromptRegistry en TO-BE] as prompts #DBEAFE
+}
+
+package "Validación y Alertas" #F0F4FF {
+  [Validation Engine\n(determinístico)] as valeng #DBEAFE
+  [CrossValidator\n(vs CSV referencia)] as crossval #A7C7F0
+  [DiscrepancyAlertEngine\nBLOCKING / WARNING / INFO] as alerts #DBEAFE
+}
+
+package "Persistencia" #F0F4FF {
+  database "PostgreSQL\n(tenant_id en todos\nlos modelos)" as pg #DBEAFE
+  [AuditLog\n(JSONL local)\n→ AuditService en TO-BE] as auditlog #DBEAFE
+}
+
+package "LLM Provider (externo)" #FFF8E7 {
+  [OpenAI / Gemini\n(GPT-4o / Flash)] as llmprov #FEF3C7
+}
+
+package "Observabilidad" #F0F4FF {
+  [MLflow\n(experimentos locales)] as mlflow #DBEAFE
+}
+
+note right of api
+  tenant_id="las-galias"
+  fijo en PoC
+  parametrizable en TO-BE
+end note
+
+note bottom of pg
+  Todos los modelos tienen tenant_id
+  Document, DocumentExtraction,
+  DiscrepancyAlert, AuditLog
+end note
+
+docs --> api : POST /upload
+refcsv --> api : POST /batches (referencia)
+api --> auth : valida API Key
+api --> ces : procesar documento
+ces --> extractor : archivo PDF base64
+extractor --> schema : cargar schema tipo documental
+extractor --> prompts : cargar prompt versionado
+extractor --> llm : invocar LLM
+llm --> llmprov : llamada API
+llmprov --> llm : respuesta JSON
+llm --> extractor : structured output
+extractor --> valeng : validar campos
+valeng --> crossval : campos válidos + CSV referencia
+crossval --> alerts : campos MISMATCH
+alerts --> pg : persistir alertas
+extractor --> pg : persistir extracción
+api --> auditlog : registrar trazabilidad
+extractor --> mlflow : log métricas experimento
+
+@enduml

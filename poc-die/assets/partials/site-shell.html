@@ -1,0 +1,69 @@
+<div class="site-shell">
+  <aside class="sidebar">
+    <div class="brand-block">
+      <p class="eyebrow">PoC · Document Intelligence Engine</p>
+      <h1>DIE — Las Galias</h1>
+      <p class="brand-copy">Prueba de Concepto del Document Intelligence Engine con el proyecto Las Galias · Extracción estructurada · Un solo ingeniero · Jun 9–30, 2026</p>
+    </div>
+
+    <label class="search-box" for="site-search">
+      <span>Buscar en el sitio</span>
+      <input id="site-search" type="search" placeholder="Componentes, sprints, riesgos..." autocomplete="off">
+    </label>
+    <div id="search-results" class="search-results" hidden></div>
+
+    <nav class="main-nav" aria-label="Secciones principales">
+      <a href="../index.html" data-nav="portal">← Portal de micrositios</a>
+      <a href="index.html" data-nav="inicio">Inicio</a>
+
+      <details class="nav-section-collapsible" open>
+        <summary class="nav-section-label tobe">PoC DIE — Las Galias</summary>
+        <div class="nav-section-body">
+          <a href="alcance.html" data-nav="alcance">Alcance, arquitectura y definición técnica</a>
+          <a href="prerequisitos.html" data-nav="prerequisitos">Prerequisitos y validaciones externas</a>
+          <a href="cronograma.html" data-nav="cronograma">Cronograma de trabajo</a>
+          <a href="prototipo.html" data-nav="prototipo">Prototipo de la PoC</a>
+          <a href="riesgos.html" data-nav="riesgos">Riesgos y mitigaciones</a>
+        </div>
+      </details>
+
+      <details class="nav-section-collapsible">
+        <summary class="nav-section-label">Micrositios relacionados</summary>
+        <div class="nav-section-body">
+          <a href="../RAG/index.html">TO-BE DIE MultiTenant (RAG)</a>
+          <a href="../RAG/tobefuncional.html">TO-BE funcional DIE</a>
+          <a href="../RAG/arquitectura-tobe.html">Arquitectura TO-BE</a>
+          <a href="../transversales/index.html">Transversales</a>
+        </div>
+      </details>
+    </nav>
+
+    <div class="sidebar-note">
+      <strong>PoC — un cliente, un ingeniero</strong>
+      <p>Esta PoC es un subconjunto funcional y técnico del DIE MultiTenant. Todos los modelos de datos incluyen <code>tenant_id</code> para habilitar la evolución hacia multi-tenant sin refactorización mayor.</p>
+    </div>
+  </aside>
+
+  <div class="page-column">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">PoC Document Intelligence Engine · Las Galias</p>
+        <h2 id="page-title">Cargando sección...</h2>
+      </div>
+    </header>
+
+    <div id="runtime-warning" class="runtime-warning" hidden></div>
+
+    <main class="content-layout">
+      <article id="content" class="content-panel" aria-live="polite"></article>
+      <aside class="toc-panel">
+        <div class="toc-card">
+          <p class="eyebrow">Navegación interna</p>
+          <nav id="toc" aria-label="Tabla de contenido"></nav>
+        </div>
+      </aside>
+    </main>
+  </div>
+</div>
+
+<button id="back-to-top" class="back-to-top" type="button" aria-label="Volver arriba">↑</button>

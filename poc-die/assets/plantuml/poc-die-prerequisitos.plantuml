@@ -1,0 +1,76 @@
+@startuml poc-die-prerequisitos
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 11
+skinparam shadowing false
+skinparam titleFontSize 14
+skinparam titleFontStyle bold
+skinparam noteBackgroundColor #EFF6FF
+skinparam noteBorderColor #1A4480
+skinparam rectangleBackgroundColor #DBEAFE
+skinparam rectangleBorderColor #1A4480
+skinparam arrowColor #1A4480
+
+title Prerequisitos y dependencias — PoC DIE Las Galias
+
+package "Semana previa — Sprint 1 (≤ Jun 8)" #E0EFFF {
+  rectangle "PRE-01\nCredenciales LLM\nAPI Key activa\n[CINTEL]" as P01 #DBEAFE
+  rectangle "PRE-02\nAmbiente de desarrollo\nDocker + Python 3.11\n[Ingeniero]" as P02 #DBEAFE
+}
+
+package "Durante Sprint 1 — Jun 11" #F5F3FF {
+  rectangle "PRE-00\nReunión de contexto\ncon Las Galias\n[Las Galias + CINTEL]" as P00 #EDE9FE
+}
+
+package "Al inicio de Sprint 2 (≤ Jun 13)" #D1FAE5 {
+  rectangle "PRE-03\nCorpus documental\n20+ CTLs (DOC_CTL)\n[Las Galias]" as P03 #A7F3D0
+  rectangle "PRE-04\nSchema de campos\nvalidado y aprobado\n[Las Galias + CINTEL]" as P04 #A7F3D0
+  rectangle "PRE-05\nAutorización tratamiento\nde datos reales\n[Las Galias]" as P05 #A7F3D0
+}
+
+package "Durante Sprint 2 (≤ Jun 17)" #FEF9C3 {
+  rectangle "PRE-06\nTemplate de referencia\ncargado en módulo admin\n[Las Galias opera módulo]" as P06 #FDE68A
+}
+
+package "Sprint 1 (Jun 9–13)" #F0F4FF {
+  rectangle "Hito 1:\nExtractor LLM operativo\nDOC_CTL" as H1 #1A4480
+}
+
+package "Sprint 2 (Jun 16–20)" #F0F4FF {
+  rectangle "Hito 2:\nCrossValidator + módulo admin\nMétricas de calidad" as H2 #1A4480
+}
+
+package "Sprint 3 (Jun 23–30)" #F0F4FF {
+  rectangle "Hito 3:\nPoC completa\nEntrega formal Jun 30" as H3 #1A4480
+}
+
+P01 --> H1 : habilita\nextracción LLM
+P02 --> H1 : habilita\nejecución
+P00 --> H1 : insumos para\nprompt v1 + few-shots
+P03 --> H2 : habilita\ndocs reales
+P04 --> H2 : habilita\nschemas finales
+P05 --> H2 : habilita\nuso datos reales
+P06 --> H2 : habilita\nCrossValidator
+H1 --> H2 : base técnica
+H2 --> H3 : integración completa
+
+note bottom of P01
+  ⚠️ BLOQUEANTE Sprint 1
+  Sin LLM no hay extracción
+end note
+
+note bottom of P00
+  ⭐ MUY IMPORTANTE
+  Insumos para construir
+  prompt v1 calibrado
+end note
+
+note bottom of P06
+  ℹ️ Se hace en módulo admin
+  No requiere preparación previa
+  de CSV en formato específico
+end note
+
+@enduml
+

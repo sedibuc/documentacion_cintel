@@ -1,0 +1,54 @@
+@startuml poc-die-riesgos
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 12
+skinparam shadowing false
+skinparam titleFontSize 14
+skinparam titleFontStyle bold
+
+title Matriz de Riesgos — PoC DIE Las Galias
+
+<style>
+  table {
+    FontSize 11
+  }
+</style>
+
+' Use a custom table visualization
+rectangle " " as spacer #white/white {
+  rectangle "IMPACTO\nALTO" as ia #FFE4E4 {
+    rectangle "  R-02\nBaja calidad\nextracción LLM  \n[Media/Alto]" as r02 #FF8080
+    rectangle "  R-01\nPrerequisitos no\ndisponibles a tiempo\n[Media/Alto]  " as r01 #FF8080
+    rectangle "  R-03\nDataset referencia\nincompleto  \n[Media/Alto]" as r03 #FF8080
+  }
+
+  rectangle "IMPACTO\nMEDIO" as im #FFF3E4 {
+    rectangle "  R-05\nLatencia LLM\n> 30 seg/doc  \n[Media/Medio]" as r05 #FFBB80
+    rectangle "  R-06\nCambios de\nalcance  \n[Media/Medio]" as r06 #FFBB80
+    rectangle "  R-07\nFormatos\nno soportados  \n[Baja/Medio]" as r07 #FFD9B0
+    rectangle "  R-04\nCostos LLM\nexcesivos  \n[Baja/Medio]" as r04 #FFD9B0
+  }
+
+  rectangle "IMPACTO\nBAJO" as ib #E4F0FF {
+    rectangle "  R-10\nRate limits LLM\n[Media/Bajo]  " as r10 #A7C7F0
+    rectangle "  R-08\nAmbiente\ninestable  \n[Baja/Bajo]" as r08 #BFDBFE
+    rectangle "  R-09\nDisponibilidad\ningeniero  \n[Baja/Bajo]" as r09 #BFDBFE
+  }
+}
+
+legend right
+| Color | Estado |
+| <back:#FF8080> Crítico </back> | Prob. Media + Impacto Alto |
+| <back:#FFBB80> Moderado </back> | Prob. Media + Impacto Medio |
+| <back:#FFD9B0> Controlable </back> | Prob. Baja + Impacto Medio |
+| <back:#A7C7F0> Bajo </back> | Prob. Media + Impacto Bajo |
+| <back:#BFDBFE> Mínimo </back> | Prob. Baja + Impacto Bajo |
+endlegend
+
+note bottom
+  **Riesgos críticos:** R-01, R-02, R-03 requieren seguimiento activo desde Sprint 1
+  **Mitigación clave:** entrega anticipada de corpus (PRE-04) y prompts con guardrails robustos
+end note
+
+@enduml

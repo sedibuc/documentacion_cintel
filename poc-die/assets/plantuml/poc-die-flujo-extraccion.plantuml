@@ -1,0 +1,80 @@
+@startuml poc-die-flujo-extraccion
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 11
+skinparam shadowing false
+skinparam titleFontSize 14
+skinparam titleFontStyle bold
+skinparam activityBackgroundColor #DBEAFE
+skinparam activityBorderColor #1A4480
+skinparam activityArrowColor #444444
+skinparam activityDiamondBackgroundColor #EFF6FF
+skinparam activityDiamondBorderColor #1A4480
+skinparam noteBackgroundColor #FEF9E7
+skinparam noteBorderColor #D97706
+
+title Flujo de Extracción Estructurada\nPoC DIE — Las Galias (DOC_CTL)
+
+|#EFF6FF| <b>Operador / API</b> |
+|#DBEAFE| <b>StructuredExtractor (LLM)</b> |
+|#E8F5E9| <b>Validación y Alertas</b> |
+
+|Operador / API|
+start
+:POST /documents/upload\n(PDF + doc_type="DOC_CTL");
+
+:Registrar documento\ncon tenant_id="las-galias"\nen PostgreSQL;
+:Almacenar archivo\nen STORAGE_PATH;
+
+:Convertir PDF a base64\npara envío directo al LLM;
+note right #FEF3C7 : Envío directo sin detección\nprevia de tipo de contenido.\nEl modelo lo procesa tal como llega.
+
+:Cargar schema JSON\ndel tipo documental\n(DOC_CTL_v1.json);
+:Cargar prompt versionado\n(guardrails + few-shots);
+
+|StructuredExtractor (LLM)|
+:Construir contexto:\narchivo base64 + schema + prompt;
+note right #A7C7F0 : <<LLM>>\nInvocación estructurada
+:Invocar LLM\n(GPT-4o / Gemini Flash)\nvía LiteLLM;
+:Parsear respuesta\ncon Pydantic (JSON mode);
+:Evaluar logprobs\npor campo;
+
+if (¿logprob < umbral (0.85)?) then (Sí — algún campo)
+  :Marcar campos como\nLOW_CONFIDENCE;
+else (No)
+endif
+
+if (¿Salida JSON válida?) then (No)
+  :Reintento con variante\nde prompt (hasta 3 veces);
+  if (¿Reintento exitoso?) then (No)
+    :Marcar extracción\ncomo ERROR;
+    stop
+  else (Sí)
+  endif
+else (Sí)
+endif
+
+|Validación y Alertas|
+:ValidationEngine:\nverificar tipos, formatos,\ncampos obligatorios;
+
+if (¿Hay referencia Excel con mapeo?) then (Sí — PRE-06 disponible)
+  :CrossValidator:\ncomparar campos extraídos\nvs referencia (mapeo del admin);
+  :Clasificar por campo:\nMATCH / MISMATCH / PENDIENTE;
+  :DiscrepancyAlertEngine:\ngenerar alertas por MISMATCH;
+  :Asignar severidad:\nBLOCKING / WARNING / INFO;
+  :Persistir alertas\nen PostgreSQL;
+else (No — sin referencia)
+  :Marcar cross_validation\ncomo PENDIENTE;
+endif
+
+:Persistir DocumentExtraction\n(campos + logprobs + tokens + latencia);
+:Registrar en AuditLog\n(JSONL trazabilidad);
+:Log métricas en MLflow\n(tokens, latencia, logprobs_min);
+
+|Operador / API|
+:GET /extractions/{id}\nRetornar resultado estructurado\nJSON con campos + alertas;
+
+stop
+
+@enduml
